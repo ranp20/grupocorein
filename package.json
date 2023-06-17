@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "owl-carousel": "^1.0.0",
+    "pdfobject": "^2.2.12"
+  }
+}

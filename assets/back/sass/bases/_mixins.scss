@@ -1,0 +1,128 @@
+@mixin switch-Rocker-style($size,$color-base,$color1,$color2){
+  &{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top:1em;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+    font-size: 100%;
+    box-sizing: inherit;
+    margin:0;
+    padding:0;
+    &__label{
+      display: inline-block;
+      position: relative;
+      font-weight: bold;
+      text-align: center;
+      text-transform: uppercase;
+      color: $color-base;
+      width: 7em;
+      height: 4em;
+      overflow: hidden;
+      border-bottom: 0.5em solid #eee;
+      font-size: $size !important;
+      margin: 0 !important;
+      &::before{
+        content: "";
+        position: absolute;
+        top: 0.5em;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #999;
+        border: 0.5em solid #eee;
+        border-bottom: 0;
+      }
+      input[type='checkbox']{
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      input[type='checkbox']:checked + &__spanL{
+        background-color: $color1;
+        color: #fff;
+        bottom: 0px;
+        left: 0.5em;
+        height: 2.5em;
+        width: 3em;
+        transform: rotate(0deg) skewX(0deg);
+        &:before{
+          background-color: transparent;
+          width: 3.0833em;
+        }
+      }
+      input[type='checkbox']:checked + &__spanL + &__spanR{
+        background-color: #ddd !important;
+        color: $color-base !important;
+        bottom: 0.4em;
+        right: 0.8em;
+        height: 2.4em;
+        width: 2.75em;
+        transform: rotate(-15deg) skewX(-15deg);
+      }
+      input[type='checkbox']:checked + &__spanL + &__spanR:before{
+        background-color: #ccc;
+      }
+      input[type='checkbox']:focus + &__spanL{
+        color: #333;
+      }
+      input[type='checkbox']:focus + &__spanL + &__spanR{
+        color: #fff;
+      }
+      input[type='checkbox']:checked:focus + &__spanL{
+        color: #fff;
+      }
+      input[type='checkbox']:checked:focus + &__spanL + &__spanR{
+        color: #333;
+      }
+      &__spanL,
+      &__spanR{
+        cursor: pointer;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 2.5em;
+        width: 3em;
+        transition: 0.2s;
+        &:before{
+          content: "";
+          position: absolute;
+          width: 0.4em;
+          height: 2.45em;
+          bottom: -0.45em;
+          background-color: #ccc;
+          transform: skewY(-65deg);
+        }
+      }
+      &__spanL{
+        height: 2.4em;
+        width: 2.75em;
+        left: 0.85em;
+        bottom: 0.4em;
+        background-color: #ddd;
+        transform: rotate(15deg) skewX(15deg);
+        &:before{
+          left: -0.4em;
+        }
+      }
+      &__spanR{
+        right: 0.5em;
+        bottom: 0;
+        background-color: $color2;
+        color: #fff !important;
+        &:before{
+          right: -0.375em;
+          background-color: transparent;
+          transform: skewY(65deg);
+        }
+      }
+    }
+    &__spanTxt{
+      padding-left: 0.5rem;
+      font-size: 13px;
+      font-weight: 600;
+    }
+  }
+}

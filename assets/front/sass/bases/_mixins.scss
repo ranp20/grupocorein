@@ -1,0 +1,17 @@
+// FUNCIÓN - ANCHO MÁXIMO
+@mixin max-width($max-width){
+  max-width: $max-width;
+}
+// FUNCIÓN - GENERAR CLASES DINÁMICAS PARA APLICAR ALTURA(height) Y MÁXIMA-ALTURA(max-height) A CUALQUIER ELEMENTO, AUMENTANDO DE 5 EN 5 ".hi-"
+@mixin hi-heightelement($limit){
+  @for $i from 0 through $limit{
+    $multiply : calc($i * 5);
+    .hi-#{$multiply}{
+      height: #{$multiply}px !important;
+    }
+    .himx-#{$multiply}{
+      max-height: #{$multiply}px !important;
+      height: #{$multiply}px !important;
+    }
+  }
+}
