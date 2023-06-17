@@ -1,6 +1,18 @@
 $(() => {
   var locationsGET = window.location.href;
   var csrfTokenFrm = $("#cTentr-af1698__p").parent().find("input[name='_token']").val();
+  // ------------ FORMATO - SEPARADOR DE NÚMERO TELEFÓNICO(+51)
+  $(document).on("input keyup keypress", "input[data-valformat=withspacesforthreenumbers]", function(e){
+    let val = e.target.value;
+    let lengthVal = $(this).val().replace(/ /g,'').length;
+    if($(this).attr("maxlength") <= 9){
+      $(this).val(val.replace(/\D+/g, '').replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3'));
+    }else if(lengthVal <= 9){
+      $(this).val(val.replace(/\D+/g, '').replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3'));
+    }else{
+      $(this).val(val.replace(/\D+/g, '').replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3'));
+    }
+  });
   // ------------ SHOW/HIDDEN PASSWORD
   $(document).on("click", "div.fnc-icon_passCtrl", function(){
     var inputTypeControlPass1 = $(this).parent().find("input").attr("type");
@@ -13,7 +25,7 @@ $(() => {
     }
   });
   
-  getAllDepartamentos();  
+  getAllDepartamentos();
   var tmpListDepartamentos = ``;
   function getAllDepartamentos(){
     // e.preventDefault();

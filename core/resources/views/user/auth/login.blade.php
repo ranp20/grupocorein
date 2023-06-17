@@ -97,7 +97,7 @@
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="reg-phone">{{__('Teléfono/Celular')}}</label>
-                <input class="form-control" type="text" name="phone" autocomplete="off" spellcheck="false" placeholder="{{__('Phone Number')}}" id="reg-phone" value="{{old('phone')}}" required>
+                <input class="form-control" type="text" name="phone" autocomplete="off" spellcheck="false" data-valformat="withspacesforthreenumbers" maxlength="9" placeholder="{{__('Phone Number')}}" id="reg-phone" value="{{old('phone')}}" required>
                 @error('phone')
                 <p class="text-danger">{{$message}}</p>
                 @endif
@@ -123,16 +123,29 @@
                 <input class="form-control" type="password" name="password_confirmation" autocomplete="off" spellcheck="false" placeholder="{{__('Confirm Password')}}" id="reg-pass-confirm" required>
               </div>
             </div>
+            @if(old('reg_enterprise') != "" && old('reg_enterprise') == "on")
             <div class="col-sm-6">
               <div class="form-group">
                 <label class="switch-primary">
-                  <input type="checkbox" class="switch switch-bootstrap status radio-check" name="reg_enterprise" id="reg-enterprise" value="on">
+                  <input type="checkbox" class="switch switch-bootstrap status radio-check" name="reg_enterprise" id="reg-enterprise" checked value="{{ old('reg_enterprise') }}">
                   <span class="switch-body"></span>
                   <span class="switch-text">{{ __('Poseo Empresa') }}</span>
                 </label>
               </div>
             </div>
             <div class="row" id="cTentr-af1698__p"></div>
+            @else
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="switch-primary">
+                  <input type="checkbox" class="switch switch-bootstrap status radio-check" name="reg_enterprise" id="reg-enterprise" value="{{ old('reg_enterprise') }}">
+                  <span class="switch-body"></span>
+                  <span class="switch-text">{{ __('Poseo Empresa') }}</span>
+                </label>
+              </div>
+            </div>
+            <div class="row" id="cTentr-af1698__p"></div>
+            @endif
             @if ($setting->recaptcha == 1)
             <div class="col-lg-12 mb-4">
                 {!! NoCaptcha::renderJs() !!}

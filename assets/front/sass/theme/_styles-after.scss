@@ -32,6 +32,12 @@ a[data-role=nxt-checkoutinfo]{
     padding-top: .8rem;
     padding-bottom: .8rem;
 }
+.show_d43gHa-sd{
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    user-select: auto !important;
+}
 .icon-arrrowight{
     display: flex;
     align-items: center;
@@ -704,7 +710,7 @@ iframe{
 hr{
     margin: 0;
     border: 0;
-    border-top: 1px solid #e5e5e5
+    border-top: 1px solid #ccc;
 }
 
 hr.hr-light{
@@ -11403,5 +11409,20 @@ body{
 .heroarea-slider .owl-nav .owl-prev:before{    
     @media(min-width: 768px){
         font-size: 25px;
+    }
+}
+.btnUpdtInf-voucher{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: row nowrap;
+    background-color: transparent !important;
+    border: none !important;
+    text-decoration: underline !important;
+    vertical-align: middle;
+    color: #005596;
+    margin-top: 0.3rem;
+    span:first-child{
+        margin-right: 0.35rem;
     }
 }

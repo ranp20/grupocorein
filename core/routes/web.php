@@ -364,6 +364,7 @@ Route::group(['middleware' => 'maintainance'], function (){
     
 
     Route::post('/checkout/pdforderpreview', 'Front\CheckoutController@getGeneratePDFOrderPreview')->name('front.checkout.pdforderpreview');
+    Route::post('/checkout/datavoucher', 'Front\CheckoutController@sendDataVoucher')->name('front.checkout.submitdatavoucher');
     Route::post('/paytm/notify', 'Payment\PaytmController@notify')->name('front.paytm.notify');
     Route::post('/paytm/submit', 'Payment\PaytmController@store')->name('front.paytm.submit');
     Route::post('/razorpay/notify', 'Payment\RazorpayController@notify')->name('front.razorpay.notify');

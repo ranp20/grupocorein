@@ -64,7 +64,6 @@ body_theme4
 <script rel="preload" href="{{asset('assets/front/js/plugins/jquery-3.6.4.min.js')}}" as="script"></script>
 <link id="mainStyles" rel="stylesheet" media="screen" href="{{asset('assets/front/css/styles.min.css')}}">
 <script type="text/javascript" src="{{asset('assets/front/js/plugins/jquery-3.6.4.min.js')}}" as="script"></script>
-<script type="text/javascript" src="{{asset('assets/front/js/checkout.min.js')}}"></script>
 @include('includes.apiwhatsappbutton')
 <header class="site-header navbar-sticky">
     <div class="menu-top-area">

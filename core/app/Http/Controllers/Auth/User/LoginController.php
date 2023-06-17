@@ -79,6 +79,7 @@ class LoginController extends Controller{
     session()->forget('payment_id');
     session()->forget('order_id');
     session()->forget('searhproduct_user');
+    session()->forget('data_voucher');
     session()->forget('message');
     Auth::logout();
     return redirect('/');

@@ -68,7 +68,6 @@ body_theme4
 <script rel="preload" href="<?php echo e(asset('assets/front/js/plugins/jquery-3.6.4.min.js')); ?>" as="script"></script>
 <link id="mainStyles" rel="stylesheet" media="screen" href="<?php echo e(asset('assets/front/css/styles.min.css')); ?>">
 <script type="text/javascript" src="<?php echo e(asset('assets/front/js/plugins/jquery-3.6.4.min.js')); ?>" as="script"></script>
-<script type="text/javascript" src="<?php echo e(asset('assets/front/js/checkout.min.js')); ?>"></script>
 <?php echo $__env->make('includes.apiwhatsappbutton', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 <header class="site-header navbar-sticky">
     <div class="menu-top-area">

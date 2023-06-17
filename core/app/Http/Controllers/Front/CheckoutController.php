@@ -296,7 +296,45 @@ class CheckoutController extends Controller{
     $data['payments'] = PaymentSetting::whereStatus(1)->get();
     return view('front.checkout.payment',$data);
   }
+  public function sendDataVoucher(Request $request){    
+    $input = $request->all();
+    $selOptSelected = (isset($input['chckpay_selOpt']) && $input['chckpay_selOpt'] != "") ? $input['chckpay_selOpt'] : '';
+    // $arrDataVoucher = [];
+    if($selOptSelected == 'boleta'){
+      $arrDataVoucher = [
+        "selOptSelected" => 'boleta',
+        "selOptSelectedId" => 1,
+        "first_name" => (isset($input['chckpay_firt_name']) && $input['chckpay_firt_name'] != "") ? $input['chckpay_firt_name'] : '',
+        "dni" => (isset($input['chckpay_dni']) && $input['chckpay_dni'] != "") ? $input['chckpay_dni'] : '',
+        "phone" => (isset($input['chckpay_phone']) && $input['chckpay_phone'] != "") ? $input['chckpay_phone'] : '',
+      ];
+    }else if($selOptSelected == 'factura'){
+      $arrDataVoucher = [
+        "selOptSelected" => 'factura',
+        "selOptSelectedId" => 2,
+        "ruc" => (isset($input['chckpay_ruc']) && $input['chckpay_ruc'] != "") ? $input['chckpay_ruc'] : '',
+        "razonsocial" => (isset($input['chckpay_razonsocial']) && $input['chckpay_razonsocial'] != "") ? $input['chckpay_razonsocial'] : '',
+        "address" => (isset($input['chckpay_address']) && $input['chckpay_address'] != "") ? $input['chckpay_address'] : '',
+        "phone" => (isset($input['chckpay_phone']) && $input['chckpay_phone'] != "") ? $input['chckpay_phone'] : '',
+      ];
+    }else{
+      $arrDataVoucher = [];
+    }
+        
+    if(Session::has('data_voucher')){
+      Session::put('data_voucher', $arrDataVoucher);
+    }else{
+      Session::put('data_voucher', $arrDataVoucher);
+    }
+    return response()->json($arrDataVoucher);
+  }
 	public function checkout(PaymentRequest $request){
+    /*
+    echo "<pre>";
+    print_r($request->all());
+    echo "<pre>";
+    */
+
     $input = $request->all();
     $checkout = false;
     $payment_redirect = false;

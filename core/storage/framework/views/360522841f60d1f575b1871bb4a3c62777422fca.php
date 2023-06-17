@@ -77,7 +77,7 @@ $orderIdGenFirst = genCodeRandom();
         <div class="card-body">
           <div class="row cCrd__cTitle">
             <div class="col-9 cCrd__cTitle__cL">
-              <h6 class="pb-2"><?php echo e(__('Review Your Order')); ?> :</h6>
+              <h6 class="pb-0 mb-0"><?php echo e(__('Review Your Order')); ?> :</h6>
             </div>
             <div class="col-3 cCrd__cTitle__cR">
               <a class="btn btn-primary ms-auto text-align-center d-flex align-items-end justify-content-center" data-href="<?php echo e(route('front.checkout.pdforderpreview')); ?>" href="javascript:void(0);" id="cTentr-af1698__1prevChckp"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -145,7 +145,23 @@ unset($__errorArgs, $__bag); ?>
             </div>
           </div>
           <!-- NUEVO CONTENIDO (INICIO) -->
-          <h6><?php echo e(__('Comprobante de pago')); ?> :</h6>
+          <?php
+          $selOptsTable = [
+            0 => [
+              "id" => 1,
+              "name" => 'boleta'
+            ],
+            1 => [
+              "id" => 2,
+              "name" => 'factura'
+            ],
+          ];
+          $selOptVoucher = '';
+          if(Session::has('data_voucher')){
+            $selOptVoucher = Session::get('data_voucher');
+          }
+          ?>
+          <h6><?php echo e(__('Proof of payment')); ?> :</h6>
           <div>
             <div class="row mb-0" id="sl-docopts_order">
               <div class="col-sm-12">
@@ -153,45 +169,187 @@ unset($__errorArgs, $__bag); ?>
                   <!-- <label for="reg-slOpts__voucher">Tipo de comprobante</label> -->
                   <select class="form-control" name="reg_slOpts__voucher" id="reg-slOpts__voucher" required>
                     <option selected value="">Elige una opción</option>
-                    <option value="1">Boleta</option>
-                    <option value="2">Factura</option>
+                    <?php $__currentLoopData = $selOptsTable; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <option value="<?php echo e((isset($selOptVoucher['selOptSelectedId']) && $selOptVoucher['selOptSelectedId'] != '' && $v['id'] == $selOptVoucher['selOptSelectedId']) ? $selOptVoucher['selOptSelectedId'] : $v['id']); ?>" <?php echo e((isset($selOptVoucher['selOptSelected']) && $selOptVoucher['selOptSelected'] != '' && $v['id'] == $selOptVoucher['selOptSelectedId']) ? 'selected' : ''); ?>><?php echo e((isset($selOptVoucher['selOptSelected']) && $selOptVoucher['selOptSelected'] != '' && $v['name'] == $selOptVoucher['selOptSelected']) ? ucfirst($selOptVoucher['selOptSelected']) : ucfirst($v['name'])); ?></option>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                   </select>
                 </div>
               </div>
             </div>
             <div class="row mb-4">
-              <form id="dft443__gH09-checkoutvoucher" action="" method="POST">
+              <form id="dft443__gH09-checkoutvoucher" action="" method="POST" data-href="<?php echo e(route('front.checkout.submitdatavoucher')); ?>">
+                <?php if(Session::has('data_voucher')): ?>
+                <div id="sl-docopts_conts">
+                  <?php if($selOptVoucher['selOptSelected'] == 'boleta'): ?>
+                  <div class="cBillgADtls">
+                    <div class="cBillgADtls__c">
+                      <div class="cBillgADtls__c__i">
+                        <p><span><strong>Nombres: </strong></span><span><?php echo e($selOptVoucher['first_name']); ?></span></p>
+                      </div>
+                      <div class="cBillgADtls__c__i">
+                        <p><span><strong>DNI: </strong></span><span><?php echo e($selOptVoucher['dni']); ?></span></p>
+                      </div>
+                      <div class="cBillgADtls__c__i">
+                        <span><strong>Teléfono: </strong></span><span><a href="tel: +51 912845235"><?php echo e($selOptVoucher['phone']); ?></a></span>
+                      </div>
+                      <button type="button" class="btnUpdtInf-voucher">
+                        <span class="icon-updt">
+                          <img src="<?php echo e(asset('assets/images/Utilities/icon-update.png')); ?>" alt="icon-update" width="100" height="100" decoding="sync">
+                        </span>
+                        <span>Editar información</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div data-sec="setlist" style="display: none;">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <label for="chckpay-firt_name">Nombres</label>
+                          <input class="form-control" name="chckpay_firt_name" type="text" id="chckpay-firt_name" value="<?php echo e($selOptVoucher['first_name']); ?>" placeholder="Nombres" required>
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <label for="chckpay-dni">DNI</label>
+                          <input class="form-control" name="chckpay_dni" type="text" id="chckpay-dni" value="<?php echo e($selOptVoucher['dni']); ?>" placeholder="DNI" data-valformat="onlydigits" maxlength="8" required>
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <label for="chckpay-phone">Teléfono</label>
+                          <input class="form-control" name="chckpay_phone" type="text" id="chckpay-phone" value="<?php echo e($selOptVoucher['phone']); ?>" placeholder="Teléfono" data-valformat="withspacesforthreenumbers" maxlength="9" required>
+                        </div>
+                      </div>
+                      <div class="col-12 d-flex align-items-center justify-content-start">
+                        <div class="form-group">
+                          <button type="submit" class="btn btn-primary d-flex align-items-center">
+                            <span>Confirmar Datos</span>
+                            <span class="cNxticon-i">
+                              <svg xmlns:x="http://ns.adobe.com/Extensibility/1.0/" xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" xmlns:graph="http://ns.adobe.com/Graphs/1.0/" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 100;" xml:space="preserve"><switch><foreignObject requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/" x="0" y="0" width="1" height="1"/><g i:extraneous="self"><path d="M95.9,46.2L65.4,15.7c-2.1-2.1-5.5-2.1-7.5,0c-2.1,2.1-2.1,5.5,0,7.5l21.5,21.5H7.8c-2.9,0-5.3,2.4-5.3,5.3    c0,2.9,2.4,5.3,5.3,5.3h71.5L57.9,76.8c-2.1,2.1-2.1,5.5,0,7.5c1,1,2.4,1.6,3.8,1.6s2.7-0.5,3.8-1.6l30.6-30.6    c1-1,1.6-2.4,1.6-3.8C97.5,48.6,96.9,47.2,95.9,46.2z"/></g></switch></svg>
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="col-12 d-flex align-items-center justify-content-start">
+                        <div class="form-group">
+                          <div class="btn btn-success d-flex align-items-center" disabled="disabled">
+                            <span>Finalizar compra</span>
+                            <span class="cNxticon-i">
+                              <svg xmlns:x="http://ns.adobe.com/Extensibility/1.0/" xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" xmlns:graph="http://ns.adobe.com/Graphs/1.0/" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 100;" xml:space="preserve"><switch><foreignObject requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/" x="0" y="0" width="1" height="1"/><g i:extraneous="self"><path d="M95.9,46.2L65.4,15.7c-2.1-2.1-5.5-2.1-7.5,0c-2.1,2.1-2.1,5.5,0,7.5l21.5,21.5H7.8c-2.9,0-5.3,2.4-5.3,5.3    c0,2.9,2.4,5.3,5.3,5.3h71.5L57.9,76.8c-2.1,2.1-2.1,5.5,0,7.5c1,1,2.4,1.6,3.8,1.6s2.7-0.5,3.8-1.6l30.6-30.6    c1-1,1.6-2.4,1.6-3.8C97.5,48.6,96.9,47.2,95.9,46.2z"/></g></switch></svg>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <?php elseif($selOptVoucher['selOptSelected'] == 'factura'): ?>
+                  <div class="cBillgADtls">
+                    <div class="cBillgADtls__c">
+                      <div class="cBillgADtls__c__i">
+                        <p><span><strong>RUC - Reg unico contribuyente: </strong></span><span><?php echo e($selOptVoucher['ruc']); ?></span></p>
+                      </div>
+                      <div class="cBillgADtls__c__i">
+                        <p><span><strong>Razon social: </strong></span><span><?php echo e($selOptVoucher['razonsocial']); ?></span></p>
+                      </div>
+                      <div class="cBillgADtls__c__i">
+                        <p><span><strong>Dirección: </strong></span><span><?php echo e($selOptVoucher['address']); ?></span></p>
+                      </div>
+                      <div class="cBillgADtls__c__i">
+                        <span><strong>Teléfono: </strong></span><span><a href="tel: +51 912845235"><?php echo e($selOptVoucher['phone']); ?></a></span>
+                      </div>
+                      <button type="button" class="btnUpdtInf-voucher">
+                        <span class="icon-updt">
+                          <img src="<?php echo e(asset('assets/images/Utilities/icon-update.png')); ?>" alt="icon-update" width="100" height="100" decoding="sync">
+                        </span>
+                        <span>Editar información</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div data-sec="setlist" style="display: none;">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <label for="chckpay-ruc">RUC</label>
+                          <input class="form-control" name="chckpay_ruc" type="text" data-valformat="onlydigits" id="chckpay-ruc" value="<?php echo e($selOptVoucher['ruc']); ?>" placeholder="RUC" maxlength="11" required>
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <label for="chckpay-razonsocial">Razón Social</label>
+                          <input class="form-control" name="chckpay_razonsocial" type="text" id="chckpay-razonsocial" value="<?php echo e($selOptVoucher['razonsocial']); ?>" placeholder="Razón Social" required>
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <label for="chckpay-address">Dirección</label>
+                          <input class="form-control" name="chckpay_address" type="text" id="chckpay-address" value="<?php echo e($selOptVoucher['address']); ?>" placeholder="Dirección" required>
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <label for="chckpay-phone">Teléfono</label>
+                          <input class="form-control" name="chckpay_phone" type="text" data-valformat="withspacesforthreenumbers" id="chckpay-phone" value="<?php echo e($selOptVoucher['phone']); ?>" placeholder="Teléfono" maxlength="9" required>
+                        </div>
+                      </div>
+                      <div class="col-12 d-flex align-items-center justify-content-start">
+                        <div class="form-group">
+                          <button type="submit" class="btn btn-primary d-flex align-items-center">
+                            <span>Confirmar Datos</span>
+                            <span>
+                              <svg xmlns:x="http://ns.adobe.com/Extensibility/1.0/" xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" xmlns:graph="http://ns.adobe.com/Graphs/1.0/" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 100;" xml:space="preserve"><switch><foreignObject requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/" x="0" y="0" width="1" height="1"/><g i:extraneous="self"><path d="M95.9,46.2L65.4,15.7c-2.1-2.1-5.5-2.1-7.5,0c-2.1,2.1-2.1,5.5,0,7.5l21.5,21.5H7.8c-2.9,0-5.3,2.4-5.3,5.3    c0,2.9,2.4,5.3,5.3,5.3h71.5L57.9,76.8c-2.1,2.1-2.1,5.5,0,7.5c1,1,2.4,1.6,3.8,1.6s2.7-0.5,3.8-1.6l30.6-30.6    c1-1,1.6-2.4,1.6-3.8C97.5,48.6,96.9,47.2,95.9,46.2z"/></g></switch></svg>
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="col-12 d-flex align-items-center justify-content-start">
+                        <div class="form-group">
+                          <div class="btn btn-success d-flex align-items-center" disabled="disabled">
+                            <span>Finalizar compra</span>
+                            <span class="cNxticon-i">
+                              <svg xmlns:x="http://ns.adobe.com/Extensibility/1.0/" xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" xmlns:graph="http://ns.adobe.com/Graphs/1.0/" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 100;" xml:space="preserve"><switch><foreignObject requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/" x="0" y="0" width="1" height="1"/><g i:extraneous="self"><path d="M95.9,46.2L65.4,15.7c-2.1-2.1-5.5-2.1-7.5,0c-2.1,2.1-2.1,5.5,0,7.5l21.5,21.5H7.8c-2.9,0-5.3,2.4-5.3,5.3    c0,2.9,2.4,5.3,5.3,5.3h71.5L57.9,76.8c-2.1,2.1-2.1,5.5,0,7.5c1,1,2.4,1.6,3.8,1.6s2.7-0.5,3.8-1.6l30.6-30.6    c1-1,1.6-2.4,1.6-3.8C97.5,48.6,96.9,47.2,95.9,46.2z"/></g></switch></svg>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <?php endif; ?>
+                </div>
+                <?php else: ?>
                 <div id="sl-docopts_conts"></div>
+                <?php endif; ?>
               </form>
             </div>
           </div>
           <!-- NUEVO CONTENIDO (FIN) -->
-          <h6><?php echo e(__('Pay with')); ?> :</h6>
-          <div class="row mt-4">
-            <div class="col-12">
-              <div class="payment-methods">
-                <?php
-                  $gateways = DB::table('payment_settings')->whereStatus(1)->get();
-                ?>
-                <?php $__currentLoopData = $gateways; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $gateway): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <?php if(PriceHelper::CheckDigitalPaymentGateway()): ?>
-                <?php if($gateway->unique_keyword != 'cod'): ?>
-                <div class="single-payment-method">
-                  <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#<?php echo e($gateway->unique_keyword); ?>">
-                    <img class="" src="<?php echo e(asset('assets/back/images/payment/'.$gateway->photo)); ?>" alt="<?php echo e($gateway->name); ?>" title="<?php echo e($gateway->name); ?>">
-                    <p><?php echo e($gateway->name); ?></p>
-                  </a>
+          <div class="ctPayMthd-s" id="dkdr__fL236-ctPayMthd-s">
+            <h6><?php echo e(__('Pay with')); ?> :</h6>
+            <div class="row mt-4">
+              <div class="col-12">
+                <div class="payment-methods">
+                  <?php
+                    $gateways = DB::table('payment_settings')->whereStatus(1)->get();
+                  ?>
+                  <?php $__currentLoopData = $gateways; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $gateway): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                  <?php if(PriceHelper::CheckDigitalPaymentGateway()): ?>
+                  <?php if($gateway->unique_keyword != 'cod'): ?>
+                  <div class="single-payment-method">
+                    <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#<?php echo e($gateway->unique_keyword); ?>">
+                      <img class="" src="<?php echo e(asset('assets/back/images/payment/'.$gateway->photo)); ?>" alt="<?php echo e($gateway->name); ?>" title="<?php echo e($gateway->name); ?>">
+                      <p><?php echo e($gateway->name); ?></p>
+                    </a>
+                  </div>
+                  <?php endif; ?>
+                  <?php else: ?>
+                  <div class="single-payment-method">
+                    <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#<?php echo e($gateway->unique_keyword); ?>">
+                      <img class="" src="<?php echo e(asset('assets/back/images/payment/'.$gateway->photo)); ?>" alt="<?php echo e($gateway->name); ?>" title="<?php echo e($gateway->name); ?>">
+                      <p><?php echo e($gateway->name); ?></p>
+                    </a>
+                  </div>
+                  <?php endif; ?>
+                  <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>                
                 </div>
-                <?php endif; ?>
-                <?php else: ?>
-                <div class="single-payment-method">
-                  <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#<?php echo e($gateway->unique_keyword); ?>">
-                    <img class="" src="<?php echo e(asset('assets/back/images/payment/'.$gateway->photo)); ?>" alt="<?php echo e($gateway->name); ?>" title="<?php echo e($gateway->name); ?>">
-                    <p><?php echo e($gateway->name); ?></p>
-                  </a>
-                </div>
-                <?php endif; ?>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>                
               </div>
             </div>
           </div>

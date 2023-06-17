@@ -36,7 +36,7 @@ class AccountController extends Controller{
       'check_newsletter' => $check_newsletter,
     ]);
   }
-  public function profileUpdate(UserRequest $request){   
+  public function profileUpdate(UserRequest $request){
     $this->repository->profileUpdate($request);
     Session::flash('success',__('Profile Updated Successfully.'));
     return redirect()->back();

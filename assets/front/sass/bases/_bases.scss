@@ -234,8 +234,8 @@ img{
 	height: auto !important;
 }
 #c-modalPrevOrderPDF{
-	max-width: 1360px;
-	width: auto;
+	max-width: 1360px !important;
+	width: 96% !important;
 	height: 100%;
 	margin: 0.75rem auto 1.75rem auto;
 }

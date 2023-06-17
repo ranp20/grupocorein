@@ -123,7 +123,7 @@ $message = $__bag->first($__errorArgs[0]); ?>
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="reg-phone"><?php echo e(__('Teléfono/Celular')); ?></label>
-                <input class="form-control" type="text" name="phone" autocomplete="off" spellcheck="false" placeholder="<?php echo e(__('Phone Number')); ?>" id="reg-phone" value="<?php echo e(old('phone')); ?>" required>
+                <input class="form-control" type="text" name="phone" autocomplete="off" spellcheck="false" data-valformat="withspacesforthreenumbers" maxlength="9" placeholder="<?php echo e(__('Phone Number')); ?>" id="reg-phone" value="<?php echo e(old('phone')); ?>" required>
                 <?php $__errorArgs = ['phone'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -157,16 +157,29 @@ $message = $__bag->first($__errorArgs[0]); ?>
                 <input class="form-control" type="password" name="password_confirmation" autocomplete="off" spellcheck="false" placeholder="<?php echo e(__('Confirm Password')); ?>" id="reg-pass-confirm" required>
               </div>
             </div>
+            <?php if(old('reg_enterprise') != "" && old('reg_enterprise') == "on"): ?>
             <div class="col-sm-6">
               <div class="form-group">
                 <label class="switch-primary">
-                  <input type="checkbox" class="switch switch-bootstrap status radio-check" name="reg_enterprise" id="reg-enterprise" value="on">
+                  <input type="checkbox" class="switch switch-bootstrap status radio-check" name="reg_enterprise" id="reg-enterprise" checked value="<?php echo e(old('reg_enterprise')); ?>">
                   <span class="switch-body"></span>
                   <span class="switch-text"><?php echo e(__('Poseo Empresa')); ?></span>
                 </label>
               </div>
             </div>
             <div class="row" id="cTentr-af1698__p"></div>
+            <?php else: ?>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="switch-primary">
+                  <input type="checkbox" class="switch switch-bootstrap status radio-check" name="reg_enterprise" id="reg-enterprise" value="<?php echo e(old('reg_enterprise')); ?>">
+                  <span class="switch-body"></span>
+                  <span class="switch-text"><?php echo e(__('Poseo Empresa')); ?></span>
+                </label>
+              </div>
+            </div>
+            <div class="row" id="cTentr-af1698__p"></div>
+            <?php endif; ?>
             <?php if($setting->recaptcha == 1): ?>
             <div class="col-lg-12 mb-4">
                 <?php echo NoCaptcha::renderJs(); ?>
