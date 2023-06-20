@@ -167,7 +167,100 @@ $message = $__bag->first($__errorArgs[0]); ?>
                 </label>
               </div>
             </div>
-            <div class="row" id="cTentr-af1698__p"></div>
+            <div class="row" id="cTentr-af1698__p">
+              <div class="col-sm-12">
+                <h3 class="widget-title">Datos Personales</h3>
+              </div>
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label for="reg-address1">Dirección 1</label>
+                  <input class="form-control" type="text" name="reg_address1" placeholder="Dirección 1" id="reg-address1" value="<?php echo e(old('reg_address1')); ?>" required>
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label for="reg-address2">Dirección 2 (Opcional)</label>
+                  <input class="form-control" type="text" name="reg_address2" placeholder="Dirección 2" id="reg-address2" value="<?php echo e(old('reg_address2')); ?>" required>
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <h3 class="widget-title">Datos de Empresa</h3>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="reg-ruc">RUC</label>
+                  <input class="form-control" type="text" name="reg_ruc" placeholder="RUC" id="reg-ruc" value="<?php echo e(old('reg_ruc')); ?>" required>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="reg-razosocial">Razón social</label>
+                  <input class="form-control" type="text" name="reg_razonsocial" placeholder="Razón social" id="reg-razosocial" value="<?php echo e(old('reg_razonsocial')); ?>" required>
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label for="reg-addressfiscal">Dirección Fiscal</label>
+                  <input class="form-control" type="text" name="reg_addressfiscal" placeholder="Dirección Fiscal" id="reg-addressfiscal" value="<?php echo e(old('reg_addressfiscal')); ?>" required>
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <h3 class="widget-title">Dirección de Envío</h3>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="reg-codepostal">Código Postal</label>
+                  <input class="form-control" type="text" name="reg_codepostal" placeholder="Código Postal" id="reg-codepostal" value="<?php echo e(old('reg_codepostal')); ?>" required>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="reg-country">País</label>
+                  <select class="form-control" name="reg_country" id="reg-country" required>
+                    <option selected value="">Elige País</option>
+                    <option value="1">Perú</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="reg-departamento">Departamento</label>
+                  <select class="form-control" name="reg_departamento" id="reg-departamento" data-href="${locationsGET + '/provincia'}" required>
+                    ${tmpListDepartamentos}
+                  </select>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="reg-provincia">Provincia</label>
+                  <select class="form-control" name="reg_provincia" id="reg-provincia" data-href="${locationsGET + '/distrito'}" required></select>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="reg-distrito">Distrito</label>
+                  <select class="form-control" name="reg_distrito" id="reg-distrito" required></select>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="reg-streetaddress">Calle</label>
+                  <input class="form-control" type="text" name="reg_streetaddress" placeholder="Calle" id="reg-streetaddress" value="<?php echo e(old('reg_streetaddress')); ?>" required>
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label for="reg-referenceaddress">Referencia (Opcional)</label>
+                  <input class="form-control" type="text" name="reg_referenceaddress" placeholder="Referencia" id="reg-referenceaddress" value="<?php echo e(old('reg_referenceaddress')); ?>">
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label for="reg-addresseeaddress">Destinatario (Opcional)</label>
+                  <input class="form-control" type="text" name="reg_addresseeaddress" placeholder="Destinatario" id="reg-addresseeaddress" value="<?php echo e(old('reg_addresseeaddress')); ?>">
+                </div>
+              </div>
+            </div>
             <?php else: ?>
             <div class="col-sm-6">
               <div class="form-group">

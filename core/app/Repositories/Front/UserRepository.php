@@ -23,6 +23,21 @@ class UserRepository{
     $verify = Str::random(6);
     $input['email_token'] = $verify;
     $input['reg_enterprise'] = $input['reg_enterprise'];
+
+    $input['reg_address1'] = (isset($input['reg_address1'])) ? $input['reg_address1'] : '';
+    $input['reg_address2'] = (isset($input['reg_address2'])) ? $input['reg_address2'] : '';
+    $input['reg_ruc'] = (isset($input['reg_ruc'])) ? $input['reg_ruc'] : '';
+    $input['reg_razonsocial'] = (isset($input['reg_razonsocial'])) ? $input['reg_razonsocial'] : '';
+    $input['reg_addressfiscal'] = (isset($input['reg_addressfiscal'])) ? $input['reg_addressfiscal'] : '';
+    $input['reg_codepostal'] = (isset($input['reg_codepostal'])) ? $input['reg_codepostal'] : '';
+    $input['reg_country'] = (isset($input['reg_country'])) ? $input['reg_country'] : '';
+    $input['reg_departamento'] = (isset($input['reg_departamento'])) ? $input['reg_departamento'] : '';
+    $input['reg_provincia'] = (isset($input['reg_provincia'])) ? $input['reg_provincia'] : '';
+    $input['reg_distrito'] = (isset($input['reg_distrito'])) ? $input['reg_distrito'] : '';
+    $input['reg_streetaddress'] = (isset($input['reg_streetaddress'])) ? $input['reg_streetaddress'] : '';
+    $input['reg_referenceaddress'] = (isset($input['reg_referenceaddress'])) ? $input['reg_referenceaddress'] : '';
+    $input['reg_addresseeaddress'] = (isset($input['reg_addresseeaddress'])) ? $input['reg_addresseeaddress'] : '';
+
     $user->fill($input)->save();
     Notification::create(['user_id' => $user->id]);
     $emailData = [

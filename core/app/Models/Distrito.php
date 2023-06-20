@@ -7,7 +7,9 @@ class Distrito extends Model{
     'departamento_code',
     'provincia_code',
     'distrito_code',
-    'distrito_name'
+    'distrito_name',
+    'distrito_min_amount',
+    'distrito_max_amount'
   ];
   public $timestamps = false;
 }

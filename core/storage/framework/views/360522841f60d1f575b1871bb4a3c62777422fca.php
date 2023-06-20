@@ -30,12 +30,12 @@ function formatPhone($phone){
 function genCodeRandom(){
   $format = 'xxxxxxxxy';
   return preg_replace_callback('/[xy]/', function($match) {
-      $pattern = '1234567890';
-      if($match[0] === 'x'){
-          return substr($pattern, mt_rand(0, strlen($pattern)), 1);
-      }else{
-          return substr(date('y'), -2);
-      }
+    $pattern = '1234567890';
+    if($match[0] === 'x'){
+      return substr($pattern, mt_rand(0, strlen($pattern)), 1);
+    }else{
+      return substr(date('y'), -2);
+    }
   }, "GRPCOREIN-".$format);
 }
 
@@ -199,6 +199,16 @@ unset($__errorArgs, $__bag); ?>
                         <span>Editar información</span>
                       </button>
                     </div>
+                    <div class="col-12 d-flex align-items-center justify-content-start">
+                      <div class="form-group mt-3 mb-0">
+                        <div class="btn btn-success d-flex align-items-center" t-apparence="btn-sub__frm">
+                          <span>Finalizar compra</span>
+                          <span class="cNxticon-i">
+                            <svg xmlns:x="http://ns.adobe.com/Extensibility/1.0/" xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" xmlns:graph="http://ns.adobe.com/Graphs/1.0/" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 100;" xml:space="preserve"><switch><foreignObject requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/" x="0" y="0" width="1" height="1"/><g i:extraneous="self"><path d="M95.9,46.2L65.4,15.7c-2.1-2.1-5.5-2.1-7.5,0c-2.1,2.1-2.1,5.5,0,7.5l21.5,21.5H7.8c-2.9,0-5.3,2.4-5.3,5.3    c0,2.9,2.4,5.3,5.3,5.3h71.5L57.9,76.8c-2.1,2.1-2.1,5.5,0,7.5c1,1,2.4,1.6,3.8,1.6s2.7-0.5,3.8-1.6l30.6-30.6    c1-1,1.6-2.4,1.6-3.8C97.5,48.6,96.9,47.2,95.9,46.2z"/></g></switch></svg>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div data-sec="setlist" style="display: none;">
                     <div class="row">
@@ -264,6 +274,16 @@ unset($__errorArgs, $__bag); ?>
                         <span>Editar información</span>
                       </button>
                     </div>
+                    <div class="col-12 d-flex align-items-center justify-content-start">
+                      <div class="form-group mt-3 mb-0">
+                        <div class="btn btn-success d-flex align-items-center" t-apparence="btn-sub__frm">
+                          <span>Finalizar compra</span>
+                          <span class="cNxticon-i">
+                            <svg xmlns:x="http://ns.adobe.com/Extensibility/1.0/" xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" xmlns:graph="http://ns.adobe.com/Graphs/1.0/" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 100;" xml:space="preserve"><switch><foreignObject requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/" x="0" y="0" width="1" height="1"/><g i:extraneous="self"><path d="M95.9,46.2L65.4,15.7c-2.1-2.1-5.5-2.1-7.5,0c-2.1,2.1-2.1,5.5,0,7.5l21.5,21.5H7.8c-2.9,0-5.3,2.4-5.3,5.3    c0,2.9,2.4,5.3,5.3,5.3h71.5L57.9,76.8c-2.1,2.1-2.1,5.5,0,7.5c1,1,2.4,1.6,3.8,1.6s2.7-0.5,3.8-1.6l30.6-30.6    c1-1,1.6-2.4,1.6-3.8C97.5,48.6,96.9,47.2,95.9,46.2z"/></g></switch></svg>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div data-sec="setlist" style="display: none;">
                     <div class="row">
@@ -322,13 +342,13 @@ unset($__errorArgs, $__bag); ?>
             </div>
           </div>
           <!-- NUEVO CONTENIDO (FIN) -->
-          <div class="ctPayMthd-s" id="dkdr__fL236-ctPayMthd-s">
+          <div class="ctPayMthd-s" id="dkdr__fL236-ctPayMthd-s" style="display: none;">
             <h6><?php echo e(__('Pay with')); ?> :</h6>
             <div class="row mt-4">
               <div class="col-12">
                 <div class="payment-methods">
                   <?php
-                    $gateways = DB::table('payment_settings')->whereStatus(1)->get();
+                    $gateways = DB::table('payment_settings')->whereStatus(1)->orderBy('id','desc')->get();
                   ?>
                   <?php $__currentLoopData = $gateways; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $gateway): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                   <?php if(PriceHelper::CheckDigitalPaymentGateway()): ?>

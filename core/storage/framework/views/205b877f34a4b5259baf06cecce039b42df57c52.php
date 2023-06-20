@@ -11,15 +11,35 @@
           <p class="free-shippin-aa"><em>Envío gratis a partir de <?php echo e(PriceHelper::setCurrencyPrice($free_shipping->minimum_price)); ?></em></p>
         <?php endif; ?>
       <?php endif; ?>
+      <?php
+        $shipSessionInfo = Session::get('shipping_address');
+        $amountGrandTotal = 0;
+      ?>
       <table class="table">
         <tr>
           <td><?php echo e(__('Cart Subtotal')); ?>:</td>
           <td class="text-gray-dark"><?php echo e(PriceHelper::setCurrencyPrice($cart_total)); ?></td>
         </tr>
+        <tr>
+          <td>Envío:</td>
+          <?php if(isset($shipSessionInfo) && !empty($shipSessionInfo)): ?>
+          <td class="text-gray-dark"><?php echo e(PriceHelper::setCurrencyPrice($shipSessionInfo['ship_amountaddress'])); ?></td>
+          <?php else: ?>
+          <td class="text-gray-dark"><?php echo e(PriceHelper::setCurrencyPrice($shipSessionInfo['ship_amountaddress'])); ?></td>
+          <?php endif; ?>
+        </tr>
         
         <tr>
           <td class="text-lg text-primary"><?php echo e(__('Order total')); ?></td>
-          <td class="text-lg text-primary grand_total_set"><?php echo e(PriceHelper::setCurrencyPrice($grand_total)); ?></td>
+          <?php
+            $shipSessionInfo = Session::get('shipping_address');
+            $amountGrandTotal = 0;
+          ?>
+          <?php if(isset($shipSessionInfo) && !empty($shipSessionInfo)): ?>
+          <td class="text-lg text-primary grand_total_set"><?php echo e(PriceHelper::setCurrencyPrice($shipSessionInfo['grand_total'])); ?></td>
+          <?php else: ?>
+            <td class="text-lg text-primary grand_total_set"><?php echo e(PriceHelper::setCurrencyPrice($grand_total)); ?></td>
+          <?php endif; ?>
         </tr>
       </table>
     </section>

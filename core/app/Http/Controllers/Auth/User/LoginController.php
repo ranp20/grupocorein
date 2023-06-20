@@ -10,6 +10,7 @@ use App\Models\Distrito;
 use App\Models\Ciudad;
 use Illuminate\Http\Request;
 use App\Models\Setting;
+use App\Models\Brand;
 use App\Models\TempCart;
 use Auth;
 use Illuminate\Support\Facades\Config;
@@ -40,12 +41,16 @@ class LoginController extends Controller{
         $newArrCartSessData = [];
         foreach($dataCartSess as $k => $v){
           $idProdFormatSessCart = $v['item_id']."-";
+          $brandByIdTempCart = Brand::where('id',$v['brand_id'])->select('id','name','slug')->first();
           $newArrCartSessData[$idProdFormatSessCart] = [
             'options_id' => [],
             'attribute' => [],
             'attribute_price' => [],
             "name" => $v['name'],
             "slug" => $v['slug'],
+            "sku" => $v['sku'],
+            "brand_id" => $brandByIdTempCart->id,
+            "brand_name" => $brandByIdTempCart->name,
             "qty" => $v['quantity'],
             "price" => $v['price'],
             "main_price" => $v['main_price'],

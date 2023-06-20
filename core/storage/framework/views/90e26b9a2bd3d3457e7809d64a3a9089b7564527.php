@@ -593,7 +593,7 @@
           src="<?php echo $client->getClientEndpoint();?>/static/js/krypton-client/V4.0/stable/kr-payment-form.min.js"
           kr-public-key="<?php echo $client->getPublicKey();?>"
           kr-language="es-ES"
-          kr-post-url-success="./payment-data">
+          kr-post-url-success="<?php echo e(route('front.checkout.process')); ?>">
         </script>
       
         <link rel="stylesheet" href="<?php echo $client->getClientEndpoint();?>/static/js/krypton-client/V4.0/ext/classic-reset.css">
@@ -609,6 +609,7 @@
                 </div>
                 <!-- FORMULARIO INCRUSTADO (INICIO) -->
                 <div class="kr-embedded"  kr-form-token="<?php echo $formToken; ?>">
+                  <?php echo csrf_field(); ?>
                   <div class="kr-pan"></div>
                   <div class="kr-expiry"></div>
                   <div class="kr-security-code"></div>

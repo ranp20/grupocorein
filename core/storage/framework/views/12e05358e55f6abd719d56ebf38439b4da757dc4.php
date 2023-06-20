@@ -13,13 +13,13 @@
 </head>
 <body class="login">
   <?php echo $__env->yieldContent('content'); ?>
-    <?php
-        $mainbs = [];
-        $mainbs['is_announcement'] = $setting->is_announcement;
-        $mainbs['announcement_delay'] = $setting->announcement_delay;
-        $mainbs['overlay'] = $setting->overlay;
-        $mainbs = json_encode($mainbs);
-    ?>
+	<?php
+		$mainbs = [];
+		$mainbs['is_announcement'] = $setting->is_announcement;
+		$mainbs['announcement_delay'] = $setting->announcement_delay;
+		$mainbs['overlay'] = $setting->overlay;
+		$mainbs = json_encode($mainbs);
+	?>
 	<script src="<?php echo e(asset('assets/back/js/core/jquery.3.6.0.min.js')); ?>"></script>
 	<script src="<?php echo e(asset('assets/back/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js')); ?>"></script>
 	<script src="<?php echo e(asset('assets/back/js/core/popper.min.js')); ?>"></script>

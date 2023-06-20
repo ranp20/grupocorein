@@ -351,6 +351,7 @@ Route::group(['middleware' => 'maintainance'], function (){
     Route::get('/checkout/review/payment', 'Front\CheckoutController@payment')->name('front.checkout.payment');
     Route::get('/checkout/state/setup/{state_id}', 'Front\CheckoutController@stateSetUp')->name('front.state.setup');
     Route::post('/checkout-submit', 'Front\CheckoutController@checkout')->name('front.checkout.submit');
+    Route::post('/checkoutprocess', 'Front\CheckoutController@checkoutProcess')->name('front.checkout.process');
     Route::get('/checkout/success', 'Front\CheckoutController@paymentSuccess')->name('front.checkout.success');
     Route::get('/checkout/cancle', 'Front\CheckoutController@paymentCancle')->name('front.checkout.cancle');
     Route::get('/paypal/checkout/redirect', 'Front\CheckoutController@paymentRedirect')->name('front.checkout.redirect');

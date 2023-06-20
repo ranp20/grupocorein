@@ -1,36 +1,6 @@
 $(() => {  
   var locationsGET = window.location.href;
-  var csrfTokenFrm = $("#checkoutShipping").find("input[name='_token']").val();  
-  var tmpListDepartamentos = ``;
-  function getAllDepartamentos(htmlElement){
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': csrfTokenFrm
-      },
-      url: locationsGET+"/departamento",
-      type: "POST",
-      dataType: "JSON",
-      success: function(e){
-        if(e.length != "undefined" || e != ""){
-          var r = e.data;
-          var tmpFor = ``;
-          $.each(r, function(i,e){
-            tmpFor += `<option value="${e.id}" data-code="${e.departamento_code}">${e.departamento_name}</option>`;
-          });
-          let start = `<option value="">Elige Departamento</option>`;
-          tmpListDepartamentos = start + tmpFor;
-          $(htmlElement).html(tmpListDepartamentos);
-        }else{
-          console.log("Lo sentimos, hubo un error al obtener la información");
-        }
-      }
-    });
-  }
-  /*
-  if($("#billing-departamento option").length >= 1){
-    getAllDepartamentos($("#billing-departamento"));
-  }
-  */
+  var csrfTokenFrm = $("#checkoutShipping").find("input[name='_token']").val();
   // ------------------- NUEVO CONTENIDO  
   $(document).on("change","#billing-departamento",function(){
     let departamento_id = $(this).val();
@@ -57,7 +27,7 @@ $(() => {
         let view_html = `<option value="">No hay información</option>`;
         $('#billing-provincia').html(view_html);
       }
-    })
+    });
   }
   $(document).on("change","#billing-provincia",function(){
     let provincia_id = $(this).val();
@@ -84,7 +54,6 @@ $(() => {
         let view_html = `<option value="">No hay información</option>`;
         $('#billing-distrito').html(view_html);
       }
-    })
-  }
-  
+    });
+  }  
 });

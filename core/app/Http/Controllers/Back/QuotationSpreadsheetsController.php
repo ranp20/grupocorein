@@ -70,6 +70,8 @@ class QuotationSpreadsheetsController extends Controller{
           $dataDistrito[$k]['provincia_code'] = $v['provincia_code'];
           $dataDistrito[$k]['distrito_code'] = $v['distrito_code'];
           $dataDistrito[$k]['distrito_name'] = $v['distrito_nombre'];
+          $dataDistrito[$k]['distrito_min_amount'] = $v['min_amount'];
+          $dataDistrito[$k]['distrito_max_amount'] = $v['max_amount'];
           $dataDistrito[$k]['created_at'] = $date;
           $dataDistrito[$k]['updated_at'] = $date;
           // PROVINCIA

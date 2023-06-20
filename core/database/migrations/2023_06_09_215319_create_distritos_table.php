@@ -19,6 +19,8 @@ class CreateDistritosTable extends Migration
             $table->integer('provincia_code')->default(0)->nullable();
             $table->integer('distrito_code')->default(0)->nullable();
             $table->text('distrito_name')->nullable();
+            $table->double('distrito_min_amount', 12, 2)->nullable();
+            $table->double('distrito_max_amount', 12, 2)->nullable();
             $table->timestamps();
         });
     }

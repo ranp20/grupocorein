@@ -11,10 +11,22 @@
           <p class="free-shippin-aa"><em>Envío gratis a partir de {{PriceHelper::setCurrencyPrice($free_shipping->minimum_price)}}</em></p>
         @endif
       @endif
+      @php
+        $shipSessionInfo = Session::get('shipping_address');
+        $amountGrandTotal = 0;
+      @endphp
       <table class="table">
         <tr>
           <td>{{__('Cart Subtotal')}}:</td>
           <td class="text-gray-dark">{{PriceHelper::setCurrencyPrice($cart_total)}}</td>
+        </tr>
+        <tr>
+          <td>Envío:</td>
+          @if(isset($shipSessionInfo) && !empty($shipSessionInfo))
+          <td class="text-gray-dark">{{ PriceHelper::setCurrencyPrice($shipSessionInfo['ship_amountaddress'])}}</td>
+          @else
+          <td class="text-gray-dark">{{ PriceHelper::setCurrencyPrice($shipSessionInfo['ship_amountaddress'])}}</td>
+          @endif
         </tr>
         {{--
         <!--
@@ -46,7 +58,15 @@
         --}}
         <tr>
           <td class="text-lg text-primary">{{__('Order total')}}</td>
-          <td class="text-lg text-primary grand_total_set">{{PriceHelper::setCurrencyPrice($grand_total)}}</td>
+          @php
+            $shipSessionInfo = Session::get('shipping_address');
+            $amountGrandTotal = 0;
+          @endphp
+          @if(isset($shipSessionInfo) && !empty($shipSessionInfo))
+          <td class="text-lg text-primary grand_total_set">{{PriceHelper::setCurrencyPrice($shipSessionInfo['grand_total'])}}</td>
+          @else
+            <td class="text-lg text-primary grand_total_set">{{PriceHelper::setCurrencyPrice($grand_total)}}</td>
+          @endif
         </tr>
       </table>
     </section>
