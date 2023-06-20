@@ -98,6 +98,31 @@ class CheckoutController extends Controller{
     // $total_amount = $grand_total + $state_tax;
     $grand_total = $cart_total;
     $total_amount = $grand_total;
+
+    $getUserInfo = Auth::user() ? Auth::user() : null;
+    $regDistritoId = (isset($getUserInfo['reg_distrito_id']) && $getUserInfo['reg_distrito_id'] != "") ? $getUserInfo['reg_distrito_id'] : 0;
+    $distritoGet = Distrito::where('id',$regDistritoId)->select('id','distrito_name','distrito_min_amount','distrito_max_amount')->first();
+    $minAmountValidate = 1600.00;
+    $minAmountDelivery = floatval($distritoGet->distrito_min_amount);
+    $maxAmountDelivery = floatval($distritoGet->distrito_max_amount);
+    $ship_data['ship_amountaddress'] = 0;
+    if($total_amount >= $minAmountValidate){
+      $data['amountaddress'] = $maxAmountDelivery;
+      $total_amount_operation = $grand_total + $maxAmountDelivery;
+      $total_amount = floatval($total_amount_operation);
+      $ship_data['grand_total'] = $total_amount;
+    }else if($total_amount < $minAmountValidate){
+      $data['amountaddress'] = $minAmountDelivery;
+      $total_amount_operation = $grand_total + $minAmountDelivery;
+      $total_amount = floatval($total_amount_operation);
+      $ship_data['grand_total'] = $total_amount;
+    }else{
+      $data['amountaddress'] = $minAmountDelivery;
+      $total_amount_operation = $grand_total + $minAmountDelivery;
+      $total_amount = floatval($total_amount_operation);
+      $ship_data['grand_total'] = $total_amount;
+    }
+
     $data['cart'] = $cart;
     $data['cart_total'] = $cart_total;
     $data['grand_total'] = $total_amount;
@@ -203,7 +228,31 @@ class CheckoutController extends Controller{
     // $grand_total = $grand_total + $state_tax;
     $grand_total = $cart_total;
     $total_amount = $grand_total;
-    $total_amount = $grand_total;
+    
+    $getUserInfo = Auth::user() ? Auth::user() : null;
+    $regDistritoId = (isset($getUserInfo['reg_distrito_id']) && $getUserInfo['reg_distrito_id'] != "") ? $getUserInfo['reg_distrito_id'] : 0;
+    $distritoGet = Distrito::where('id',$regDistritoId)->select('id','distrito_name','distrito_min_amount','distrito_max_amount')->first();
+    $minAmountValidate = 1600.00;
+    $minAmountDelivery = floatval($distritoGet->distrito_min_amount);
+    $maxAmountDelivery = floatval($distritoGet->distrito_max_amount);
+    $ship_data['ship_amountaddress'] = 0;
+    if($total_amount >= $minAmountValidate){
+      $data['amountaddress'] = $maxAmountDelivery;
+      $total_amount_operation = $grand_total + $maxAmountDelivery;
+      $total_amount = floatval($total_amount_operation);
+      $ship_data['grand_total'] = $total_amount;
+    }else if($total_amount < $minAmountValidate){
+      $data['amountaddress'] = $minAmountDelivery;
+      $total_amount_operation = $grand_total + $minAmountDelivery;
+      $total_amount = floatval($total_amount_operation);
+      $ship_data['grand_total'] = $total_amount;
+    }else{
+      $data['amountaddress'] = $minAmountDelivery;
+      $total_amount_operation = $grand_total + $minAmountDelivery;
+      $total_amount = floatval($total_amount_operation);
+      $ship_data['grand_total'] = $total_amount;
+    }
+
     $data['cart'] = $cart;
     $data['cart_total'] = $cart_total;
     $data['grand_total'] = $total_amount;
@@ -215,10 +264,15 @@ class CheckoutController extends Controller{
   }
   /* ---------------- SHIPPING ---------------- */
   public function shippingStore(Request $request){
-
     $ship = Session::get('shipping_address');
     $bill = Session::get('billing_address');
-    $ship_array = explode(',', $ship);
+
+    if(!is_array($ship)){
+      $ship_array = explode(',', $ship);
+    }else{
+      $ship_array = $ship;
+    }
+    
     $ship_data = [];
     $ship_data['_token'] = (isset($request->_token) && $request->_token != "") ? $request->_token : "No definido";
 
@@ -288,7 +342,7 @@ class CheckoutController extends Controller{
 
     $ship_data['ship_zip'] = (isset($request->ship_zip) && $request->ship_zip != "") ? $request->ship_zip : "No definido";
     $ship_data['ship_country'] = (isset($request->ship_country) && $request->ship_country != "") ? $request->ship_country : "No definido";
-    if($ship == "" || $ship_array[0] == null || $ship_array[0] == ""){
+    if($ship == "" || !isset($ship_array[0]) || $ship_array[0] == null || $ship_array[0] == ""){
       $ship_data['ship_first_name'] = $bill['bill_first_name'];
       $ship_data['ship_last_name'] = $bill['bill_last_name'];
       $ship_data['ship_address1'] = $bill['bill_address1'];
@@ -299,6 +353,94 @@ class CheckoutController extends Controller{
     }else{
       echo "";
     }
+  }
+  /* ---------------- ACTUALIZAR EL MONTO DE DELIVERY EN EL CARRITO ---------------- */
+  public function updateAmountCart(Request $request){
+    $cart = Session::get('cart');
+    $total_tax = 0;
+    $cart_total = 0;
+    $total = 0;
+    $total_amount = 0;
+    $grand_total = 0;
+    $attribute_price = 0;
+    foreach($cart as $key => $item){
+      $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+      $total += ($item['main_price'] + $attribute_price) * $item['qty'];
+      $cart_total = $total;
+      $item = Item::findOrFail($key);
+      if($item->tax){
+        $total_tax += $item::taxCalculate($item);
+      }
+    }
+    $shipping = [];
+    if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
+      $shipping = ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->first();
+      if($cart_total >= $shipping->minimum_price){
+        $shipping = $shipping;
+      }else{
+        $shipping = [];
+      }
+    }
+    if(!$shipping){
+      $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
+    }
+    $discount = [];
+    if(Session::has('coupon')){
+      $discount = Session::get('coupon');
+    }
+    if (!PriceHelper::Digital()){
+      $shipping = null;
+    }
+    // $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
+    // $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
+    // $state_tax = Auth::check() && Auth::user()->state_id ? Auth::user()->state->price : 0;
+    // $total_amount = $grand_total + $state_tax;
+    $grand_total = $cart_total;
+    $total_amount = $grand_total;
+
+    $getUserInfo = Auth::user() ? Auth::user() : null;
+    $regDistritoCode = (isset($request['distrito_code']) && $request['distrito_code'] != "") ? $request['distrito_code'] : 0;
+    $distritoGet = Distrito::where('distrito_code',$regDistritoCode)->select('id','distrito_name','distrito_min_amount','distrito_max_amount')->first();
+    $minAmountValidate = 1600.00;
+    $minAmountDelivery = floatval($distritoGet->distrito_min_amount);
+    $maxAmountDelivery = floatval($distritoGet->distrito_max_amount);
+    if($total_amount >= $minAmountValidate){
+      $total_amount_operation = $grand_total + $maxAmountDelivery;
+      $total_amount = floatval($total_amount_operation);
+      $arrDataAmountCart = [
+        "carttotal" => PriceHelper::setCurrencyPrice($grand_total),
+        "amountaddress" => PriceHelper::setCurrencyPrice($maxAmountDelivery),
+        "totalamount" => PriceHelper::setCurrencyPrice($total_amount),
+      ];
+      if(Session::has('shipping_address')){
+        Session::put('ship_amountaddress', $maxAmountDelivery);
+      }
+    }else if($total_amount < $minAmountValidate){
+      $total_amount_operation = $grand_total + $minAmountDelivery;
+      $total_amount = floatval($total_amount_operation);
+      $arrDataAmountCart = [
+        "carttotal" => PriceHelper::setCurrencyPrice($grand_total),
+        "amountaddress" => PriceHelper::setCurrencyPrice($minAmountDelivery),
+        "totalamount" => PriceHelper::setCurrencyPrice($total_amount),
+      ];
+      if(Session::has('shipping_address')){
+        Session::put('ship_amountaddress', $minAmountDelivery);
+      }
+    }else{
+      $total_amount_operation = $grand_total + $minAmountDelivery;
+      $total_amount = floatval($total_amount_operation);
+      $arrDataAmountCart = [
+        "carttotal" => PriceHelper::setCurrencyPrice($grand_total),
+        "amountaddress" => PriceHelper::setCurrencyPrice($minAmountDelivery),
+        "totalamount" => PriceHelper::setCurrencyPrice($total_amount),
+      ];
+      if(Session::has('shipping_address')){
+        Session::put('ship_amountaddress', $minAmountDelivery);
+      }
+    }
+
+    // return response()->json($arrDataAmountCart);
+    return response()->json(['data'=>$arrDataAmountCart]);
   }
   /* ---------------- PAYMENT ---------------- */
   public function payment(){
@@ -353,7 +495,31 @@ class CheckoutController extends Controller{
     // $grand_total = $grand_total + $state_tax;
     $grand_total = $cart_total;
     $total_amount = $grand_total;
-    $total_amount = $grand_total;
+    
+    $getUserInfo = Auth::user() ? Auth::user() : null;
+    $regDistritoId = (isset($getUserInfo['reg_distrito_id']) && $getUserInfo['reg_distrito_id'] != "") ? $getUserInfo['reg_distrito_id'] : 0;
+    $distritoGet = Distrito::where('id',$regDistritoId)->select('id','distrito_name','distrito_min_amount','distrito_max_amount')->first();
+    $minAmountValidate = 1600.00;
+    $minAmountDelivery = floatval($distritoGet->distrito_min_amount);
+    $maxAmountDelivery = floatval($distritoGet->distrito_max_amount);
+    $ship_data['ship_amountaddress'] = 0;
+    if($total_amount >= $minAmountValidate){
+      $data['amountaddress'] = $maxAmountDelivery;
+      $total_amount_operation = $grand_total + $maxAmountDelivery;
+      $total_amount = floatval($total_amount_operation);
+      $ship_data['grand_total'] = $total_amount;
+    }else if($total_amount < $minAmountValidate){
+      $data['amountaddress'] = $minAmountDelivery;
+      $total_amount_operation = $grand_total + $minAmountDelivery;
+      $total_amount = floatval($total_amount_operation);
+      $ship_data['grand_total'] = $total_amount;
+    }else{
+      $data['amountaddress'] = $minAmountDelivery;
+      $total_amount_operation = $grand_total + $minAmountDelivery;
+      $total_amount = floatval($total_amount_operation);
+      $ship_data['grand_total'] = $total_amount;
+    }
+
     $data['cart'] = $cart;
     $data['cart_total'] = $cart_total;
     $data['grand_total'] = $total_amount;
@@ -890,10 +1056,6 @@ class CheckoutController extends Controller{
       ];
       $countAllProds++;
     }
-    
-    $get_SessionCartSubtotal = [
-      'totalNeto' => PriceHelper::setCurrencyPrice($newSubtotalAllProds)
-    ];
 
     // ---------- DIRECCIÓN DE ENVÍO
     $reg_address1 = (isset(Auth::user()->reg_address1) && !empty(Auth::user()->reg_address1))? Auth::user()->reg_address1 : '';
@@ -933,7 +1095,10 @@ class CheckoutController extends Controller{
     }else{
       $reg_razonsocialFinal = Auth::user()->reg_razonsocial;
     }
-    
+
+    // MONTO DE DELIVERY
+    $ammountDeliveryShipping = (isset($get_ShippingAddress['ship_amountaddress']) && !empty($get_ShippingAddress['ship_amountaddress'])) ? $get_ShippingAddress['ship_amountaddress'] : 0;
+
     $get_SessionUserInfo = [
       'date' => date('Y/m/d H:i:s'),
       'client' => $reg_razonsocialFinal,
@@ -945,13 +1110,23 @@ class CheckoutController extends Controller{
       'email' => (isset(Auth::user()->email) && !empty(Auth::user()->email))? Auth::user()->email : 'No especificado',
     ];
     
+    $totalShipping = $newSubtotalAllProds + $ammountDeliveryShipping;
+    $totalIGV = $newSubtotalAllProds * (18 / 100);
+    $totalNeto = $totalIGV + $totalShipping;
+
+    $get_SessionCartSubtotal = [
+      'subtotal' => PriceHelper::setCurrencyPrice($newSubtotalAllProds),
+      'totalIGV' => PriceHelper::setCurrencyPrice($totalIGV),
+      'delivery' => PriceHelper::setCurrencyPrice($ammountDeliveryShipping),
+      'totalNeto' => PriceHelper::setCurrencyPrice($totalNeto)
+    ];
 
     $dataPDF = [
       "billing_address" => $get_BillingAddress,
       "shipping_address" => $get_ShippingAddress,
       "session_cart" => $get_SessionCartFormat,
       "session_cartSubtotal" => $get_SessionCartSubtotal,
-      "session_userInfo" => $get_SessionUserInfo,
+      "session_userInfo" => $get_SessionUserInfo
     ];
     
     return PDF::loadView('front.checkout.gen_pdforderpreview', compact('dataPDF'))

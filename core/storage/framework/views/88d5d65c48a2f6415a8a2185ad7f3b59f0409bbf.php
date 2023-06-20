@@ -136,11 +136,15 @@ main table.summary td,main table.summary th{padding:8px;border-bottom:0}body,foo
 		<table class="summary">
 			<tr>
 				<th>Total Neto</th>
-				<td><?php echo e($dataPDF['session_cartSubtotal']['totalNeto']); ?></td>
+				<td><?php echo e($dataPDF['session_cartSubtotal']['subtotal']); ?></td>
 			</tr>
 			<tr>
 				<th>I.G.V.(18%)</th>
-				<td>S/. 00.00</td>
+				<td><?php echo e($dataPDF['session_cartSubtotal']['totalIGV']); ?></td>
+			</tr>
+			<tr>
+				<th>Envío</th>
+				<td><?php echo e($dataPDF['session_cartSubtotal']['delivery']); ?></td>
 			</tr>
 			<tr class="total">
 				<th>Total a Pagar</th>

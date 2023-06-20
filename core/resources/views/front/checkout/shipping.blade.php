@@ -90,7 +90,7 @@
               <div class="col-sm-6">
                 <div class="form-group">
                   <label for="billing-distrito">{{ __('Distrito') }}</label>
-                  <select class="form-control" name="ship_distrito" id="billing-distrito" required>
+                  <select class="form-control" name="ship_distrito" id="billing-distrito" data-href="{{route('front.checkout.updateamountcart')}}" required>
                     <option selected value="">{{__('Elige Distrito')}}</option>
                     @foreach ($distritoAll as $distrData)
                       <option data-code="{{ (!empty($distritoData->id) && $distritoData->id != '' && $user->reg_distrito_id == $distrData->id) ? $distritoData->distrito_code : $distrData->distrito_code }}" value="{{ (!empty($distritoData->id) && $distritoData->id != '' && $user->reg_distrito_id == $distrData->id) ? $distritoData->id : $distrData->id }}" {{ (!empty($distritoData->id) && $distritoData->id != '' && $user->reg_distrito_id == $distrData->id) ? 'selected' : '' }} >{{$distrData->distrito_name}}</option>
@@ -119,8 +119,12 @@
             </div>
             <!--  NUEVO CONTENIDO(FIN) -->
             <div class="d-flex justify-content-between paddin-top-1x mt-4">
-              <a class="btn btn-primary btn-sm" href="{{route('front.cart')}}"><span class="hidden-xs-down"><i class="icon-arrow-left"></i> {{__('Back To Cart')}}</span>
-              </a><button class="btn btn-primary  btn-sm" type="submit"><span class="hidden-xs-down">{{__('Continue')}}</span><i class="icon-arrow-right"></i></button>
+              <a class="btn btn-primary btn-sm" href="{{route('front.cart')}}">
+                <span class="hidden-xs-down"><i class="icon-arrow-left"></i> {{__('Back To Cart')}}</span>
+              </a>
+              <button class="btn btn-primary  btn-sm" type="submit">
+                <span class="hidden-xs-down">{{__('Continue')}}</span><i class="icon-arrow-right position-relative z-3 ms-1"></i>
+              </button>
             </div>
           </form>
         </div>

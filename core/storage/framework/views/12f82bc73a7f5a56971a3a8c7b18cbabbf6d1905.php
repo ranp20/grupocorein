@@ -86,7 +86,7 @@
               <div class="col-sm-6">
                 <div class="form-group">
                   <label for="billing-distrito"><?php echo e(__('Distrito')); ?></label>
-                  <select class="form-control" name="ship_distrito" id="billing-distrito" required>
+                  <select class="form-control" name="ship_distrito" id="billing-distrito" data-href="<?php echo e(route('front.checkout.updateamountcart')); ?>" required>
                     <option selected value=""><?php echo e(__('Elige Distrito')); ?></option>
                     <?php $__currentLoopData = $distritoAll; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $distrData): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                       <option data-code="<?php echo e((!empty($distritoData->id) && $distritoData->id != '' && $user->reg_distrito_id == $distrData->id) ? $distritoData->distrito_code : $distrData->distrito_code); ?>" value="<?php echo e((!empty($distritoData->id) && $distritoData->id != '' && $user->reg_distrito_id == $distrData->id) ? $distritoData->id : $distrData->id); ?>" <?php echo e((!empty($distritoData->id) && $distritoData->id != '' && $user->reg_distrito_id == $distrData->id) ? 'selected' : ''); ?> ><?php echo e($distrData->distrito_name); ?></option>
@@ -115,8 +115,12 @@
             </div>
             <!--  NUEVO CONTENIDO(FIN) -->
             <div class="d-flex justify-content-between paddin-top-1x mt-4">
-              <a class="btn btn-primary btn-sm" href="<?php echo e(route('front.cart')); ?>"><span class="hidden-xs-down"><i class="icon-arrow-left"></i> <?php echo e(__('Back To Cart')); ?></span>
-              </a><button class="btn btn-primary  btn-sm" type="submit"><span class="hidden-xs-down"><?php echo e(__('Continue')); ?></span><i class="icon-arrow-right"></i></button>
+              <a class="btn btn-primary btn-sm" href="<?php echo e(route('front.cart')); ?>">
+                <span class="hidden-xs-down"><i class="icon-arrow-left"></i> <?php echo e(__('Back To Cart')); ?></span>
+              </a>
+              <button class="btn btn-primary  btn-sm" type="submit">
+                <span class="hidden-xs-down"><?php echo e(__('Continue')); ?></span><i class="icon-arrow-right position-relative z-3 ms-1"></i>
+              </button>
             </div>
           </form>
         </div>

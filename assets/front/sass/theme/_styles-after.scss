@@ -32,11 +32,25 @@ a[data-role=nxt-checkoutinfo]{
     padding-top: .8rem;
     padding-bottom: .8rem;
 }
+#crdLEvent__sd343fg-34Gas{
+    transition: all ease-in-out .4s;
+}
+#crdLEvent__sd343fg-34Gas.card-listenevent{
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 3px 0.25rem rgba(13,110,253,.25);
+}
 .show_d43gHa-sd{
     display: block !important;
     opacity: 1 !important;
     visibility: visible !important;
     user-select: auto !important;
+}
+.spnLstCart__fz1{
+    font-size: 1rem !important;
+}
+.spnLstCart__fz2{
+    font-size: 1.125rem !important;
 }
 .icon-arrrowight{
     display: flex;

@@ -351,21 +351,20 @@ Route::group(['middleware' => 'maintainance'], function (){
     Route::get('/checkout/review/payment', 'Front\CheckoutController@payment')->name('front.checkout.payment');
     Route::get('/checkout/state/setup/{state_id}', 'Front\CheckoutController@stateSetUp')->name('front.state.setup');
     Route::post('/checkout-submit', 'Front\CheckoutController@checkout')->name('front.checkout.submit');
-    Route::post('/checkoutprocess', 'Front\CheckoutController@checkoutProcess')->name('front.checkout.process');
     Route::get('/checkout/success', 'Front\CheckoutController@paymentSuccess')->name('front.checkout.success');
     Route::get('/checkout/cancle', 'Front\CheckoutController@paymentCancle')->name('front.checkout.cancle');
     Route::get('/paypal/checkout/redirect', 'Front\CheckoutController@paymentRedirect')->name('front.checkout.redirect');
     Route::get('/checkout/mollie/notify', 'Front\CheckoutController@mollieRedirect')->name('front.checkout.mollie.redirect');
-    //------------ NUEVO CONTENIDO
-    
-    
+    //------------ NUEVO CONTENIDO(INICIO)
+    Route::post('/checkoutprocess', 'Front\CheckoutController@checkoutProcess')->name('front.checkout.process');
     Route::post('/checkout/shpping/address/departamento', 'Front\CheckoutController@getAllDepartamentos')->name('front.checkout.departamento');
     Route::get('/checkout/shpping/address/provincia', 'Front\CheckoutController@getProvinciaByIdDepartamento')->name('front.checkout.provincia');
     Route::get('/checkout/shpping/address/distrito', 'Front\CheckoutController@getDistritoByIdProvincia')->name('front.checkout.distrito');
-    
-
+    Route::get('/checkout/shpping/address/updateamountcart', 'Front\CheckoutController@updateAmountCart')->name('front.checkout.updateamountcart');
     Route::post('/checkout/pdforderpreview', 'Front\CheckoutController@getGeneratePDFOrderPreview')->name('front.checkout.pdforderpreview');
     Route::post('/checkout/datavoucher', 'Front\CheckoutController@sendDataVoucher')->name('front.checkout.submitdatavoucher');
+    //------------ NUEVO CONTENIDO(FIN)
+    
     Route::post('/paytm/notify', 'Payment\PaytmController@notify')->name('front.paytm.notify');
     Route::post('/paytm/submit', 'Payment\PaytmController@store')->name('front.paytm.submit');
     Route::post('/razorpay/notify', 'Payment\RazorpayController@notify')->name('front.razorpay.notify');

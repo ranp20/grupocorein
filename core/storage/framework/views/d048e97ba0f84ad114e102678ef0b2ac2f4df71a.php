@@ -109,9 +109,13 @@
               <div class="d-flex justify-content-between paddin-top-1x mt-4">
                 <a class="btn btn-primary btn-sm" href="<?php echo e(route('front.cart')); ?>"><span class="hidden-xs-down"><i class="icon-arrow-left"></i><?php echo e(__('Back To Cart')); ?></span></a>
                 <?php if($setting->is_privacy_trams == 1): ?>
-                <button disabled id="continue__button" class="btn btn-primary  btn-sm" type="button"><span class="hidden-xs-down"><?php echo e(__('Continue')); ?></span><i class="icon-arrow-right"></i></button>
+                <button disabled id="continue__button" class="btn btn-primary  btn-sm" type="button">
+                  <span class="hidden-xs-down"><?php echo e(__('Continue')); ?></span><i class="icon-arrow-right position-relative z-3 ms-1"></i>
+                </button>
                 <?php else: ?>
-                <button class="btn btn-primary btn-sm" type="submit"><span class="hidden-xs-down"><?php echo e(__('Continue')); ?></span><i class="icon-arrow-right"></i></button>
+                <button class="btn btn-primary btn-sm" type="submit">
+                  <span class="hidden-xs-down"><?php echo e(__('Continue')); ?></span><i class="icon-arrow-right position-relative z-3 ms-1"></i>
+                </button>
                 <?php endif; ?>
               </div>
             </form>
