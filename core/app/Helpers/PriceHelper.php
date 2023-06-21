@@ -158,7 +158,11 @@ class PriceHelper{
     $cart_total = 0;
     $total = 0;
     foreach($cart as $key => $item){
-      $total += ($item['main_price'] + $item['attribute_price']) * $item['qty'];
+      if($item['attribute_price'] != "" && count($item['attribute_price']) > 0){
+        $total += ($item['main_price'] + $item['attribute_price']) * $item['qty'];
+      }else{
+        $total += ($item['main_price'] * $item['qty']);
+      }
       $cart_total = $total;
       if(Item::where('id',$key)->exists()){
         $item = Item::findOrFail($key);
@@ -194,7 +198,9 @@ class PriceHelper{
     $option_price = 0;
     foreach($cart as $key => $item){
       $total += $item['main_price'] * $item['qty'];
-      $option_price += $item['attribute_price'];
+      if($item['attribute_price'] != "" && count($item['attribute_price']) > 0){
+        $option_price += $item['attribute_price'];
+      }
       $cart_total = $total + $option_price;
       if(Item::where('id',$key)->exists()){
         $item = Item::findOrFail($key);
@@ -320,11 +326,9 @@ class PriceHelper{
           $option = AttributeOption::findOrFail($id);
           if($option->stock != 'unlimited'){
             $new_stock = (int)$option->stock - $item['qty'];
-
             if($new_stock <=0){
               $option->stock = '0';
             }else{
-
               $option->stock = (string)$new_stock;
             }
             $option->save();

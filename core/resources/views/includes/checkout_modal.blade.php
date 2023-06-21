@@ -593,7 +593,7 @@
           src="<?php echo $client->getClientEndpoint();?>/static/js/krypton-client/V4.0/stable/kr-payment-form.min.js"
           kr-public-key="<?php echo $client->getPublicKey();?>"
           kr-language="es-ES"
-          kr-post-url-success="{{route('front.checkout.process')}}">
+          kr-post-url-success="{{route('front.checkout.submit')}}">
         </script>
       
         <link rel="stylesheet" href="<?php echo $client->getClientEndpoint();?>/static/js/krypton-client/V4.0/ext/classic-reset.css">
@@ -610,6 +610,7 @@
                 <!-- FORMULARIO INCRUSTADO (INICIO) -->
                 <div class="kr-embedded"  kr-form-token="<?php echo $formToken; ?>">
                   @csrf
+                  <input type="hidden" name="payment_method" value="Izipay">
                   <div class="kr-pan"></div>
                   <div class="kr-expiry"></div>
                   <div class="kr-security-code"></div>
