@@ -1,5 +1,5 @@
 <?php $__env->startSection('styles'); ?>
-	<link rel="stylesheet" href="<?php echo e(asset('assets/back/css/datepicker.css')); ?>">
+	<link rel="stylesheet" href="<?php echo e(asset('assets/back/css-before/datepicker.css')); ?>">
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
 <div class="container-fluid">

@@ -42,18 +42,19 @@ function genCodeRandom(){
 mt_srand(3);
 $orderIdGenFirst = genCodeRandom();
 ?>
-@extends('master.front')
-@section('title')
-  {{__('Payment')}}
-@endsection
-@section('content')
+
+<?php $__env->startSection('title'); ?>
+  <?php echo e(__('Payment')); ?>
+
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
 <div class="page-title">
   <div class="container">
     <div class="column">
       <ul class="breadcrumbs">
-        <li><a href="{{route('front.index')}}">{{ __('Home') }}</a> </li>
+        <li><a href="<?php echo e(route('front.index')); ?>"><?php echo e(__('Home')); ?></a> </li>
         <li class="separator"></li>
-        <li>{{ __('Review your order and pay') }}</li>
+        <li><?php echo e(__('Review your order and pay')); ?></li>
       </ul>
     </div>
   </div>
@@ -62,24 +63,24 @@ $orderIdGenFirst = genCodeRandom();
   <div class="row">
     <div class="col-xl-9 col-lg-8">
       <div class="steps flex-sm-nowrap mb-2">
-        <a class="step" href="{{route('front.checkout.billing')}}">
+        <a class="step" href="<?php echo e(route('front.checkout.billing')); ?>">
           <h4 class="step-title"><i class="icon-check-circle"></i>1. Datos:</h4>
         </a>
-        <a class="step" href="{{route('front.checkout.shipping')}}">
+        <a class="step" href="<?php echo e(route('front.checkout.shipping')); ?>">
           <h4 class="step-title"><i class="icon-check-circle"></i>2. Envío:</h4>
         </a>
-        <a class="step active" href="{{route('front.checkout.payment')}}">
-          <h4 class="step-title">3. {{__('Review and pay')}}</h4>
+        <a class="step active" href="<?php echo e(route('front.checkout.payment')); ?>">
+          <h4 class="step-title">3. <?php echo e(__('Review and pay')); ?></h4>
         </a>
       </div>
       <div class="card">
         <div class="card-body">
           <div class="row cCrd__cTitle">
             <div class="col-9 cCrd__cTitle__cL">
-              <h6 class="pb-0 mb-0">{{__('Review Your Order')}} :</h6>
+              <h6 class="pb-0 mb-0"><?php echo e(__('Review Your Order')); ?> :</h6>
             </div>
             <div class="col-3 cCrd__cTitle__cR">
-              <a class="btn btn-primary ms-auto text-align-center d-flex align-items-end justify-content-center" data-href="{{route('front.checkout.pdforderpreview')}}" href="javascript:void(0);" id="cTentr-af1698__1prevChckp"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+              <a class="btn btn-primary ms-auto text-align-center d-flex align-items-end justify-content-center" data-href="<?php echo e(route('front.checkout.pdforderpreview')); ?>" href="javascript:void(0);" id="cTentr-af1698__1prevChckp"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                 <span>VISUALIZAR PEDIDO</span>
                 <span>
                   <!-- <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 100 125" x="0px" y="0px"><path d="M93.08,48.24C92.3,47.16,73.71,22,50,22S7.7,47.16,6.91,48.24a3,3,0,0,0,0,3.53C7.7,52.84,26.29,78,50,78S92.3,52.84,93.08,51.77A3,3,0,0,0,93.08,48.24ZM50,72C32.72,72,17.69,55.51,13.16,50,17.68,44.48,32.68,28,50,28S82.31,44.49,86.84,50C82.32,55.52,67.32,72,50,72Z"/><path d="M50,32.38A17.62,17.62,0,1,0,67.62,50,17.64,17.64,0,0,0,50,32.38Zm0,29.24A11.62,11.62,0,1,1,61.62,50,11.63,11.63,0,0,1,50,61.62Z"/></svg> -->
@@ -92,64 +93,59 @@ $orderIdGenFirst = genCodeRandom();
           </div>
           <hr>
           <div class="row padding-top-1x mb-4">
-            @php
+            <?php
               $ship = Session::get('shipping_address');
               $bill = Session::get('billing_address');
-            @endphp
-            {{--  
-            <!--
-            <div class="col-sm-6">
-              <h6>{{__('Invoice address')}} :</h6>
-              <ul class="list-unstyled">
-              <li><span class="text-muted">{{__('Nombres y Apellidos')}}: </span>{{$ship['ship_first_name']}} {{$ship['ship_last_name']}}</li>
-              @if (PriceHelper::CheckDigital())
-              <li><span class="text-muted">{{__('Address')}}: </span>{{$ship['ship_address1']}} {{$ship['ship_address2']}}</li>
-              @endif
-              <li><span class="text-muted">{{__('Phone')}}/Celular: </span>{{formatPhone($ship['ship_phone'])}}</li>
-              </ul>
-            </div>
-            -->
-            --}}
+            ?>
+            
             <div class="col-sm-12">
-              <h6>{{__('Shipping address')}} :</h6>
+              <h6><?php echo e(__('Shipping address')); ?> :</h6>
               <ul class="list-unstyled">
                 <li>
-                  <span class="text-muted">{{__('Nombres y Apellidos')}}: </span>
-                  <span class="fw-bold">{{$bill['bill_first_name']}} {{$bill['bill_last_name']}}</span>
+                  <span class="text-muted"><?php echo e(__('Nombres y Apellidos')); ?>: </span>
+                  <span class="fw-bold"><?php echo e($bill['bill_first_name']); ?> <?php echo e($bill['bill_last_name']); ?></span>
                 </li>
-                @if (PriceHelper::CheckDigital())
+                <?php if(PriceHelper::CheckDigital()): ?>
                 <li>
-                  <span class="text-muted">{{__('Address')}}: </span>
-                  <span class="fw-bold">{{$ship['ship_address1']}} {{$ship['ship_address2']}}</span>
+                  <span class="text-muted"><?php echo e(__('Address')); ?>: </span>
+                  <span class="fw-bold"><?php echo e($ship['ship_address1']); ?> <?php echo e($ship['ship_address2']); ?></span>
                 </li>
-                @endif
+                <?php endif; ?>
                 <li>
-                  <span class="text-muted">{{__('Phone')}}/Celular: </span>
-                  <span class="fw-bold">{{formatPhone($bill['bill_phone'])}}</span>
+                  <span class="text-muted"><?php echo e(__('Phone')); ?>/Celular: </span>
+                  <span class="fw-bold"><?php echo e(formatPhone($bill['bill_phone'])); ?></span>
                 </li>
               </ul>
-              @if (DB::table('states')->whereStatus(1)->count() > 0)
+              <?php if(DB::table('states')->whereStatus(1)->count() > 0): ?>
               <select name="state_id" class="form-control" id="state_id_select" required>
-                <option value="" selected disabled>{{__('Select Shipping State')}}</option>
-                @foreach (DB::table('states')->whereStatus(1)->get() as $state)
-                  <option value="{{$state->id}}" data-href="{{route('front.state.setup',$state->id)}}" {{Auth::check() && Auth::user()->state_id == $state->id ? 'selected' : ''}} >{{$state->name}}
-                    @if ($state->type == 'fixed')
-                    ({{PriceHelper::setCurrencyPrice($state->price)}})
-                    @else
-                    ({{$state->price}}%)
-                    @endif
+                <option value="" selected disabled><?php echo e(__('Select Shipping State')); ?></option>
+                <?php $__currentLoopData = DB::table('states')->whereStatus(1)->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $state): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                  <option value="<?php echo e($state->id); ?>" data-href="<?php echo e(route('front.state.setup',$state->id)); ?>" <?php echo e(Auth::check() && Auth::user()->state_id == $state->id ? 'selected' : ''); ?> ><?php echo e($state->name); ?>
+
+                    <?php if($state->type == 'fixed'): ?>
+                    (<?php echo e(PriceHelper::setCurrencyPrice($state->price)); ?>)
+                    <?php else: ?>
+                    (<?php echo e($state->price); ?>%)
+                    <?php endif; ?>
                   </option>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
               </select>
-              <small class="text-primary">{{__('please select shipping state')}}</small>
-              @error('state_id')
-              <p class="text-danger">{{$message}}</p>
-              @enderror
-              @endif
+              <small class="text-primary"><?php echo e(__('please select shipping state')); ?></small>
+              <?php $__errorArgs = ['state_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+              <p class="text-danger"><?php echo e($message); ?></p>
+              <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+              <?php endif; ?>
             </div>
           </div>
           <!-- NUEVO CONTENIDO (INICIO) -->
-          @php
+          <?php
           $selOptsTable = [
             0 => [
               "id" => 1,
@@ -164,8 +160,8 @@ $orderIdGenFirst = genCodeRandom();
           if(Session::has('data_voucher')){
             $selOptVoucher = Session::get('data_voucher');
           }
-          @endphp
-          <h6>{{__('Proof of payment')}} :</h6>
+          ?>
+          <h6><?php echo e(__('Proof of payment')); ?> :</h6>
           <div>
             <div class="row mb-0" id="sl-docopts_order">
               <div class="col-sm-12">
@@ -173,32 +169,32 @@ $orderIdGenFirst = genCodeRandom();
                   <!-- <label for="reg-slOpts__voucher">Tipo de comprobante</label> -->
                   <select class="form-control" name="reg_slOpts__voucher" id="reg-slOpts__voucher" required>
                     <option selected value="">Elige una opción</option>
-                    @foreach($selOptsTable as $k => $v)
-                    <option value="{{ (isset($selOptVoucher['selOptSelectedId']) && $selOptVoucher['selOptSelectedId'] != '' && $v['id'] == $selOptVoucher['selOptSelectedId']) ? $selOptVoucher['selOptSelectedId'] : $v['id'] }}" {{ (isset($selOptVoucher['selOptSelected']) && $selOptVoucher['selOptSelected'] != '' && $v['id'] == $selOptVoucher['selOptSelectedId']) ? 'selected' : '' }}>{{ (isset($selOptVoucher['selOptSelected']) && $selOptVoucher['selOptSelected'] != '' && $v['name'] == $selOptVoucher['selOptSelected']) ? ucfirst($selOptVoucher['selOptSelected']) : ucfirst($v['name']) }}</option>
-                    @endforeach
+                    <?php $__currentLoopData = $selOptsTable; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <option value="<?php echo e((isset($selOptVoucher['selOptSelectedId']) && $selOptVoucher['selOptSelectedId'] != '' && $v['id'] == $selOptVoucher['selOptSelectedId']) ? $selOptVoucher['selOptSelectedId'] : $v['id']); ?>" <?php echo e((isset($selOptVoucher['selOptSelected']) && $selOptVoucher['selOptSelected'] != '' && $v['id'] == $selOptVoucher['selOptSelectedId']) ? 'selected' : ''); ?>><?php echo e((isset($selOptVoucher['selOptSelected']) && $selOptVoucher['selOptSelected'] != '' && $v['name'] == $selOptVoucher['selOptSelected']) ? ucfirst($selOptVoucher['selOptSelected']) : ucfirst($v['name'])); ?></option>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                   </select>
                 </div>
               </div>
             </div>
             <div class="row mb-4">
-              <form id="dft443__gH09-checkoutvoucher" action="" method="POST" data-href="{{ route('front.checkout.submitdatavoucher') }}">
-                @if(Session::has('data_voucher'))
+              <form id="dft443__gH09-checkoutvoucher" action="" method="POST" data-href="<?php echo e(route('front.checkout.submitdatavoucher')); ?>">
+                <?php if(Session::has('data_voucher')): ?>
                 <div id="sl-docopts_conts">
-                  @if($selOptVoucher['selOptSelected'] == 'boleta')
+                  <?php if($selOptVoucher['selOptSelected'] == 'boleta'): ?>
                   <div class="cBillgADtls">
                     <div class="cBillgADtls__c">
                       <div class="cBillgADtls__c__i">
-                        <p><span><strong>Nombres: </strong></span><span>{{$selOptVoucher['first_name']}}</span></p>
+                        <p><span><strong>Nombres: </strong></span><span><?php echo e($selOptVoucher['first_name']); ?></span></p>
                       </div>
                       <div class="cBillgADtls__c__i">
-                        <p><span><strong>DNI: </strong></span><span>{{$selOptVoucher['dni']}}</span></p>
+                        <p><span><strong>DNI: </strong></span><span><?php echo e($selOptVoucher['dni']); ?></span></p>
                       </div>
                       <div class="cBillgADtls__c__i">
-                        <span><strong>Teléfono: </strong></span><span><a href="tel: +51 912845235">{{$selOptVoucher['phone']}}</a></span>
+                        <span><strong>Teléfono: </strong></span><span><a href="tel: +51 912845235"><?php echo e($selOptVoucher['phone']); ?></a></span>
                       </div>
                       <button type="button" class="btnUpdtInf-voucher">
                         <span class="icon-updt">
-                          <img src="{{ asset('assets/images/Utilities/icon-update.png') }}" alt="icon-update" width="100" height="100" decoding="sync">
+                          <img src="<?php echo e(asset('assets/images/Utilities/icon-update.png')); ?>" alt="icon-update" width="100" height="100" decoding="sync">
                         </span>
                         <span>Editar información</span>
                       </button>
@@ -219,19 +215,19 @@ $orderIdGenFirst = genCodeRandom();
                       <div class="col-sm-6">
                         <div class="form-group">
                           <label for="chckpay-firt_name">Nombres</label>
-                          <input class="form-control" name="chckpay_firt_name" type="text" id="chckpay-firt_name" value="{{$selOptVoucher['first_name']}}" placeholder="Nombres" required>
+                          <input class="form-control" name="chckpay_firt_name" type="text" id="chckpay-firt_name" value="<?php echo e($selOptVoucher['first_name']); ?>" placeholder="Nombres" required>
                         </div>
                       </div>
                       <div class="col-sm-6">
                         <div class="form-group">
                           <label for="chckpay-dni">DNI</label>
-                          <input class="form-control" name="chckpay_dni" type="text" id="chckpay-dni" value="{{$selOptVoucher['dni']}}" placeholder="DNI" data-valformat="onlydigits" maxlength="8" required>
+                          <input class="form-control" name="chckpay_dni" type="text" id="chckpay-dni" value="<?php echo e($selOptVoucher['dni']); ?>" placeholder="DNI" data-valformat="onlydigits" maxlength="8" required>
                         </div>
                       </div>
                       <div class="col-sm-6">
                         <div class="form-group">
                           <label for="chckpay-phone">Teléfono</label>
-                          <input class="form-control" name="chckpay_phone" type="text" id="chckpay-phone" value="{{$selOptVoucher['phone']}}" placeholder="Teléfono" data-valformat="withspacesforthreenumbers" maxlength="9" required>
+                          <input class="form-control" name="chckpay_phone" type="text" id="chckpay-phone" value="<?php echo e($selOptVoucher['phone']); ?>" placeholder="Teléfono" data-valformat="withspacesforthreenumbers" maxlength="9" required>
                         </div>
                       </div>
                       <div class="col-12 d-flex align-items-center justify-content-start">
@@ -256,24 +252,24 @@ $orderIdGenFirst = genCodeRandom();
                       </div>
                     </div>
                   </div>
-                  @elseif($selOptVoucher['selOptSelected'] == 'factura')
+                  <?php elseif($selOptVoucher['selOptSelected'] == 'factura'): ?>
                   <div class="cBillgADtls">
                     <div class="cBillgADtls__c">
                       <div class="cBillgADtls__c__i">
-                        <p><span><strong>RUC - Reg unico contribuyente: </strong></span><span>{{ $selOptVoucher['ruc'] }}</span></p>
+                        <p><span><strong>RUC - Reg unico contribuyente: </strong></span><span><?php echo e($selOptVoucher['ruc']); ?></span></p>
                       </div>
                       <div class="cBillgADtls__c__i">
-                        <p><span><strong>Razon social: </strong></span><span>{{ $selOptVoucher['razonsocial'] }}</span></p>
+                        <p><span><strong>Razon social: </strong></span><span><?php echo e($selOptVoucher['razonsocial']); ?></span></p>
                       </div>
                       <div class="cBillgADtls__c__i">
-                        <p><span><strong>Dirección: </strong></span><span>{{ $selOptVoucher['address'] }}</span></p>
+                        <p><span><strong>Dirección: </strong></span><span><?php echo e($selOptVoucher['address']); ?></span></p>
                       </div>
                       <div class="cBillgADtls__c__i">
-                        <span><strong>Teléfono: </strong></span><span><a href="tel: +51 912845235">{{ $selOptVoucher['phone'] }}</a></span>
+                        <span><strong>Teléfono: </strong></span><span><a href="tel: +51 912845235"><?php echo e($selOptVoucher['phone']); ?></a></span>
                       </div>
                       <button type="button" class="btnUpdtInf-voucher">
                         <span class="icon-updt">
-                          <img src="{{ asset('assets/images/Utilities/icon-update.png') }}" alt="icon-update" width="100" height="100" decoding="sync">
+                          <img src="<?php echo e(asset('assets/images/Utilities/icon-update.png')); ?>" alt="icon-update" width="100" height="100" decoding="sync">
                         </span>
                         <span>Editar información</span>
                       </button>
@@ -294,25 +290,25 @@ $orderIdGenFirst = genCodeRandom();
                       <div class="col-sm-6">
                         <div class="form-group">
                           <label for="chckpay-ruc">RUC</label>
-                          <input class="form-control" name="chckpay_ruc" type="text" data-valformat="onlydigits" id="chckpay-ruc" value="{{ $selOptVoucher['ruc'] }}" placeholder="RUC" maxlength="11" required>
+                          <input class="form-control" name="chckpay_ruc" type="text" data-valformat="onlydigits" id="chckpay-ruc" value="<?php echo e($selOptVoucher['ruc']); ?>" placeholder="RUC" maxlength="11" required>
                         </div>
                       </div>
                       <div class="col-sm-6">
                         <div class="form-group">
                           <label for="chckpay-razonsocial">Razón Social</label>
-                          <input class="form-control" name="chckpay_razonsocial" type="text" id="chckpay-razonsocial" value="{{ $selOptVoucher['razonsocial'] }}" placeholder="Razón Social" required>
+                          <input class="form-control" name="chckpay_razonsocial" type="text" id="chckpay-razonsocial" value="<?php echo e($selOptVoucher['razonsocial']); ?>" placeholder="Razón Social" required>
                         </div>
                       </div>
                       <div class="col-sm-6">
                         <div class="form-group">
                           <label for="chckpay-address">Dirección</label>
-                          <input class="form-control" name="chckpay_address" type="text" id="chckpay-address" value="{{ $selOptVoucher['address'] }}" placeholder="Dirección" required>
+                          <input class="form-control" name="chckpay_address" type="text" id="chckpay-address" value="<?php echo e($selOptVoucher['address']); ?>" placeholder="Dirección" required>
                         </div>
                       </div>
                       <div class="col-sm-6">
                         <div class="form-group">
                           <label for="chckpay-phone">Teléfono</label>
-                          <input class="form-control" name="chckpay_phone" type="text" data-valformat="withspacesforthreenumbers" id="chckpay-phone" value="{{ $selOptVoucher['phone'] }}" placeholder="Teléfono" maxlength="9" required>
+                          <input class="form-control" name="chckpay_phone" type="text" data-valformat="withspacesforthreenumbers" id="chckpay-phone" value="<?php echo e($selOptVoucher['phone']); ?>" placeholder="Teléfono" maxlength="9" required>
                         </div>
                       </div>
                       <div class="col-12 d-flex align-items-center justify-content-start">
@@ -337,42 +333,42 @@ $orderIdGenFirst = genCodeRandom();
                       </div>
                     </div>
                   </div>
-                  @endif
+                  <?php endif; ?>
                 </div>
-                @else
+                <?php else: ?>
                 <div id="sl-docopts_conts"></div>
-                @endif
+                <?php endif; ?>
               </form>
             </div>
           </div>
           <!-- NUEVO CONTENIDO (FIN) -->
           <div class="ctPayMthd-s" id="dkdr__fL236-ctPayMthd-s" style="display: none;">
-            <h6>{{__('Pay with')}} :</h6>
+            <h6><?php echo e(__('Pay with')); ?> :</h6>
             <div class="row mt-4">
               <div class="col-12">
                 <div class="payment-methods">
-                  @php
+                  <?php
                     $gateways = DB::table('payment_settings')->whereStatus(1)->orderBy('id','desc')->get();
-                  @endphp
-                  @foreach ($gateways as $gateway)
-                  @if (PriceHelper::CheckDigitalPaymentGateway())
-                  @if ($gateway->unique_keyword != 'cod')
+                  ?>
+                  <?php $__currentLoopData = $gateways; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $gateway): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                  <?php if(PriceHelper::CheckDigitalPaymentGateway()): ?>
+                  <?php if($gateway->unique_keyword != 'cod'): ?>
                   <div class="single-payment-method">
-                    <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
-                      <img class="" src="{{asset('assets/back/images/payment/'.$gateway->photo)}}" alt="{{$gateway->name}}" title="{{$gateway->name}}">
-                      <p>{{$gateway->name}}</p>
+                    <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#<?php echo e($gateway->unique_keyword); ?>">
+                      <img class="" src="<?php echo e(asset('assets/back/images/payment/'.$gateway->photo)); ?>" alt="<?php echo e($gateway->name); ?>" title="<?php echo e($gateway->name); ?>">
+                      <p><?php echo e($gateway->name); ?></p>
                     </a>
                   </div>
-                  @endif
-                  @else
+                  <?php endif; ?>
+                  <?php else: ?>
                   <div class="single-payment-method">
-                    <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
-                      <img class="" src="{{asset('assets/back/images/payment/'.$gateway->photo)}}" alt="{{$gateway->name}}" title="{{$gateway->name}}">
-                      <p>{{$gateway->name}}</p>
+                    <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#<?php echo e($gateway->unique_keyword); ?>">
+                      <img class="" src="<?php echo e(asset('assets/back/images/payment/'.$gateway->photo)); ?>" alt="<?php echo e($gateway->name); ?>" title="<?php echo e($gateway->name); ?>">
+                      <p><?php echo e($gateway->name); ?></p>
                     </a>
                   </div>
-                  @endif
-                  @endforeach                
+                  <?php endif; ?>
+                  <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>                
                 </div>
               </div>
             </div>
@@ -380,13 +376,13 @@ $orderIdGenFirst = genCodeRandom();
         </div>
       </div>
     </div>
-    @include('includes.checkout_modal')
+    <?php echo $__env->make('includes.checkout_modal', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     
-    @include('includes.checkout_sitebar',$cart)
+    <?php echo $__env->make('includes.checkout_sitebar',$cart, \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
   </div>  
 </div>
-<script type="text/javascript" src="{{ asset('node_modules/pdfobject/pdfobject.min.js')}}"></script>
-<script type="text/javascript" src="{{asset('assets/front/js/checkout.min.js')}}"></script>
+<script type="text/javascript" src="<?php echo e(asset('node_modules/pdfobject/pdfobject.min.js')); ?>"></script>
+<script type="text/javascript" src="<?php echo e(asset('assets/front/js/checkout.min.js')); ?>"></script>
 <!-- Modal -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog" id="c-modalPrevOrderPDF">
@@ -415,4 +411,5 @@ $orderIdGenFirst = genCodeRandom();
     </div>
   </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('master.front', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\grupocorein\core\resources\views/front/checkout/payment.blade.php ENDPATH**/ ?>

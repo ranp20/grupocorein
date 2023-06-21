@@ -4,6 +4,8 @@ use DB;
 use Illuminate\Database\Eloquent\Model;
 class Order extends Model{
   protected $fillable = [
+    'id_gencode',
+    'code_quote',
     'user_id',
     'user_info',
     'cart',

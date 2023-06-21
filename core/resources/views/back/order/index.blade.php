@@ -1,6 +1,6 @@
 @extends('master.back')
 @section('styles')
-	<link rel="stylesheet" href="{{asset('assets/back/css/datepicker.css')}}">
+	<link rel="stylesheet" href="{{asset('assets/back/css-before/datepicker.css')}}">
 @endsection
 @section('content')
 <div class="container-fluid">
