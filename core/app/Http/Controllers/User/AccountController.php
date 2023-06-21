@@ -64,12 +64,24 @@ class AccountController extends Controller{
   }
   public function shippingSubmit(Request $request){
     $request->validate([
+      /*
       'ship_address1' => 'required|max:100',
       'ship_address2' => 'nullable|max:100',
       'ship_zip'      => 'nullable|max:100',
       'ship_city'      => 'required|max:100',
       'ship_company'   => 'nullable|max:100',
       'ship_country'   => 'required|max:100',
+      */
+      'reg_address1'   => 'required',
+      'reg_address2'   => 'required',
+      'reg_codepostal'   => 'required',
+      'reg_country_id'   => 'required',
+      'reg_departamento_id'   => 'required',
+      'reg_provincia_id'   => 'required',
+      'reg_distrito_id'   => 'required',
+      'reg_streetaddress'   => 'required',
+      'reg_referenceaddress'   => 'required',
+      'reg_addresseeaddress'   => 'required',
     ]);
     $user =  Auth::user();
     $input = $request->all();

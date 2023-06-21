@@ -346,33 +346,35 @@ $orderIdGenFirst = genCodeRandom();
             </div>
           </div>
           <!-- NUEVO CONTENIDO (FIN) -->
-          <div class="ctPayMthd-s" id="dkdr__fL236-ctPayMthd-s" style="display: none;">
-            <h6>{{__('Pay with')}} :</h6>
-            <div class="row mt-4">
-              <div class="col-12">
-                <div class="payment-methods">
-                  @php
-                    $gateways = DB::table('payment_settings')->whereStatus(1)->orderBy('id','desc')->get();
-                  @endphp
-                  @foreach ($gateways as $gateway)
-                  @if (PriceHelper::CheckDigitalPaymentGateway())
-                  @if ($gateway->unique_keyword != 'cod')
-                  <div class="single-payment-method">
-                    <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
-                      <img class="" src="{{asset('assets/back/images/payment/'.$gateway->photo)}}" alt="{{$gateway->name}}" title="{{$gateway->name}}">
-                      <p>{{$gateway->name}}</p>
-                    </a>
+          <div class="ctPayMthd-s">
+            <div class="ctPayMthd-s__c" id="dkdr__fL236-ctPayMthd-s" style="display: none;">
+              <h6>{{__('Pay with')}} :</h6>
+              <div class="row mt-4">
+                <div class="col-12">
+                  <div class="payment-methods">
+                    @php
+                      $gateways = DB::table('payment_settings')->whereStatus(1)->orderBy('id','desc')->get();
+                    @endphp
+                    @foreach ($gateways as $gateway)
+                    @if (PriceHelper::CheckDigitalPaymentGateway())
+                    @if ($gateway->unique_keyword != 'cod')
+                    <div class="single-payment-method">
+                      <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
+                        <img class="" src="{{asset('assets/back/images/payment/'.$gateway->photo)}}" alt="{{$gateway->name}}" title="{{$gateway->name}}">
+                        <p>{{$gateway->name}}</p>
+                      </a>
+                    </div>
+                    @endif
+                    @else
+                    <div class="single-payment-method">
+                      <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
+                        <img class="" src="{{asset('assets/back/images/payment/'.$gateway->photo)}}" alt="{{$gateway->name}}" title="{{$gateway->name}}">
+                        <p>{{$gateway->name}}</p>
+                      </a>
+                    </div>
+                    @endif
+                    @endforeach                
                   </div>
-                  @endif
-                  @else
-                  <div class="single-payment-method">
-                    <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
-                      <img class="" src="{{asset('assets/back/images/payment/'.$gateway->photo)}}" alt="{{$gateway->name}}" title="{{$gateway->name}}">
-                      <p>{{$gateway->name}}</p>
-                    </a>
-                  </div>
-                  @endif
-                  @endforeach                
                 </div>
               </div>
             </div>

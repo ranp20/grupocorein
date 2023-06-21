@@ -342,33 +342,35 @@ unset($__errorArgs, $__bag); ?>
             </div>
           </div>
           <!-- NUEVO CONTENIDO (FIN) -->
-          <div class="ctPayMthd-s" id="dkdr__fL236-ctPayMthd-s" style="display: none;">
-            <h6><?php echo e(__('Pay with')); ?> :</h6>
-            <div class="row mt-4">
-              <div class="col-12">
-                <div class="payment-methods">
-                  <?php
-                    $gateways = DB::table('payment_settings')->whereStatus(1)->orderBy('id','desc')->get();
-                  ?>
-                  <?php $__currentLoopData = $gateways; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $gateway): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                  <?php if(PriceHelper::CheckDigitalPaymentGateway()): ?>
-                  <?php if($gateway->unique_keyword != 'cod'): ?>
-                  <div class="single-payment-method">
-                    <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#<?php echo e($gateway->unique_keyword); ?>">
-                      <img class="" src="<?php echo e(asset('assets/back/images/payment/'.$gateway->photo)); ?>" alt="<?php echo e($gateway->name); ?>" title="<?php echo e($gateway->name); ?>">
-                      <p><?php echo e($gateway->name); ?></p>
-                    </a>
+          <div class="ctPayMthd-s">
+            <div class="ctPayMthd-s__c" id="dkdr__fL236-ctPayMthd-s" style="display: none;">
+              <h6><?php echo e(__('Pay with')); ?> :</h6>
+              <div class="row mt-4">
+                <div class="col-12">
+                  <div class="payment-methods">
+                    <?php
+                      $gateways = DB::table('payment_settings')->whereStatus(1)->orderBy('id','desc')->get();
+                    ?>
+                    <?php $__currentLoopData = $gateways; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $gateway): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php if(PriceHelper::CheckDigitalPaymentGateway()): ?>
+                    <?php if($gateway->unique_keyword != 'cod'): ?>
+                    <div class="single-payment-method">
+                      <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#<?php echo e($gateway->unique_keyword); ?>">
+                        <img class="" src="<?php echo e(asset('assets/back/images/payment/'.$gateway->photo)); ?>" alt="<?php echo e($gateway->name); ?>" title="<?php echo e($gateway->name); ?>">
+                        <p><?php echo e($gateway->name); ?></p>
+                      </a>
+                    </div>
+                    <?php endif; ?>
+                    <?php else: ?>
+                    <div class="single-payment-method">
+                      <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#<?php echo e($gateway->unique_keyword); ?>">
+                        <img class="" src="<?php echo e(asset('assets/back/images/payment/'.$gateway->photo)); ?>" alt="<?php echo e($gateway->name); ?>" title="<?php echo e($gateway->name); ?>">
+                        <p><?php echo e($gateway->name); ?></p>
+                      </a>
+                    </div>
+                    <?php endif; ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>                
                   </div>
-                  <?php endif; ?>
-                  <?php else: ?>
-                  <div class="single-payment-method">
-                    <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#<?php echo e($gateway->unique_keyword); ?>">
-                      <img class="" src="<?php echo e(asset('assets/back/images/payment/'.$gateway->photo)); ?>" alt="<?php echo e($gateway->name); ?>" title="<?php echo e($gateway->name); ?>">
-                      <p><?php echo e($gateway->name); ?></p>
-                    </a>
-                  </div>
-                  <?php endif; ?>
-                  <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>                
                 </div>
               </div>
             </div>

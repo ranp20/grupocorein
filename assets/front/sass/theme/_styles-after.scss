@@ -34,11 +34,19 @@ a[data-role=nxt-checkoutinfo]{
 }
 #crdLEvent__sd343fg-34Gas{
     transition: all ease-in-out .4s;
+    &.card-listenevent{
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 3px 0.25rem rgba(13,110,253,.25);
+    }
 }
-#crdLEvent__sd343fg-34Gas.card-listenevent{
-    border-color: #86b7fe;
-    outline: 0;
-    box-shadow: 0 0 3px 0.25rem rgba(13,110,253,.25);
+#dkdr__fL236-ctPayMthd-s{
+    transition: all ease-in-out .4s;
+    &.card-listenevent{
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 3px 0.25rem rgba(13,110,253,.25);
+    }
 }
 .show_d43gHa-sd{
     display: block !important;
@@ -11438,5 +11446,25 @@ body{
     margin-top: 0.3rem;
     span:first-child{
         margin-right: 0.35rem;
+    }
+}
+.spn-txtOrdInfState{
+    span{
+        padding: .25em .5rem;
+        font-size: .8rem;
+        border-radius: 4px;
+        color: #fff;
+    }
+    &__pending{
+        background-color: #2196f3;
+    }
+    &__in-progress{
+        background-color: #ffa000;
+    }
+    &__delivered{
+        background-color: #4caf50;
+    }
+    &__canceled{
+        background-color: #f44336;
     }
 }

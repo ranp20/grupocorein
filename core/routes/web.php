@@ -278,6 +278,11 @@ Route::group(['middleware' => 'maintainance'], function (){
       //------------ SETTING ------------
       Route::post('/profile/update', 'User\AccountController@profileUpdate')->name('user.profile.update');
       Route::get('/addresses', 'User\AccountController@addresses')->name('user.address');
+      //------------ NUEVO CONTENIDO(INICIO)
+      Route::post('/addresses/departamento', 'User\AccountController@getAllDepartamentos')->name('user.departamento');
+      Route::get('/addresses/provincia', 'User\AccountController@getProvinciaByIdDepartamento')->name('user.provincia');
+      Route::get('/addresses/distrito', 'User\AccountController@getDistritoByIdProvincia')->name('user.distrito');
+      //------------ NUEVO CONTENIDO(FIN)
       Route::post('/billing/addresses', 'User\AccountController@billingSubmit')->name('user.billing.submit');
       Route::post('/shipping/addresses', 'User\AccountController@shippingSubmit')->name('user.shipping.submit');
       //------------ ORDER ------------
