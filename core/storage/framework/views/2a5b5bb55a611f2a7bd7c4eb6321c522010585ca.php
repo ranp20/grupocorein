@@ -85,7 +85,9 @@
                 $ship = json_decode($order->shipping_info,true)
               ?>
               <span class="text-muted"><?php echo e(__('Name')); ?>: </span><?php echo e($ship['ship_first_name']); ?> <?php echo e($ship['ship_last_name']); ?> <br>
-              
+              <?php if(isset($ship['ship_email'])): ?>
+              <span class="text-muted"><?php echo e(__('Email')); ?>: </span><?php echo e($ship['ship_email']); ?><br>
+              <?php endif; ?>
               <span class="text-muted"><?php echo e(__('Phone')); ?>: </span><?php echo e($ship['ship_phone']); ?><br>
               <?php if(isset($ship['ship_address1'])): ?>
               <span class="text-muted"><?php echo e(__('Address')); ?>: </span><?php echo e($ship['ship_address1']); ?>, <?php echo e(isset($ship['ship_address2']) ? $ship['ship_address2'] : ''); ?><br>

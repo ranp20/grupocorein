@@ -84,11 +84,9 @@
                 $ship = json_decode($order->shipping_info,true)
               @endphp
               <span class="text-muted">{{__('Name')}}: </span>{{$ship['ship_first_name']}} {{$ship['ship_last_name']}} <br>
-              {{--
-              <!--
+              @if(isset($ship['ship_email']))
               <span class="text-muted">{{__('Email')}}: </span>{{$ship['ship_email']}}<br>
-              -->
-              --}}
+              @endif
               <span class="text-muted">{{__('Phone')}}: </span>{{$ship['ship_phone']}}<br>
               @if (isset($ship['ship_address1']))
               <span class="text-muted">{{__('Address')}}: </span>{{$ship['ship_address1']}}, {{isset($ship['ship_address2']) ? $ship['ship_address2'] : ''}}<br>

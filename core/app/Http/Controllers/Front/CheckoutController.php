@@ -342,8 +342,15 @@ class CheckoutController extends Controller{
       $ship_data['grand_total'] = $total_amount;
     }
 
+    $ship_data['ship_email'] = (isset($bill['bill_email']) && $bill['bill_email'] != "") ? $bill['bill_email'] : "No definido";
     $ship_data['ship_zip'] = (isset($request->ship_zip) && $request->ship_zip != "") ? $request->ship_zip : "No definido";
     $ship_data['ship_country'] = (isset($request->ship_country) && $request->ship_country != "") ? $request->ship_country : "No definido";
+    $ship_data['ship_departamento'] = (isset($request->ship_departamento) && $request->ship_departamento != "") ? $request->ship_departamento : "No definido";
+    $ship_data['ship_provincia'] = (isset($request->ship_provincia) && $request->ship_provincia != "") ? $request->ship_provincia : "No definido";
+    $ship_data['ship_distrito'] = (isset($request->ship_distrito) && $request->ship_distrito != "") ? $request->ship_distrito : "No definido";
+    $ship_data['ship_streetaddress'] = (isset($request->ship_streetaddress) && $request->ship_streetaddress != "") ? $request->ship_streetaddress : "No definido";
+    $ship_data['ship_referenceaddress'] = (isset($request->ship_referenceaddress) && $request->ship_referenceaddress != "") ? $request->ship_referenceaddress : "No definido";
+    $ship_data['ship_addresseeaddress'] = (isset($request->ship_addresseeaddress) && $request->ship_addresseeaddress != "") ? $request->ship_addresseeaddress : "No definido";
     if($ship == "" || !isset($ship_array[0]) || $ship_array[0] == null || $ship_array[0] == ""){
       $ship_data['ship_first_name'] = $bill['bill_first_name'];
       $ship_data['ship_last_name'] = $bill['bill_last_name'];

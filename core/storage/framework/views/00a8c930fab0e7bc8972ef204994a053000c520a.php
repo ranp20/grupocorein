@@ -26,8 +26,22 @@
   </td>
   <td><?php echo e($data->payment_method); ?></td>
   <td>
+    <?php
+      $statusOrder = "";
+      if($data->order_status == 'Pending'){
+        $statusOrder = __('Pending');
+      }else if($data->order_status == 'In Progress'){
+        $statusOrder = __('In Progress');
+      }else if($data->order_status == 'Delivered'){
+        $statusOrder = __('Delivered');
+      }else if($data->order_status == 'Canceled'){
+        $statusOrder = __('Canceled');
+      }else{
+        $statusOrder = __('Canceled');
+      }
+    ?>
     <div class="dropdown">
-      <button class="btn <?php echo e($data->order_status); ?>  btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo e($data->order_status); ?></button>
+      <button class="btn <?php echo e($data->order_status); ?>  btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo e($statusOrder); ?></button>
       <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
         <a class="dropdown-item" data-toggle="modal" data-target="#statusModal" href="javascript:;" data-href="<?php echo e(route('back.order.status',[$data->id,'order_status','Pending'])); ?>"><?php echo e(__('Pending')); ?></a>
         <a class="dropdown-item" data-toggle="modal" data-target="#statusModal" href="javascript:;" data-href="<?php echo e(route('back.order.status',[$data->id,'order_status','In Progress'])); ?>"><?php echo e(__('In Progress')); ?></a>

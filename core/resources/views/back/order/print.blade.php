@@ -37,11 +37,11 @@
                 </div>
                 <div class="row">
                   <div class="col-12">
-                    <h5><b>{{__('Order Details :')}}</b></h5>
-                    <span class="text-muted">{{__('Transaction Id :')}}</span>{{$order->txnid}}<br>
-                    <span class="text-muted">{{__('Order Id :')}}</span>{{$order->transaction_number}}<br>
-                    <span class="text-muted">{{__('Order Date :')}}</span>{{$order->created_at->format('M d, Y')}}<br>
-                    <span class="text-muted">{{__('Payment Status :')}}</span>
+                    <h5><b>{{__('Order Details')}} :</b></h5>
+                    <span class="text-muted">{{__('Transaction Id')}} :</span>{{$order->txnid}}<br>
+                    <span class="text-muted">{{__('Order Id')}} :</span>{{$order->transaction_number}}<br>
+                    <span class="text-muted">{{__('Order Date')}} :</span>{{$order->created_at->format('M d, Y')}}<br>
+                    <span class="text-muted">{{__('Payment Status')}} :</span>
                     @if($order->payment_status == 'Paid')
                     <div class="badge badge-success">
                       {{__('Paid')}}
@@ -52,14 +52,14 @@
                     </div>
                     @endif
                     <br>
-                    <span class="text-muted">{{__('Payment Method :')}}</span>{{$order->payment_method }}<br>
+                    <span class="text-muted">{{__('Payment Method')}} :</span>{{$order->payment_method }}<br>
                     <br>
                     <br>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-12 col-md-6">
-                    <h5>{{__('Billing Address :')}}</h5>
+                    <h5>{{__('Billing Address')}} :</h5>
                     @php
                       $bill = json_decode($order->billing_info,true);
                     @endphp
@@ -86,16 +86,14 @@
                     @endif
                   </div>
                   <div class="col-12 col-md-6">
-                    <h5>{{__('Shipping Address :')}}</h5>
+                    <h5>{{__('Shipping Address')}} :</h5>
                     @php
                       $ship = json_decode($order->shipping_info,true)
                     @endphp
                     <span class="text-muted">{{__('Name')}}: </span>{{$ship['ship_first_name']}} {{$ship['ship_last_name']}} <br>
-                    {{--
-                    <!--
+                    @if(isset($ship['ship_email']))
                     <span class="text-muted">{{__('Email')}}: </span>{{$ship['ship_email']}}<br>
-                    -->
-                    --}}
+                    @endif
                     <span class="text-muted">{{__('Phone')}}: </span>{{$ship['ship_phone']}}<br>
                     @if (isset($ship['ship_address1']))
                     <span class="text-muted">{{__('Address')}}: </span>{{$ship['ship_address1']}}, {{isset($ship['ship_address2']) ? $ship['ship_address2'] : ''}}<br>
