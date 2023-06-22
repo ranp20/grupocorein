@@ -138,10 +138,14 @@ main table.summary td,main table.summary th{padding:8px;border-bottom:0}body,foo
 				<th>Total Neto</th>
 				<td>{{ $dataPDF['session_cartSubtotal']['subtotal'] }}</td>
 			</tr>
+			{{--
+			<!--
 			<tr>
 				<th>I.G.V.(18%)</th>
 				<td>{{ $dataPDF['session_cartSubtotal']['totalIGV'] }}</td>
 			</tr>
+			-->
+			--}}
 			<tr>
 				<th>Envío</th>
 				<td>{{ $dataPDF['session_cartSubtotal']['delivery'] }}</td>

@@ -894,7 +894,8 @@ class CheckoutController extends Controller{
     
     $totalShipping = $newSubtotalAllProds + $ammountDeliveryShipping;
     $totalIGV = $newSubtotalAllProds * (18 / 100);
-    $totalNeto = $totalIGV + $totalShipping;
+    // $totalNeto = $totalIGV + $totalShipping;
+    $totalNeto = $totalShipping;
 
     $get_SessionCartSubtotal = [
       'subtotal' => PriceHelper::setCurrencyPrice($newSubtotalAllProds),

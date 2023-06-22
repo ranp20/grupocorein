@@ -47,34 +47,6 @@
             </td>
             @endif
           </tr>
-          {{--
-          <!--
-          @if($tax != 0)
-          <tr>
-            <td>Impuesto:</td>
-            <td class="text-gray-dark">{{PriceHelper::setCurrencyPrice($tax)}}</td>
-          </tr>
-          @endif
-          @if (DB::table('states')->count() > 0)
-          <tr class="{{Auth::check() && Auth::user()->state_id ? '' : 'd-none'}} set__state_price_tr">
-            <td>{{__('State tax')}}:</td>
-            <td class="text-gray-dark set__state_price">{{PriceHelper::setCurrencyPrice(Auth::check() && Auth::user()->state_id ? Auth::user()->state->price : 0)}}</td>
-          </tr>
-          @endif
-          @if($discount)
-          <tr>
-            <td>{{__('Coupon discount')}}:</td>
-            <td class="text-danger">- {{PriceHelper::setCurrencyPrice($discount ? $discount['discount'] : 0)}}</td>
-          </tr>
-          @endif
-          @if($shipping)
-          <tr>
-            <td>{{__('Shipping')}}:</td>
-            <td class="text-gray-dark">{{PriceHelper::setCurrencyPrice($shipping ? $shipping->price : 0)}}</td>
-          </tr>
-          @endif
-          -->
-          --}}
           <tr>
             <td class="text-lg text-primary">{{__('Order total')}}</td>
             @if($amountDeliveryTotal != 0 && $amountDeliveryTotal != "")
