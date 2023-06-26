@@ -49,7 +49,13 @@
         @if ($item->previous_price != 0)
         <del>{{PriceHelper::setPreviousPrice($item->previous_price)}}</del>
         @endif
-        <span>{{PriceHelper::grandCurrencyPrice($item)}}</span>
+          @if(isset($item->sections_id) && $item->sections_id != 0)
+            @if($item->sections_id == 1)
+            <span>{{PriceHelper::setCurrencyPrice($item->on_sale_price)}}</span>
+            @else
+            <span>{{PriceHelper::setCurrencyPrice($item->special_offer_price)}}</span>
+            @endif
+          @endif
         </h4>
         <div class="cWtspBtnCtc">
           <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51{{$setting->footer_phone}}&text=Solicito información sobre: {{route('front.product',$item->slug)}}" target="_blank" class="cWtspBtnCtc__pLink">

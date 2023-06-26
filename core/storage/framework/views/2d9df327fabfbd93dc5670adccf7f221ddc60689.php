@@ -107,10 +107,19 @@
           <span class="h3 d-block price-area">
           <?php if($item->previous_price != 0): ?>
             <small class="d-inline-block"><del><?php echo e(PriceHelper::setPreviousPrice($item->previous_price)); ?></del></small>
-            <!-- <span style="font-size: 13px;margin-left: 5px;">Inc. IGV</span> -->
           <?php endif; ?>
-            <span id="main_price" class="main-price"><?php echo e(PriceHelper::grandCurrencyPrice($item)); ?></span>
+            <?php if(isset($item->sections_id) && $item->sections_id != 0): ?>
+              <?php if($item->sections_id == 1): ?>
+              <span id="main_price" class="main-price"><?php echo e(PriceHelper::setCurrencyPrice($item->on_sale_price)); ?></span>
+              <?php else: ?>
+              <span id="main_price" class="main-price"><?php echo e(PriceHelper::setCurrencyPrice($item->special_offer_price)); ?></span>
+              <?php endif; ?>
+            <?php endif; ?>
+            <?php if(isset($item->tax_id) && $item->tax_id == 1): ?>
             <span style="font-size: 13px;margin-left: 5px;">Inc. IGV</span>
+            <?php else: ?>
+            <span style="font-size: 13px;margin-left: 5px;">Sin IGV</span>
+            <?php endif; ?>
           </span>
           <p class="text-muted"><?php echo e($item->sort_details); ?> <a href="#details" class="txtd-underline scroll-to"><?php echo e(__('Read more')); ?></a></p>
           <div class="row margin-top-1x">
@@ -139,7 +148,7 @@
                 <input type="hidden" value="3333" id="current_stock">
               </div>
               <?php endif; ?>
-              <div class="p-action-button">
+              <div class="p-action-button" style="display: flex;align-items:center;justify-content:flex-start;flex-flow:wrap;">
                 <?php if($item->item_type != 'affiliate'): ?>
                   <?php if($item->is_stock()): ?>
                   <button class="btn btn-primary m-0 a-t-c-mr" id="add_to_cart"><i class="icon-bag"></i><span><?php echo e(__('Add to Cart')); ?></span></button>  
@@ -148,7 +157,31 @@
                   <?php endif; ?>
                 <?php else: ?>
                 <?php endif; ?>
-                  <a href="https://api.whatsapp.com/send?phone=51<?php echo e($setting->footer_phone); ?>&text=Solicito información sobre: <?php echo e(route('front.product',$item->slug)); ?>" target="_blank" ><img src="../assets/images/boton-pedir-por-whatsapp.png" class="boton-as"></a>
+                <div class="cWtspBtnCtc">
+                  <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51<?php echo e($setting->footer_phone); ?>&text=Solicito información sobre: <?php echo e(route('front.product',$item->slug)); ?>" target="_blank" class="cWtspBtnCtc__pLink">
+                    <img src="../assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" width="100" height="100" decoding="sync">
+                  </a>
+                  <div class="cWtspBtnCtc__pSubM">
+                    <ul class="cWtspBtnCtc__pSubM__m">
+                      <li class="cWtspBtnCtc__pSubM__m__i">
+                        <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
+                          <!-- <img src="<?php echo e(asset('assets/back/images/WhatsApp')); ?>/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
+                          <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
+                          <!-- <span>912 831 232</span> -->
+                          <span>Tienda #1</span>
+                        </a>
+                      </li>
+                      <li class="cWtspBtnCtc__pSubM__m__i">
+                        <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
+                          <!-- <img src="<?php echo e(asset('assets/back/images/WhatsApp')); ?>/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
+                          <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
+                          <!-- <span>974 124 991</span> -->
+                          <span>Tienda #2</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -480,7 +513,31 @@
                 <del><?php echo e(PriceHelper::setPreviousPrice($related->previous_price)); ?></del>
                 <?php endif; ?>
                 <?php echo e(PriceHelper::grandCurrencyPrice($related)); ?> </h4>
-                <a href="https://api.whatsapp.com/send?phone=51<?php echo e($setting->footer_phone); ?>&text=Solicito información sobre: <?php echo e(route('front.product',$related->slug)); ?>" target="_blank" ><img src="../assets/images/boton-pedir-por-whatsapp.png" class="boton-as"></a>
+                <div class="cWtspBtnCtc">
+                  <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51<?php echo e($setting->footer_phone); ?>&text=Solicito información sobre: <?php echo e(route('front.product',$related->slug)); ?>" target="_blank" class="cWtspBtnCtc__pLink">
+                    <img src="../assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" width="100" height="100" decoding="sync">
+                  </a>
+                  <div class="cWtspBtnCtc__pSubM">
+                    <ul class="cWtspBtnCtc__pSubM__m">
+                      <li class="cWtspBtnCtc__pSubM__m__i">
+                        <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
+                          <!-- <img src="<?php echo e(asset('assets/back/images/WhatsApp')); ?>/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
+                          <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
+                          <!-- <span>912 831 232</span> -->
+                          <span>Tienda #1</span>
+                        </a>
+                      </li>
+                      <li class="cWtspBtnCtc__pSubM__m__i">
+                        <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
+                          <!-- <img src="<?php echo e(asset('assets/back/images/WhatsApp')); ?>/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
+                          <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
+                          <!-- <span>974 124 991</span> -->
+                          <span>Tienda #2</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

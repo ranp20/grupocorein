@@ -51,7 +51,13 @@
         <?php if($item->previous_price != 0): ?>
         <del><?php echo e(PriceHelper::setPreviousPrice($item->previous_price)); ?></del>
         <?php endif; ?>
-        <span><?php echo e(PriceHelper::grandCurrencyPrice($item)); ?></span>
+          <?php if(isset($item->sections_id) && $item->sections_id != 0): ?>
+            <?php if($item->sections_id == 1): ?>
+            <span><?php echo e(PriceHelper::setCurrencyPrice($item->on_sale_price)); ?></span>
+            <?php else: ?>
+            <span><?php echo e(PriceHelper::setCurrencyPrice($item->special_offer_price)); ?></span>
+            <?php endif; ?>
+          <?php endif; ?>
         </h4>
         <div class="cWtspBtnCtc">
           <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51<?php echo e($setting->footer_phone); ?>&text=Solicito información sobre: <?php echo e(route('front.product',$item->slug)); ?>" target="_blank" class="cWtspBtnCtc__pLink">

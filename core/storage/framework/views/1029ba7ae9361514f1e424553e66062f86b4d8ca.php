@@ -21,7 +21,7 @@ function renderStarRating($rating,$maxRating=5) {
   <?php if($items->count() > 0): ?>
     <?php if($checkType != 'list'): ?>
       <?php $__currentLoopData = $items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-      <div class="col-xxl-3 col-md-4 col-6">
+      <div class="col-gd">
         <div class="product-card ">
           <?php if($item->is_stock()): ?>
           <div class="product-badge
@@ -63,12 +63,17 @@ function renderStarRating($rating,$maxRating=5) {
             <h3 class="product-title">
               <a href="<?php echo e(route('front.product',$item->slug)); ?>"><?php echo e(strlen(strip_tags($item->name)) > $name_string_count ? substr(strip_tags($item->name), 0, 38) : strip_tags($item->name)); ?></a>
             </h3>
-            
             <h4 class="product-price">
               <?php if($item->previous_price !=0): ?>
               <del><?php echo e(PriceHelper::setPreviousPrice($item->previous_price)); ?></del>
               <?php endif; ?>
-              <span><?php echo e(PriceHelper::grandCurrencyPrice($item)); ?></span>
+                <?php if(isset($item->sections_id) && $item->sections_id != 0): ?>
+                  <?php if($item->sections_id == 1): ?>
+                  <span><?php echo e(PriceHelper::setCurrencyPrice($item->on_sale_price)); ?></span>
+                  <?php else: ?>
+                  <span><?php echo e(PriceHelper::setCurrencyPrice($item->special_offer_price)); ?></span>
+                  <?php endif; ?>
+                <?php endif; ?>
             </h4>
             <div class="cWtspBtnCtc">
               <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51<?php echo e($setting->footer_phone); ?>&text=Solicito información sobre: <?php echo e(route('front.product',$item->slug)); ?>" target="_blank" class="cWtspBtnCtc__pLink">

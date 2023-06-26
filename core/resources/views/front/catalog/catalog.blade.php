@@ -21,7 +21,7 @@ function renderStarRating($rating,$maxRating=5) {
   @if($items->count() > 0)
     @if ($checkType != 'list')
       @foreach ($items as $item)
-      <div class="col-xxl-3 col-md-4 col-6">
+      <div class="col-gd">
         <div class="product-card ">
           @if ($item->is_stock())
           <div class="product-badge
@@ -62,18 +62,17 @@ function renderStarRating($rating,$maxRating=5) {
             <h3 class="product-title">
               <a href="{{route('front.product',$item->slug)}}">{{ strlen(strip_tags($item->name)) > $name_string_count ? substr(strip_tags($item->name), 0, 38) : strip_tags($item->name) }}</a>
             </h3>
-            {{--
-            <!--
-            <div class="rating-stars">
-              {!!renderStarRating($item->reviews->avg('rating'))!!}
-            </div>
-            -->
-            --}}
             <h4 class="product-price">
               @if ($item->previous_price !=0)
               <del>{{PriceHelper::setPreviousPrice($item->previous_price)}}</del>
               @endif
-              <span>{{PriceHelper::grandCurrencyPrice($item)}}</span>
+                @if(isset($item->sections_id) && $item->sections_id != 0)
+                  @if($item->sections_id == 1)
+                  <span>{{PriceHelper::setCurrencyPrice($item->on_sale_price)}}</span>
+                  @else
+                  <span>{{PriceHelper::setCurrencyPrice($item->special_offer_price)}}</span>
+                  @endif
+                @endif
             </h4>
             <div class="cWtspBtnCtc">
               <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51{{$setting->footer_phone}}&text=Solicito información sobre: {{route('front.product',$item->slug)}}" target="_blank" class="cWtspBtnCtc__pLink">
