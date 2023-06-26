@@ -47,10 +47,6 @@
 
           </a>
         </h3>
-        <div class="rating-stars">
-          <?php echo renderStarRating($item->reviews->avg('rating')); ?>
-
-        </div>
         <h4 class="product-price">
         <?php if($item->previous_price != 0): ?>
         <del><?php echo e(PriceHelper::setPreviousPrice($item->previous_price)); ?></del>

@@ -30,7 +30,7 @@
     <nav class="list-group">
       <a class="list-group-item <?php echo e(request()->is('user/dashboard') ? 'active' : ''); ?>" href="<?php echo e(route('user.dashboard')); ?>"><i class="icon-command"></i><?php echo e(__('Dashboard')); ?></a>
       <a class="list-group-item <?php echo e(request()->is('user/profile') ? 'active' : ''); ?>" href="<?php echo e(route('user.profile')); ?>"><i class="icon-user"></i><?php echo e(__('Profile')); ?></a>
-      <a class="list-group-item <?php echo e(request()->is('user/ticket') ? 'active' : ''); ?>" href="<?php echo e(route('user.ticket')); ?>"><i class="icon-file-text"></i><?php echo e(__('Support Ticket')); ?></a>
+      
       <a class="list-group-item with-badge <?php echo e(request()->is('user/orders') ? 'active' : ''); ?>" href="<?php echo e(route('user.order.index')); ?>"><i class="icon-shopping-bag"></i><?php echo e(__('Orders')); ?><span class="badge badge-default badge-pill"><?php echo e($user->orders->count()); ?></span></a>
       <a class="list-group-item <?php echo e(request()->is('user/addresses') ? 'active' : ''); ?>" href="<?php echo e(route('user.address')); ?>"><i class="icon-map-pin"></i><?php echo e(__('Address')); ?></a>
       <a class="list-group-item  with-badge <?php echo e(request()->is('user/wishlists') ? 'active' : ''); ?>" href="<?php echo e(route('user.wishlist.index')); ?>"><i class="icon-heart"></i><?php echo e(__('Wishlist')); ?><span class="badge badge-default badge-pill"><?php echo e($user->wishlists->count()); ?></span></a>

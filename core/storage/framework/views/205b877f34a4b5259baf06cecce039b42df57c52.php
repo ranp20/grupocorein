@@ -47,7 +47,6 @@
             </td>
             <?php endif; ?>
           </tr>
-          
           <tr>
             <td class="text-lg text-primary"><?php echo e(__('Order total')); ?></td>
             <?php if($amountDeliveryTotal != 0 && $amountDeliveryTotal != ""): ?>

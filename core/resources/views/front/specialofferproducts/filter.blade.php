@@ -45,9 +45,6 @@
           {{ strlen(strip_tags($item->name)) > 35 ? substr(strip_tags($item->name), 0, 35) : strip_tags($item->name) }}
           </a>
         </h3>
-        <div class="rating-stars">
-          {!! renderStarRating($item->reviews->avg('rating')) !!}
-        </div>
         <h4 class="product-price">
         @if ($item->previous_price != 0)
         <del>{{PriceHelper::setPreviousPrice($item->previous_price)}}</del>

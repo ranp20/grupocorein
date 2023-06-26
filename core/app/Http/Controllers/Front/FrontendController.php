@@ -23,6 +23,9 @@ use App\Models\ChieldCategory;
 use App\Models\Fcategory;
 use App\Models\HomeCutomize;
 use App\Models\Order;
+use App\Models\Departamento;
+use App\Models\Provincia;
+use App\Models\Distrito;
 use App\Models\Language;
 use App\Models\Post;
 use App\Models\Service;
@@ -69,7 +72,7 @@ class FrontendController extends Controller{
 
     $feature_categories = [];
     foreach($feature_category as $key => $cat){
-        $feature_categories[] = Category::findOrFail($cat);
+      $feature_categories[] = Category::findOrFail($cat);
     }
     $feature_category_items = [];
     if(count($feature_categories)){
@@ -84,13 +87,13 @@ class FrontendController extends Controller{
       $subcategory = $feature_category_ids['subcategory_id1'];
       $childcategory = $feature_category_ids['childcategory_id1'];
 
-      $feature_category_items = Item::when($category, function ($query, $category) {
+      $feature_category_items = Item::when($category, function ($query, $category){
       return $query->where('category_id', $category);
       })
-      ->when($subcategory, function ($query, $subcategory) {
+      ->when($subcategory, function ($query, $subcategory){
       return $query->where('subcategory_id', $subcategory);
       })
-      ->when($childcategory, function ($query, $childcategory) {
+      ->when($childcategory, function ($query, $childcategory){
       return $query->where('childcategory_id', $childcategory);
       })
       ->whereStatus(1)->take(10)->orderby('id','desc')->get();
@@ -139,13 +142,13 @@ class FrontendController extends Controller{
       $subcategory = $popular_category_ids['subcategory_id1'];
       $childcategory = $popular_category_ids['childcategory_id1'];
 
-      $popular_category_items = Item::when($category, function ($query, $category) {
+      $popular_category_items = Item::when($category, function ($query, $category){
         return $query->where('category_id', $category);
         })
-        ->when($subcategory, function ($query, $subcategory) {
+        ->when($subcategory, function ($query, $subcategory){
         return $query->where('subcategory_id', $subcategory);
         })
-        ->when($childcategory, function ($query, $childcategory) {
+        ->when($childcategory, function ($query, $childcategory){
         return $query->where('childcategory_id', $childcategory);
         })
         ->whereStatus(1)->get();
@@ -244,38 +247,30 @@ class FrontendController extends Controller{
       'feature_category_items' => $feature_category_items,
       'feature_categories' => $feature_categories,
       'feature_category_title' => $feature_category_title,
-
       // feature category
       'popular_category_items' => $popular_category_items,
       'popular_categories' => $popular_categories,
       'popular_category_title' => $popular_category_title,
-
       // two column category
       'two_column_categoriess' => $two_column_categoriess,
-
     ]);
 	}
-
   public function review_submit(){
     return view('back.overlay.index');
   }
-
   public function slider_o_update(Request $request){
     $setting = Setting::find(1);
     $setting->overlay = $request->slider_overlay;
     $setting->save();
     return redirect()->back();
   }
-
   public function product($slug){
-      
     $item = Item::with('category')->whereStatus(1)->whereSlug($slug)->get();
     $video = "";
     if($item[0]->video != "" && $item[0]->video != "null" && $item[0]->video != null){
       $video = explode('=',$item[0]->video);
       $video = end($video);
     }
-
     return view('front.catalog.product',[
       'item'          => $item[0],
       'reviews'       => $item[0]->reviews()->where('status',1)->paginate(3),
@@ -287,7 +282,6 @@ class FrontendController extends Controller{
       'related_items' => $item[0]->category->items()->whereStatus(1)->where('id','!=',$item[0]->id)->take(8)->get()
     ]);
   }
-
   public function brands(){
     if(Setting::first()->is_brands == 0){
       return back();
@@ -296,7 +290,6 @@ class FrontendController extends Controller{
       'brands' => Brand::whereStatus(1)->get()
     ]);
   }
-
 	public function blog(Request $request){
     $tagz = '';
     $tags = null;
@@ -305,10 +298,8 @@ class FrontendController extends Controller{
       $tagz .= $nm.',';
     }
     $tags = array_unique(explode(',',$tagz));
-
     if(Setting::first()->is_blog == 0) return back();
     if($request->ajax()) return view('front.blog.list',['posts' => $this->repository->displayPosts($request)]);
-
     return view('front.blog.index',['posts' => $this->repository->displayPosts($request),
       'recent_posts'       => Post::orderby('id','desc')->take(4)->get(),
       'categories' => \App\Models\Bcategory::withCount('posts')->whereStatus(1)->get(),
@@ -528,39 +519,39 @@ class FrontendController extends Controller{
     $maxPrice = $request->has('maxPrice') ?  ( !empty($request->maxPrice) ? PriceHelper::convertPrice($request->maxPrice) : null ) : null;
 
     $items = Item::with('category')
-    ->when($category, function ($query, $category) {
+    ->when($category, function ($query, $category){
       return $query->where('category_id', $category->id);
     })
-    ->when($subcategory, function ($query, $subcategory) {
+    ->when($subcategory, function ($query, $subcategory){
       return $query->where('subcategory_id', $subcategory->id);
     })
-    ->when($childcategory, function ($query, $childcategory) {
+    ->when($childcategory, function ($query, $childcategory){
       return $query->where('childcategory_id', $childcategory->id);
     })
 
-    ->when($feature, function ($query) {
+    ->when($feature, function ($query){
       return $query->whereIsType('feature');
     })
 
-    ->when($new, function ($query) {
+    ->when($new, function ($query){
       return $query->orderby('id','desc');
     })
-    ->when($top, function ($query) {
+    ->when($top, function ($query){
       return $query->whereIsType('top');
     })
-    ->when($best, function ($query) {
+    ->when($best, function ($query){
       return $query->whereIsType('best');
     })
-    ->when($new, function ($query) {
+    ->when($new, function ($query){
       return $query->whereIsType('new');
     })
-    ->when($sections_id, function ($query, $sections_id) {
+    ->when($sections_id, function ($query, $sections_id){
       return $query->where('sections_id', $sections_id);
     })
-    ->when($brand, function ($query, $brand) {
+    ->when($brand, function ($query, $brand){
       return $query->where('brand_id', $brand->id);
     })
-    ->when($search, function ($query, $search) {
+    ->when($search, function ($query, $search){
       return $query->whereStatus(1)->where('name', 'like', '%' . $search . '%')
       /* -- NUEVO CONTENIDO (INICIO) -- */
       ->orWhere('sku', 'like', '%' . $search . '%')
@@ -568,15 +559,15 @@ class FrontendController extends Controller{
       /* -- NUEVO CONTENIDO (FIN) -- */
       ->orwhere('name', 'like', '%' . $search . '%');
     })
-    ->when($minPrice, function($query, $minPrice) {
+    ->when($minPrice, function($query, $minPrice){
       return $query->where('discount_price', '>=', $minPrice);
     })
 
-    ->when($maxPrice, function($query, $maxPrice) {
+    ->when($maxPrice, function($query, $maxPrice){
       return $query->where('discount_price', '<=', $maxPrice);
     })
 
-    ->when($sorting, function($query, $sorting) {
+    ->when($sorting, function($query, $sorting){
       if($sorting == 'low_to_high'){
         return $query->orderby('discount_price','asc');
       }else{
@@ -584,10 +575,10 @@ class FrontendController extends Controller{
       }
     })
 
-    ->when($attr_item_ids, function($query, $attr_item_ids) {
+    ->when($attr_item_ids, function($query, $attr_item_ids){
       return $query->whereIn('id',$attr_item_ids);
     })
-    ->when($option_wise_item_ids, function($query, $option_wise_item_ids) {
+    ->when($option_wise_item_ids, function($query, $option_wise_item_ids){
       return $query->whereIn('id',$option_wise_item_ids);
     })
 
@@ -635,7 +626,7 @@ class FrontendController extends Controller{
       'childcategory' => $childcategory,
       'checkType'  => $checkType,
       'brands' => Brand::withCount('items')->whereStatus(1)->get(),
-      'categories' => Category::whereStatus(1)->orderby('serial','asc')->withCount(['items' => function($query) {
+      'categories' => Category::whereStatus(1)->orderby('serial','asc')->withCount(['items' => function($query){
         $query->where('status',1);
       }])->get(),
     ]);
@@ -679,39 +670,39 @@ class FrontendController extends Controller{
     $maxPrice = $request->has('maxPrice') ?  ( !empty($request->maxPrice) ? PriceHelper::convertPrice($request->maxPrice) : null ) : null;
 
     $items = Item::with('category')
-    ->when($category, function ($query, $category) {
+    ->when($category, function ($query, $category){
       return $query->where('category_id', $category->id);
     })
-    ->when($subcategory, function ($query, $subcategory) {
+    ->when($subcategory, function ($query, $subcategory){
       return $query->where('subcategory_id', $subcategory->id);
     })
-    ->when($childcategory, function ($query, $childcategory) {
+    ->when($childcategory, function ($query, $childcategory){
       return $query->where('childcategory_id', $childcategory->id);
     })
 
-    ->when($feature, function ($query) {
+    ->when($feature, function ($query){
       return $query->whereIsType('feature');
     })
 
-    ->when($new, function ($query) {
+    ->when($new, function ($query){
       return $query->orderby('id','desc');
     })
-    ->when($top, function ($query) {
+    ->when($top, function ($query){
       return $query->whereIsType('top');
     })
-    ->when($best, function ($query) {
+    ->when($best, function ($query){
       return $query->whereIsType('best');
     })
-    ->when($new, function ($query) {
+    ->when($new, function ($query){
       return $query->whereIsType('new');
     })
-    ->when($sections_id, function ($query, $sections_id) {
+    ->when($sections_id, function ($query, $sections_id){
       return $query->where('sections_id', $sections_id);
     })
-    ->when($brand, function ($query, $brand) {
+    ->when($brand, function ($query, $brand){
       return $query->where('brand_id', $brand->id);
     })
-    ->when($search, function ($query, $search) {
+    ->when($search, function ($query, $search){
       return $query->whereStatus(1)->where('name', 'like', '%' . $search . '%')
       /* -- NUEVO CONTENIDO (INICIO) -- */
       ->orWhere('sku', 'like', '%' . $search . '%')
@@ -719,15 +710,15 @@ class FrontendController extends Controller{
       /* -- NUEVO CONTENIDO (FIN) -- */
       ->orwhere('name', 'like', '%' . $search . '%');
     })
-    ->when($minPrice, function($query, $minPrice) {
+    ->when($minPrice, function($query, $minPrice){
       return $query->where('discount_price', '>=', $minPrice);
     })
 
-    ->when($maxPrice, function($query, $maxPrice) {
+    ->when($maxPrice, function($query, $maxPrice){
       return $query->where('discount_price', '<=', $maxPrice);
     })
 
-    ->when($sorting, function($query, $sorting) {
+    ->when($sorting, function($query, $sorting){
       if($sorting == 'low_to_high'){
         return $query->orderby('discount_price','asc');
       }else{
@@ -735,10 +726,10 @@ class FrontendController extends Controller{
       }
     })
 
-    ->when($attr_item_ids, function($query, $attr_item_ids) {
+    ->when($attr_item_ids, function($query, $attr_item_ids){
       return $query->whereIn('id',$attr_item_ids);
     })
-    ->when($option_wise_item_ids, function($query, $option_wise_item_ids) {
+    ->when($option_wise_item_ids, function($query, $option_wise_item_ids){
       return $query->whereIn('id',$option_wise_item_ids);
     })
 
@@ -786,9 +777,55 @@ class FrontendController extends Controller{
       'childcategory' => $childcategory,
       'checkType'  => $checkType,
       'brands' => Brand::withCount('items')->whereStatus(1)->get(),
-      'categories' => Category::whereStatus(1)->orderby('serial','asc')->withCount(['items' => function($query) {
+      'categories' => Category::whereStatus(1)->orderby('serial','asc')->withCount(['items' => function($query){
         $query->where('status',1);
       }])->get(),
     ]);
+  }
+  /* ------------------- NUEVO CONTENIDO ------------------- */
+  public function getAllDepartamentos(){
+    $departamentos = Departamento::get()->toArray();
+    $data = $departamentos;
+    return response()->json(['data'=>$data]);
+  }
+  public function getProvinciaByIdDepartamento(Request $request){
+    if(isset($request->departamento_code) && $request->departamento_code != "undefined"){
+      if($request->departamento_code){
+        $provincias = Provincia::where('departamento_code', $request->departamento_code)->get()->toArray();
+        $data = $provincias;
+      }else{
+        $data = [];
+      }
+    }else{
+      $data = [];
+    }
+    return response()->json(['data'=>$data]);
+  }
+  public function getDistritoByIdProvincia(Request $request){
+    if($request->provincia_code){
+      $distritos = Distrito::where('provincia_code', $request->provincia_code)->get()->toArray();
+      $data = $distritos;
+    }else{
+      $data = [];
+    }
+    return response()->json(['data'=>$data]);
+  }
+  public function getAmmountDispathByDistrito(Request $request){
+    if(isset($request->departID) && $request->departID != "undefined" && 
+       isset($request->provID) && $request->provID != "undefined" &&
+       isset($request->distrID) && $request->distrID != "undefined"){
+      $distritoByIdDistrito = Distrito::where('id', $request->distrID)->first()->toArray();
+      if(count($distritoByIdDistrito) != 0){
+        $data = [
+          'min_amount' => $distritoByIdDistrito['distrito_min_amount'],
+          'max_amount' => $distritoByIdDistrito['distrito_max_amount'],
+        ];
+      }else{
+        $data = [];
+      }
+    }else{
+      $data = [];
+    }
+    return response()->json(['data'=>$data]);
   }
 }
