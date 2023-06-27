@@ -16,7 +16,11 @@
                 </div>
             </div>
             <div>
-                <div class="small text-gray-500"><?php echo e($notf->created_at->diffForHumans()); ?></div>
+                <?php
+                $notifCreate = \Carbon\Carbon::parse($notf->created_at);
+                $notifDate = $notifCreate->locale('es_ES')->diffForHumans(null, false, false, 1);
+                ?>
+                <div class="small text-gray-500"><?php echo e($notifDate); ?></div>
                 <?php echo e(__('A new user has registered.')); ?>
 
             </div>
@@ -30,7 +34,11 @@
                 </div>
             </div>
             <div>
-                <div class="small text-gray-500"><?php echo e($notf->created_at->diffForHumans()); ?></div>
+                <?php
+                $notifCreate = \Carbon\Carbon::parse($notf->created_at);
+                $notifDate = $notifCreate->locale('es_ES')->diffForHumans(null, false, false, 1);
+                ?>
+                <div class="small text-gray-500"><?php echo e($notifDate); ?></div>
                 <?php echo e(__('You have recieved a new order.')); ?>
 
             </div>

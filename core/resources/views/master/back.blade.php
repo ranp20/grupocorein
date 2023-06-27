@@ -146,7 +146,6 @@
 	<script src="{{ asset('assets/back/js/jscolor.js') }}"></script>
 	<script src="{{ asset('assets/back/js/jquery.magnific-popup.min.js') }}"></script>
 	<script src="{{ asset('assets/back/js/sortable.js') }}"></script>
-	<script src="{{ asset('assets/back/js/bootstrap-iconpicker.bundle.min.js') }}"></script>
 	<script src="{{ asset('assets/back/js/ready.min.js') }}"></script>
   @yield('scripts')
 	<script src="{{ asset('assets/back/js/custom.js') }}"></script>

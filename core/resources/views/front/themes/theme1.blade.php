@@ -190,14 +190,17 @@
                                         <h3 class="product-title">
                                             <a href="{{route('front.product',$popular_category_item->slug)}}">{{ strlen(strip_tags($popular_category_item->name)) > 35 ? substr(strip_tags($popular_category_item->name), 0, 35) : strip_tags($popular_category_item->name) }}</a>
                                         </h3>
-                                        <div class="rating-stars">
-                                        <i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i>
-                                        </div>
                                         <h4 class="product-price">
                                         @if ($popular_category_item->previous_price != 0)
                                         <del>{{PriceHelper::setPreviousPrice($popular_category_item->previous_price)}}</del>
                                         @endif
-                                        {{PriceHelper::grandCurrencyPrice($popular_category_item)}}
+                                        @if(isset($popular_category_item->sections_id) && $popular_category_item->sections_id != 0)
+                                            @if($popular_category_item->sections_id == 1)
+                                            <span>{{PriceHelper::setCurrencyPrice($popular_category_item->on_sale_price)}}</span>
+                                            @else
+                                            <span>{{PriceHelper::setCurrencyPrice($popular_category_item->special_offer_price)}}</span>
+                                            @endif
+                                        @endif
                                         </h4>
                                         <div class="cWtspBtnCtc">
                                             <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51{{$setting->footer_phone}}&text=Solicito información sobre: {{route('front.product',$popular_category_item->slug)}}" target="_blank" class="cWtspBtnCtc__pLink">
@@ -294,14 +297,17 @@
                                             {{ strlen(strip_tags($feature_category_item->name)) > 35 ? substr(strip_tags($feature_category_item->name), 0, 35) : strip_tags($feature_category_item->name) }}
                                             </a>
                                         </h3>
-                                        <div class="rating-stars">
-                                        <i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i>
-                                        </div>
                                         <h4 class="product-price">
                                         @if ($feature_category_item->previous_price != 0)
                                         <del>{{PriceHelper::setPreviousPrice($feature_category_item->previous_price)}}</del>
                                         @endif
-                                        {{PriceHelper::grandCurrencyPrice($feature_category_item)}}
+                                        @if(isset($feature_category_item->sections_id) && $feature_category_item->sections_id != 0)
+                                            @if($feature_category_item->sections_id == 1)
+                                            <span>{{PriceHelper::setCurrencyPrice($feature_category_item->on_sale_price)}}</span>
+                                            @else
+                                            <span>{{PriceHelper::setCurrencyPrice($feature_category_item->special_offer_price)}}</span>
+                                            @endif
+                                        @endif
                                         </h4>
                                         <div class="cWtspBtnCtc">
                                             <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51{{$setting->footer_phone}}&text=Solicito información sobre: {{route('front.product',$feature_category_item->slug)}}" target="_blank" class="cWtspBtnCtc__pLink">

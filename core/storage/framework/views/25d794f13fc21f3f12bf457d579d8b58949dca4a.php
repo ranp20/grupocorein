@@ -189,15 +189,17 @@
                                         <h3 class="product-title">
                                             <a href="<?php echo e(route('front.product',$popular_category_item->slug)); ?>"><?php echo e(strlen(strip_tags($popular_category_item->name)) > 35 ? substr(strip_tags($popular_category_item->name), 0, 35) : strip_tags($popular_category_item->name)); ?></a>
                                         </h3>
-                                        <div class="rating-stars">
-                                        <i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i>
-                                        </div>
                                         <h4 class="product-price">
                                         <?php if($popular_category_item->previous_price != 0): ?>
                                         <del><?php echo e(PriceHelper::setPreviousPrice($popular_category_item->previous_price)); ?></del>
                                         <?php endif; ?>
-                                        <?php echo e(PriceHelper::grandCurrencyPrice($popular_category_item)); ?>
-
+                                        <?php if(isset($popular_category_item->sections_id) && $popular_category_item->sections_id != 0): ?>
+                                            <?php if($popular_category_item->sections_id == 1): ?>
+                                            <span><?php echo e(PriceHelper::setCurrencyPrice($popular_category_item->on_sale_price)); ?></span>
+                                            <?php else: ?>
+                                            <span><?php echo e(PriceHelper::setCurrencyPrice($popular_category_item->special_offer_price)); ?></span>
+                                            <?php endif; ?>
+                                        <?php endif; ?>
                                         </h4>
                                         <div class="cWtspBtnCtc">
                                             <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51<?php echo e($setting->footer_phone); ?>&text=Solicito información sobre: <?php echo e(route('front.product',$popular_category_item->slug)); ?>" target="_blank" class="cWtspBtnCtc__pLink">
@@ -295,15 +297,17 @@
 
                                             </a>
                                         </h3>
-                                        <div class="rating-stars">
-                                        <i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i>
-                                        </div>
                                         <h4 class="product-price">
                                         <?php if($feature_category_item->previous_price != 0): ?>
                                         <del><?php echo e(PriceHelper::setPreviousPrice($feature_category_item->previous_price)); ?></del>
                                         <?php endif; ?>
-                                        <?php echo e(PriceHelper::grandCurrencyPrice($feature_category_item)); ?>
-
+                                        <?php if(isset($feature_category_item->sections_id) && $feature_category_item->sections_id != 0): ?>
+                                            <?php if($feature_category_item->sections_id == 1): ?>
+                                            <span><?php echo e(PriceHelper::setCurrencyPrice($feature_category_item->on_sale_price)); ?></span>
+                                            <?php else: ?>
+                                            <span><?php echo e(PriceHelper::setCurrencyPrice($feature_category_item->special_offer_price)); ?></span>
+                                            <?php endif; ?>
+                                        <?php endif; ?>
                                         </h4>
                                         <div class="cWtspBtnCtc">
                                             <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51<?php echo e($setting->footer_phone); ?>&text=Solicito información sobre: <?php echo e(route('front.product',$feature_category_item->slug)); ?>" target="_blank" class="cWtspBtnCtc__pLink">

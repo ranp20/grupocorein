@@ -15,7 +15,11 @@
                 </div>
             </div>
             <div>
-                <div class="small text-gray-500">{{ $notf->created_at->diffForHumans() }}</div>
+                <?php
+                $notifCreate = \Carbon\Carbon::parse($notf->created_at);
+                $notifDate = $notifCreate->locale('es_ES')->diffForHumans(null, false, false, 1);
+                ?>
+                <div class="small text-gray-500">{{ $notifDate }}</div>
                 {{ __('A new user has registered.') }}
             </div>
             </a>
@@ -28,7 +32,11 @@
                 </div>
             </div>
             <div>
-                <div class="small text-gray-500">{{ $notf->created_at->diffForHumans() }}</div>
+                <?php
+                $notifCreate = \Carbon\Carbon::parse($notf->created_at);
+                $notifDate = $notifCreate->locale('es_ES')->diffForHumans(null, false, false, 1);
+                ?>
+                <div class="small text-gray-500">{{ $notifDate }}</div>
                 {{ __('You have recieved a new order.') }}
             </div>
             </a>

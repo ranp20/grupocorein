@@ -1,6 +1,8 @@
 <?php $__env->startSection('styles'); ?>
   <link rel="stylesheet" href="<?php echo e(asset('assets/back/js/plugin/codemirror/codemirror.css')); ?>">
   <link rel="stylesheet" href="<?php echo e(asset('assets/back/js/plugin/codemirror/monokai.css')); ?>">
+
+  <link rel="stylesheet" href="<?php echo e(asset('assets/back/js/plugin/Bootstrap-IconPicker/dist/css/bootstrap-iconpicker.min.css')); ?>">
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
 <div class="container-fluid">
@@ -397,7 +399,7 @@
                                       <div class="d-flex">
                                         <div>
                                           <div class="form-group">
-                                            <button class="btn btn-secondary social-picker" name="social_icons[]" data-icon="<?php echo e($icons[$link_key]); ?>"> </button>
+                                            <button class="btn btn-secondary social-picker" name="social_icons[]" data-icon="<?php echo e($icons[$link_key]); ?>" role="iconpicker"></button>
                                           </div>
                                         </div>
                                         <div class="flex-grow-1">
@@ -640,6 +642,7 @@
 <?php $__env->startSection('scripts'); ?>
 <script src="<?php echo e(asset('assets/back/js/plugin/codemirror/codemirror.js')); ?>"></script>
 <script src="<?php echo e(asset('assets/back/js/plugin/codemirror/css.js')); ?>"></script>
+<script type="text/javascript" src="<?php echo e(asset('assets/back/js/bootstrap-iconpicker.bundle.min.js')); ?>"></script>
 <script type="text/javascript" src="<?php echo e(asset('assets/back/js/system-config.js')); ?>"></script>
 <script type="text/javascript">
 $(document).ready(function () {

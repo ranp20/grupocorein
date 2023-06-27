@@ -163,6 +163,8 @@
                   <tr>
                     <td class="padding-top-2x" colspan="5"></td>
                   </tr>
+                  {{--
+                  <!--
                   @if($order->tax!=0)
                   <tr>
                     <td class="px-0 border-top border-top-2">
@@ -231,6 +233,8 @@
                     </td>
                   </tr>
                   @endif
+                  -->
+                  --}}
                   <tr>
                     <td class="px-0 border-top border-top-2">
                     @if ($order->payment_method == 'Cash On Delivery')

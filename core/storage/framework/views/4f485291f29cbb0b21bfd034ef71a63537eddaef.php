@@ -147,7 +147,6 @@
 	<script src="<?php echo e(asset('assets/back/js/jscolor.js')); ?>"></script>
 	<script src="<?php echo e(asset('assets/back/js/jquery.magnific-popup.min.js')); ?>"></script>
 	<script src="<?php echo e(asset('assets/back/js/sortable.js')); ?>"></script>
-	<script src="<?php echo e(asset('assets/back/js/bootstrap-iconpicker.bundle.min.js')); ?>"></script>
 	<script src="<?php echo e(asset('assets/back/js/ready.min.js')); ?>"></script>
   <?php echo $__env->yieldContent('scripts'); ?>
 	<script src="<?php echo e(asset('assets/back/js/custom.js')); ?>"></script>

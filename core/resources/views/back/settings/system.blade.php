@@ -2,6 +2,8 @@
 @section('styles')
   <link rel="stylesheet" href="{{asset('assets/back/js/plugin/codemirror/codemirror.css')}}">
   <link rel="stylesheet" href="{{asset('assets/back/js/plugin/codemirror/monokai.css')}}">
+
+  <link rel="stylesheet" href="{{asset('assets/back/js/plugin/Bootstrap-IconPicker/dist/css/bootstrap-iconpicker.min.css')}}">
 @endsection
 @section('content')
 <div class="container-fluid">
@@ -398,7 +400,7 @@
                                       <div class="d-flex">
                                         <div>
                                           <div class="form-group">
-                                            <button class="btn btn-secondary social-picker" name="social_icons[]" data-icon="{{$icons[$link_key]}}"> </button>
+                                            <button class="btn btn-secondary social-picker" name="social_icons[]" data-icon="{{$icons[$link_key]}}" role="iconpicker"></button>
                                           </div>
                                         </div>
                                         <div class="flex-grow-1">
@@ -641,6 +643,7 @@
 @section('scripts')
 <script src="{{asset('assets/back/js/plugin/codemirror/codemirror.js')}}"></script>
 <script src="{{asset('assets/back/js/plugin/codemirror/css.js')}}"></script>
+<script type="text/javascript" src="{{ asset('assets/back/js/bootstrap-iconpicker.bundle.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/back/js/system-config.js') }}"></script>
 <script type="text/javascript">
 $(document).ready(function () {
