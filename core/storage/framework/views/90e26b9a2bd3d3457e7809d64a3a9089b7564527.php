@@ -534,11 +534,19 @@
         <div class="cLogo__modal-header">
           <p>Proceder a pagar</p>
           <?php
-            $sessShipping = 0;
             $del_charge = 0;
-            if(Session::has('shipping_address')){
-              $sessShipping = Session::get('shipping_address');
-              $del_charge = (isset($sessShipping['ship_amountaddress']) && $sessShipping['ship_amountaddress'] != 0) ? $sessShipping['ship_amountaddress'] : 0;
+            $shipSessionInfo = "";
+            $amountGrandTotal = 0;
+            $postamount = 0;
+            if(Session::has('shipping_address') && Session::get('shipping_address') != ""){
+              $shipSessionInfo = Session::get('shipping_address');
+              $del_charge = $shipSessionInfo['ship_amountaddress'];
+              $amountGrandTotal = $shipSessionInfo['grand_total'];
+              if($del_charge != 0 && $del_charge != ""){
+                $postamount = $amountGrandTotal;
+              }else{
+                $postamount = $grand_total;
+              }
             }
           ?>
         </div>
@@ -547,10 +555,8 @@
       <div class="modal-body">
         <?php
           $client = new Lyra\Client();
-
-          $postamount = $grand_total;
           $u_amount = 0;
-          $u_sum_or_not = $postamount + $del_charge;
+          $u_sum_or_not = $postamount;
           $u_amount =  floatval($u_sum_or_not) * 100;
           $orderIdGen = $orderIdGenFirst;
           $billing = Session::get('billing_address');

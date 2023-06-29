@@ -33,7 +33,7 @@
             <td class="text-gray-dark">
               <div class="cInfAmmtCart">
                 <div class="cInfAmmtCart__c">
-                  <span class="fw-bold spnLstCart__fz1" id="cInfAmmtCart__c-346hg">{{ PriceHelper::setCurrencyPrice($amountDeliveryTotal)}}</span>
+                  <span class="fw-bold spnLstCart__fz1" id="cInfAmmtCart__c-346hg">{{ PriceHelper::setCurrencyPrice($amountDeliveryTotal) }}</span>
                 </div>
               </div>
             </td>
@@ -41,7 +41,7 @@
             <td class="text-gray-dark">
               <div class="cInfAmmtCart">
                 <div class="cInfAmmtCart__c">
-                  <span class="fw-bold spnLstCart__fz1" id="cInfAmmtCart__c-346hg">{{ PriceHelper::setCurrencyPrice($amountaddress)}}</span>
+                  <span class="fw-bold spnLstCart__fz1" id="cInfAmmtCart__c-346hg">{{ PriceHelper::setCurrencyPrice($amountaddress) }}</span>
                 </div>
               </div>
             </td>
@@ -50,9 +50,9 @@
           <tr>
             <td class="text-lg text-primary">{{__('Order total')}}</td>
             @if($amountDeliveryTotal != 0 && $amountDeliveryTotal != "")
-            <td class="fw-bold spnLstCart__fz2 text-lg text-primary grand_total_set">{{PriceHelper::setCurrencyPrice($amountGrandTotal)}}</td>
+            <td class="fw-bold spnLstCart__fz2 text-lg text-primary grand_total_set">{{ PriceHelper::setCurrencyPrice($amountGrandTotal) }}</td>
             @else
-            <td class="fw-bold spnLstCart__fz2 text-lg text-primary grand_total_set">{{PriceHelper::setCurrencyPrice($grand_total)}}</td>
+            <td class="fw-bold spnLstCart__fz2 text-lg text-primary grand_total_set">{{ PriceHelper::setCurrencyPrice($grand_total) }}</td>
             @endif
           </tr>
         </table>
