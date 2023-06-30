@@ -641,8 +641,8 @@
 </div>
 @endsection
 @section('scripts')
-<script src="{{asset('assets/back/js/plugin/codemirror/codemirror.js')}}"></script>
-<script src="{{asset('assets/back/js/plugin/codemirror/css.js')}}"></script>
+<script type="text/javascript" src="{{asset('assets/back/js/plugin/codemirror/codemirror.js')}}"></script>
+<script type="text/javascript" src="{{asset('assets/back/js/plugin/codemirror/css.js')}}"></script>
 <script type="text/javascript" src="{{ asset('assets/back/js/bootstrap-iconpicker.bundle.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/back/js/system-config.js') }}"></script>
 <script type="text/javascript">

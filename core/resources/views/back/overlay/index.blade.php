@@ -7,7 +7,7 @@
     <link rel="icon"  type="image/x-icon" href="{{ asset('assets/images/'.$setting->favicon) }}"/>
 
 	<!-- Fonts and icons -->
-	<script src="{{ asset('assets/back/js/plugin/webfont/webfont.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/back/js/plugin/webfont/webfont.min.js') }}"></script>
 	<script id="setFont" data-src="{{ asset("assets/back/css/fonts.css") }}" src="{{ asset('assets/back/js/plugin/webfont/setfont.js') }}"></script>
 
 	<!-- CSS Files -->
@@ -67,53 +67,53 @@
     </div>
 
 	<!--   Core JS Files   -->
-	<script src="{{ asset('assets/back/js/core/jquery.3.6.0.min.js') }}"></script>
-	<script src="{{ asset('assets/back/js/core/popper.min.js') }}"></script>
-	<script src="{{ asset('assets/back/js/core/bootstrap.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/back/js/core/jquery.3.6.0.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/back/js/core/popper.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/back/js/core/bootstrap.min.js') }}"></script>
 
 	<!-- jQuery UI -->
-	<script src="{{ asset('assets/back/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js') }}"></script>
-	<script src="{{ asset('assets/back/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/back/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/back/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js') }}"></script>
 
 	<!-- jQuery Scrollbar -->
-	<script src="{{ asset('assets/back/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/back/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js') }}"></script>
 
 	<!-- Moment JS -->
-	<script src="{{ asset('assets/back/js/plugin/moment/moment.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/back/js/plugin/moment/moment.min.js') }}"></script>
 
 	<!-- Datatables -->
-	<script src="{{ asset('assets/back/js/plugin/datatables/datatables.min.js') }}"></script>
-	<script src="{{ asset('assets/back/js/plugin/datatables/dataTables.bootstrap4.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/back/js/plugin/datatables/datatables.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/back/js/plugin/datatables/dataTables.bootstrap4.min.js') }}"></script>
 
 	<!-- Bootstrap Notify -->
-	<script src="{{ asset('assets/back/js/plugin/bootstrap-notify/bootstrap-notify.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/back/js/plugin/bootstrap-notify/bootstrap-notify.min.js') }}"></script>
 
 	<!-- Bootstrap Toggle -->
-	<script src="{{ asset('assets/back/js/plugin/bootstrap-toggle/bootstrap-toggle.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/back/js/plugin/bootstrap-toggle/bootstrap-toggle.min.js') }}"></script>
 	<!-- Editor -->
-	<script src="{{ asset('assets/back/js/plugin/editor.js') }}"></script>
-    <script src="{{ asset('assets/back/js/plugin/datepicker/bootstrap-datetimepicker.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/back/js/plugin/editor.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/back/js/plugin/datepicker/bootstrap-datetimepicker.min.js') }}"></script>
 
     <!-- Tagify -->
-    <script src="{{ asset('assets/back/js/tagify.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/back/js/tagify.js') }}"></script>
 
     <!-- JS Color -->
-    <script src="{{ asset('assets/back/js/jscolor.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/back/js/jscolor.js') }}"></script>
 
     <!-- Magnific Popup -->
-    <script src="{{ asset('assets/back/js/jquery.magnific-popup.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/back/js/jquery.magnific-popup.min.js') }}"></script>
 
     <!-- Sortable -->
-    <script src="{{ asset('assets/back/js/sortable.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/back/js/sortable.js') }}"></script>
 
     <!-- Icon Picker -->
-    <script src="{{ asset('assets/back/js/bootstrap-iconpicker.bundle.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/back/js/bootstrap-iconpicker.bundle.min.js') }}"></script>
 
 	<!-- Azzara JS -->
-    <script src="{{ asset('assets/back/js/ready.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/back/js/ready.min.js') }}"></script>
 
 	<!-- Custom JS -->
-    <script src="{{ asset('assets/back/js/custom.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/back/js/custom.js') }}"></script>
 
 
 

@@ -464,7 +464,7 @@
   @endphp
   @section('script')
   <!--
-  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <script type="text/javascript" src="https://js.paystack.co/v1/inline.js"></script>
   -->
   <script type="text/javascript">
     /*
@@ -610,7 +610,7 @@
         </script>
       
         <link rel="stylesheet" href="<?php echo $client->getClientEndpoint();?>/static/js/krypton-client/V4.0/ext/classic-reset.css">
-        <script src="<?php echo $client->getClientEndpoint();?>/static/js/krypton-client/V4.0/ext/classic.js"></script>
+        <script type="text/javascript" src="<?php echo $client->getClientEndpoint();?>/static/js/krypton-client/V4.0/ext/classic.js"></script>
       
         <div class="row">
           <div class="m-auto">

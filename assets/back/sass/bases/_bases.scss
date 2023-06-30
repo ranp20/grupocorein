@@ -162,3 +162,23 @@ img{
 		}
 	}
 }
+.cFrmCtrl__cIcon--R{
+	position: absolute;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	height: 100%;
+	max-width: 42px;
+	width: 42px;
+	padding: 0 .6rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	z-index: 3;
+	user-select: none;
+	svg{
+		display: table;
+    fill: #666;
+	}
+}

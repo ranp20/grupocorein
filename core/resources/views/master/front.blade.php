@@ -18,7 +18,7 @@
 <link rel="apple-touch-icon" sizes="167x167" href="{{asset('assets/images/'.$setting->favicon)}}">
 @yield('styleplugins')
 <link href="{{ asset('assets/front/css/color.php?primary_color=').str_replace('#','',$setting->primary_color) }}" rel="stylesheet">
-<script src="{{asset('assets/front/js/modernizr.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('assets/front/js/modernizr.min.js')}}"></script>
 @if (DB::table('languages')->where('is_default',1)->first()->rtl == 1)
     <!-- <link rel="stylesheet" href="{{asset('assets/front/css/rtl.css')}}"> -->
 @endif

@@ -640,8 +640,8 @@
 </div>
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('scripts'); ?>
-<script src="<?php echo e(asset('assets/back/js/plugin/codemirror/codemirror.js')); ?>"></script>
-<script src="<?php echo e(asset('assets/back/js/plugin/codemirror/css.js')); ?>"></script>
+<script type="text/javascript" src="<?php echo e(asset('assets/back/js/plugin/codemirror/codemirror.js')); ?>"></script>
+<script type="text/javascript" src="<?php echo e(asset('assets/back/js/plugin/codemirror/css.js')); ?>"></script>
 <script type="text/javascript" src="<?php echo e(asset('assets/back/js/bootstrap-iconpicker.bundle.min.js')); ?>"></script>
 <script type="text/javascript" src="<?php echo e(asset('assets/back/js/system-config.js')); ?>"></script>
 <script type="text/javascript">
