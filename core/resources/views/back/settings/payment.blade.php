@@ -35,7 +35,7 @@
               </div>
             </div>
 						<div class="col-lg-9">
-							<div class="p-5">
+							<div class="p-2">
 								<div class="admin-form">
 									@include('alerts.alerts')
                   <div class="container pl-0 pr-0 ml-0 mr-0 w-100 mw-100">
@@ -43,9 +43,9 @@
                       <div class="tab-content">
                         {{--  
                         <!--
-                        <div id="cod" class="container tab-pane active"><br>
+                        <div id="cod" class="container tab-pane active">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -88,9 +88,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="stripe" class="container tab-pane"><br>
+                        <div id="stripe" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -139,9 +139,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="paypal" class="container tab-pane"><br>
+                        <div id="paypal" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -199,9 +199,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="molly" class="container tab-pane"><br>
+                        <div id="molly" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -250,9 +250,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="paytm" class="container tab-pane"><br>
+                        <div id="paytm" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -310,9 +310,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="razorpay" class="container tab-pane"><br>
+                        <div id="razorpay" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -370,9 +370,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="sslcommerz" class="container tab-pane"><br>
+                        <div id="sslcommerz" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -430,9 +430,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="mercadopago" class="container tab-pane"><br>
+                        <div id="mercadopago" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -490,9 +490,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="authorize" class="container tab-pane"><br>
+                        <div id="authorize" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -550,9 +550,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="paystack" class="container tab-pane"><br>
+                        <div id="paystack" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -610,9 +610,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="flutterwave" class="container tab-pane"><br>
+                        <div id="flutterwave" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -672,9 +672,9 @@
                         </div>
                         -->
                         --}}
-                        <div id="bank" class="container tab-pane active"><br>
+                        <div id="bank" class="container tab-pane active">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -717,9 +717,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="izipay" class="container tab-pane"><br>
+                        <div id="izipay" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
