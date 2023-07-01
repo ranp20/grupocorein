@@ -122,6 +122,7 @@ class Setting extends Model
         'decimal_separator',
         'thousand_separator',
         'is_decimal',
+        'whatsapp_numbers',
     ];
 
     public $timestamps = false;

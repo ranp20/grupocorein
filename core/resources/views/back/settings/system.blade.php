@@ -589,33 +589,40 @@
                                 <div class="row justify-content-center">
                                   <div class="col-lg-12">
                                     <div id="wtspnumbers_number-section" class="cCt_wtpsNmbrs">
-                                      <div class="cCt_wtpsNmbrs__c">
-                                        @php
-                                        $icons = json_decode($setting->whatsapp_numbers,true)['icons'];
-                                        $titles = json_decode($setting->whatsapp_numbers,true)['title'];
-                                        $texts = json_decode($setting->whatsapp_numbers,true)['text'];
-                                        $numbers = json_decode($setting->whatsapp_numbers,true)['number'];
-                                        @endphp
-                                        @foreach ($numbers as $key => $number)
-                                        <div class="d-flex cCt_wtpsNmbrs__c__m">
-                                          <div class="flex-grow-1 cCt_wtpsNmbrs__c__m__i">
-                                            <div class="form-group">
-                                              <input type="text" class="form-control" name="wtspnumbers_title[]" placeholder="" value="{{ $titles[$key] }}">
+                                      <div class="cCt_wtpsNmbrs__c" id="wpsnumbsgadd_1Gdhj5-2lks">
+                                        @if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers))
+                                          @php
+                                          /*
+                                          $icons = json_decode($setting->whatsapp_numbers,true)['icons'];
+                                          */
+                                          $titles = json_decode($setting->whatsapp_numbers,true)['title'];
+                                          $texts = json_decode($setting->whatsapp_numbers,true)['text'];
+                                          $numbers = json_decode($setting->whatsapp_numbers,true)['number'];
+                                          @endphp
+                                          @foreach ($numbers as $key => $number)
+                                          <div class="d-flex cCt_wtpsNmbrs__c__m">
+                                            <div class="flex-grow-1 cCt_wtpsNmbrs__c__m__i">
+                                              <div class="form-group">
+                                                <input type="text" class="form-control" name="wtspnumbers_title[]" placeholder="" value="{{ $titles[$key] }}">
+                                              </div>
+                                              <div class="form-group">
+                                                <input type="text" class="form-control" name="wtspnumbers_text[]" placeholder="" value="{{ $texts[$key] }}">
+                                              </div>
+                                              <div class="form-group">
+                                                <input type="text" class="form-control" name="wtspnumbers_number[]" placeholder="" value="{{ $number }}" data-valformat="withspacesforthreenumbers" maxlength="9">
+                                              </div>
                                             </div>
-                                            <div class="form-group">
-                                              <input type="text" class="form-control" name="wtspnumbers_text[]" placeholder="" value="{{ $texts[$key] }}">
-                                            </div>
-                                            <div class="form-group">
-                                              <input type="text" class="form-control" name="wtspnumbers_number[]" placeholder="" value="{{ $number }}">
+                                            <div class="flex-btn">
+                                              <button type="button" class="btn btn-danger remove-social">
+                                                <i class="fa fa-minus"></i>
+                                              </button>
                                             </div>
                                           </div>
-                                          <div class="flex-btn">
-                                            <button type="button" class="btn btn-danger remove-social">
-                                              <i class="fa fa-minus"></i>
-                                            </button>
-                                          </div>
-                                        </div>
-                                        @endforeach
+                                          @endforeach
+                                        @endif
+                                      </div>
+                                      <div class="flex-btn">
+                                        <button type="button" class="btn btn-success d-block w-100 add-whatsapp-number"><i class="fa fa-plus"></i></button>
                                       </div>
                                     </div>
                                   </div>

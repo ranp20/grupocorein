@@ -16,22 +16,28 @@ class SettingRepository{
       }
     }
     if($request->social_icons && $request->social_links){
-      $links = ['icons'=>$request->social_icons,'links'=>$request->social_links];
+      $links = [
+        'icons'=>$request->social_icons,
+        'links'=>$request->social_links
+      ];
       $input['social_link'] = json_encode($links,true);
     }
-    if($request->wtspnumbers_title && $request->wtspnumbers_number){
+    if($request->wtspnumbers_number){
       $whatsapp_numbers = [
-        'icons'=>$request->wtspnumbers_icon,
+        // 'icons'=>$request->wtspnumbers_icon,
         'title'=>$request->wtspnumbers_title,
         'text'=>$request->wtspnumbers_text,
-        'number'=>$request->wtspnumbers_number
+        'number'=> str_replace(" ", "", $request->wtspnumbers_number)
       ];
+      $input['whatsapp_numbers'] = json_encode($whatsapp_numbers,true);
+    }else{
+      $whatsapp_numbers = [];
       $input['whatsapp_numbers'] = json_encode($whatsapp_numbers,true);
     }
     // message text json encode
     if(isset($input['twilio_section'])){
       $input['twilio_section'] = json_encode($input['twilio_section'],true);
-    }   
+    }
     $setting_fields = [
       'is_attribute_search',
       'is_range_search',
@@ -50,6 +56,13 @@ class SettingRepository{
       'is_privacy_trams',
       'is_guest_checkout'
     ];
+    /*
+    echo "<pre>";
+    print_r($input);
+    echo "</pre>";
+    exit();
+    */
+    
     foreach($setting_fields as $setting_field){
       if($request->has($setting_field)){
         $input[$setting_field] = 1;
