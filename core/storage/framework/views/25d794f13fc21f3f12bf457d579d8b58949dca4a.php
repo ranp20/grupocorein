@@ -202,28 +202,31 @@
                                         <?php endif; ?>
                                         </h4>
                                         <div class="cWtspBtnCtc">
-                                            <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51<?php echo e($setting->footer_phone); ?>&text=Solicito información sobre: <?php echo e(route('front.product',$popular_category_item->slug)); ?>" target="_blank" class="cWtspBtnCtc__pLink">
+                                            <a title="Solicitar información" href="javascript:void(0);" target="_blank" class="cWtspBtnCtc__pLink">
                                                 <img src="<?php echo e(route('front.index')); ?>/assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" width="100" height="100" decoding="sync">
                                             </a>
                                             <div class="cWtspBtnCtc__pSubM">
+                                                <?php if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers)): ?>
+                                                <?php
+                                                    $titles = json_decode($setting->whatsapp_numbers,true)['title'];
+                                                    $texts = json_decode($setting->whatsapp_numbers,true)['text'];
+                                                    $numbers = json_decode($setting->whatsapp_numbers,true)['number'];
+                                                ?>
                                                 <ul class="cWtspBtnCtc__pSubM__m">
-                                                <li class="cWtspBtnCtc__pSubM__m__i">
-                                                    <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
-                                                    <!-- <img src="<?php echo e(asset('assets/back/images/WhatsApp')); ?>/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
-                                                    <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                                                    <!-- <span>912 831 232</span> -->
-                                                    <span>Tienda #1</span>
-                                                    </a>
-                                                </li>
-                                                <li class="cWtspBtnCtc__pSubM__m__i">
-                                                    <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
-                                                    <!-- <img src="<?php echo e(asset('assets/back/images/WhatsApp')); ?>/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
-                                                    <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                                                    <!-- <span>974 124 991</span> -->
-                                                    <span>Tienda #2</span>
-                                                    </a>
-                                                </li>
+                                                    <?php $__currentLoopData = $numbers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $number): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <li class="cWtspBtnCtc__pSubM__m__i">
+                                                        <a title="<?php echo e($titles[$key]); ?>" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51<?php echo e($numbers[$key]); ?>&text=<?php echo e($texts[$key]); ?>" target="_blank">
+                                                            <!-- <img src="<?php echo e(asset('assets/back/images/WhatsApp')); ?>/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
+                                                            <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
+                                                            <!-- <span>912 831 232</span> -->
+                                                            <span><?php echo e($titles[$key]); ?></span>
+                                                        </a>
+                                                    </li>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </ul>
+                                                <?php else: ?>
+                                                <p>No hay información</p>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </div>
@@ -310,28 +313,31 @@
                                         <?php endif; ?>
                                         </h4>
                                         <div class="cWtspBtnCtc">
-                                            <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51<?php echo e($setting->footer_phone); ?>&text=Solicito información sobre: <?php echo e(route('front.product',$feature_category_item->slug)); ?>" target="_blank" class="cWtspBtnCtc__pLink">
+                                            <a title="Solicitar información" href="javascript:void(0);" target="_blank" class="cWtspBtnCtc__pLink">
                                                 <img src="<?php echo e(route('front.index')); ?>/assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" width="100" height="100" decoding="sync">
                                             </a>
                                             <div class="cWtspBtnCtc__pSubM">
+                                                <?php if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers)): ?>
+                                                <?php
+                                                    $titles = json_decode($setting->whatsapp_numbers,true)['title'];
+                                                    $texts = json_decode($setting->whatsapp_numbers,true)['text'];
+                                                    $numbers = json_decode($setting->whatsapp_numbers,true)['number'];
+                                                ?>
                                                 <ul class="cWtspBtnCtc__pSubM__m">
-                                                <li class="cWtspBtnCtc__pSubM__m__i">
-                                                    <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
-                                                    <!-- <img src="<?php echo e(asset('assets/back/images/WhatsApp')); ?>/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
-                                                    <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                                                    <!-- <span>912 831 232</span> -->
-                                                    <span>Tienda #1</span>
-                                                    </a>
-                                                </li>
-                                                <li class="cWtspBtnCtc__pSubM__m__i">
-                                                    <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
-                                                    <!-- <img src="<?php echo e(asset('assets/back/images/WhatsApp')); ?>/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
-                                                    <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                                                    <!-- <span>974 124 991</span> -->
-                                                    <span>Tienda #2</span>
-                                                    </a>
-                                                </li>
+                                                    <?php $__currentLoopData = $numbers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $number): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <li class="cWtspBtnCtc__pSubM__m__i">
+                                                        <a title="<?php echo e($titles[$key]); ?>" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51<?php echo e($numbers[$key]); ?>&text=<?php echo e($texts[$key]); ?>" target="_blank">
+                                                            <!-- <img src="<?php echo e(asset('assets/back/images/WhatsApp')); ?>/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
+                                                            <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
+                                                            <!-- <span>912 831 232</span> -->
+                                                            <span><?php echo e($titles[$key]); ?></span>
+                                                        </a>
+                                                    </li>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </ul>
+                                                <?php else: ?>
+                                                <p>No hay información</p>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </div>

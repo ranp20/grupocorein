@@ -611,7 +611,7 @@
                                                 <input type="text" class="form-control" name="wtspnumbers_number[]" placeholder="" value="<?php echo e($number); ?>" data-valformat="withspacesforthreenumbers" maxlength="9">
                                               </div>
                                             </div>
-                                            <div class="flex-btn">
+                                            <div class="flex-btn pr-2">
                                               <button type="button" class="btn btn-danger remove-social">
                                                 <i class="fa fa-minus"></i>
                                               </button>
