@@ -1,6 +1,11 @@
 <?php $__env->startSection('content'); ?>
 <div class="wrapper wrapper-login">
   <div class="container container-login animated fadeIn">
+    <div class="cLogoFrmSignInAdm">
+      <a href="<?php echo e(route('back.login')); ?>" title="Login">
+        <img src="<?php echo e($setting->logo ? asset('assets/images/'.$setting->logo) : asset('assets/images/placeholder.png')); ?>" alt="logo_grupocorein" width="100" height="100" decoding="sync">
+      </a>
+    </div>
     <h3 class="text-center"><?php echo e(__('Sign In - Admin')); ?></h3>
     <div class="login-form">
       <form action="<?php echo e(route('back.login.submit')); ?>" method="POST">
@@ -19,8 +24,8 @@
             </div>
           </div>
         </div>
-        <div class="row justify-content-start form-sub m-0">
-          <a href="<?php echo e(route('back.forgot')); ?>" class="link float-right"><?php echo e(__('Forget Password ?')); ?></a>
+        <div class="row justify-content-center form-sub m-0">
+          <a href="<?php echo e(route('back.forgot')); ?>" class="link float-right"><?php echo e(__('Forgot the password?')); ?></a>
         </div>
         <div class="form-action mb-3">
           <button type="submit" class="btn btn-secondary  btn-login"><?php echo e(__('Sign In')); ?></button>
