@@ -105,7 +105,7 @@ body_theme4
                                 <form class="input-group" id="header_search_form" action="{{route('front.catalog')}}" method="get">
                                     <input type="hidden" name="category" value="" id="search__category">
                                     <span class="input-group-btn">
-                                        <button type="submit"><i class="icon-search"></i></button>
+                                        <button type="submit" title="Buscar..."><i class="icon-search"></i></button>
                                     </span>
                                     <input class="form-control" type="text" data-target="{{route('front.search.suggest')}}" autocomplete="off" spellcheck="false" id="__product__search" name="search" placeholder="{{__('Search by product name')}}" value="{{ $getSessProdSearch }}">
                                     <div class="serch-result d-none px-0 pb-0">
@@ -409,27 +409,29 @@ body_theme4
         </div>
         <div class="col-lg-4">
             <section class="widget">
-              <h3 class="widget-title">{{__('Newsletter')}}</h3>
-              <form class="row subscriber-form" action="{{route('front.subscriber.submit')}}" method="post">
-                @csrf
-                <div class="col-sm-12">
-                  <div class="input-group">
-                    <input class="form-control" type="email" name="email" placeholder="Su correo">
-                    <span class="input-group-addon"><i class="icon-mail"></i></span> </div>
-                  <div aria-hidden="true">
-                    <input type="hidden" name="b_c7103e2c981361a6639545bd5_1194bb7544" tabindex="-1">
-                  </div>
+                <h3 class="widget-title">{{__('Newsletter')}}</h3>
+                <form class="row subscriber-form" action="{{route('front.subscriber.submit')}}" method="post">
+                    @csrf
+                    <div class="col-sm-12">
+                    <div class="input-group">
+                        <input class="form-control" type="email" name="email" placeholder="Su correo">
+                        <span class="input-group-addon"><i class="icon-mail"></i></span> </div>
+                    <div aria-hidden="true">
+                        <input type="hidden" name="b_c7103e2c981361a6639545bd5_1194bb7544" tabindex="-1">
+                    </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <button class="btn btn-primary btn-block mt-2" type="submit">
+                            <span>{{__('Subscribe')}}</span>
+                        </button>
+                    </div>
+                    <div class="col-lg-12">
+                        <p class="text-sm opacity-80 pt-2">{{__('Subscribe to our Newsletter to receive early discount offers, latest news, sales and promo information.')}}</p>
+                    </div>
+                </form>
+                <div class="pt-3">
+                    <img class="d-block gateway_image" src="{{ $setting->footer_gateway_img ? asset('assets/images/'.$setting->footer_gateway_img) : asset('system/resources/assets/images/placeholder.png') }}" alt="credit-card_list" width="100" height="100" decoding="sync">
                 </div>
-                <div class="col-sm-12">
-                    <button class="btn btn-primary btn-block mt-2" type="submit">
-                        <span>{{__('Subscribe')}}</span>
-                    </button>
-                </div>
-                <div class="col-lg-12">
-                    <p class="text-sm opacity-80 pt-2">{{__('Subscribe to our Newsletter to receive early discount offers, latest news, sales and promo information.')}}</p>
-                </div>
-              </form>
-              <div class="pt-3"><img class="d-block gateway_image" src="{{ $setting->footer_gateway_img ? asset('assets/images/'.$setting->footer_gateway_img) : asset('system/resources/assets/images/placeholder.png') }}"></div>
             </section>
           </div>
       </div>

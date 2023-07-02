@@ -109,7 +109,7 @@ body_theme4
                                 <form class="input-group" id="header_search_form" action="<?php echo e(route('front.catalog')); ?>" method="get">
                                     <input type="hidden" name="category" value="" id="search__category">
                                     <span class="input-group-btn">
-                                        <button type="submit"><i class="icon-search"></i></button>
+                                        <button type="submit" title="Buscar..."><i class="icon-search"></i></button>
                                     </span>
                                     <input class="form-control" type="text" data-target="<?php echo e(route('front.search.suggest')); ?>" autocomplete="off" spellcheck="false" id="__product__search" name="search" placeholder="<?php echo e(__('Search by product name')); ?>" value="<?php echo e($getSessProdSearch); ?>">
                                     <div class="serch-result d-none px-0 pb-0">
@@ -401,27 +401,29 @@ body_theme4
         </div>
         <div class="col-lg-4">
             <section class="widget">
-              <h3 class="widget-title"><?php echo e(__('Newsletter')); ?></h3>
-              <form class="row subscriber-form" action="<?php echo e(route('front.subscriber.submit')); ?>" method="post">
-                <?php echo csrf_field(); ?>
-                <div class="col-sm-12">
-                  <div class="input-group">
-                    <input class="form-control" type="email" name="email" placeholder="Su correo">
-                    <span class="input-group-addon"><i class="icon-mail"></i></span> </div>
-                  <div aria-hidden="true">
-                    <input type="hidden" name="b_c7103e2c981361a6639545bd5_1194bb7544" tabindex="-1">
-                  </div>
+                <h3 class="widget-title"><?php echo e(__('Newsletter')); ?></h3>
+                <form class="row subscriber-form" action="<?php echo e(route('front.subscriber.submit')); ?>" method="post">
+                    <?php echo csrf_field(); ?>
+                    <div class="col-sm-12">
+                    <div class="input-group">
+                        <input class="form-control" type="email" name="email" placeholder="Su correo">
+                        <span class="input-group-addon"><i class="icon-mail"></i></span> </div>
+                    <div aria-hidden="true">
+                        <input type="hidden" name="b_c7103e2c981361a6639545bd5_1194bb7544" tabindex="-1">
+                    </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <button class="btn btn-primary btn-block mt-2" type="submit">
+                            <span><?php echo e(__('Subscribe')); ?></span>
+                        </button>
+                    </div>
+                    <div class="col-lg-12">
+                        <p class="text-sm opacity-80 pt-2"><?php echo e(__('Subscribe to our Newsletter to receive early discount offers, latest news, sales and promo information.')); ?></p>
+                    </div>
+                </form>
+                <div class="pt-3">
+                    <img class="d-block gateway_image" src="<?php echo e($setting->footer_gateway_img ? asset('assets/images/'.$setting->footer_gateway_img) : asset('system/resources/assets/images/placeholder.png')); ?>" alt="credit-card_list" width="100" height="100" decoding="sync">
                 </div>
-                <div class="col-sm-12">
-                    <button class="btn btn-primary btn-block mt-2" type="submit">
-                        <span><?php echo e(__('Subscribe')); ?></span>
-                    </button>
-                </div>
-                <div class="col-lg-12">
-                    <p class="text-sm opacity-80 pt-2"><?php echo e(__('Subscribe to our Newsletter to receive early discount offers, latest news, sales and promo information.')); ?></p>
-                </div>
-              </form>
-              <div class="pt-3"><img class="d-block gateway_image" src="<?php echo e($setting->footer_gateway_img ? asset('assets/images/'.$setting->footer_gateway_img) : asset('system/resources/assets/images/placeholder.png')); ?>"></div>
             </section>
           </div>
       </div>
