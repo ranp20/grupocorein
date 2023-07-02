@@ -66,9 +66,9 @@
           <div class="cWtspBtnCtc__pSubM">
             <?php if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers)): ?>
             <?php
-                $titles = json_decode($setting->whatsapp_numbers,true)['title'];
-                $texts = json_decode($setting->whatsapp_numbers,true)['text'];
-                $numbers = json_decode($setting->whatsapp_numbers,true)['number'];
+              $titles = json_decode($setting->whatsapp_numbers,true)['title'];
+              $texts = json_decode($setting->whatsapp_numbers,true)['text'];
+              $numbers = json_decode($setting->whatsapp_numbers,true)['number'];
             ?>
             <ul class="cWtspBtnCtc__pSubM__m">
               <?php $__currentLoopData = $numbers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $number): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>

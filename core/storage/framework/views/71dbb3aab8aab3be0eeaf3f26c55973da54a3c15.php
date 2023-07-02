@@ -6,32 +6,6 @@
     </a>
   </li>
   <li class="nav-item">
-    <a data-toggle="collapse" href="#category">
-      <i class="fas fa-list-alt"></i>
-      <p><?php echo e(__('Manage Categories')); ?></p>
-      <span class="caret"></span>
-    </a>
-    <div class="collapse" id="category">
-      <ul class="nav nav-collapse">
-        <li>
-          <a class="sub-link" href="<?php echo e(route('back.category.index')); ?>">
-            <span class="sub-item"><?php echo e(__('Categories')); ?></span>
-          </a>
-        </li>
-        <li>
-          <a class="sub-link" href="<?php echo e(route('back.subcategory.index')); ?>">
-            <span class="sub-item"><?php echo e(__('Sub categories')); ?></span>
-          </a>
-        </li>
-        <li>
-          <a class="sub-link" href="<?php echo e(route('back.childcategory.index')); ?>">
-            <span class="sub-item"><?php echo e(__('Child categories')); ?></span>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </li>
-  <li class="nav-item">
     <a data-toggle="collapse" href="#items">
       <i class="fab fa-product-hunt"></i>
       <p><?php echo e(__('Manage Products')); ?></p>
@@ -39,11 +13,6 @@
     </a>
     <div class="collapse" id="items">
       <ul class="nav nav-collapse">
-        <li>
-          <a class="sub-link" href="<?php echo e(route('back.brand.index')); ?>">
-            <span class="sub-item"><?php echo e(__('Brands')); ?></span>
-          </a>
-        </li>
         <li>
           <a class="sub-link" href="<?php echo e(route('back.item.add')); ?>">
             <span class="sub-item"><?php echo e(__('Add Product')); ?></span>
@@ -60,39 +29,14 @@
           </a>
         </li>
         <li>
-          <a class="sub-link" href="<?php echo e(route('back.campaign.index')); ?>">
-            <span class="sub-item"><?php echo e(__('Campaign Offer')); ?></span>
+          <a class="sub-link" href="<?php echo e(route('back.brand.index')); ?>">
+            <span class="sub-item"><?php echo e(__('Brands')); ?></span>
           </a>
         </li>
-        <li>
-          <a class="sub-link" href="<?php echo e(route('back.bulk.product.index')); ?>">
-            <span class="sub-item"><?php echo e(__('Importar y Exportar CSV')); ?></span>
-          </a>
-        </li>
-        <li>
-          <a class="sub-link" href="<?php echo e(route('back.review.index')); ?>">
-          <span class="sub-item"><?php echo e(__('Product Reviews')); ?></span></a>
-        </li>
+        
       </ul>
     </div>
   </li>
-  <li class="nav-item">
-    <a data-toggle="collapse" href="#quotation">
-      <i class="fas fa-percent"></i>
-      <p><?php echo e(__('Manage Quotation')); ?> </p>
-      <span class="caret"></span>
-    </a>
-    <div class="collapse" id="quotation">
-      <ul class="nav nav-collapse">
-        <li>
-          <a class="sub-link" href="<?php echo e(route('back.quotation.index')); ?>">
-            <span class="sub-item"><?php echo e(__('All Quotation')); ?></span>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </li>
-  <!-- NUEVO CONTENIDO(INICIO) -->
   <li class="nav-item <?php echo e(request()->is('orders/*') ? 'submenu' : ''); ?>">
     <a data-toggle="collapse" href="#order">
       <i class="fab fa-first-order"></i>
@@ -129,16 +73,54 @@
       </ul>
     </div>
   </li>
-  <!-- NUEVO CONTENIDO(FIN) -->
+  <li class="nav-item">
+    <a data-toggle="collapse" href="#category">
+      <i class="fas fa-list-alt"></i>
+      <p><?php echo e(__('Manage Categories')); ?></p>
+      <span class="caret"></span>
+    </a>
+    <div class="collapse" id="category">
+      <ul class="nav nav-collapse">
+        <li>
+          <a class="sub-link" href="<?php echo e(route('back.category.index')); ?>">
+            <span class="sub-item"><?php echo e(__('Categories')); ?></span>
+          </a>
+        </li>
+        <li>
+          <a class="sub-link" href="<?php echo e(route('back.subcategory.index')); ?>">
+            <span class="sub-item"><?php echo e(__('Sub categories')); ?></span>
+          </a>
+        </li>
+        <li>
+          <a class="sub-link" href="<?php echo e(route('back.childcategory.index')); ?>">
+            <span class="sub-item"><?php echo e(__('Child categories')); ?></span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </li>
+  <li class="nav-item">
+    <a data-toggle="collapse" href="#quotation">
+      <i class="fas fa-percent"></i>
+      <p><?php echo e(__('Manage Quotation')); ?> </p>
+      <span class="caret"></span>
+    </a>
+    <div class="collapse" id="quotation">
+      <ul class="nav nav-collapse">
+        <li>
+          <a class="sub-link" href="<?php echo e(route('back.quotation.index')); ?>">
+            <span class="sub-item"><?php echo e(__('All Quotation')); ?></span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </li>
   <li class="nav-item">
     <a href="<?php echo e(route('back.transaction.index')); ?>">
       <i class="fas fa-random"></i>
       <p><?php echo e(__('Transactions')); ?></p>
     </a>
   </li>    
-  <!-- NUEVO CONTENIDO (INICIO) -->
-  
-    
   <li class="nav-item">
     <a data-toggle="collapse" href="#locaciones">
       <i class="fas fa-list-alt"></i>
@@ -165,9 +147,6 @@
       </ul>
     </div>
   </li>
- 
-  
-  <!-- NUEVO CONTENIDO (FIN) -->
   <li class="nav-item">
     <a data-toggle="collapse" href="#ecommerce">
       <i class="fas fa-newspaper"></i>
@@ -390,5 +369,4 @@
       <p><?php echo e(__('Borrar caché')); ?></p>
     </a>
   </li>
-</ul>
-<?php /**PATH C:\xampp\htdocs\grupocorein\core\resources\views/master/inc/super.blade.php ENDPATH**/ ?>
+</ul><?php /**PATH C:\xampp\htdocs\grupocorein\core\resources\views/master/inc/super.blade.php ENDPATH**/ ?>

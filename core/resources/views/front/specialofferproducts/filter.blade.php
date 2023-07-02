@@ -64,9 +64,9 @@
           <div class="cWtspBtnCtc__pSubM">
             @if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers))
             @php
-                $titles = json_decode($setting->whatsapp_numbers,true)['title'];
-                $texts = json_decode($setting->whatsapp_numbers,true)['text'];
-                $numbers = json_decode($setting->whatsapp_numbers,true)['number'];
+              $titles = json_decode($setting->whatsapp_numbers,true)['title'];
+              $texts = json_decode($setting->whatsapp_numbers,true)['text'];
+              $numbers = json_decode($setting->whatsapp_numbers,true)['number'];
             @endphp
             <ul class="cWtspBtnCtc__pSubM__m">
               @foreach ($numbers as $key => $number)

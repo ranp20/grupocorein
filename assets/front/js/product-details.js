@@ -99,7 +99,7 @@ $(() => {
           let minAmmountformat = (Math.round(response.min_amount * 100) / 100).toFixed(2);
 
           view_html += `<div>
-            <div><h4>Costo de envío, por monto menor a S/.1600.00: </h4></div>
+            <div><h4>Costo de envío, por monto menor a S/.1600.00 es: </h4></div>
             <div><h4><strong>S/. ${minAmmountformat}</strong></h4></div>
           </div>`;
           $('#svalgscirn45__3FgH3').html(view_html);

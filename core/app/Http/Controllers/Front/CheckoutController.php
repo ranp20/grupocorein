@@ -589,10 +589,6 @@ class CheckoutController extends Controller{
     }
     return response()->json($arrDataVoucher);
   }
-  /* ---------------- AL ENVIAR Y PROCESAR LOS DATOS DE PAGO ---------------- */
-  public function checkoutProcess(Request $request){
-    
-  }
   /* ---------------- AL ENVIAR DATOS DESDE EL MÉTODO DE PAGO ---------------- */
 	public function checkout(PaymentRequest $request){
 

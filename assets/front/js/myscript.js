@@ -394,10 +394,12 @@ $(function($){
     document.addEventListener('keydown', handleKeyPress);
     $(document).on("click",".cWtspBtnCtc__pLink",function(e){
       e.preventDefault();
+      /*
       // console.log($(this).parent().parent().find('.product-title').find('a').text());
       let prod_name = $(this).parent().parent().find('.product-title').find('a').text().trim();
       let prod_price = $(this).parent().parent().find('.product-price').find('span').text().trim();
       alert("Producto: "+prod_name+"\n"+"Precio: "+prod_price);
+      */
     });
     // ----------------------- NUEVO CONTENIDO(FIN)
     $(document).on('click', '#view_all_search_', function(){

@@ -158,28 +158,31 @@
                 @else
                 @endif
                 <div class="cWtspBtnCtc">
-                  <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51{{$setting->footer_phone}}&text=Solicito información sobre: {{route('front.product',$item->slug)}}" target="_blank" class="cWtspBtnCtc__pLink">
+                  <a title="Solicitar información" href="javascript:void(0);" target="_blank" class="cWtspBtnCtc__pLink">
                     <img src="../assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" width="100" height="100" decoding="sync">
                   </a>
                   <div class="cWtspBtnCtc__pSubM">
+                  @if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers))
+                  @php
+                    $titles = json_decode($setting->whatsapp_numbers,true)['title'];
+                    $texts = json_decode($setting->whatsapp_numbers,true)['text'];
+                    $numbers = json_decode($setting->whatsapp_numbers,true)['number'];
+                  @endphp
                     <ul class="cWtspBtnCtc__pSubM__m">
+                      @foreach ($numbers as $key => $number)
                       <li class="cWtspBtnCtc__pSubM__m__i">
-                        <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
+                        <a title="{{ $titles[$key] }}" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51{{ $numbers[$key] }}&text={{ $texts[$key] }}" target="_blank">
                           <!-- <img src="{{ asset('assets/back/images/WhatsApp') }}/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
                           <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
                           <!-- <span>912 831 232</span> -->
-                          <span>Tienda #1</span>
+                          <span>{{ $titles[$key] }}</span>
                         </a>
                       </li>
-                      <li class="cWtspBtnCtc__pSubM__m__i">
-                        <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
-                          <!-- <img src="{{ asset('assets/back/images/WhatsApp') }}/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
-                          <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                          <!-- <span>974 124 991</span> -->
-                          <span>Tienda #2</span>
-                        </a>
-                      </li>
+                      @endforeach
                     </ul>
+                    @else
+                    <p>No hay información</p>
+                    @endif
                   </div>
                 </div>
               </div>
