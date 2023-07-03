@@ -555,14 +555,14 @@ body_theme4
     @if(Session::has('error'))
     <script>
       $(document).ready(function(){
-        DangerNotification('{{Session::get('error')}}')
+        DangerNotification("{{Session::get('error')}}");
       });
     </script>
     @endif
     @if(Session::has('success'))
     <script>
       $(document).ready(function(){
-        SuccessNotification('{{Session::get('success')}}');
+        SuccessNotification("{{Session::get('success')}}");
       });
     </script>
     @endif

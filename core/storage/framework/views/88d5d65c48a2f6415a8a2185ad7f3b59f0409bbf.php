@@ -35,11 +35,11 @@ main table.summary td,main table.summary th{padding:8px;border-bottom:0}body,foo
   	<div class="cH-sec">
 			<div class="cH-sec__cL">
 				<div class="cH-sec__cL__cLogo">
-					<img src="{{asset('assets/images/1669085546GRUPO-COREIN-LOGOTIPO.png')}}" alt="logo_grupocorein" width="100" height="100">
+					<img src="<?php echo e(asset('assets/images/1669085546GRUPO-COREIN-LOGOTIPO.png')); ?>" alt="logo_grupocorein" width="100" height="100">
 				</div>
 				<div class="cH-sec__cL__cDataInfo">
-					<p>{{ $dataPDF['system_settinginfo']['site_title'] }}</p>
-					<p>RUC: {{ $dataPDF['system_settinginfo']['site_ruc'] }}</p>
+					<p><?php echo e($dataPDF['system_settinginfo']['site_title']); ?></p>
+					<p>RUC: <?php echo e($dataPDF['system_settinginfo']['site_ruc']); ?></p>
 				</div>
 			</div>
 			<div class="cH-sec__cR">
@@ -50,34 +50,34 @@ main table.summary td,main table.summary th{padding:8px;border-bottom:0}body,foo
 					</div>
 					<div class="cH-sec__cR__cGrp__i">
 						<span>Fecha: </span>
-						<span>{{ $dataPDF['session_userInfo']['date'] }}</span>
+						<span><?php echo e($dataPDF['session_userInfo']['date']); ?></span>
 					</div>
 				</div>
 				<div class="cH-sec__cR__cNor">
 					<span>Cliente: </span>
-					<span>{{ $dataPDF['session_userInfo']['client'] }}</span>
+					<span><?php echo e($dataPDF['session_userInfo']['client']); ?></span>
 				</div>
 				<div class="cH-sec__cR__cGrp">
 					<div class="cH-sec__cR__cGrp__i">
 						<span>RUC Cliente: </span>
-						<span>{{ $dataPDF['session_userInfo']['ruc'] }}</span>
+						<span><?php echo e($dataPDF['session_userInfo']['ruc']); ?></span>
 					</div>
 					<div class="cH-sec__cR__cGrp__i">
 						<span>Usuario: </span>
-						<span>{{ $dataPDF['session_userInfo']['user'] }}</span>
+						<span><?php echo e($dataPDF['session_userInfo']['user']); ?></span>
 					</div>
 				</div>
 				<div class="cH-sec__cR__cNor">
 					<span>Dirección: </span>
-					<span>{{ $dataPDF['session_userInfo']['address'] }}</span>
+					<span><?php echo e($dataPDF['session_userInfo']['address']); ?></span>
 				</div>
 				<div class="cH-sec__cR__cNor">
 					<span>Teléfono: </span>
-					<span>{{ formatPhone($dataPDF['session_userInfo']['phone']) }}</span>
+					<span><?php echo e(formatPhone($dataPDF['session_userInfo']['phone'])); ?></span>
 				</div>
 				<div class="cH-sec__cR__cNor">
 					<span>E-mail: </span>
-					<span>{{ $dataPDF['session_userInfo']['email'] }}</span>
+					<span><?php echo e($dataPDF['session_userInfo']['email']); ?></span>
 				</div>
 				<!--
 				<div class="cH-sec__cR__cNor">
@@ -112,52 +112,45 @@ main table.summary td,main table.summary th{padding:8px;border-bottom:0}body,foo
 				</tr>
 			</thead>
 			<tbody>
-				@php
+				<?php
 				$countProds = 1;
-				@endphp
-				@foreach($dataPDF['session_cart'] as $k => $v)
+				?>
+				<?php $__currentLoopData = $dataPDF['session_cart']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 				<tr>
-					<td class="width-2 pl-2">{{ $countProds }}</td>
-					<td class="width-4">{{ $v['sku'] }}</td>
-					<td class="width-19"><span>{{ maxcharacters($v['name'], 42) }}</span></td>
-					<td class="width-7">{{ maxcharacters($v['brand_name'], 23) }}</td>
-					<td class="width-2 pl-2">{{ $v['qty'] }}</td>
-					<td class="width-3">{{ $v['price'] }}</td>
-					<td class="width-2 pl-2">{{ '0.00' }}</td>
+					<td class="width-2 pl-2"><?php echo e($countProds); ?></td>
+					<td class="width-4"><?php echo e($v['sku']); ?></td>
+					<td class="width-19"><span><?php echo e(maxcharacters($v['name'], 42)); ?></span></td>
+					<td class="width-7"><?php echo e(maxcharacters($v['brand_name'], 23)); ?></td>
+					<td class="width-2 pl-2"><?php echo e($v['qty']); ?></td>
+					<td class="width-3"><?php echo e($v['price']); ?></td>
+					<td class="width-2 pl-2"><?php echo e('0.00'); ?></td>
 					<!-- <td class="width-3 pl-2">'160'</td> -->
-					<td class="width-3">{{ $v['subtotal'] }}</td>
+					<td class="width-3"><?php echo e($v['subtotal']); ?></td>
 				</tr>
-				@php
+				<?php
 				$countProds++;
-				@endphp
-				@endforeach
+				?>
+				<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 			</tbody>
 		</table>
 		<table class="summary">
 			<tr>
 				<th>Total Neto</th>
-				<td>{{ $dataPDF['session_cartSubtotal']['subtotal'] }}</td>
+				<td><?php echo e($dataPDF['session_cartSubtotal']['subtotal']); ?></td>
 			</tr>
-			{{--
-			<!--
-			<tr>
-				<th>I.G.V.(18%)</th>
-				<td>{{ $dataPDF['session_cartSubtotal']['totalIGV'] }}</td>
-			</tr>
-			-->
-			--}}
+			
 			<tr>
 				<th>Envío</th>
-				<td>{{ $dataPDF['session_cartSubtotal']['delivery'] }}</td>
+				<td><?php echo e($dataPDF['session_cartSubtotal']['delivery']); ?></td>
 			</tr>
 			<tr class="total">
 				<th>Total a Pagar</th>
-				<td>{{ $dataPDF['session_cartSubtotal']['totalNeto'] }}</td>
+				<td><?php echo e($dataPDF['session_cartSubtotal']['totalNeto']); ?></td>
 			</tr>
 		</table>
 	</main>
 	<footer>
-		<p>Su Pedido será procesado en horario de oficina. Lunes - Viernes: {{ $dataPDF['system_settinginfo']['site_working-hours']['init'] }} a {{ $dataPDF['system_settinginfo']['site_working-hours']['end'] }} / Sábados {{ $dataPDF['system_settinginfo']['site_weekend']['init'] }} a {{ $dataPDF['system_settinginfo']['site_weekend']['end'] }}</p>
+		<p>Su Pedido será procesado en horario de oficina. Lunes - Viernes: <?php echo e($dataPDF['system_settinginfo']['site_working-hours']['init']); ?> a <?php echo e($dataPDF['system_settinginfo']['site_working-hours']['end']); ?> / Sábados <?php echo e($dataPDF['system_settinginfo']['site_weekend']['init']); ?> a <?php echo e($dataPDF['system_settinginfo']['site_weekend']['end']); ?></p>
 	</footer>
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\grupocorein\core\resources\views/front/checkout/gen_pdforderpreview.blade.php ENDPATH**/ ?>

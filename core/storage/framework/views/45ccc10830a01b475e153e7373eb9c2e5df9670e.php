@@ -548,14 +548,14 @@ body_theme4
     <?php if(Session::has('error')): ?>
     <script>
       $(document).ready(function(){
-        DangerNotification('<?php echo e(Session::get('error')); ?>')
+        DangerNotification("<?php echo e(Session::get('error')); ?>");
       });
     </script>
     <?php endif; ?>
     <?php if(Session::has('success')): ?>
     <script>
       $(document).ready(function(){
-        SuccessNotification('<?php echo e(Session::get('success')); ?>');
+        SuccessNotification("<?php echo e(Session::get('success')); ?>");
       });
     </script>
     <?php endif; ?>

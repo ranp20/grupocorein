@@ -8,6 +8,7 @@ class Setting extends Model
 {
     protected $fillable = [
         'title',
+        'ruc',
         'home_page_title',
         'logo',
         'favicon',

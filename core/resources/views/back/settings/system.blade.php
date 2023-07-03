@@ -46,11 +46,17 @@
                   <div id="tabs">
                     <div class="tab-content">
                       <div id="basic" class="tab-pane active"><br>
-                        <div class="row justify-content-center">
+                        <div class="row justify-content-start">
                           <div class="col-lg-8">
                             <div class="form-group">
                               <label for="title">{{ __('App Name') }} *</label>
                               <input type="text" name="title" class="form-control" id="title" placeholder="{{ __('Enter Website Title') }}" value="{{ $setting->title }}" >
+                            </div>
+                          </div>
+                          <div class="col-lg-8">
+                            <div class="form-group">
+                              <label for="ruc">{{ __('RUC') }} *</label>
+                              <input type="text" name="ruc" class="form-control" id="ruc" placeholder="{{ __('Enter Website RUC') }}" value="{{ $setting->ruc }}" maxlength="11">
                             </div>
                           </div>
                           <div class="col-lg-8">

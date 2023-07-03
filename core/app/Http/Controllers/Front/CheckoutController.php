@@ -917,13 +917,27 @@ class CheckoutController extends Controller{
       'delivery' => PriceHelper::setCurrencyPrice($ammountDeliveryShipping),
       'totalNeto' => PriceHelper::setCurrencyPrice($totalNeto)
     ];
+    $setting = Setting::first();
+    $getSettingsInfo = [
+      'site_title' => $setting->title,
+      'site_ruc' => $setting->ruc,
+      'site_working-hours' => [
+        'init' => $setting->friday_start,
+        'end' => $setting->friday_end
+      ],
+      'site_weekend' => [
+        'init' => $setting->satureday_start,
+        'end' => $setting->satureday_end
+      ]
+    ];
 
     $dataPDF = [
       "billing_address" => $get_BillingAddress,
       "shipping_address" => $get_ShippingAddress,
       "session_cart" => $get_SessionCartFormat,
       "session_cartSubtotal" => $get_SessionCartSubtotal,
-      "session_userInfo" => $get_SessionUserInfo
+      "session_userInfo" => $get_SessionUserInfo,
+      "system_settinginfo" => $getSettingsInfo,
     ];
     
     return PDF::loadView('front.checkout.gen_pdforderpreview', compact('dataPDF'))

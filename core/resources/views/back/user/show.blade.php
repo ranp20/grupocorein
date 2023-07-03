@@ -21,24 +21,24 @@
               <table class="table table-bordered table-striped">
                 <tr>
                   <th>{{ __("Names") }}</th>
-                  <td> <input type="text" name="first_name" class="form-control" id="text" value="{{$user->first_name}}" ></td>
+                  <td><input type="text" name="first_name" id="first_name" value="{{$user->first_name}}" disabled class="form-control" aria-expanded="true" aria-visibility="show"></td>
                 </tr>
                 <tr>
                   <th>{{ __("SurNames") }}</th>
-                  <td><input type="text" name="last_name" class="form-control" id="text" value="{{$user->last_name}}" ></td>
+                  <td><input type="text" name="last_name" id="last_name" value="{{$user->last_name}}" disabled class="form-control" aria-expanded="true" aria-visibility="show"></td>
                 </tr>
                 <tr>
                   <th>{{ __("Email Address") }}</th>
-                  <td><input type="text" name="email" class="form-control" id="text" value="{{$user->email}}" ></td>
+                  <td><input type="text" name="email" id="email" value="{{$user->email}}" disabled class="form-control" aria-expanded="true" aria-visibility="show"></td>
                 </tr>
                 <tr>
                   <th>{{ __("Phone Number") }}</th>
-                  <td><input type="text" name="phone" class="form-control" id="text" value="{{$user->phone}}" ></td>
+                  <td><input type="text" name="phone" id="phone" value="{{$user->phone}}" disabled class="form-control" aria-expanded="true" aria-visibility="show"></td>
                 </tr>
-                <input type="hidden" name="user_id" id="" value="{{$user->id}}">
+                <input type="hidden" name="user_id" id="user_id" value="{{$user->id}}">
                 <tr>
                   <th>{{ __("Password") }}</th>
-                  <td><input type="password" name="password" class="form-control" id="text" placeholder="{{ __('Password') }}" value="" ></td>
+                  <td><input type="password" name="password" id="password" placeholder="{{ __('Password') }}" autocomplete="false" value="" disabled class="form-control" aria-expanded="true" aria-visibility="show"></td>
                 </tr>
                 <tr>
                   <th>{{ __("Total Orders") }}</th>
