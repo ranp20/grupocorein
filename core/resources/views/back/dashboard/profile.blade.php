@@ -6,7 +6,7 @@
       <h3 class="mb-0 bc-title"><b>{{ __('Update Profile') }}</b></h3>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('back.dashboard') }}">{{ __('Dashboard') }}</a></li>
-        <li class="breadcrumb-item"><a href="#">{{ __('Update Profile') }}</a></li>
+        <li class="breadcrumb-item"><a href="javascript:void(0);">{{ __('Update Profile') }}</a></li>
       </ol>
     </div>
   </div>

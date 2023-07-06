@@ -108,11 +108,44 @@
           @if ($item->previous_price != 0)
             <small class="d-inline-block"><del>{{PriceHelper::setPreviousPrice($item->previous_price)}}</del></small>
           @endif
+          @php
+            $TaxesAll = DB::table('taxes')->get();
+            $sumFinalPrice1 = 0;
+            $sumFinalPrice2 = 0;
+            $incIGV = $TaxesAll[0]->value;
+            $sinIGV = $TaxesAll[1]->value;
+            $incIGV_format = $incIGV / 100;
+            $sinIGV_format = $sinIGV;
+          @endphp
             @if(isset($item->sections_id) && $item->sections_id != 0)
               @if($item->sections_id == 1)
-              <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($item->on_sale_price)}}</span>
+                @if(isset($item->tax_id) && $item->tax_id == 1)
+                  @php
+                    $sumFinalPrice1 = $item->on_sale_price * $incIGV_format;
+                    $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
+                  @endphp
+                  <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                @else
+                  @php
+                    $sumFinalPrice1 = $item->on_sale_price;
+                    $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
+                  @endphp
+                  <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                @endif
               @else
-              <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($item->special_offer_price)}}</span>
+                @if(isset($item->tax_id) && $item->tax_id == 1)
+                  @php
+                    $sumFinalPrice1 = $item->special_offer_price * $incIGV_format;
+                    $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                  @endphp
+                  <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                @else
+                  @php
+                    $sumFinalPrice1 = $item->special_offer_price;
+                    $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                  @endphp
+                  <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                @endif
               @endif
             @endif
             @if(isset($item->tax_id) && $item->tax_id == 1)

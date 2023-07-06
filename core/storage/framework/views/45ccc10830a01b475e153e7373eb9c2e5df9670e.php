@@ -122,14 +122,14 @@ body_theme4
                         </div>
                         <div class="toolbar d-flex">
                         <div class="toolbar-item close-m-serch visible-on-mobile">
-                            <a href="#">
+                            <a href="javascript:void(0);">
                                 <div>
                                     <i class="icon-search"></i>
                                 </div>
                             </a>
                         </div>
                         <div class="toolbar-item visible-on-mobile mobile-menu-toggle">
-                            <a href="#">
+                            <a href="javascript:void(0);">
                                 <div>
                                     <i class="icon-menu"></i>
                                     <span class="text-label"><?php echo e(__('Menu')); ?></span>
@@ -185,7 +185,7 @@ body_theme4
                             <div class="mm-heading-area">
                                 <h4><?php echo e(__('Navigation')); ?></h4>
                                 <div class="toolbar-item visible-on-mobile mobile-menu-toggle mm-t-two">
-                                    <a href="#">
+                                    <a href="javascript:void(0);">
                                         <div><i class="icon-x"></i></div>
                                     </a>
                                 </div>
@@ -430,7 +430,7 @@ body_theme4
       <p class="footer-copyright"> <?php echo e($setting->copy_right); ?></p>
     </div>
 </footer>
-<a class="scroll-to-top-btn" href="#">
+<a class="scroll-to-top-btn" href="javascript:void(0);">
     <i class="icon-chevron-up"></i>
 </a>
 <div class="site-backdrop"></div>

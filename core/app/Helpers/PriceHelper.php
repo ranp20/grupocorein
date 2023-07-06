@@ -3,6 +3,7 @@ namespace App\Helpers;
 use App\Models\AttributeOption;
 use App\Models\Currency;
 use App\Models\Item;
+use App\Models\Tax;
 use App\Models\PaymentSetting;
 use App\Models\Setting;
 use App\Models\State;
@@ -129,6 +130,11 @@ class PriceHelper{
   }
   public static function grandPrice($item){
     $option_price = 0;
+    $taxes = Tax::where('id',$item->tax_id)->select('id','name','value','status')->first();
+    $taxes = $taxes->value;
+    $taxesformat = $taxes / 100;
+    $price1 = 0;
+    $price2 = 0;
     if(count($item->attributes) > 0){
       foreach($item->attributes as $attr){
         if(isset($attr->options[0])){
@@ -141,8 +147,17 @@ class PriceHelper{
     }else{
       $curr = Currency::where('is_default',1)->first();
     }
-    $price = ($item->discount_price + $option_price);
-    return $price;;
+
+    $price1 = ($item->discount_price + $option_price) * $taxesformat;
+    $price2 = $price1 + $item->discount_price + $option_price;
+    $price = $price2;
+    /*
+    echo "<pre>";
+    print_r($price);
+    echo "</pre>";
+    exit();
+    */
+    return $price;
   }
   public static function Discount($discount){
     if($discount){

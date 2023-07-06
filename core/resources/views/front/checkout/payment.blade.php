@@ -359,7 +359,7 @@ $orderIdGenFirst = genCodeRandom();
                     @if (PriceHelper::CheckDigitalPaymentGateway())
                     @if ($gateway->unique_keyword != 'cod')
                     <div class="single-payment-method">
-                      <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
+                      <a class="text-decoration-none sLinkModal-shw__cPay" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
                         <img class="" src="{{asset('assets/back/images/payment/'.$gateway->photo)}}" alt="{{$gateway->name}}" title="{{$gateway->name}}">
                         <p>{{$gateway->name}}</p>
                       </a>
@@ -367,7 +367,7 @@ $orderIdGenFirst = genCodeRandom();
                     @endif
                     @else
                     <div class="single-payment-method">
-                      <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
+                      <a class="text-decoration-none sLinkModal-shw__cPay" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
                         <img class="" src="{{asset('assets/back/images/payment/'.$gateway->photo)}}" alt="{{$gateway->name}}" title="{{$gateway->name}}">
                         <p>{{$gateway->name}}</p>
                       </a>

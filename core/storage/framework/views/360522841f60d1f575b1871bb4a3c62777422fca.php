@@ -355,7 +355,7 @@ unset($__errorArgs, $__bag); ?>
                     <?php if(PriceHelper::CheckDigitalPaymentGateway()): ?>
                     <?php if($gateway->unique_keyword != 'cod'): ?>
                     <div class="single-payment-method">
-                      <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#<?php echo e($gateway->unique_keyword); ?>">
+                      <a class="text-decoration-none sLinkModal-shw__cPay" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#<?php echo e($gateway->unique_keyword); ?>">
                         <img class="" src="<?php echo e(asset('assets/back/images/payment/'.$gateway->photo)); ?>" alt="<?php echo e($gateway->name); ?>" title="<?php echo e($gateway->name); ?>">
                         <p><?php echo e($gateway->name); ?></p>
                       </a>
@@ -363,7 +363,7 @@ unset($__errorArgs, $__bag); ?>
                     <?php endif; ?>
                     <?php else: ?>
                     <div class="single-payment-method">
-                      <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#<?php echo e($gateway->unique_keyword); ?>">
+                      <a class="text-decoration-none sLinkModal-shw__cPay" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#<?php echo e($gateway->unique_keyword); ?>">
                         <img class="" src="<?php echo e(asset('assets/back/images/payment/'.$gateway->photo)); ?>" alt="<?php echo e($gateway->name); ?>" title="<?php echo e($gateway->name); ?>">
                         <p><?php echo e($gateway->name); ?></p>
                       </a>

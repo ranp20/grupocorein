@@ -24,6 +24,15 @@
             $html = $html;
             return $html;
         }
+
+        $TaxesAll = DB::table('taxes')->get();
+        $sumFinalPrice1 = 0;
+        $sumFinalPrice2 = 0;
+        $incIGV = $TaxesAll[0]->value;
+        $sinIGV = $TaxesAll[1]->value;
+        $incIGV_format = $incIGV / 100;
+        $sinIGV_format = $sinIGV;
+
     ?>
     <?php if($extra_settings->is_t3_slider == 1): ?>
         <div  class="hero-area3" >
@@ -193,13 +202,37 @@
                                         <?php if($popular_category_item->previous_price != 0): ?>
                                         <del><?php echo e(PriceHelper::setPreviousPrice($popular_category_item->previous_price)); ?></del>
                                         <?php endif; ?>
-                                        <?php if(isset($popular_category_item->sections_id) && $popular_category_item->sections_id != 0): ?>
-                                            <?php if($popular_category_item->sections_id == 1): ?>
-                                            <span><?php echo e(PriceHelper::setCurrencyPrice($popular_category_item->on_sale_price)); ?></span>
-                                            <?php else: ?>
-                                            <span><?php echo e(PriceHelper::setCurrencyPrice($popular_category_item->special_offer_price)); ?></span>
+                                            <?php if(isset($popular_category_item->sections_id) && $popular_category_item->sections_id != 0): ?>
+                                                <?php if($popular_category_item->sections_id == 1): ?>
+                                                    <?php if(isset($popular_category_item->tax_id) && $popular_category_item->tax_id == 1): ?>
+                                                        <?php
+                                                        $sumFinalPrice1 = $popular_category_item->on_sale_price * $incIGV_format;
+                                                        $sumFinalPrice2 = $popular_category_item->on_sale_price + $sumFinalPrice1;
+                                                        ?>
+                                                        <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                                                    <?php else: ?>
+                                                        <?php
+                                                        $sumFinalPrice1 = $popular_category_item->on_sale_price;
+                                                        $sumFinalPrice2 = $popular_category_item->on_sale_price + $sumFinalPrice1;
+                                                        ?>
+                                                        <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                                                    <?php endif; ?>
+                                                <?php else: ?>
+                                                    <?php if(isset($popular_category_item->tax_id) && $popular_category_item->tax_id == 1): ?>
+                                                        <?php
+                                                        $sumFinalPrice1 = $popular_category_item->special_offer_price * $incIGV_format;
+                                                        $sumFinalPrice2 = $popular_category_item->special_offer_price + $sumFinalPrice1;
+                                                        ?>
+                                                        <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                                                    <?php else: ?>
+                                                        <?php
+                                                        $sumFinalPrice1 = $popular_category_item->special_offer_price;
+                                                        $sumFinalPrice2 = $popular_category_item->special_offer_price + $sumFinalPrice1;
+                                                        ?>
+                                                        <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                                                    <?php endif; ?>
+                                                <?php endif; ?>
                                             <?php endif; ?>
-                                        <?php endif; ?>
                                         </h4>
                                         <div class="cWtspBtnCtc">
                                             <a title="Solicitar información" href="javascript:void(0);" target="_blank" class="cWtspBtnCtc__pLink">
@@ -306,9 +339,33 @@
                                         <?php endif; ?>
                                         <?php if(isset($feature_category_item->sections_id) && $feature_category_item->sections_id != 0): ?>
                                             <?php if($feature_category_item->sections_id == 1): ?>
-                                            <span><?php echo e(PriceHelper::setCurrencyPrice($feature_category_item->on_sale_price)); ?></span>
+                                                <?php if(isset($feature_category_item->tax_id) && $feature_category_item->tax_id == 1): ?>
+                                                    <?php
+                                                    $sumFinalPrice1 = $feature_category_item->on_sale_price * $incIGV_format;
+                                                    $sumFinalPrice2 = $feature_category_item->on_sale_price + $sumFinalPrice1;
+                                                    ?>
+                                                    <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                                                <?php else: ?>
+                                                    <?php
+                                                    $sumFinalPrice1 = $feature_category_item->on_sale_price;
+                                                    $sumFinalPrice2 = $feature_category_item->on_sale_price + $sumFinalPrice1;
+                                                    ?>
+                                                    <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                                                <?php endif; ?>
                                             <?php else: ?>
-                                            <span><?php echo e(PriceHelper::setCurrencyPrice($feature_category_item->special_offer_price)); ?></span>
+                                                <?php if(isset($feature_category_item->tax_id) && $feature_category_item->tax_id == 1): ?>
+                                                    <?php
+                                                    $sumFinalPrice1 = $feature_category_item->special_offer_price * $incIGV_format;
+                                                    $sumFinalPrice2 = $feature_category_item->special_offer_price + $sumFinalPrice1;
+                                                    ?>
+                                                    <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                                                <?php else: ?>
+                                                    <?php
+                                                    $sumFinalPrice1 = $feature_category_item->special_offer_price;
+                                                    $sumFinalPrice2 = $feature_category_item->special_offer_price + $sumFinalPrice1;
+                                                    ?>
+                                                    <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                                                <?php endif; ?>
                                             <?php endif; ?>
                                         <?php endif; ?>
                                         </h4>

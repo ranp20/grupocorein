@@ -37,7 +37,7 @@
               <tbody>
               <?php $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
               <tr>
-                <td><a class="navi-link" href="#" data-toggle="modal" data-target="#orderDetails"><?php echo e($order->transaction_number); ?></a></td>
+                <td><a class="navi-link" href="javascript:void(0);" data-toggle="modal" data-target="#orderDetails"><?php echo e($order->transaction_number); ?></a></td>
                 <td>
                   <?php if($setting->currency_direction == 1): ?>
                   <?php echo e($order->currency_sign); ?><?php echo e(PriceHelper::OrderTotal($order)); ?>
