@@ -20,7 +20,7 @@
       <?php echo e(strlen(strip_tags($cart['name'])) > 15 ? substr(strip_tags($cart['name']), 0, 15) . '...' : strip_tags($cart['name'])); ?>
 
     </a></h4>
-    <span class="entry-meta"><?php echo e($cart['qty']); ?> x <?php echo e(PriceHelper::setCurrencyPrice($cart['main_price'])); ?></span>
+    <span class="entry-meta"><?php echo e($cart['qty']); ?> x <?php echo e(PriceHelper::setCurrencyPrice($cart['price'])); ?></span>
     <?php if(isset($cart['attribute']['option_name']) && !empty($cart['attribute']['option_name'])): ?>
     <?php $__currentLoopData = $cart['attribute']['option_name']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $optionkey => $option_name): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
     <span class="att"><em><?php echo e($cart['attribute']['names'][$optionkey]); ?>:</em> <?php echo e($option_name); ?> (<?php echo e(PriceHelper::setCurrencyPrice($cart['attribute']['option_price'][$optionkey])); ?>)</span>

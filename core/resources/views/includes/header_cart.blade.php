@@ -19,7 +19,7 @@
     <h4 class="entry-title"><a href="{{route('front.product',$cart['slug'])}}">
       {{ strlen(strip_tags($cart['name'])) > 15 ? substr(strip_tags($cart['name']), 0, 15) . '...' : strip_tags($cart['name']) }}
     </a></h4>
-    <span class="entry-meta">{{$cart['qty']}} x {{PriceHelper::setCurrencyPrice($cart['main_price'])}}</span>
+    <span class="entry-meta">{{$cart['qty']}} x {{PriceHelper::setCurrencyPrice($cart['price'])}}</span>
     @if(isset($cart['attribute']['option_name']) && !empty($cart['attribute']['option_name']))
     @foreach ($cart['attribute']['option_name'] as $optionkey => $option_name)
     <span class="att"><em>{{$cart['attribute']['names'][$optionkey]}}:</em> {{$option_name}} ({{PriceHelper::setCurrencyPrice($cart['attribute']['option_price'][$optionkey])}})</span>

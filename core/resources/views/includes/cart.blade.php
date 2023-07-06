@@ -4,6 +4,13 @@
   $option_price = 0;
   $cartTotal = 0;
 @endphp
+<?php
+  /*
+  echo "<pre>";
+  print_r(Session::get('cart'));
+  echo "<pre>";
+  */
+?>
 <div class="row">
   <div class="col-xl-9 col-lg-8">
     <div class="card">
@@ -45,7 +52,7 @@
                     </div>
                   </div>
                 </td>
-                <td class="text-center text-lg">{{PriceHelper::setCurrencyPrice($item['main_price'])}}</td>
+                <td class="text-center text-lg">{{PriceHelper::setCurrencyPrice($item['price'])}}</td>
                 <td class="text-center d-flex align-items-center justify-content-center border border-0">
                   @if ($item['item_type'] != 'digital')
                   <div class="qtySelector product-quantity pt-3">
@@ -56,7 +63,7 @@
                   </div>
                   @endif
                 </td>
-                <td class="text-center text-lg">{{PriceHelper::setCurrencyPrice($item['main_price'] * $item['qty'])}}</td>
+                <td class="text-center text-lg">{{PriceHelper::setCurrencyPrice($item['price'] * $item['qty'])}}</td>
                 <td class="text-center">
                   <a class="remove-from-cart" href="{{route('front.cart.destroy',$key)}}" data-toggle="tooltip" title="{{ __('Remove product') }}"><i class="icon-trash-2"></i>
                   </a>

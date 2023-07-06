@@ -148,12 +148,32 @@ class PriceHelper{
       $curr = Currency::where('is_default',1)->first();
     }
 
-    $price1 = ($item->discount_price + $option_price) * $taxesformat;
-    $price2 = $price1 + $item->discount_price + $option_price;
-    $price = $price2;
+    $sum1 = 0;
+    $sum2 = 0;
+    $sum3 = 0;
+    if($item->sections_id != 0){
+      if($item->sections_id != 0 && $item->sections_id == 1){
+        $sum1 = $item->on_sale_price;
+        $sum2 = $sum1 * $taxesformat;
+        $sum3 = $sum1 + $sum2;
+      }else{
+        $sum1 = $item->special_offer_price;
+        $sum2 = $sum1 * $taxesformat;
+        $sum3 = $sum1 + $sum2;
+      }
+    }else{
+      $sum1 = $item->discount_price + $option_price;
+      $sum2 = $sum1;
+      $sum3 = $sum2;
+    }
+
+    $price = $sum3;
     /*
     echo "<pre>";
-    print_r($price);
+    echo $item->sections_id."<br>";
+    echo $item->on_sale_price."<br>";
+    echo $item->special_offer_price."<br>";
+    echo $price;
     echo "</pre>";
     exit();
     */

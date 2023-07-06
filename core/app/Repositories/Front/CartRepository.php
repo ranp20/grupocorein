@@ -24,7 +24,7 @@ class CartRepository{
     $qty = isset($input['quantity']) ? $input['quantity'] : 1 ;
     $qty = is_numeric($qty) ? $qty : 1;
     $cart = Session::get('cart');
-    $item = Item::where('id',$input['item_id'])->select('id','tax_id','name','photo','discount_price','previous_price','brand_id','slug','sku','is_type','item_type','license_name','license_key')->first();
+    $item = Item::where('id',$input['item_id'])->select('id','tax_id','sections_id','name','photo','discount_price','previous_price','on_sale_price','special_offer_price','brand_id','slug','sku','is_type','item_type','license_name','license_key')->first();
     // $taxes = Tax::where('id',$item->tax_id)->select('id','name','value','status')->first();
     $brand = Brand::where('id',$item->brand_id)->select('id','name','slug')->first();
     $single = isset($request->type) ? ($request->type == '1' ? 1 : 0 ) : 0;

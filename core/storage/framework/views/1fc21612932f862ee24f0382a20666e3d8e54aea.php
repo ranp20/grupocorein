@@ -4,6 +4,13 @@
   $option_price = 0;
   $cartTotal = 0;
 ?>
+<?php
+  /*
+  echo "<pre>";
+  print_r(Session::get('cart'));
+  echo "<pre>";
+  */
+?>
 <div class="row">
   <div class="col-xl-9 col-lg-8">
     <div class="card">
@@ -46,7 +53,7 @@
                     </div>
                   </div>
                 </td>
-                <td class="text-center text-lg"><?php echo e(PriceHelper::setCurrencyPrice($item['main_price'])); ?></td>
+                <td class="text-center text-lg"><?php echo e(PriceHelper::setCurrencyPrice($item['price'])); ?></td>
                 <td class="text-center d-flex align-items-center justify-content-center border border-0">
                   <?php if($item['item_type'] != 'digital'): ?>
                   <div class="qtySelector product-quantity pt-3">
@@ -57,7 +64,7 @@
                   </div>
                   <?php endif; ?>
                 </td>
-                <td class="text-center text-lg"><?php echo e(PriceHelper::setCurrencyPrice($item['main_price'] * $item['qty'])); ?></td>
+                <td class="text-center text-lg"><?php echo e(PriceHelper::setCurrencyPrice($item['price'] * $item['qty'])); ?></td>
                 <td class="text-center">
                   <a class="remove-from-cart" href="<?php echo e(route('front.cart.destroy',$key)); ?>" data-toggle="tooltip" title="<?php echo e(__('Remove product')); ?>"><i class="icon-trash-2"></i>
                   </a>
