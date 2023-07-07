@@ -59,7 +59,7 @@ trait IzipayCheckout{
       $total = 0;
       $option_price = 0;
       foreach($cart as $key => $item){
-        $total += $item['main_price'] * $item['qty'];
+        $total += $item['price'] * $item['qty'];
         if($item['attribute_price'] != "" && count($item['attribute_price']) > 0){
           $option_price += $item['attribute_price'];
         }

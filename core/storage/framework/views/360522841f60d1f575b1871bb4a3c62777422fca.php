@@ -75,6 +75,13 @@ $orderIdGenFirst = genCodeRandom();
       </div>
       <div class="card">
         <div class="card-body">
+          <?php
+            /*
+            echo "<pre>";
+            print_r(Session::get('cart'));
+            echo "<pre>";
+            */
+          ?>
           <div class="row cCrd__cTitle">
             <div class="col-9 cCrd__cTitle__cL">
               <h6 class="pb-0 mb-0"><?php echo e(__('Review Your Order')); ?> :</h6>

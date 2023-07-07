@@ -115,7 +115,11 @@
                 <thead>
                   <tr>
                     <th width="50%" class="px-0 bg-transparent border-top-0"><span class="h6">{{__('Products')}}</span></th>
+                    {{--
+                    <!--
                     <th class="px-0 bg-transparent border-top-0"><span class="h6">{{__('Attribute')}}</span></th>
+                    -->
+                    --}}
                     <th class="px-0 bg-transparent border-top-0"><span class="h6">{{__('Quantity')}}</span></th>
                     <th class="px-0 bg-transparent border-top-0 text-right"><span class="h6">{{__('Price')}}</span></th>
                   </tr>
@@ -135,6 +139,8 @@
                   @endphp
                   <tr>
                     <td class="px-0">{{$item['name']}}</td>
+                    {{--
+                    <!--
                     <td class="px-0">
                       @if($item['attribute_price'] != "" && count($item['attribute_price']) > 0 && $item['attribute']['option_name'])
                         @foreach ($item['attribute']['option_name'] as $optionkey => $option_name)
@@ -150,12 +156,14 @@
                         --
                       @endif
                     </td>
+                    -->
+                    --}}
                     <td class="px-0">{{$item['qty']}}</td>
                     <td class="px-0 text-right">
                       @if ($setting->currency_direction == 1)
-                        {{$order->currency_sign}}{{round($item['main_price']*$order->currency_value,2)}}
+                        {{$order->currency_sign}}{{round($item['price']*$order->currency_value,2)}}
                       @else
-                        {{round($item['main_price']*$order->currency_value,2)}}{{$order->currency_sign}}
+                        {{round($item['price']*$order->currency_value,2)}}{{$order->currency_sign}}
                       @endif
                     </td>
                   </tr>

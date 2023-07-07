@@ -119,7 +119,11 @@
             <thead>
               <tr>
                 <th width="50%" class="px-0 bg-transparent border-top-0"><span class="h6">{{__('Products')}}</span></th>
+                {{--
+                <!--
                 <th class="px-0 bg-transparent border-top-0"><span class="h6">{{__('Attribute')}}</span></th>
+                -->
+                --}}
                 <th class="px-0 bg-transparent border-top-0"><span class="h6">{{__('Quantity')}}</span></th>
                 <th class="px-0 bg-transparent border-top-0 text-right"><span class="h6">{{__('Price')}}</span></th>
               </tr>
@@ -170,6 +174,8 @@
                   @endif
                   </p>
                 </td>
+                {{--
+                <!--
                 <td class="px-0">
                   @if($item['attribute_price'] != "" && count($item['attribute_price']) > 0 && $item['attribute']['option_name'])
                   @foreach ($item['attribute']['option_name'] as $optionkey => $option_name)
@@ -186,8 +192,10 @@
                   --
                   @endif
                 </td>
+                -->
+                --}}
                 <td class="px-0">{{$item['qty']}}</td>
-                <td class="px-0 text-right">
+                <td class="px-0 text-right text-end">
                   @if ($setting->currency_direction == 1)
                     {{$order->currency_sign}}{{round($item['main_price']*$order->currency_value,2)}}
                   @else
@@ -199,10 +207,12 @@
               <tr>
                 <td class="padding-top-2x" colspan="5"></td>
               </tr>
+              {{--
+              <!--
               @if($order->tax!=0)
               <tr>
                 <td class="px-0 border-top border-top-2"><span class="text-muted">{{__('Tax')}}</span></td>
-                <td class="px-0 text-right border-top border-top-2" colspan="5">
+                <td class="px-0 text-right text-end border-top border-top-2" colspan="5">
                   <span>
                   @if ($setting->currency_direction == 1)
                     {{$order->currency_sign}}{{round($order->tax*$order->currency_value,2)}}
@@ -213,13 +223,15 @@
                 </td>
               </tr>
               @endif
+              -->
+              --}}
               @if(json_decode($order->discount,true))
               @php
                 $discount = json_decode($order->discount,true);
               @endphp
               <tr>
                 <td class="px-0 border-top border-top-2"><span class="text-muted">{{__('Coupon discount')}} ({{$discount['code']['code_name']}})</span></td>
-                <td class="px-0 text-right border-top border-top-2" colspan="5">
+                <td class="px-0 text-right text-end border-top border-top-2" colspan="5">
                   <span class="text-danger">
                   @if ($setting->currency_direction == 1)
                     -{{$order->currency_sign}}{{round($discount['discount'] * $order->currency_value,2)}}
@@ -236,7 +248,7 @@
               @endphp
               <tr>
                 <td class="px-0 border-top border-top-2"><span class="text-muted">{{__('Shipping')}}</span></td>
-                <td class="px-0 text-right border-top border-top-2" colspan="5">
+                <td class="px-0 text-right text-end border-top border-top-2" colspan="5">
                   <span >
                   @if ($setting->currency_direction == 1)
                     {{$order->currency_sign}}{{round($shipping['price']*$order->currency_value,2)}}
@@ -247,12 +259,14 @@
                 </td>
               </tr>
               @endif
+              {{--
+              <!--
               @if(json_decode($order->state_price,true))
               <tr>
                 <td class="px-0 border-top border-top-2">
                 <span class="text-muted">{{__('State Tax')}}</span>
                 </td>
-                <td class="px-0 text-right border-top border-top-2" colspan="5">
+                <td class="px-0 text-right text-end border-top border-top-2" colspan="5">
                   <span >
                   @if ($setting->currency_direction == 1)
                   {{isset($state['type']) && $state['type'] == 'percentage' ?  ' ('.$state['price'].'%) ' : ''}}  {{$order->currency_sign}}{{round($order['state_price']*$order->currency_value,2)}}
@@ -263,6 +277,8 @@
                 </td>
               </tr>
               @endif
+              -->
+              --}}
               <tr>
                 <td class="px-0 border-top border-top-2">
                 @if ($order->payment_method == 'Cash On Delivery')
@@ -271,7 +287,7 @@
                 <strong>{{__('Total due')}}</strong>
                 @endif
                 </td>
-                <td class="px-0 text-right border-top border-top-2" colspan="5">
+                <td class="px-0 text-right text-end border-top border-top-2" colspan="5">
                   <span class="h3">
                     @if ($setting->currency_direction == 1)
                     {{$order->currency_sign}}{{PriceHelper::OrderTotal($order)}}

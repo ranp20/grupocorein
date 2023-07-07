@@ -194,9 +194,9 @@ class PriceHelper{
     $total = 0;
     foreach($cart as $key => $item){
       if($item['attribute_price'] != "" && count($item['attribute_price']) > 0){
-        $total += ($item['main_price'] + $item['attribute_price']) * $item['qty'];
+        $total += ($item['price'] + $item['attribute_price']) * $item['qty'];
       }else{
-        $total += ($item['main_price'] * $item['qty']);
+        $total += ($item['price'] * $item['qty']);
       }
       $cart_total = $total;
       if(Item::where('id',$key)->exists()){
@@ -216,7 +216,20 @@ class PriceHelper{
     if(json_decode($order->discount)){
       $discount = json_decode($order->discount,true);
     }
-    $grand_total = ($cart_total + ($shipping?$shipping['price']:0)) + $total_tax;
+
+    // $grand_total = ($cart_total + ($shipping?$shipping['price']:0)) + $total_tax;
+    $grand_total = ($cart_total + ($shipping?$shipping['price']:0));
+    /*
+    echo $total_tax;
+    echo "<br>";
+    echo $cart_total;
+    print_r($shipping);
+    echo "<pre>";
+    echo "TOTAL: ";
+    print_r($grand_total);
+    echo "<pre>";
+    exit();
+    */
     $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
     $grand_total = $grand_total + $order->state_price;
     $total_amount = round($grand_total * $order->currency_value,2);
@@ -232,7 +245,7 @@ class PriceHelper{
     $total = 0;
     $option_price = 0;
     foreach($cart as $key => $item){
-      $total += $item['main_price'] * $item['qty'];
+      $total += $item['price'] * $item['qty'];
       if($item['attribute_price'] != "" && count($item['attribute_price']) > 0){
         $option_price += $item['attribute_price'];
       }
@@ -265,7 +278,7 @@ class PriceHelper{
     $attribute_price = 0;
     foreach ($cartt as $key => $cart){
       $attribute_price = (isset($cart['attribute_price']) && !empty($cart['attribute_price'])) ? $cart['attribute_price'] : 0;
-      $total =($cart['main_price'] + $total + $attribute_price) * $cart['qty'];
+      $total =($cart['price'] + $total + $attribute_price) * $cart['qty'];
     }
     if(Session::has('currency')){
       $curr = Currency::findOrFail(Session::get('currency'));

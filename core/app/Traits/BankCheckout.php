@@ -26,10 +26,9 @@ trait BankCheckout{
     $total = 0;
     $option_price = 0;
     foreach($cart as $key => $item){
-      $total += $item['main_price'] * $item['qty'];
-      
-      if(!empty($item['attribute_price']) && $item['attribute_price'] != ""){
-        // $option_price += $item['attribute_price'];
+      $total += $item['price'] * $item['qty'];
+      if($item['attribute_price'] != "" && count($item['attribute_price']) > 0){
+        $option_price += $item['attribute_price'];
       }
 
       $cart_total = $total + $option_price;

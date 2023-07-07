@@ -116,7 +116,7 @@
                 <thead>
                   <tr>
                     <th width="50%" class="px-0 bg-transparent border-top-0"><span class="h6"><?php echo e(__('Products')); ?></span></th>
-                    <th class="px-0 bg-transparent border-top-0"><span class="h6"><?php echo e(__('Attribute')); ?></span></th>
+                    
                     <th class="px-0 bg-transparent border-top-0"><span class="h6"><?php echo e(__('Quantity')); ?></span></th>
                     <th class="px-0 bg-transparent border-top-0 text-right"><span class="h6"><?php echo e(__('Price')); ?></span></th>
                   </tr>
@@ -136,30 +136,14 @@
                   ?>
                   <tr>
                     <td class="px-0"><?php echo e($item['name']); ?></td>
-                    <td class="px-0">
-                      <?php if($item['attribute_price'] != "" && count($item['attribute_price']) > 0 && $item['attribute']['option_name']): ?>
-                        <?php $__currentLoopData = $item['attribute']['option_name']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $optionkey => $option_name): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <span class="entry-meta"><b><?php echo e($option_name); ?></b> :
-                          <?php if($setting->currency_direction == 1): ?>
-                          <?php echo e($order->currency_sign); ?><?php echo e(round($item['attribute']['option_price'][$optionkey]*$order->currency_value,2)); ?>
-
-                          <?php else: ?>
-                          <?php echo e(round($item['attribute']['option_price'][$optionkey]*$order->currency_value,2)); ?><?php echo e($order->currency_sign); ?>
-
-                          <?php endif; ?>
-                        </span>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        <?php else: ?>
-                        --
-                      <?php endif; ?>
-                    </td>
+                    
                     <td class="px-0"><?php echo e($item['qty']); ?></td>
                     <td class="px-0 text-right">
                       <?php if($setting->currency_direction == 1): ?>
-                        <?php echo e($order->currency_sign); ?><?php echo e(round($item['main_price']*$order->currency_value,2)); ?>
+                        <?php echo e($order->currency_sign); ?><?php echo e(round($item['price']*$order->currency_value,2)); ?>
 
                       <?php else: ?>
-                        <?php echo e(round($item['main_price']*$order->currency_value,2)); ?><?php echo e($order->currency_sign); ?>
+                        <?php echo e(round($item['price']*$order->currency_value,2)); ?><?php echo e($order->currency_sign); ?>
 
                       <?php endif; ?>
                     </td>

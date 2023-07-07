@@ -119,7 +119,7 @@
             <thead>
               <tr>
                 <th width="50%" class="px-0 bg-transparent border-top-0"><span class="h6"><?php echo e(__('Products')); ?></span></th>
-                <th class="px-0 bg-transparent border-top-0"><span class="h6"><?php echo e(__('Attribute')); ?></span></th>
+                
                 <th class="px-0 bg-transparent border-top-0"><span class="h6"><?php echo e(__('Quantity')); ?></span></th>
                 <th class="px-0 bg-transparent border-top-0 text-right"><span class="h6"><?php echo e(__('Price')); ?></span></th>
               </tr>
@@ -171,26 +171,9 @@
                   <?php endif; ?>
                   </p>
                 </td>
-                <td class="px-0">
-                  <?php if($item['attribute_price'] != "" && count($item['attribute_price']) > 0 && $item['attribute']['option_name']): ?>
-                  <?php $__currentLoopData = $item['attribute']['option_name']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $optionkey => $option_name): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                  <span class="entry-meta"><b><?php echo e($option_name); ?></b> :
-                    <?php if($setting->currency_direction == 1): ?>
-                    <?php echo e($order->currency_sign); ?><?php echo e(round($item['attribute']['option_price'][$optionkey]*$order->currency_value,2)); ?>
-
-                    <?php else: ?>
-                    <?php echo e(round($item['attribute']['option_price'][$optionkey]*$order->currency_value,2)); ?><?php echo e($order->currency_sign); ?>
-
-                    <?php endif; ?>
-
-                  </span>
-                  <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                  <?php else: ?>
-                  --
-                  <?php endif; ?>
-                </td>
+                
                 <td class="px-0"><?php echo e($item['qty']); ?></td>
-                <td class="px-0 text-right">
+                <td class="px-0 text-right text-end">
                   <?php if($setting->currency_direction == 1): ?>
                     <?php echo e($order->currency_sign); ?><?php echo e(round($item['main_price']*$order->currency_value,2)); ?>
 
@@ -204,29 +187,14 @@
               <tr>
                 <td class="padding-top-2x" colspan="5"></td>
               </tr>
-              <?php if($order->tax!=0): ?>
-              <tr>
-                <td class="px-0 border-top border-top-2"><span class="text-muted"><?php echo e(__('Tax')); ?></span></td>
-                <td class="px-0 text-right border-top border-top-2" colspan="5">
-                  <span>
-                  <?php if($setting->currency_direction == 1): ?>
-                    <?php echo e($order->currency_sign); ?><?php echo e(round($order->tax*$order->currency_value,2)); ?>
-
-                  <?php else: ?>
-                  <?php echo e(round($order->tax*$order->currency_value,2)); ?><?php echo e($order->currency_sign); ?>
-
-                  <?php endif; ?>
-                  </span>
-                </td>
-              </tr>
-              <?php endif; ?>
+              
               <?php if(json_decode($order->discount,true)): ?>
               <?php
                 $discount = json_decode($order->discount,true);
               ?>
               <tr>
                 <td class="px-0 border-top border-top-2"><span class="text-muted"><?php echo e(__('Coupon discount')); ?> (<?php echo e($discount['code']['code_name']); ?>)</span></td>
-                <td class="px-0 text-right border-top border-top-2" colspan="5">
+                <td class="px-0 text-right text-end border-top border-top-2" colspan="5">
                   <span class="text-danger">
                   <?php if($setting->currency_direction == 1): ?>
                     -<?php echo e($order->currency_sign); ?><?php echo e(round($discount['discount'] * $order->currency_value,2)); ?>
@@ -245,7 +213,7 @@
               ?>
               <tr>
                 <td class="px-0 border-top border-top-2"><span class="text-muted"><?php echo e(__('Shipping')); ?></span></td>
-                <td class="px-0 text-right border-top border-top-2" colspan="5">
+                <td class="px-0 text-right text-end border-top border-top-2" colspan="5">
                   <span >
                   <?php if($setting->currency_direction == 1): ?>
                     <?php echo e($order->currency_sign); ?><?php echo e(round($shipping['price']*$order->currency_value,2)); ?>
@@ -258,24 +226,7 @@
                 </td>
               </tr>
               <?php endif; ?>
-              <?php if(json_decode($order->state_price,true)): ?>
-              <tr>
-                <td class="px-0 border-top border-top-2">
-                <span class="text-muted"><?php echo e(__('State Tax')); ?></span>
-                </td>
-                <td class="px-0 text-right border-top border-top-2" colspan="5">
-                  <span >
-                  <?php if($setting->currency_direction == 1): ?>
-                  <?php echo e(isset($state['type']) && $state['type'] == 'percentage' ?  ' ('.$state['price'].'%) ' : ''); ?>  <?php echo e($order->currency_sign); ?><?php echo e(round($order['state_price']*$order->currency_value,2)); ?>
-
-                  <?php else: ?>
-                  <?php echo e(isset($state['type']) &&  $state['type'] == 'percentage' ?  ' ('.$state['price'].'%) ' : ''); ?>  <?php echo e(round($order['state_price']*$order->currency_value,2)); ?><?php echo e($order->currency_sign); ?>
-
-                  <?php endif; ?>
-                  </span>
-                </td>
-              </tr>
-              <?php endif; ?>
+              
               <tr>
                 <td class="px-0 border-top border-top-2">
                 <?php if($order->payment_method == 'Cash On Delivery'): ?>
@@ -284,7 +235,7 @@
                 <strong><?php echo e(__('Total due')); ?></strong>
                 <?php endif; ?>
                 </td>
-                <td class="px-0 text-right border-top border-top-2" colspan="5">
+                <td class="px-0 text-right text-end border-top border-top-2" colspan="5">
                   <span class="h3">
                     <?php if($setting->currency_direction == 1): ?>
                     <?php echo e($order->currency_sign); ?><?php echo e(PriceHelper::OrderTotal($order)); ?>
