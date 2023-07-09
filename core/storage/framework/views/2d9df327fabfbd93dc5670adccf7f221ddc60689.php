@@ -317,41 +317,45 @@
                   <div class="modal-body">
                     <div class="pt-1 cBodyMdBy__c">
                       <div class="d-block cBodyMdBy__c__cList">
+                        <?php
+                          $StoresAll = "";
+                          $arrStoresAdd = [];
+                          if(isset($item->store_availables) && $item->store_availables != ""){
+                            $storesAvailables = json_decode($item->store_availables, TRUE);
+                            $storesAvailables_list = $storesAvailables['store'];
+                            foreach($storesAvailables_list as $key => $val){
+                              $arrStoresAdd['id'] = $val['id'];
+                            }
+                          }
+                          if(isset($arrStoresAdd['id'])){
+                            $StoresAll = DB::table('tbl_stores')->where('id',$arrStoresAdd['id'])->get();
+                          }
+                        ?>
+                        <?php if(!empty($StoresAll) && count($StoresAll) > 0): ?>
                         <ul class="cBodyMdBy__c__cList__m">
+                          <?php $__currentLoopData = json_decode($StoresAll, TRUE); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $stores): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                           <li href="javascript:void(0);" class="cBodyMdBy__c__cList__m__i">
-                            <div class="cBodyMdBy__c__cList__m__i__cTop">
-                              <div class="cBodyMdBy__c__cList__m__i__cTop__cIcon">
-                                <img src="<?php echo e(route('front.index')); ?>/assets/images/1669243349tienda.png" target="_blank">
-                              </div>
-                              <div class="cBodyMdBy__c__cList__m__i__cTop__cNameStr">
-                                Dansey
+                            <div style="display: block;width:100%;">
+                              <div class="cBodyMdBy__c__cList__m__i__cTop">
+                                <div class="cBodyMdBy__c__cList__m__i__cTop__cIcon">
+                                  <img src="<?php echo e(route('front.index')); ?>/assets/images/1669243349tienda.png" target="_blank">
+                                </div>
+                                <div class="cBodyMdBy__c__cList__m__i__cTop__cNameStr"><?php echo e($stores['name']); ?></div>
                               </div>
                             </div>
                             <div class="cBodyMdBy__c__cList__m__i__cBott">
                               <ul class="cBodyMdBy__c__cList__m__i__cBott__m">
-                                <li>
-                                  <span><strong>Dirección: </strong>AV. Guillermo Dansey n° 454 C. Comercial Nicolini Psj 5 Stand BB-9A - Lima</span>
-                                </li>
+                                <li><span><strong>Dirección: </strong><?php echo e($stores['address']); ?></span></li>
+                                <li><span><strong>Teléfono: </strong><?php echo e($stores['telephone']); ?></span></li>
                               </ul>
                             </div>
                           </li>
-                          <li href="javascript:void(0);" class="cBodyMdBy__c__cList__m__i">
-                            <div class="cBodyMdBy__c__cList__m__i__cTop">
-                              <div class="cBodyMdBy__c__cList__m__i__cTop__cIcon">
-                                <img src="<?php echo e(route('front.index')); ?>/assets/images/1669243349tienda.png" target="_blank">
-                              </div>
-                              <div class="cBodyMdBy__c__cList__m__i__cTop__cNameStr">
-                                Dansey
-                              </div>
-                            </div>
-                            <div class="cBodyMdBy__c__cList__m__i__cBott">
-                              <ul class="cBodyMdBy__c__cList__m__i__cBott__m">
-                                <li>
-                                  <span><strong>Dirección: </strong>AV. Guillermo Dansey n° 454 C. Comercial Nicolini Psj 5 Stand BB-9A - Lima</span>
-                                </li>
-                              </ul>
-                            </div>
-                          </li>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <?php else: ?>
+                        <div class="text-center">
+                          <h5>Sin tiendas disponibles.</h5>
+                        </div>
+                        <?php endif; ?>
                         </ul>
                       </div>
                     </div>

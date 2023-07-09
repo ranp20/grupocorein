@@ -115,6 +115,8 @@ class ItemController extends Controller
         $request->request->add(['on_sale_price' => $rComeFunction_on_sale_price]);
         $request->request->add(['special_offer_price' => $rComeFunction_special_offer_price]);
 
+        // $request->request->add(['special_offer_price' => $rComeFunction_special_offer_price]);
+
         $item_id = $this->repository->store($request);
 
         if($request->is_button ==0){

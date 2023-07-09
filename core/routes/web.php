@@ -241,6 +241,14 @@ Route::group(['middleware' => 'adminlocalize'], function (){
     Route::get('/subscribers/send-mail', 'Back\SubscriberController@sendMail')->name('back.subscribers.mail');
     Route::post('/subscribers/send-mail/submit', 'Back\SubscriberController@sendMailSubmit')->name('back.subscribers.mail.submit');
   });
+  
+  Route::group(['middleware' => 'permissions:Manage Stores'], function (){
+    //------------ CATEGORY ------------
+    // Route::get('stores/status/{id}/{status}', 'Back\StoresController@status')->name('back.stores.status');
+    // Route::get('stores/feature/{id}/{status}', 'Back\StoresController@feature')->name('back.stores.feature');
+    Route::resource('store', 'Back\StoreController', ['as' => 'back', 'except' => 'show']);
+  });
+  
 });
 // ************************************ ADMIN PANEL ENDS**********************************************
 // ************************************ GLOBAL LOCALIZATION **********************************************

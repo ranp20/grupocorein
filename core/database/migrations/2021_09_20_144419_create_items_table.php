@@ -35,6 +35,9 @@ class CreateItemsTable extends Migration
             $table->string('photo')->nullable();
             $table->double('discount_price')->default(0)->nullable();
             $table->double('previous_price')->default(0)->nullable();
+            $table->string('on_sale_price')->nullable();
+            $table->string('special_offer_price')->nullable();
+            $table->string('store_availables')->nullable();
             $table->integer('stock')->default(0)->nullable();
             $table->text('meta_keywords')->nullable();
             $table->text('meta_description')->nullable();

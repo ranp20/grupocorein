@@ -229,6 +229,22 @@
             </div>
             <div id="cTentr-af1698__p-adm"></div>
             <div class="form-group">
+              <label for="">{{ __('Seleccionar Tiendas') }} *</label>
+              <div class="border-list-switchs">
+                @foreach(DB::table('tbl_stores')->get() as $section)
+                <div class="form-check pb-0">
+                  <section class="c-sWitch__c--cDesign-1">
+                    <div class="c-sWitch__c--cDesign-1__c">
+                      <input type="checkbox" class="c-sWitch__c--cDesign-1__c__input" name="store_availables[]" value="{{ $section->id }}" id="{{ $section->name }}"/>
+                      <label class="c-sWitch__c--cDesign-1__c__label"></label>
+                    </div>
+                    <label for="{{ $section->name }}" style="cursor:pointer;">{{ $section->name }}</label>
+                  </section>
+                </div>
+                @endforeach
+              </div>
+            </div>
+            <div class="form-group">
               <label for="sku">{{ __('SKU') }} *</label>
               <input type="text" name="sku" class="form-control" id="sku" placeholder="{{ __('Enter SKU') }}" value="{{Str::random(10)}}" >
             </div>

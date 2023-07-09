@@ -100,6 +100,22 @@
     </div>
   </li>
   <li class="nav-item">
+    <a data-toggle="collapse" href="#store">
+      <i class="fas fa-store"></i>
+      <p><?php echo e(__('Manage Stores')); ?></p>
+      <span class="caret"></span>
+    </a>
+    <div class="collapse" id="store">
+      <ul class="nav nav-collapse">
+        <li>
+          <a class="sub-link" href="<?php echo e(route('back.store.index')); ?>">
+            <span class="sub-item"><?php echo e(__('Stores')); ?></span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </li>
+  <li class="nav-item">
     <a data-toggle="collapse" href="#quotation">
       <i class="fas fa-percent"></i>
       <p><?php echo e(__('Manage Quotation')); ?> </p>
