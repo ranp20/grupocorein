@@ -78,32 +78,40 @@ function renderStarRating($rating,$maxRating=5) {
               ?>
                 <?php if(isset($item->sections_id) && $item->sections_id != 0): ?>
                   <?php if($item->sections_id == 1): ?>
-                    <?php if(isset($item->tax_id) && $item->tax_id == 1): ?>
-                      <?php
-                        $sumFinalPrice1 = $item->on_sale_price * $incIGV_format;
-                        $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
-                      ?>
-                      <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                    <?php if($item->on_sale_price != 0 && $item->on_sale_price != ""): ?>
+                      <?php if(isset($item->tax_id) && $item->tax_id == 1): ?>
+                        <?php
+                          $sumFinalPrice1 = $item->on_sale_price * $incIGV_format;
+                          $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
+                        ?>
+                        <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                      <?php else: ?>
+                        <?php
+                          $sumFinalPrice1 = $item->on_sale_price;
+                          $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
+                        ?>
+                        <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                      <?php endif; ?>
                     <?php else: ?>
-                      <?php
-                        $sumFinalPrice1 = $item->on_sale_price;
-                        $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
-                      ?>
-                      <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                      <span><?php echo e(PriceHelper::setCurrencyPrice($item->discount_price)); ?></span>
                     <?php endif; ?>
                   <?php else: ?>
-                    <?php if(isset($item->tax_id) && $item->tax_id == 1): ?>
-                      <?php
-                        $sumFinalPrice1 = $item->special_offer_price * $incIGV_format;
-                        $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
-                      ?>
-                      <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                    <?php if($item->special_offer_price != 0 && $item->special_offer_price != ""): ?>
+                      <?php if(isset($item->tax_id) && $item->tax_id == 1): ?>
+                        <?php
+                          $sumFinalPrice1 = $item->special_offer_price * $incIGV_format;
+                          $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                        ?>
+                        <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                      <?php else: ?>
+                        <?php
+                          $sumFinalPrice1 = $item->special_offer_price;
+                          $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                        ?>
+                        <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                      <?php endif; ?>
                     <?php else: ?>
-                      <?php
-                        $sumFinalPrice1 = $item->special_offer_price;
-                        $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
-                      ?>
-                      <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                      <span><?php echo e(PriceHelper::setCurrencyPrice($item->discount_price)); ?></span>
                     <?php endif; ?>
                   <?php endif; ?>
                 <?php endif; ?>
@@ -115,19 +123,19 @@ function renderStarRating($rating,$maxRating=5) {
               <div class="cWtspBtnCtc__pSubM">
                 <?php if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers)): ?>
                 <?php
-                    $titles = json_decode($setting->whatsapp_numbers,true)['title'];
-                    $texts = json_decode($setting->whatsapp_numbers,true)['text'];
-                    $numbers = json_decode($setting->whatsapp_numbers,true)['number'];
+                  $titles = json_decode($setting->whatsapp_numbers,true)['title'];
+                  $texts = json_decode($setting->whatsapp_numbers,true)['text'];
+                  $numbers = json_decode($setting->whatsapp_numbers,true)['number'];
                 ?>
                 <ul class="cWtspBtnCtc__pSubM__m">
                   <?php $__currentLoopData = $numbers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $number): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                   <li class="cWtspBtnCtc__pSubM__m__i">
-                      <a title="<?php echo e($titles[$key]); ?>" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51<?php echo e($numbers[$key]); ?>&text=<?php echo e($texts[$key]); ?>" target="_blank">
-                          <!-- <img src="<?php echo e(asset('assets/back/images/WhatsApp')); ?>/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
-                          <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                          <!-- <span>912 831 232</span> -->
-                          <span><?php echo e($titles[$key]); ?></span>
-                      </a>
+                    <a title="<?php echo e($titles[$key]); ?>" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51<?php echo e($numbers[$key]); ?>&text=<?php echo e($texts[$key]); ?>" target="_blank">
+                      <!-- <img src="<?php echo e(asset('assets/back/images/WhatsApp')); ?>/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
+                      <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
+                      <!-- <span>912 831 232</span> -->
+                      <span><?php echo e($titles[$key]); ?></span>
+                    </a>
                   </li>
                   <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </ul>

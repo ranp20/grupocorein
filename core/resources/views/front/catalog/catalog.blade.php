@@ -77,32 +77,40 @@ function renderStarRating($rating,$maxRating=5) {
               @endphp
                 @if(isset($item->sections_id) && $item->sections_id != 0)
                   @if($item->sections_id == 1)
-                    @if(isset($item->tax_id) && $item->tax_id == 1)
-                      @php
-                        $sumFinalPrice1 = $item->on_sale_price * $incIGV_format;
-                        $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
-                      @endphp
-                      <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                    @if($item->on_sale_price != 0 && $item->on_sale_price != "")
+                      @if(isset($item->tax_id) && $item->tax_id == 1)
+                        @php
+                          $sumFinalPrice1 = $item->on_sale_price * $incIGV_format;
+                          $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
+                        @endphp
+                        <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                      @else
+                        @php
+                          $sumFinalPrice1 = $item->on_sale_price;
+                          $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
+                        @endphp
+                        <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                      @endif
                     @else
-                      @php
-                        $sumFinalPrice1 = $item->on_sale_price;
-                        $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
-                      @endphp
-                      <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                      <span>{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
                     @endif
                   @else
-                    @if(isset($item->tax_id) && $item->tax_id == 1)
-                      @php
-                        $sumFinalPrice1 = $item->special_offer_price * $incIGV_format;
-                        $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
-                      @endphp
-                      <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                    @if($item->special_offer_price != 0 && $item->special_offer_price != "")
+                      @if(isset($item->tax_id) && $item->tax_id == 1)
+                        @php
+                          $sumFinalPrice1 = $item->special_offer_price * $incIGV_format;
+                          $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                        @endphp
+                        <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                      @else
+                        @php
+                          $sumFinalPrice1 = $item->special_offer_price;
+                          $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                        @endphp
+                        <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                      @endif
                     @else
-                      @php
-                        $sumFinalPrice1 = $item->special_offer_price;
-                        $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
-                      @endphp
-                      <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                      <span>{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
                     @endif
                   @endif
                 @endif
@@ -114,19 +122,19 @@ function renderStarRating($rating,$maxRating=5) {
               <div class="cWtspBtnCtc__pSubM">
                 @if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers))
                 @php
-                    $titles = json_decode($setting->whatsapp_numbers,true)['title'];
-                    $texts = json_decode($setting->whatsapp_numbers,true)['text'];
-                    $numbers = json_decode($setting->whatsapp_numbers,true)['number'];
+                  $titles = json_decode($setting->whatsapp_numbers,true)['title'];
+                  $texts = json_decode($setting->whatsapp_numbers,true)['text'];
+                  $numbers = json_decode($setting->whatsapp_numbers,true)['number'];
                 @endphp
                 <ul class="cWtspBtnCtc__pSubM__m">
                   @foreach ($numbers as $key => $number)
                   <li class="cWtspBtnCtc__pSubM__m__i">
-                      <a title="{{ $titles[$key] }}" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51{{ $numbers[$key] }}&text={{ $texts[$key] }}" target="_blank">
-                          <!-- <img src="{{ asset('assets/back/images/WhatsApp') }}/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
-                          <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                          <!-- <span>912 831 232</span> -->
-                          <span>{{ $titles[$key] }}</span>
-                      </a>
+                    <a title="{{ $titles[$key] }}" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51{{ $numbers[$key] }}&text={{ $texts[$key] }}" target="_blank">
+                      <!-- <img src="{{ asset('assets/back/images/WhatsApp') }}/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
+                      <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
+                      <!-- <span>912 831 232</span> -->
+                      <span>{{ $titles[$key] }}</span>
+                    </a>
                   </li>
                   @endforeach
                 </ul>

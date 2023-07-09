@@ -9,6 +9,9 @@
       </div>
     </div>
   </div>
+  <div id="iptc-A3gs4FS_token">
+    @csrf
+  </div>
   <div class="row">
     <div class="col-lg-12">
       @include('alerts.alerts')

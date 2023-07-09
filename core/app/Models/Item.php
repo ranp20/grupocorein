@@ -27,6 +27,8 @@ class Item extends Model
         'thumbnail',
         'discount_price',
         'previous_price',
+        'on_sale_price',
+        'special_offer_price',
         'store_availables',
         'stock',
         'meta_keywords',

@@ -119,32 +119,40 @@
           ?>
             <?php if(isset($item->sections_id) && $item->sections_id != 0): ?>
               <?php if($item->sections_id == 1): ?>
-                <?php if(isset($item->tax_id) && $item->tax_id == 1): ?>
-                  <?php
-                    $sumFinalPrice1 = $item->on_sale_price * $incIGV_format;
-                    $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
-                  ?>
-                  <span id="main_price" class="main-price"><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                <?php if($item->on_sale_price != 0 && $item->on_sale_price != ""): ?>
+                  <?php if(isset($item->tax_id) && $item->tax_id == 1): ?>
+                    <?php
+                      $sumFinalPrice1 = $item->on_sale_price * $incIGV_format;
+                      $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
+                    ?>
+                    <span id="main_price" class="main-price"><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                  <?php else: ?>
+                    <?php
+                      $sumFinalPrice1 = $item->on_sale_price;
+                      $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
+                    ?>
+                    <span id="main_price" class="main-price"><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                  <?php endif; ?>
                 <?php else: ?>
-                  <?php
-                    $sumFinalPrice1 = $item->on_sale_price;
-                    $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
-                  ?>
-                  <span id="main_price" class="main-price"><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                <span id="main_price" class="main-price"><?php echo e(PriceHelper::setCurrencyPrice($item->discount_price)); ?></span>
                 <?php endif; ?>
               <?php else: ?>
-                <?php if(isset($item->tax_id) && $item->tax_id == 1): ?>
-                  <?php
-                    $sumFinalPrice1 = $item->special_offer_price * $incIGV_format;
-                    $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
-                  ?>
-                  <span id="main_price" class="main-price"><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                <?php if($item->special_offer_price != 0 && $item->special_offer_price != ""): ?>
+                  <?php if(isset($item->tax_id) && $item->tax_id == 1): ?>
+                    <?php
+                      $sumFinalPrice1 = $item->special_offer_price * $incIGV_format;
+                      $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                    ?>
+                    <span id="main_price" class="main-price"><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                  <?php else: ?>
+                    <?php
+                      $sumFinalPrice1 = $item->special_offer_price;
+                      $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                    ?>
+                    <span id="main_price" class="main-price"><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                  <?php endif; ?>
                 <?php else: ?>
-                  <?php
-                    $sumFinalPrice1 = $item->special_offer_price;
-                    $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
-                  ?>
-                  <span id="main_price" class="main-price"><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                  <span id="main_price" class="main-price"><?php echo e(PriceHelper::setCurrencyPrice($item->discount_price)); ?></span>
                 <?php endif; ?>
               <?php endif; ?>
             <?php endif; ?>

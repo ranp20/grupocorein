@@ -184,6 +184,12 @@ class ItemRepository{
       }
     }
     /*-- NUEVO CONTENIDO (FIN) --*/
+    /*
+    echo "<pre>";
+    print_r($input);
+    echo "<pre>";
+    exit();
+    */
     $item->update($input);
     if(isset($input['galleries'])){
       $this->galleriesUpdate($request,$item->id);

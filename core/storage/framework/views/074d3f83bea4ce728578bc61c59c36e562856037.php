@@ -276,7 +276,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text">S/.</span>
                     </div>
-                    <input type="text" data-valformat="withcomedecimal" id="on-sale-price" name="on_sale_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="<?php echo e($item->on_sale_price); ?>">
+                    <input type="text" data-valformat="withcomedecimal" id="on-sale-price" name="on_sale_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="<?php echo e($item->on_sale_price); ?>" required>
                   </div>
                 </div>
                 <?php elseif($item->sections_id == 2): ?>
@@ -286,7 +286,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text">S/.</span>
                     </div>
-                    <input type="text" data-valformat="withcomedecimal" id="special-offer-price" name="special_offer_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="<?php echo e($item->special_offer_price); ?>">
+                    <input type="text" data-valformat="withcomedecimal" id="special-offer-price" name="special_offer_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="<?php echo e($item->special_offer_price); ?>" required>
                   </div>
                 </div>
                 <?php else: ?>

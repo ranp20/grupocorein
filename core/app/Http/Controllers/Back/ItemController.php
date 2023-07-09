@@ -12,6 +12,7 @@ use App\Models\Category;
 use App\Models\ChieldCategory;
 use App\Models\Currency;
 use App\Models\Subcategory;
+use App\Models\Tax;
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
@@ -245,5 +246,11 @@ class ItemController extends Controller
     public function stockOut(){
         $datas = Item::where('item_type','normal')->where('stock',0)->get();
         return view('back.item.stockout',compact('datas'));
+    }
+
+    public function getAllTaxes(){
+        $taxes = Tax::get()->toArray();
+        $data = $taxes;
+        return response()->json(['data'=>$data]);
     }
 }

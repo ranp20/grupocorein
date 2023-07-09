@@ -60,32 +60,40 @@
         @endphp
           @if(isset($item->sections_id) && $item->sections_id != 0)
             @if($item->sections_id == 1)
-              @if(isset($item->tax_id) && $item->tax_id == 1)
-                @php
-                  $sumFinalPrice1 = $item->on_sale_price * $incIGV_format;
-                  $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
-                @endphp
-                <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+              @if($item->on_sale_price != 0 && $item->on_sale_price != "")
+                @if(isset($item->tax_id) && $item->tax_id == 1)
+                  @php
+                    $sumFinalPrice1 = $item->on_sale_price * $incIGV_format;
+                    $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
+                  @endphp
+                  <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                @else
+                  @php
+                    $sumFinalPrice1 = $item->on_sale_price;
+                    $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
+                  @endphp
+                  <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                @endif
               @else
-                @php
-                  $sumFinalPrice1 = $item->on_sale_price;
-                  $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
-                @endphp
-                <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                <span>{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
               @endif
             @else
-              @if(isset($item->tax_id) && $item->tax_id == 1)
-                @php
-                  $sumFinalPrice1 = $item->special_offer_price * $incIGV_format;
-                  $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
-                @endphp
-                <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+              @if($item->special_offer_price != 0 && $item->special_offer_price != "")
+                @if(isset($item->tax_id) && $item->tax_id == 1)
+                  @php
+                    $sumFinalPrice1 = $item->special_offer_price * $incIGV_format;
+                    $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                  @endphp
+                  <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                @else
+                  @php
+                    $sumFinalPrice1 = $item->special_offer_price;
+                    $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                  @endphp
+                  <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                @endif
               @else
-                @php
-                  $sumFinalPrice1 = $item->special_offer_price;
-                  $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
-                @endphp
-                <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                <span>{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
               @endif
             @endif
           @endif

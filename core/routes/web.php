@@ -40,6 +40,7 @@ Route::group(['middleware' => 'adminlocalize'], function (){
       Route::get('item/status/{item}/{status}', 'Back\ItemController@status')->name('back.item.status');
       Route::get('get/subcategory', 'Back\ItemController@getsubCategory')->name('back.get.subcategory');
       Route::get('get/childcategory', 'Back\ItemController@getChildCategory')->name('back.get.childcategory');
+      Route::post('item/taxes', 'Back\ItemController@getAllTaxes')->name('back.item.taxes');
       Route::get('stock/out/product', 'Back\ItemController@stockOut')->name('back.item.stock.out');
       Route::resource('item', 'Back\ItemController', ['as' => 'back', 'except' => 'show', 'getsubCategory']);
       Route::get('item/highlight/{item}', 'Back\ItemController@highlight')->name('back.item.highlight');

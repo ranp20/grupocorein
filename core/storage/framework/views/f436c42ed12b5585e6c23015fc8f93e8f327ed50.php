@@ -8,6 +8,9 @@
       </div>
     </div>
   </div>
+  <div id="iptc-A3gs4FS_token">
+    <?php echo csrf_field(); ?>
+  </div>
   <div class="row">
     <div class="col-lg-12">
       <?php echo $__env->make('alerts.alerts', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
