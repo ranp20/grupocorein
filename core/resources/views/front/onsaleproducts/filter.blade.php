@@ -5,24 +5,22 @@
       <div class="product-thumb">
         @if ($item->stock != 0)
           @php
-          $classValStock = '';
+          $itm_istype = '';
           if($item->is_type == 'feature'){
-            $classValStock = 'bg-warning';
+            $itm_istype = 'bg-warning';
           }else if($item->is_type == 'new'){
-            $classValStock = '';
+            $itm_istype = 'bg-danger';
           }else if($item->is_type == 'top'){
-            $classValStock = 'bg-info';
+            $itm_istype = 'bg-info';
           }else if($item->is_type == 'best'){
-            $classValStock = 'bg-dark';
+            $itm_istype = 'bg-dark';
           }else if($item->is_type == 'flash_deal'){
-            $classValStock = 'bg-success';
+            $itm_istype = 'bg-success';
           }else{
-            $classValStock = '';
+            $itm_istype = '';
           }
           @endphp
-          <div class="product-badge {{$classValStock}}">
-          {{ ($item->is_type != 'undefine') ? ucfirst(str_replace('_',' ',$item->is_type)) : '' }}
-          </div>
+          <div class="product-badge {{ $itm_istype }}">{{ ($item->is_type != 'undefine') ? ucfirst(str_replace('_',' ',$item->is_type)) : '' }}</div>
         @else
           <div class="product-badge bg-secondary border-default text-body">{{__('out of stock')}}</div>
         @endif

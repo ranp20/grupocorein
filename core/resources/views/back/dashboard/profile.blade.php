@@ -2,7 +2,7 @@
 @section('content')
 <div class="container-fluid">
   <div class="card mb-4">
-    <div class="d-sm-flex align-items-center justify-content-between">
+    <div class="d-sm-flex align-items-center justify-content-between py-1 px-3">
       <h3 class="mb-0 bc-title"><b>{{ __('Update Profile') }}</b></h3>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('back.dashboard') }}">{{ __('Dashboard') }}</a></li>

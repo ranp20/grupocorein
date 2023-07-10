@@ -328,6 +328,7 @@ Route::group(['middleware' => 'maintainance'], function (){
     Route::get('/faq/getCatalogsByAnio', 'Front\FrontendController@getCatalogsByAnio')->name('front.getCatalogsByAnio');
     Route::get('/blog', 'Front\FrontendController@blog')->name('front.blog');
     Route::get('/brands', 'Front\FrontendController@brands')->name('front.brand');
+    Route::get('/allcategories', 'Front\FrontendController@allCategories')->name('front.allcategories');
     Route::get('/blog/{slug}', 'Front\FrontendController@blogDetails')->name('front.blog.details');
     Route::get('/faq', 'Front\FrontendController@faq')->name('front.faq');
     Route::get('/faq/{slug}', 'Front\FrontendController@show')->name('front.faq.details');

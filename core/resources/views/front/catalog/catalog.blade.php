@@ -24,23 +24,25 @@ function renderStarRating($rating,$maxRating=5) {
       <div class="col-gd">
         <div class="product-card ">
           @if ($item->is_stock())
-          <div class="product-badge
-            @if($item->is_type == 'feature')
-            bg-warning
-            @elseif($item->is_type == 'new')
-            bg-danger
-            @elseif($item->is_type == 'top')
-            bg-info
-            @elseif($item->is_type == 'best')
-            bg-dark
-            @elseif($item->is_type == 'flash_deal')
-            bg-success
-            @endif
-            "> {{  $item->is_type != 'undefine' ?  (str_replace('_',' ',__("$item->is_type"))) : ''   }}
-          </div>
+          @php
+            $itm_istype = '';
+            if($item->is_type == 'feature'){
+              $itm_istype = 'bg-warning';
+            }else if($item->is_type == 'new'){
+              $itm_istype = 'bg-danger';
+            }else if($item->is_type == 'top'){
+              $itm_istype = 'bg-info';
+            }else if($item->is_type == 'best'){
+              $itm_istype = 'bg-dark';
+            }else if($item->is_type == 'flash_deal'){
+              $itm_istype = 'bg-success';
+            }else{
+              $itm_istype = '';
+            }
+          @endphp
+          <div class="product-badge {{ $itm_istype }}"> {{  $item->is_type != 'undefine' ?  (str_replace('_',' ',__("$item->is_type"))) : ''   }}</div>
           @else
-          <div class="product-badge bg-secondary border-default text-body
-          ">{{__('out of stock')}}</div>
+          <div class="product-badge bg-secondary border-default text-body">{{__('out of stock')}}</div>
           @endif
           @if($item->previous_price && $item->previous_price !=0)
           <div class="product-badge product-badge2 bg-info"> -{{PriceHelper::DiscountPercentage($item)}}</div>
@@ -153,23 +155,25 @@ function renderStarRating($rating,$maxRating=5) {
           <div class="product-card product-list">
             <div class="product-thumb">
             @if ($item->is_stock())
-              <div class="product-badge
-                @if($item->is_type == 'feature')
-                bg-warning
-                @elseif($item->is_type == 'new')
-                bg-danger
-                @elseif($item->is_type == 'top')
-                bg-info
-                @elseif($item->is_type == 'best')
-                bg-dark
-                @elseif($item->is_type == 'flash_deal')
-                bg-success
-                @endif
-                ">{{  $item->is_type != 'undefine' ?  ucfirst(str_replace('_',' ',$item->is_type)) : ''   }}
-              </div>
+            @php
+              $itm_istype = '';
+              if($item->is_type == 'feature'){
+                $itm_istype = 'bg-warning';
+              }else if($item->is_type == 'new'){
+                $itm_istype = 'bg-danger';
+              }else if($item->is_type == 'top'){
+                $itm_istype = 'bg-info';
+              }else if($item->is_type == 'best'){
+                $itm_istype = 'bg-dark';
+              }else if($item->is_type == 'flash_deal'){
+                $itm_istype = 'bg-success';
+              }else{
+                $itm_istype = '';
+              }
+            @endphp
+              <div class="product-badge {{ $itm_istype }}">{{  $item->is_type != 'undefine' ?  ucfirst(str_replace('_',' ',$item->is_type)) : ''   }}</div>
               @else
-              <div class="product-badge bg-secondary border-default text-body
-              ">{{__('out of stock')}}</div>
+              <div class="product-badge bg-secondary border-default text-body">{{__('out of stock')}}</div>
               @endif
               @if($item->previous_price && $item->previous_price !=0)
               <div class="product-badge product-badge2 bg-info"> -{{PriceHelper::DiscountPercentage($item)}}</div>

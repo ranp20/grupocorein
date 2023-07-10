@@ -69,6 +69,20 @@
                 <div class="col-lg-12">
                     <div class="section-title">
                         <h2 class="h3">Categorías destacadas</h2>
+                        <div class="c-LinksViewsAll__c">
+                            <a href="<?php echo e(route('front.allcategories')); ?>" class="c-LinksViewsAll__c--cMob-link c-linkAc8S5__s57ds">
+                                <span><?php echo e(__('View all')); ?> </span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 100 125" x="0px" y="0px"><path d="M20.81,86.25a11.25,11.25,0,0,0,19.2,8L75.9,58.32a11.23,11.23,0,0,0,3.29-8c0-.13,0-.25,0-.37a11.2,11.2,0,0,0-3.28-8.32L40,5.79A11.25,11.25,0,0,0,24.1,21.7L52.4,50,24.1,78.3A11.23,11.23,0,0,0,20.81,86.25Z"/></svg>
+                                </span>
+                            </a>
+                            <a href="<?php echo e(route('front.allcategories')); ?>" class="c-LinksViewsAll__c--cDesk-link c-linkAc8S5__s57ds">
+                                <span><?php echo e(__('All Categories')); ?> </span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 100 125" x="0px" y="0px"><path d="M20.81,86.25a11.25,11.25,0,0,0,19.2,8L75.9,58.32a11.23,11.23,0,0,0,3.29-8c0-.13,0-.25,0-.37a11.2,11.2,0,0,0-3.28-8.32L40,5.79A11.25,11.25,0,0,0,24.1,21.7L52.4,50,24.1,78.3A11.23,11.23,0,0,0,20.81,86.25Z"/></svg>
+                                </span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

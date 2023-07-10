@@ -107,10 +107,8 @@ body_theme4
                                     <span class="input-group-btn">
                                         <button type="submit" title="Buscar..."><i class="icon-search"></i></button>
                                     </span>
-                                    <input class="form-control" type="text" data-target="{{route('front.search.suggest')}}" autocomplete="off" spellcheck="false" id="__product__search" name="search" placeholder="{{__('Search by product name')}}" value="{{ $getSessProdSearch }}">
-                                    <div class="serch-result d-none px-0 pb-0">
-                                       {{-- search result --}}
-                                    </div>
+                                    <input class="form-control" type="text" data-target="{{route('front.search.suggest')}}" autocomplete="off" spellcheck="false" id="__product__search" name="search" placeholder="{{__('Search')}}" value="{{ $getSessProdSearch }}">
+                                    <div class="serch-result d-none px-0 pb-0">{{-- search result --}}</div>
                                 </form>
                             </div>
                         </div>

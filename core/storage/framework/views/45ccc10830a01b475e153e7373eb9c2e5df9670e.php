@@ -111,10 +111,8 @@ body_theme4
                                     <span class="input-group-btn">
                                         <button type="submit" title="Buscar..."><i class="icon-search"></i></button>
                                     </span>
-                                    <input class="form-control" type="text" data-target="<?php echo e(route('front.search.suggest')); ?>" autocomplete="off" spellcheck="false" id="__product__search" name="search" placeholder="<?php echo e(__('Search by product name')); ?>" value="<?php echo e($getSessProdSearch); ?>">
-                                    <div class="serch-result d-none px-0 pb-0">
-                                       
-                                    </div>
+                                    <input class="form-control" type="text" data-target="<?php echo e(route('front.search.suggest')); ?>" autocomplete="off" spellcheck="false" id="__product__search" name="search" placeholder="<?php echo e(__('Search')); ?>" value="<?php echo e($getSessProdSearch); ?>">
+                                    <div class="serch-result d-none px-0 pb-0"></div>
                                 </form>
                             </div>
                         </div>

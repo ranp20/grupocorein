@@ -290,6 +290,13 @@ class FrontendController extends Controller{
       'brands' => Brand::whereStatus(1)->get()
     ]);
   }
+  public function allCategories(){
+    $category = Category::get();
+    
+    return view('front.allcategories',[
+      'category' => $category
+    ]);
+  }
 	public function blog(Request $request){
     $tagz = '';
     $tags = null;

@@ -24,24 +24,25 @@ function renderStarRating($rating,$maxRating=5) {
       <div class="col-gd">
         <div class="product-card ">
           <?php if($item->is_stock()): ?>
-          <div class="product-badge
-            <?php if($item->is_type == 'feature'): ?>
-            bg-warning
-            <?php elseif($item->is_type == 'new'): ?>
-            bg-danger
-            <?php elseif($item->is_type == 'top'): ?>
-            bg-info
-            <?php elseif($item->is_type == 'best'): ?>
-            bg-dark
-            <?php elseif($item->is_type == 'flash_deal'): ?>
-            bg-success
-            <?php endif; ?>
-            "> <?php echo e($item->is_type != 'undefine' ?  (str_replace('_',' ',__("$item->is_type"))) : ''); ?>
-
-          </div>
+          <?php
+            $itm_istype = '';
+            if($item->is_type == 'feature'){
+              $itm_istype = 'bg-warning';
+            }else if($item->is_type == 'new'){
+              $itm_istype = 'bg-danger';
+            }else if($item->is_type == 'top'){
+              $itm_istype = 'bg-info';
+            }else if($item->is_type == 'best'){
+              $itm_istype = 'bg-dark';
+            }else if($item->is_type == 'flash_deal'){
+              $itm_istype = 'bg-success';
+            }else{
+              $itm_istype = '';
+            }
+          ?>
+          <div class="product-badge <?php echo e($itm_istype); ?>"> <?php echo e($item->is_type != 'undefine' ?  (str_replace('_',' ',__("$item->is_type"))) : ''); ?></div>
           <?php else: ?>
-          <div class="product-badge bg-secondary border-default text-body
-          "><?php echo e(__('out of stock')); ?></div>
+          <div class="product-badge bg-secondary border-default text-body"><?php echo e(__('out of stock')); ?></div>
           <?php endif; ?>
           <?php if($item->previous_price && $item->previous_price !=0): ?>
           <div class="product-badge product-badge2 bg-info"> -<?php echo e(PriceHelper::DiscountPercentage($item)); ?></div>
@@ -154,24 +155,25 @@ function renderStarRating($rating,$maxRating=5) {
           <div class="product-card product-list">
             <div class="product-thumb">
             <?php if($item->is_stock()): ?>
-              <div class="product-badge
-                <?php if($item->is_type == 'feature'): ?>
-                bg-warning
-                <?php elseif($item->is_type == 'new'): ?>
-                bg-danger
-                <?php elseif($item->is_type == 'top'): ?>
-                bg-info
-                <?php elseif($item->is_type == 'best'): ?>
-                bg-dark
-                <?php elseif($item->is_type == 'flash_deal'): ?>
-                bg-success
-                <?php endif; ?>
-                "><?php echo e($item->is_type != 'undefine' ?  ucfirst(str_replace('_',' ',$item->is_type)) : ''); ?>
-
-              </div>
+            <?php
+              $itm_istype = '';
+              if($item->is_type == 'feature'){
+                $itm_istype = 'bg-warning';
+              }else if($item->is_type == 'new'){
+                $itm_istype = 'bg-danger';
+              }else if($item->is_type == 'top'){
+                $itm_istype = 'bg-info';
+              }else if($item->is_type == 'best'){
+                $itm_istype = 'bg-dark';
+              }else if($item->is_type == 'flash_deal'){
+                $itm_istype = 'bg-success';
+              }else{
+                $itm_istype = '';
+              }
+            ?>
+              <div class="product-badge <?php echo e($itm_istype); ?>"><?php echo e($item->is_type != 'undefine' ?  ucfirst(str_replace('_',' ',$item->is_type)) : ''); ?></div>
               <?php else: ?>
-              <div class="product-badge bg-secondary border-default text-body
-              "><?php echo e(__('out of stock')); ?></div>
+              <div class="product-badge bg-secondary border-default text-body"><?php echo e(__('out of stock')); ?></div>
               <?php endif; ?>
               <?php if($item->previous_price && $item->previous_price !=0): ?>
               <div class="product-badge product-badge2 bg-info"> -<?php echo e(PriceHelper::DiscountPercentage($item)); ?></div>
