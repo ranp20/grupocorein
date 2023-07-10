@@ -310,9 +310,13 @@ img{
 .cPreviewAmmountIGV{
 	span{
 		&:first-child{
-			
+			color: #000;
 		}
 		&:nth-child(2){
+			font-weight: bold;
+			color: #4BD865;
+		}
+		&:last-child{
 
 		}
 	}

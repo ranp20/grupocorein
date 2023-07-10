@@ -271,6 +271,15 @@
                 @endforeach
               </select>
             </div>
+            @php
+              $TaxesAll = DB::table('taxes')->get();
+              $sumFinalPriceIGV1 = 0;
+              $sumFinalPriceIGV2 = 0;
+              $incIGV = $TaxesAll[0]->value;
+              $sinIGV = $TaxesAll[1]->value;
+              $incIGV_format = $incIGV / 100;
+              $sinIGV_format = $sinIGV;
+            @endphp
             @if($item->sections_id != 0 || $item->sections_id != "")
               <div id="cTentr-af1698__p-adm">
                 @if($item->sections_id == 1)
@@ -280,8 +289,21 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text">S/.</span>
                     </div>
-                    <input type="text" data-valformat="withcomedecimal" id="on-sale-price" name="on_sale_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="{{$item->on_sale_price}}" required>
+                    <input type="text" data-valformat="withcomedecimal" data-archorigv="product" id="on-sale-price" name="on_sale_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="{{$item->on_sale_price}}" required>
                   </div>
+                </div>
+                <div class="c_cPreviewAmmountIGV">
+                  @if($item->tax_id != 0 && $item->tax_id == 1)
+                  @php
+                    $sumFinalPriceIGV1 = $incIGV_format * $item->on_sale_price;
+                    $sumFinalPriceIGV2 = $item->on_sale_price + $sumFinalPriceIGV1;
+                  @endphp
+                  <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+                    <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
+                    <span>Monto Final: </span>
+                    <span id="c-prevammt__igvGs23s">S/. {{ $sumFinalPriceIGV2 }}</span>
+                  </div>
+                  @endif
                 </div>
                 @elseif($item->sections_id == 2)
                 <div class="form-group">
@@ -290,8 +312,21 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text">S/.</span>
                     </div>
-                    <input type="text" data-valformat="withcomedecimal" id="special-offer-price" name="special_offer_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="{{$item->special_offer_price}}" required>
+                    <input type="text" data-valformat="withcomedecimal" data-archorigv="product" id="special-offer-price" name="special_offer_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="{{$item->special_offer_price}}" required>
                   </div>
+                </div>
+                <div class="c_cPreviewAmmountIGV">
+                  @if($item->tax_id != 0 && $item->tax_id == 1)
+                  @php
+                    $sumFinalPriceIGV1 = $incIGV_format * $item->special_offer_price;
+                    $sumFinalPriceIGV2 = $item->special_offer_price + $sumFinalPriceIGV1;
+                  @endphp
+                  <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+                    <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
+                    <span>Monto Final: </span>
+                    <span id="c-prevammt__igvGs23s">S/. {{ $sumFinalPriceIGV2 }}</span>
+                  </div>
+                  @endif
                 </div>
                 @else
                 <div></div>

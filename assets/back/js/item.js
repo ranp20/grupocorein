@@ -36,14 +36,42 @@ $(() => {
   $(document).on("keyup", "input[data-valformat=withcomedecimal]", function(e){
     let val = e.target.value;
     let val_formatNumber = val.toString().replace(/[^\d.]/g, "").replace(/^(\d*\.)(.*)\.(.*)$/, '$1$2$3').replace(/\.(\d{2})\d+/, '.$1').replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    let val_formatNumberWithoutCome = val_formatNumber.replace(",","");
+    let val_formatNumberWithoutCome = val_formatNumber.replace(/,/g,"");
     $(this).val(val_formatNumber);
     let incIGV = taxesObj[0];
     let sincIGV = taxesObj[1];
-    let incIGVFormat = taxesObj[0] / 100;
-    let sincIGVFormat = taxesObj[1];
-    let incIGVFormatOpe = parseFloat(val_formatNumberWithoutCome) + incIGVFormat;
-    $("#c-prevammt__igvGs23s").text('S/. '+val_formatNumber);
+    let incIGVFormat = incIGV / 100;
+    let sincIGVFormat = sincIGV;
+    let incIGVFormatOpe = parseFloat(val_formatNumberWithoutCome);
+    let incIGVFormatOpeMoreIGV = incIGVFormatOpe * incIGVFormat;
+    let incIGVFormatOpeMoreIGVCalc = incIGVFormatOpe + incIGVFormatOpeMoreIGV;
+    let val_formatNumberWithIGV = incIGVFormatOpeMoreIGVCalc.toString().replace(/[^\d.]/g, "").replace(/^(\d*\.)(.*)\.(.*)$/, '$1$2$3').replace(/\.(\d{2})\d+/, '.$1').replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    $("#c-prevammt__igvGs23s").text('S/. '+val_formatNumberWithIGV);
+  });
+  function addIGVintoTag(elementOrTag){
+    let val_formatNumberWithoutCome = elementOrTag.replace(/,/g,"");
+    let incIGV = taxesObj[0];
+    let incIGVFormat = incIGV / 100;
+    let incIGVFormatOpe = parseFloat(val_formatNumberWithoutCome);
+    let incIGVFormatOpeMoreIGV = incIGVFormatOpe * incIGVFormat;
+    let incIGVFormatOpeMoreIGVCalc = incIGVFormatOpe + incIGVFormatOpeMoreIGV;
+    let val_formatNumberWithIGV = incIGVFormatOpeMoreIGVCalc.toString().replace(/[^\d.]/g, "").replace(/^(\d*\.)(.*)\.(.*)$/, '$1$2$3').replace(/\.(\d{2})\d+/, '.$1').replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return val_formatNumberWithIGV;
+  }
+  $(document).on("change","#tax_id",function(){
+    let tId = $(this).val();
+    // console.log(tId);
+    if(tId != "" && tId != 0 && tId == 1){
+      $(".c_cPreviewAmmountIGV").html(`
+      <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+        <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
+        <span>Monto Final: </span>
+        <span id="c-prevammt__igvGs23s">S/. ${addIGVintoTag($("input[data-archorigv='product']").val())}</span>
+      </div>
+      `);
+    }else{
+      $(".c_cPreviewAmmountIGV").html("");
+    }
   });
   $(document).on("change","#sections_id",function(){
     let tId = $(this).val();
@@ -55,13 +83,15 @@ $(() => {
           <div class="input-group-prepend">
             <span class="input-group-text">S/.</span>
           </div>
-          <input type="text" data-valformat="withcomedecimal" id="on-sale-price" name="on_sale_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="" required>
+          <input type="text" data-valformat="withcomedecimal" data-archorigv="product" id="on-sale-price" name="on_sale_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="" required>
         </div>
       </div>
-      <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
-        <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
-        <span>Monto Final: </span>
-        <span id="c-prevammt__igvGs23s">S/. 0.00</span>
+      <div class="c_cPreviewAmmountIGV">
+        <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+          <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
+          <span>Monto Final: </span>
+          <span id="c-prevammt__igvGs23s">S/. 0.00</span>
+        </div>
       </div>
       `;
       $("#cTentr-af1698__p-adm").html(tmpSelSection);
@@ -73,13 +103,15 @@ $(() => {
           <div class="input-group-prepend">
             <span class="input-group-text">S/.</span>
           </div>
-          <input type="text" data-valformat="withcomedecimal" id="special-offer-price" name="special_offer_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="" required>
+          <input type="text" data-valformat="withcomedecimal" data-archorigv="product" id="special-offer-price" name="special_offer_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="" required>
         </div>
       </div>
-      <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
-        <span style="display:block;"><strong>INCLUYE IGV: </strong></span>  
-        <span>Monto Final: </span>
-        <span id="c-prevammt__igvGs23s">S/. 0.00</span>
+      <div class="c_cPreviewAmmountIGV">
+        <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+          <span style="display:block;"><strong>INCLUYE IGV: </strong></span>  
+          <span>Monto Final: </span>
+          <span id="c-prevammt__igvGs23s">S/. 0.00</span>
+        </div>
       </div>
       `;
       $("#cTentr-af1698__p-adm").html(tmpSelSection);
