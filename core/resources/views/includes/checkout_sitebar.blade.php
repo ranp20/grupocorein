@@ -69,9 +69,9 @@
           </h4>
           <span class="entry-meta">{{$item['qty']}} x {{PriceHelper::setCurrencyPrice($item['main_price'])}}</span>
           @if(isset($cart['attribute']['option_name']) && !empty($cart['attribute']['option_name']))
-          @foreach ($item['attribute']['option_name'] as $optionkey => $option_name)
-          <span class="entry-meta"><b>{{$option_name}}</b> : {{PriceHelper::setCurrencySign()}}{{$item['attribute']['option_price'][$optionkey]}}</span>
-          @endforeach
+            @foreach ($item['attribute']['option_name'] as $optionkey => $option_name)
+            <span class="entry-meta"><b>{{$option_name}}</b> : {{PriceHelper::setCurrencySign()}}{{$item['attribute']['option_price'][$optionkey]}}</span>
+            @endforeach
           @endif
         </div>
       </div>
