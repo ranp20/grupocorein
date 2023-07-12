@@ -212,7 +212,39 @@
               </select>
             </div>
             <div class="form-group">
-              <label for="sections_id">{{ __('Seleccionar sección') }} *</label>
+              <label for="">{{ __('Seleccionar sección') }} *</label>
+              <div class="border-list-switchs">
+                <div class="form-check pb-0">
+                  <section class="c-sRadioBtn__c--cDesign-1">
+                    <div class="c-sRadioBtn__c--cDesign-1__c">
+                    <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="0" id="0"/>
+                      <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
+                    </div>
+                    <label for="0" style="cursor:pointer;">Ninguna</label>
+                  </section>
+                  @foreach(DB::table('tbl_sections')->get() as $section)
+                    @php
+                    $onSection = "";
+                    if($section->name == "on_sale"){
+                      $onSection = "En promoción";
+                    }else if($section->name == "special_offer"){
+                      $onSection = "Oferta Especial";
+                    }else{
+                      $onSection = $section->name;
+                    }
+                    @endphp
+                    <section class="c-sRadioBtn__c--cDesign-1">
+                      <div class="c-sRadioBtn__c--cDesign-1__c">
+                      <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="{{ $section->id }}" id="{{ $onSection }}"/>
+                        <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
+                      </div>
+                      <label for="{{ $onSection }}" style="cursor:pointer;">{{ $onSection }}</label>
+                    </section>
+                  @endforeach
+                </div>
+              </div>
+              {{--
+              <!--
               <select name="sections_id" id="sections_id" class="form-control" required>
                 <option value="">{{__('Select One')}}</option>
                 @foreach(DB::table('tbl_sections')->get() as $section)
@@ -229,6 +261,8 @@
                   <option value="{{ $section->id }}">{{ $onSection }}</option>
                 @endforeach
               </select>
+              -->
+              --}}
             </div>
             <div id="cTentr-af1698__p-adm"></div>
             <div class="form-group">

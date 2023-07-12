@@ -24,8 +24,7 @@
                 <th class="text-center">{{__('Quantity')}}</th>
                 <th class="text-center">{{__('Subtotal')}}</th>
                 <th class="text-center">
-                  <a class="btn btn-sm btn-primary" href="{{route('front.cart.clear')}}"><span>{{__('Clear Cart')}}</span>
-                  </a>
+                  <a class="btn btn-sm btn-primary" href="{{route('front.cart.clear')}}"><span>{{__('Clear Cart')}}</span></a>
                 </th>
               </tr>
             </thead>
@@ -33,7 +32,7 @@
               @foreach ($cart as $key => $item)
               @php
                 $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-                $cartTotal +=  ($item['main_price'] + $total + $attribute_price) * $item['qty'];
+                $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
               @endphp
               <tr>
                 <td>
@@ -95,7 +94,10 @@
           <div class="text-right text-lg column {{Session::has('coupon') ? '' : 'd-none'}}"><span class="text-muted">{{__('Discount')}} ({{Session::has('coupon') ? Session::get('coupon')['code']['title'] : ''}}) : </span><span class="text-gray-dark">{{PriceHelper::setCurrencyPrice(Session::has('coupon') ? Session::get('coupon')['discount'] : 0)}}</span></div>
           -->
           --}}
-          <div class="text-right column text-lg"><span class="text-muted">{{__('Subtotal')}}: </span><span class="text-gray-dark">{{PriceHelper::setCurrencyPrice($cartTotal - (Session::has('coupon') ? Session::get('coupon')['discount'] : 0))}}</span></div>
+          <div class="text-right column text-lg">
+            <span class="text-muted">{{__('Subtotal')}}: </span>
+            <span class="text-gray-dark">{{PriceHelper::setCurrencyPrice($cartTotal - (Session::has('coupon') ? Session::get('coupon')['discount'] : 0))}}</span>
+          </div>
         </div>
         <div class="shopping-cart-footer">
           {{--  

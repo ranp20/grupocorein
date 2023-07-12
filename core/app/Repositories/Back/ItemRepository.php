@@ -89,6 +89,13 @@ class ItemRepository{
         $input['adj_doc'] = $namecomplete;
       }
     }
+    /*
+    echo "<pre>";
+    print_r($input);
+    echo "</pre>";
+    exit();
+    */
+
     /*-- NUEVO CONTENIDO (FIN) --*/
     $item_id = Item::create($input)->id;
     if(isset($input['galleries'])){
