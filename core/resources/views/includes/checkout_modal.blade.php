@@ -554,7 +554,41 @@
       </div>
       <div class="modal-body">
         <?php
+          $arrCredentials = "";
+          $arrCredentials2 = [];
+          $paymentIzipayAll = DB::table('payment_settings')->where('name','Izipay')->select('information')->first();
+          $arrCredentials = json_decode($paymentIzipayAll->information, TRUE);
+          $chck_mode = $arrCredentials['check_mode'];
+          $chck_credentials = array("access" => $arrCredentials['credentials']);
+                    
+          if($chck_mode == 1){
+            foreach($chck_credentials as $k => $v){
+              $arrCredentials2['Server_API-REST'] = $v['production']['Server_API-REST'];
+              $arrCredentials2['username'] = $v['production']['username'];
+              $arrCredentials2['public_key'] = $v['production']['public_key'];
+              $arrCredentials2['token'] = $v['production']['token'];
+              $arrCredentials2['SHA-256'] = $v['production']['SHA-256'];
+              $arrCredentials2['password'] = $v['production']['password'];
+            }
+          }else{
+            foreach($chck_credentials as $k => $v){
+              $arrCredentials2['Server_API-REST'] = $v['test']['Server_API-REST'];
+              $arrCredentials2['username'] = $v['test']['username'];
+              $arrCredentials2['public_key'] = $v['test']['public_key'];
+              $arrCredentials2['token'] = $v['test']['token'];
+              $arrCredentials2['SHA-256'] = $v['test']['SHA-256'];
+              $arrCredentials2['password'] = $v['test']['password'];
+            }
+          }
+          
           $client = new Lyra\Client();
+
+          $client->setDefaultUsername($arrCredentials2['username']);
+          $client->setDefaultPassword($arrCredentials2['password']);
+          $client->setDefaultEndpoint($arrCredentials2['Server_API-REST']);
+          $client->setDefaultPublicKey($arrCredentials2['public_key']);
+          $client->setDefaultSHA256Key($arrCredentials2['SHA-256']);
+
           $u_amount = 0;
           $u_sum_or_not = $postamount;
           $u_amount =  floatval($u_sum_or_not) * 100;

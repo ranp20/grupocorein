@@ -211,7 +211,7 @@
               </select>
             </div>
             <div class="form-group">
-              <label for="sections_id"><?php echo e(__('Seleccionar sección')); ?> *</label>
+              <label for=""><?php echo e(__('Seleccionar sección')); ?> *</label>
               <div class="border-list-switchs">
                 <div class="form-check pb-0">
                   <section class="c-sRadioBtn__c--cDesign-1">

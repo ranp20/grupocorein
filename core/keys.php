@@ -20,6 +20,20 @@ $fk_Token = "";
 $fk_Publickey = "";
 $fk_SHA_256 = "";
 */
+/*
+$app = require_once 'bootstrap/app.php';
+$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+$kernel->handle(Illuminate\Http\Request::capture());
+
+use \App\PaymentSetting;
+$paymentSettings = PaymentSetting::all();
+
+echo "<pre>";
+print_r($paymentSettings);
+echo "</pre>";
+exit();
+*/
+
 // CREDENCIALES REALES (INICIO)
 Lyra\Client::setDefaultUsername($fk_Username); // NOMBRE DE USUARIO
 Lyra\Client::setDefaultPassword($fk_Password); // PASSWORD

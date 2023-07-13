@@ -39,6 +39,18 @@ img{
 	width: auto;
 	height: auto;
 }
+.dc_show{
+	display: none;
+	opacity: 0;
+	visibility: hidden;
+	user-select: none;
+}
+*[mod-integration='production']{
+	color: #367dff !important;
+}
+*[mod-integration='test']{
+	color: #f3545d !important;
+}
 /* CUSTOMS */
 .cLogo__modal-header{
 	max-width: 190px;
@@ -333,4 +345,38 @@ img{
 
 		}
 	}
+}
+#c-modalPrevOrderPDF{
+	max-width: 1360px !important;
+	width: 96% !important;
+	height: 100%;
+	margin: 0.75rem auto 1.75rem auto;
+}
+#c-modalPrevOrderPDF .modal-content{
+	height: 100%;
+}
+#cTentr-af1698__1prevChckp-show{
+	width: 100%;
+	height: 100%;
+}
+#cTentr-af1698__1prevChckp-show embed{
+	width: 100%;
+	height: 100%;
+}
+#cTentr-af1698__1prevChckpPDFDown span{
+	position: relative;
+	top: -1px;
+}
+#cTentr-af1698__1prevChckpPDFDown svg{
+	position: relative;
+	fill: #fff;
+	top: 2px;
+}
+#cTentr-af1698__1prevChckp span svg{
+	width: 27px;
+	height: 28px;
+	fill: #fff;
+	position: relative;
+	top: 4px;
+	margin-left: 6px;
 }
