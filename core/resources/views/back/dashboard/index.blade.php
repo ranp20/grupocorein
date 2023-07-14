@@ -546,20 +546,22 @@
                 </thead>
                 <tbody>
                   @foreach($recentOrders as $data)
-                  <tr>
-                    <td>
-                      <a href="{{route('back.user.show',$data->user_id)}}">{{ $data->user->displayName()}}</a>
-                    </td>
-                    <td>
-                      <a href="{{route('back.order.invoice',$data->id)}}">{{ $data->transaction_number}}</a>
-                    </td>
-                    <td>
-                      {{ $data->payment_method}}
-                    </td>
-                    <td>
-                      {{$data->currency_sign}}{{PriceHelper::OrderTotal($data)}}
-                    </td>
-                  </tr>
+                    @if($data->user_id)
+                    <tr>
+                      <td>
+                        <a href="{{route('back.user.show',$data->user_id)}}">{{ $data->user->displayName()}}</a>
+                      </td>
+                      <td>
+                        <a href="{{route('back.order.invoice',$data->id)}}">{{ $data->transaction_number}}</a>
+                      </td>
+                      <td>
+                        {{ $data->payment_method}}
+                      </td>
+                      <td>
+                        {{$data->currency_sign}}{{PriceHelper::OrderTotal($data)}}
+                      </td>
+                    </tr>
+                    @endif
                   @endforeach
                 </tbody>
               </table>

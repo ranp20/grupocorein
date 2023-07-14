@@ -380,3 +380,21 @@ img{
 	top: 4px;
 	margin-left: 6px;
 }
+.cDownPDF__cTitle__c{
+	display: flex !important;
+	align-items: center !important;
+	justify-content: space-between !important;
+	flex-flow: row wrap !important;
+	width: 100%;
+	max-width: 100%;
+}
+.cDownPDF__cTitle__c__cBtnDown{
+	margin: 0 auto 0 auto !important;
+	width: auto !important;
+	@media(min-width: 768px){
+		margin: 0 0 0 auto !important;
+	}
+	a{
+		font-size: 15px;
+	}
+}
