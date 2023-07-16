@@ -46,7 +46,7 @@ main table.summary td,main table.summary th{padding:8px;border-bottom:0}body,foo
 				<div class="cH-sec__cR__cGrp">
 					<div class="cH-sec__cR__cGrp__i">
 						<span>N.Pedido: </span>
-						<span>2020/398</span>
+						<span><?php echo e($dataPDF['getUltimateGenCodeOrder']); ?></span>
 					</div>
 					<div class="cH-sec__cR__cGrp__i">
 						<span>Fecha: </span>

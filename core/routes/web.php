@@ -299,6 +299,7 @@ Route::group(['middleware' => 'maintainance'], function (){
       Route::get('/orders', 'User\OrderController@index')->name('user.order.index');
       Route::get('/order/print/{id}', 'User\OrderController@printOrder')->name('user.order.print');
       Route::get('/order/invoice/{id}', 'User\OrderController@details')->name('user.order.invoice');
+      Route::get('/order/pdforderpreview/{id}', 'User\OrderController@getGeneratePDFOrderPreview')->name('user.order.pdforderpreview');
       //------------ WISHLIST ------------
       Route::get('/wishlists', 'User\WishlistController@index')->name('user.wishlist.index');
       Route::get('/wishlist/store/{id}', 'User\WishlistController@store')->name('user.wishlist.store');

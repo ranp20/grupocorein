@@ -212,7 +212,9 @@
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="staticBackdropLabel">VISUALIZACIÓN DEL PEDIDO</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <div class="modal-body" style="overflow: hidden;height:100%;box-sizing:border-box;">
         <div class="row mb-2 cDownPDF__cTitle">

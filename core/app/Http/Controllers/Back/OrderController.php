@@ -147,15 +147,9 @@ class OrderController extends Controller{
     if(isset($request->id_order) && $request->id_order != ""){
       $order = Order::where('id', $request->id_order)->get()->toArray()[0];
       $user = User::where('id', $order['user_id'])->get()->toArray()[0];
-      /*
-      echo "<pre>";
-      print_r($order);
-      echo "<pre>";
-      exit();
-      */
-
-      
+            
       $get_idUser = $user['id'];
+      $nextIdGenCode = $order['id_gencode'];
       $get_BillingAddress = $order['billing_info'];
       $get_ShippingAddress = $order['shipping_info'];
       $get_SessionCart = json_decode($order['cart'], TRUE);
@@ -275,17 +269,13 @@ class OrderController extends Controller{
         "session_cartSubtotal" => $get_SessionCartSubtotal,
         "session_userInfo" => $get_SessionUserInfo,
         "system_settinginfo" => $getSettingsInfo,
+        "getUltimateGenCodeOrder" => $nextIdGenCode
       ];
-      
-
-    }
-        
+    }   
     return PDF::loadView('back.order.gen_pdforderpreview', compact('dataPDF'))
           ->setPaper('A4', 'landscape')
           ->stream('ejemplo.pdf', array('Attachment' => true))
           ->header('Content-Type', 'application/pdf');
-    
-    exit();
-    
+    exit();    
   }
 }

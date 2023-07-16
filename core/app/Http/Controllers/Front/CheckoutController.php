@@ -24,6 +24,7 @@ use App\Models\Departamento;
 use App\Models\Provincia;
 use App\Models\Distrito;
 use App\Models\Ciudad;
+use Cartalyst\Stripe\Api\Orders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -817,7 +818,38 @@ class CheckoutController extends Controller{
     }
     return response()->json(['data'=>$data]);
   }
+  public function getUltimateIdGenCode($idgencodelast){
+    if($idgencodelast){
+      $idgencode = str_replace(' ','',$idgencodelast->id_gencode);
+      if($idgencode != "" && $idgencode != null){
+        $lastCodeArr = explode('-', $idgencode);
+        $firstGroup = intval($lastCodeArr[0]);
+        $secondGroup = intval($lastCodeArr[1]);
+        if($secondGroup == 9999999){
+          $firstGroup++;
+          $secondGroup = 1;
+        }else{
+          $secondGroup++;
+        }
+      }else{
+        $firstGroup = 1;
+        $secondGroup = 1;
+      }
+    }else{
+      $firstGroup = 1;
+      $secondGroup = 1;
+    }
+    
+    $firstGroupPadded = str_pad($firstGroup, 3, '0', STR_PAD_LEFT);
+    $secondGroupPadded = str_pad($secondGroup, 7, '0', STR_PAD_LEFT);
+    $code = $firstGroupPadded . '-' . $secondGroupPadded;
+    return $code;
+  }
   public function getGeneratePDFOrderPreview(){
+    
+    $ultimateIdGenCode = Order::select('id_gencode')->orderBy('id', 'desc')->take(1)->first();
+    $nextIdGenCode = $this->getUltimateIdGenCode($ultimateIdGenCode);
+    
     $get_idUser = Auth::user()->id;
     $get_BillingAddress = Session::get('billing_address');
     $get_ShippingAddress = Session::get('shipping_address');
@@ -938,6 +970,7 @@ class CheckoutController extends Controller{
       "session_cartSubtotal" => $get_SessionCartSubtotal,
       "session_userInfo" => $get_SessionUserInfo,
       "system_settinginfo" => $getSettingsInfo,
+      "getUltimateGenCodeOrder" => $nextIdGenCode
     ];
     
     return PDF::loadView('front.checkout.gen_pdforderpreview', compact('dataPDF'))

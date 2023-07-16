@@ -17,8 +17,37 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 trait IzipayCheckout{
+  public function getUltimateIdGenCode($idgencodelast){
+    if($idgencodelast){
+      $idgencode = str_replace(' ','',$idgencodelast->id_gencode);
+      if($idgencode != "" && $idgencode != null){
+        $lastCodeArr = explode('-', $idgencode);
+        $firstGroup = intval($lastCodeArr[0]);
+        $secondGroup = intval($lastCodeArr[1]);
+        if($secondGroup == 9999999){
+          $firstGroup++;
+          $secondGroup = 1;
+        }else{
+          $secondGroup++;
+        }
+      }else{
+        $firstGroup = 1;
+        $secondGroup = 1;
+      }
+    }else{
+      $firstGroup = 1;
+      $secondGroup = 1;
+    }
+    
+    $firstGroupPadded = str_pad($firstGroup, 3, '0', STR_PAD_LEFT);
+    $secondGroupPadded = str_pad($secondGroup, 7, '0', STR_PAD_LEFT);
+    $code = $firstGroupPadded . '-' . $secondGroupPadded;
+    return $code;
+  }
   public function IzipaySubmit($data){
     $r = "";
+    $ultimateIdGenCode = Order::select('id_gencode')->orderBy('id', 'desc')->take(1)->first();
+    $nextIdGenCode = $this->getUltimateIdGenCode($ultimateIdGenCode);
     if(isset($data['kr-answer']) && $data['kr-answer'] != ""){
       $izzipay_r = json_decode($data['kr-answer'], TRUE);
       $_token = uniqid('fk-srWong'); // TRANSACTION DATE
@@ -99,6 +128,7 @@ trait IzipayCheckout{
       $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
       $grand_total += $statePrice;
       $total_amount = PriceHelper::setConvertPrice($grand_total);
+      $orderData['id_gencode'] = $nextIdGenCode;
       $orderData['state'] =  $state_id ? json_encode(State::findOrFail($state_id),true) : null;
       $orderData['cart'] = json_encode($cart,true);
       $orderData['discount'] = json_encode($discount,true);
