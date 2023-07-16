@@ -674,7 +674,7 @@
                         --}}
                         <div id="bank" class="container tab-pane active">
                           <div class="row justify-content-center">
-                            <div class="col-lg-10">
+                            <div class="col-lg-12">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -719,7 +719,7 @@
                         </div>
                         <div id="izipay" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-10">
+                            <div class="col-lg-12">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">

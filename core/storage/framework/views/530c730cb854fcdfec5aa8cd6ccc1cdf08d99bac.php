@@ -29,7 +29,7 @@
                         
                         <div id="bank" class="container tab-pane active">
                           <div class="row justify-content-center">
-                            <div class="col-lg-10">
+                            <div class="col-lg-12">
                               <form action="<?php echo e(route('back.setting.payment.update')); ?>" method="POST" enctype="multipart/form-data">
                                 <?php echo csrf_field(); ?>
                                 <div class="form-group">
@@ -74,7 +74,7 @@
                         </div>
                         <div id="izipay" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-10">
+                            <div class="col-lg-12">
                               <form action="<?php echo e(route('back.setting.payment.update')); ?>" method="POST" enctype="multipart/form-data">
                                 <?php echo csrf_field(); ?>
                                 <div class="form-group">

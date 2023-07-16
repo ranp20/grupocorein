@@ -41,7 +41,7 @@
                 </span>
               </a>
             </div>
-          </div>          
+          </div>
           <div class="row">
             <div class="col text-center">
               <img class="img-fluid mb-5 mh-70" width="180" alt="Logo" src="<?php echo e(asset('assets/images/'.$setting->logo)); ?>">
