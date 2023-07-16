@@ -127,8 +127,8 @@
 		$mainbs['overlay'] = $setting->overlay;
 		$mainbs = json_encode($mainbs);
 	@endphp
-	<script>
-		var mainbs = {!! $mainbs !!};
+	<script type="text/javascript">
+		var mainbs = "{!! $mainbs !!}";
 	</script>
 	<script type="text/javascript" src="{{ asset('assets/back/js/core/jquery.3.6.0.min.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('assets/back/js/core/popper.min.js') }}"></script>
