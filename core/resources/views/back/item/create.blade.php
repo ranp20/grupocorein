@@ -164,7 +164,7 @@
           <div class="card-body">
             <div class="form-group">
               <label for="category_id">{{ __('Select Category') }} *</label>
-              <select name="category_id" id="category_id" data-href="{{route('back.get.subcategory')}}" class="form-control" >
+              <select name="category_id" id="category_id" data-href="{{route('back.get.subcategory')}}" class="form-control" required>
                 <option value="" selected>{{__('Select One')}}</option>
                 @foreach(DB::table('categories')->whereStatus(1)->get() as $cat)
                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
@@ -173,13 +173,13 @@
             </div>
             <div class="form-group">
               <label for="subcategory_id">{{ __('Select Sub Category') }} </label>
-              <select name="subcategory_id" id="subcategory_id" data-href="{{route('back.get.childcategory')}}" class="form-control">
+              <select name="subcategory_id" id="subcategory_id" data-href="{{route('back.get.childcategory')}}" class="form-control" required>
                 <option value="">{{__('Select One')}}</option>
               </select>
             </div>
             <div class="form-group">
               <label for="childcategory_id">{{ __('Select Child Category') }} </label>
-              <select name="childcategory_id" id="childcategory_id" class="form-control">
+              <select name="childcategory_id" id="childcategory_id" class="form-control" required>
                 <option value="">{{__('Select One')}}</option>
               </select>
             </div>
@@ -199,7 +199,7 @@
             <div class="form-group">
               <label for="stock">{{ __('Total in stock') }} *</label>
               <div class="input-group mb-3">
-                <input type="number" id="stock" name="stock" class="form-control" placeholder="{{ __('Total in stock') }}" value="{{ old('stock') }}" >
+                <input type="number" id="stock" name="stock" class="form-control" placeholder="{{ __('Total in stock') }}" value="{{ old('stock') }}" required>
               </div>
             </div>
             <div class="form-group">

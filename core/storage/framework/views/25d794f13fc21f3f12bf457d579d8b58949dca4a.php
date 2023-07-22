@@ -254,6 +254,8 @@
                                                     <span><?php echo e(PriceHelper::setCurrencyPrice($popular_category_item->discount_price)); ?></span>
                                                     <?php endif; ?>
                                                 <?php endif; ?>
+                                            <?php else: ?>
+                                                <span><?php echo e(PriceHelper::setCurrencyPrice($popular_category_item->discount_price)); ?></span>
                                             <?php endif; ?>
                                         </h4>
                                         <div class="cWtspBtnCtc">
@@ -397,6 +399,8 @@
                                                     <span><?php echo e(PriceHelper::setCurrencyPrice($feature_category_item->discount_price)); ?></span>
                                                 <?php endif; ?>
                                             <?php endif; ?>
+                                        <?php else: ?>
+                                            <span><?php echo e(PriceHelper::setCurrencyPrice($feature_category_item->discount_price)); ?></span>
                                         <?php endif; ?>
                                         </h4>
                                         <div class="cWtspBtnCtc">

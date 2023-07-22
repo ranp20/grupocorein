@@ -84,6 +84,7 @@ class ItemRequest extends FormRequest
             'details.required'         =>  __('El campo de descripción es obligatorio.'),
             'sort_details.required'    =>  __('El campo Descripción de clasificación es obligatorio.'),
             'discount_price.required'  =>  __('El campo Precio actual es obligatorio.'),
+            'stock.required'           =>  __('El campo de Stock debe ser numérico mayor a 0.'),
             'stock.required'           =>  __('El campo de existencias es obligatorio.'),
             'photo.required'           =>  __('El campo de la imagen es obligatorio.'),
             'photo.mimes'              =>  __('El tipo de imagen debe ser jpg, jpeg, png, svg.')

@@ -9,37 +9,49 @@
 
   </td>
   <td>
-    <?php if($data->sections_id != 0): ?>
     <?php
     $newPrice = 0;
-    if($data->on_sale_price != 0){
-      $newPrice = $data->on_sale_price;
-    }else if($data->special_offer_price != 0){
-      $newPrice = $data->special_offer_price;
-    }else{
-      $newPrice = $data->discount_price;
-    }
     ?>
+    <?php if($data->sections_id != 0): ?>
+      <?php
+      if($data->on_sale_price != 0){
+        $newPrice = $data->on_sale_price;
+      }else if($data->special_offer_price != 0){
+        $newPrice = $data->special_offer_price;
+      }else{
+        $newPrice = $data->discount_price;
+      }
+      ?>
+    <?php else: ?>
+      <?php
+        $newPrice = $data->discount_price;
+      ?>
     <?php endif; ?>
-    <?php echo e(PriceHelper::adminCurrencyPrice($newPrice)); ?>
-
+    <span><?php echo e(PriceHelper::adminCurrencyPrice($newPrice)); ?></span>
   </td>
   <td>
-    <?php if($data->sections_id != 0): ?>
     <?php
     $nameSection = "";
     $nameSectionClassSpan = "";
-    if($data->sections_id == 1){
-      $nameSection = "En promoción";
-      $nameSectionClassSpan = "sptxt_prod-prom";
-    }else if($data->sections_id == 2){
-      $nameSection = "Oferta Especial";
-      $nameSectionClassSpan = "sptxt_prod-offspecial";
-    }else{
-      $nameSection = "Normal";
-      $nameSectionClassSpan = "sptxt_prod-normal";
-    }
     ?>
+    <?php if($data->sections_id != 0): ?>
+      <?php
+        if($data->sections_id == 1){
+          $nameSection = "En promoción";
+          $nameSectionClassSpan = "sptxt_prod-prom";
+        }else if($data->sections_id == 2){
+          $nameSection = "Oferta Especial";
+          $nameSectionClassSpan = "sptxt_prod-offspecial";
+        }else{
+          $nameSection = "Normal";
+          $nameSectionClassSpan = "sptxt_prod-normal";
+        }
+      ?>
+    <?php else: ?>
+      <?php
+        $nameSection = "Normal";
+        $nameSectionClassSpan = "sptxt_prod-normal";
+      ?>
     <?php endif; ?>
     <span class="<?php echo e($nameSectionClassSpan); ?>"><?php echo e($nameSection); ?></span>
   </td>

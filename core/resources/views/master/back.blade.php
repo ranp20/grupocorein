@@ -128,7 +128,7 @@
 		$mainbs = json_encode($mainbs);
 	@endphp
 	<script type="text/javascript">
-		var mainbs = "{!! $mainbs !!}";
+		var mainbs = {!! $mainbs !!};
 	</script>
 	<script type="text/javascript" src="{{ asset('assets/back/js/core/jquery.3.6.0.min.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('assets/back/js/core/popper.min.js') }}"></script>

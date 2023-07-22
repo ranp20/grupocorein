@@ -155,6 +155,8 @@
                   <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
                 @endif
               @endif
+            @else
+              <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
             @endif
             @if(isset($item->tax_id) && $item->tax_id == 1)
             <span style="font-size: 13px;margin-left: 5px;">Inc. IGV</span>

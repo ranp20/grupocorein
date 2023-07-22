@@ -973,7 +973,8 @@ class CheckoutController extends Controller{
       "getUltimateGenCodeOrder" => $nextIdGenCode
     ];
     
-    return PDF::loadView('front.checkout.gen_pdforderpreview', compact('dataPDF'))
+    return PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
+          ->loadView('front.checkout.gen_pdforderpreview', compact('dataPDF'))
           ->setPaper('A4', 'landscape')
           ->stream('ejemplo.pdf', array('Attachment' => true))
           ->header('Content-Type', 'application/pdf');

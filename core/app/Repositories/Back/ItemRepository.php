@@ -91,10 +91,15 @@ class ItemRepository{
     }
     /*
     echo "<pre>";
+    print_r($request->all());
+    echo "</pre>";
+    echo "<br>";
+    echo "<pre>";
     print_r($input);
     echo "</pre>";
     exit();
     */
+    
 
     /*-- NUEVO CONTENIDO (FIN) --*/
     $item_id = Item::create($input)->id;

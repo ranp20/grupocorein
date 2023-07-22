@@ -35,7 +35,7 @@ main table.summary td,main table.summary th{padding:8px;border-bottom:0}body,foo
   	<div class="cH-sec">
 			<div class="cH-sec__cL">
 				<div class="cH-sec__cL__cLogo">
-					<img src="{{asset('assets/images/1669085546GRUPO-COREIN-LOGOTIPO.png')}}" alt="logo_grupocorein" width="100" height="100">
+					<img src="{{ asset('assets/images/1669085546GRUPO-COREIN-LOGOTIPO.png') }}" alt="logo_grupocorein" width="100" height="100">
 				</div>
 				<div class="cH-sec__cL__cDataInfo">
 					<p>{{ $dataPDF['system_settinginfo']['site_title'] }}</p>

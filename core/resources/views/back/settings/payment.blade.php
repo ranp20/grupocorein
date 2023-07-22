@@ -751,6 +751,8 @@
                                     <label for="text">{{ __('Enter Text') }} *</label>
                                     <textarea name="text" id="text" class="form-control " rows="5" placeholder="{{ __('Enter Text') }}">{{ $izipay->text }}</textarea>
                                   </div>
+                                  {{--
+                                  <!--
                                   @php
                                     $izipayInfoIndex = array("info" => $izipayData);  
                                     $chck_mode = $izipayInfoIndex['info']['check_mode'];
@@ -809,6 +811,8 @@
                                       </div>
                                     </div>
                                   @endforeach
+                                  -->
+                                  --}}
                                   <input type="hidden" name="unique_keyword" value="izipay">
                                 </div>
                                 <div>

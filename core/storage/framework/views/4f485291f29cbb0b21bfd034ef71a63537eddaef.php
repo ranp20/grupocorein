@@ -129,7 +129,7 @@
 		$mainbs = json_encode($mainbs);
 	?>
 	<script type="text/javascript">
-		var mainbs = "<?php echo $mainbs; ?>";
+		var mainbs = <?php echo $mainbs; ?>;
 	</script>
 	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/core/jquery.3.6.0.min.js')); ?>"></script>
 	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/core/popper.min.js')); ?>"></script>

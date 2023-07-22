@@ -106,64 +106,7 @@
                                     <label for="text"><?php echo e(__('Enter Text')); ?> *</label>
                                     <textarea name="text" id="text" class="form-control " rows="5" placeholder="<?php echo e(__('Enter Text')); ?>"><?php echo e($izipay->text); ?></textarea>
                                   </div>
-                                  <?php
-                                    $izipayInfoIndex = array("info" => $izipayData);  
-                                    $chck_mode = $izipayInfoIndex['info']['check_mode'];
-                                    $chck_credentials = $izipayInfoIndex['info']['credentials'];
-                                  ?>                                  
-                                  <?php if($chck_mode == 1): ?>
-                                    <div class="form-group">
-                                      <div class="mid swtchStyl--Rock">
-                                      <span class="swtchStyl--Rock__spanTxt pr-2" mod-integration='production' id="txt-sl_chkModAccessMethodPay">Modo producción</span>
-                                        <label for="sl_chkModAccessMethodPay" class="rocker rocker-small swtchStyl--Rock__label">
-                                          <input type="checkbox" class="swtchStyl--Rock__label__ipt" name="check_mode" checked value="<?php echo e($chck_mode); ?>" id="sl_chkModAccessMethodPay">
-                                          <span class="switch-left swtchStyl--Rock__label__spanL">Sí</span>
-                                          <span class="switch-right swtchStyl--Rock__label__spanR">No</span>
-                                        </label>
-                                        <!-- <span class="swtchStyl--Rock__spanTxt pl-2" mod-integration='production' id="txt-sl_chkModAccessMethodPay">Modo producción</span> -->
-                                      </div>
-                                    </div>
-                                  <?php else: ?>
-                                  <div class="form-group">
-                                    <div class="mid swtchStyl--Rock">
-                                      <span class="swtchStyl--Rock__spanTxt pr-2" mod-integration='test' id="txt-sl_chkModAccessMethodPay">Modo producción</span>
-                                      <label for="sl_chkModAccessMethodPay" class="rocker rocker-small swtchStyl--Rock__label">
-                                        <input type="checkbox" class="swtchStyl--Rock__label__ipt" name="check_mode" value="0" id="sl_chkModAccessMethodPay">
-                                        <span class="switch-left swtchStyl--Rock__label__spanL">Sí</span>
-                                        <span class="switch-right swtchStyl--Rock__label__spanR">No</span>
-                                      </label>
-                                      <!-- <span class="swtchStyl--Rock__spanTxt pl-2" mod-integration='test' id="txt-sl_chkModAccessMethodPay">Modo producción</span> -->
-                                    </div>
-                                  </div>
-                                  <?php endif; ?>
-                                  <?php $__currentLoopData = $izipayInfoIndex['info']['credentials']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pkey => $pdata): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <div class="c-accessMethodPay__rFa6GBin8 <?php echo e(($chck_mode == 1 && $pkey == 'test') ? 'dc_show' : ''); ?>" id="<?php echo e($pkey); ?>">
-                                      <div class="form-group">
-                                        <label for="Server_API-REST"><?php echo e(__('Server_API-REST')); ?> - <?php echo e(ucfirst($pkey)); ?> *</label>
-                                        <input type="text" class="form-control" name="Server_API-REST[]" id="Server_API-REST" value="<?php echo e($pdata['Server_API-REST']); ?>" required>
-                                      </div>
-                                      <div class="form-group">
-                                        <label for="username"><?php echo e(__('Username')); ?> - <?php echo e(ucfirst($pkey)); ?> *</label>
-                                        <input type="text" class="form-control" name="username[]" id="username" value="<?php echo e($pdata['username']); ?>" required>
-                                      </div>
-                                      <div class="form-group">
-                                        <label for="public_key"><?php echo e(__('Pulic Key')); ?> - <?php echo e(ucfirst($pkey)); ?> *</label>
-                                        <input type="text" class="form-control" name="public_key[]" id="public_key" value="<?php echo e($pdata['public_key']); ?>" required>
-                                      </div>
-                                      <div class="form-group">
-                                        <label for="token"><?php echo e(__('Token')); ?> - <?php echo e(ucfirst($pkey)); ?> *</label>
-                                        <input type="text" class="form-control" name="token[]" id="token" value="<?php echo e($pdata['token']); ?>" required>
-                                      </div>
-                                      <div class="form-group">
-                                        <label for="SHA-256"><?php echo e(__('SHA-256')); ?> - <?php echo e(ucfirst($pkey)); ?> *</label>
-                                        <input type="text" class="form-control" name="SHA-256[]" id="SHA-256" value="<?php echo e($pdata['SHA-256']); ?>" required>
-                                      </div>
-                                      <div class="form-group">
-                                        <label for="password"><?php echo e(__('Password')); ?> - <?php echo e(ucfirst($pkey)); ?> *</label>
-                                        <input type="text" class="form-control" name="password[]" id="password" value="<?php echo e($pdata['password']); ?>" required>
-                                      </div>
-                                    </div>
-                                  <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                  
                                   <input type="hidden" name="unique_keyword" value="izipay">
                                 </div>
                                 <div>

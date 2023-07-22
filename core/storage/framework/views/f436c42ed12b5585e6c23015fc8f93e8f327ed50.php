@@ -163,7 +163,7 @@
           <div class="card-body">
             <div class="form-group">
               <label for="category_id"><?php echo e(__('Select Category')); ?> *</label>
-              <select name="category_id" id="category_id" data-href="<?php echo e(route('back.get.subcategory')); ?>" class="form-control" >
+              <select name="category_id" id="category_id" data-href="<?php echo e(route('back.get.subcategory')); ?>" class="form-control" required>
                 <option value="" selected><?php echo e(__('Select One')); ?></option>
                 <?php $__currentLoopData = DB::table('categories')->whereStatus(1)->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <option value="<?php echo e($cat->id); ?>"><?php echo e($cat->name); ?></option>
@@ -172,13 +172,13 @@
             </div>
             <div class="form-group">
               <label for="subcategory_id"><?php echo e(__('Select Sub Category')); ?> </label>
-              <select name="subcategory_id" id="subcategory_id" data-href="<?php echo e(route('back.get.childcategory')); ?>" class="form-control">
+              <select name="subcategory_id" id="subcategory_id" data-href="<?php echo e(route('back.get.childcategory')); ?>" class="form-control" required>
                 <option value=""><?php echo e(__('Select One')); ?></option>
               </select>
             </div>
             <div class="form-group">
               <label for="childcategory_id"><?php echo e(__('Select Child Category')); ?> </label>
-              <select name="childcategory_id" id="childcategory_id" class="form-control">
+              <select name="childcategory_id" id="childcategory_id" class="form-control" required>
                 <option value=""><?php echo e(__('Select One')); ?></option>
               </select>
             </div>
@@ -198,7 +198,7 @@
             <div class="form-group">
               <label for="stock"><?php echo e(__('Total in stock')); ?> *</label>
               <div class="input-group mb-3">
-                <input type="number" id="stock" name="stock" class="form-control" placeholder="<?php echo e(__('Total in stock')); ?>" value="<?php echo e(old('stock')); ?>" >
+                <input type="number" id="stock" name="stock" class="form-control" placeholder="<?php echo e(__('Total in stock')); ?>" value="<?php echo e(old('stock')); ?>" required>
               </div>
             </div>
             <div class="form-group">

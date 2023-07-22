@@ -95,6 +95,8 @@
                 <span><?php echo e(PriceHelper::setCurrencyPrice($item->discount_price)); ?></span>
               <?php endif; ?>
             <?php endif; ?>
+          <?php else: ?>
+            <span><?php echo e(PriceHelper::setCurrencyPrice($item->discount_price)); ?></span>
           <?php endif; ?>
         </h4>
         <div class="cWtspBtnCtc">

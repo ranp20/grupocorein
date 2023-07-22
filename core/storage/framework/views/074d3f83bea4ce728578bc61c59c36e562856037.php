@@ -255,32 +255,61 @@
               <label for=""><?php echo e(__('Seleccionar sección')); ?> *</label>
               <div class="border-list-switchs">
                 <div class="form-check pb-0">
-                  <section class="c-sRadioBtn__c--cDesign-1">
-                    <div class="c-sRadioBtn__c--cDesign-1__c">
-                    <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="0" id="0"/>
-                      <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
-                    </div>
-                    <label for="0" style="cursor:pointer;">Ninguna</label>
-                  </section>
-                  <?php $__currentLoopData = DB::table('tbl_sections')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $section): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                  <?php
-                  $onSection = "";
-                  if($section->name == "on_sale"){
-                    $onSection = "En promoción";
-                  }else if($section->name == "special_offer"){
-                    $onSection = "Oferta Especial";
-                  }else{
-                    $onSection = $section->name;
-                  }
-                  ?>
-                  <section class="c-sRadioBtn__c--cDesign-1">
-                    <div class="c-sRadioBtn__c--cDesign-1__c">
-                    <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="<?php echo e($section->id); ?>" <?php echo e($item->sections_id == $section->id ? 'checked' : ''); ?> id="<?php echo e($onSection); ?>"/>
-                      <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
-                    </div>
-                    <label for="<?php echo e($onSection); ?>" style="cursor:pointer;"><?php echo e($onSection); ?></label>
-                  </section>
-                  <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                  <?php if($item->sections_id != 0): ?>
+                    <section class="c-sRadioBtn__c--cDesign-1">
+                      <div class="c-sRadioBtn__c--cDesign-1__c">
+                      <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="0" id="0"/>
+                        <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
+                      </div>
+                      <label for="0" style="cursor:pointer;">Ninguna</label>
+                    </section>
+                    <?php $__currentLoopData = DB::table('tbl_sections')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $section): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                      <?php
+                      $onSection = "";
+                      if($section->name == "on_sale"){
+                        $onSection = "En promoción";
+                      }else if($section->name == "special_offer"){
+                        $onSection = "Oferta Especial";
+                      }else{
+                        $onSection = $section->name;
+                      }
+                      ?>
+                      <section class="c-sRadioBtn__c--cDesign-1">
+                        <div class="c-sRadioBtn__c--cDesign-1__c">
+                        <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="<?php echo e($section->id); ?>" <?php echo e($item->sections_id == $section->id ? 'checked' : ''); ?> id="<?php echo e($onSection); ?>"/>
+                          <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
+                        </div>
+                        <label for="<?php echo e($onSection); ?>" style="cursor:pointer;"><?php echo e($onSection); ?></label>
+                      </section>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                  <?php else: ?>
+                    <section class="c-sRadioBtn__c--cDesign-1">
+                      <div class="c-sRadioBtn__c--cDesign-1__c">
+                      <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" checked value="0" id="0"/>
+                        <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
+                      </div>
+                      <label for="0" style="cursor:pointer;">Ninguna</label>
+                    </section>
+                    <?php $__currentLoopData = DB::table('tbl_sections')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $section): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                      <?php
+                      $onSection = "";
+                      if($section->name == "on_sale"){
+                        $onSection = "En promoción";
+                      }else if($section->name == "special_offer"){
+                        $onSection = "Oferta Especial";
+                      }else{
+                        $onSection = $section->name;
+                      }
+                      ?>
+                      <section class="c-sRadioBtn__c--cDesign-1">
+                        <div class="c-sRadioBtn__c--cDesign-1__c">
+                        <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="<?php echo e($section->id); ?>" <?php echo e($item->sections_id == $section->id ? 'checked' : ''); ?> id="<?php echo e($onSection); ?>"/>
+                          <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
+                        </div>
+                        <label for="<?php echo e($onSection); ?>" style="cursor:pointer;"><?php echo e($onSection); ?></label>
+                      </section>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                  <?php endif; ?>
                 </div>
               </div>
             </div>

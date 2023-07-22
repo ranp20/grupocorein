@@ -1,4 +1,5 @@
 $(() => {
+  // alert("asdasd");
   var locationsGET = window.location.href;
   var locationGETArray = locationsGET.split("/");
   var locationGETFormat = locationGETArray[0]+
@@ -73,7 +74,7 @@ $(() => {
       $(".c_cPreviewAmmountIGV").html("");
     }
   });
-  $(document).on("change","#sections_id",function(){
+  $(document).on("click","input[name=sections_id]",function(){
     let tId = $(this).val();
     if(tId == 1){
       var tmpSelSection = `
@@ -118,5 +119,48 @@ $(() => {
     }else{
       $("#cTentr-af1698__p-adm").html("");
     }
+  });
+  // --------------- KEYUP INPUTS ESPECIFICATIONS - TEXT
+  $(document).on("keyup","input[name='specification_name[]']",function(e){
+    let val = e.target.value;
+    let btnAddSpecification = $(this).parent().parent().parent().find(".add-specification");
+    btnAddSpecification.attr('data-text', val);
+  });
+  // --------------- KEYUP INPUTS ESPECIFICATIONS - DESCRIPTION
+  $(document).on("keyup","input[name='specification_description[]']",function(e){
+    let val = e.target.value;
+    let btnAddSpecification = $(this).parent().parent().parent().find(".add-specification");
+    btnAddSpecification.attr('data-text1', val);
+  });
+  // --------------- ADD ESPECIFICATIONS
+  $('.add-specification').on('click',function(){
+    var text = $(this).parent().parent().parent().find("input[name='specification_name[]").val();
+    var text1 = $(this).parent().parent().parent().find("input[name='specification_description[]").val();
+    $('#specifications-section').append(`
+    <div class="d-flex">
+      <div class="flex-grow-1">
+        <div class="form-group">
+          <input type="text" class="form-control" name="specification_name[]" placeholder="${text}" value="${text}">
+        </div>
+      </div>
+      <div class="flex-grow-1">
+        <div class="form-group">
+          <input type="text" class="form-control" name="specification_description[]" placeholder="${text1}" value="${text1}">
+        </div>
+      </div>
+      <div class="flex-btn">
+        <button type="button" class="btn btn-danger remove-spcification">
+          <i class="fa fa-minus"></i>
+        </button>
+      </div>
+    </div>
+    `);
+    $(this).data('text', '');
+    $(this).data('text1', '');
+    // $('.social-picker').iconpicker();
+  });
+  // --------------- REMOVE ESPECIFICATIONS
+  $(document).on('click','.remove-spcification',function(){
+    $(this).parent().parent().remove();
   });
 });

@@ -255,6 +255,8 @@
                                                     <span>{{PriceHelper::setCurrencyPrice($popular_category_item->discount_price)}}</span>
                                                     @endif
                                                 @endif
+                                            @else
+                                                <span>{{PriceHelper::setCurrencyPrice($popular_category_item->discount_price)}}</span>
                                             @endif
                                         </h4>
                                         <div class="cWtspBtnCtc">
@@ -397,6 +399,8 @@
                                                     <span>{{PriceHelper::setCurrencyPrice($feature_category_item->discount_price)}}</span>
                                                 @endif
                                             @endif
+                                        @else
+                                            <span>{{PriceHelper::setCurrencyPrice($feature_category_item->discount_price)}}</span>
                                         @endif
                                         </h4>
                                         <div class="cWtspBtnCtc">

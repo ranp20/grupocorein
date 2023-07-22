@@ -30,26 +30,6 @@
         </div>
       </div>
     </div>
-    <?php
-      $idgencode = "001-0000001";
-      $firstGroup = 1;
-      $secondGroup = 1;
-      if($idgencode != "" && $idgencode != "null"){
-        $lastCodeArr = explode('-', $idgencode);
-        $firstGroup = intval($lastCodeArr[0]);
-        $secondGroup = intval($lastCodeArr[1]);
-        if($secondGroup == 9999999){
-          $firstGroup++;
-          $secondGroup = 1;
-        }else{
-          $secondGroup++;
-        }
-      }
-      $firstGroupPadded = str_pad($firstGroup, 3, '0', STR_PAD_LEFT);
-      $secondGroupPadded = str_pad($secondGroup, 7, '0', STR_PAD_LEFT);
-      $code = $firstGroupPadded . '-' . $secondGroupPadded;
-      echo $code;
-    ?>
     <div class="row">
       <div class="container">
         <div class="row gx-3">

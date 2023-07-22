@@ -18,6 +18,22 @@
 		}
 		return $output_strg;
 	}
+
+	/*
+	$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
+  $imglogo =  $actual_link . "/" ."grupocorein/assets/images/1669085546GRUPO-COREIN-LOGOTIPO.png";
+	function imagenABase64($ruta_relativa_al_public){
+		// $path = $ruta_relativa_al_public;
+		// $type = pathinfo($path, PATHINFO_EXTENSION);
+		// $data = \File::get($path);
+		$data = $ruta_relativa_al_public;
+
+		$base64 = "";
+		$base64 = "data:image/png;base64,".base64_encode($data);
+		
+		return $base64;
+	}
+	*/
 	
 ?>
 <!DOCTYPE html>

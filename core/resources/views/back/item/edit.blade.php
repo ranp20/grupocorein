@@ -256,32 +256,61 @@
               <label for="">{{ __('Seleccionar sección') }} *</label>
               <div class="border-list-switchs">
                 <div class="form-check pb-0">
-                  <section class="c-sRadioBtn__c--cDesign-1">
-                    <div class="c-sRadioBtn__c--cDesign-1__c">
-                    <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="0" id="0"/>
-                      <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
-                    </div>
-                    <label for="0" style="cursor:pointer;">Ninguna</label>
-                  </section>
-                  @foreach(DB::table('tbl_sections')->get() as $section)
-                  @php
-                  $onSection = "";
-                  if($section->name == "on_sale"){
-                    $onSection = "En promoción";
-                  }else if($section->name == "special_offer"){
-                    $onSection = "Oferta Especial";
-                  }else{
-                    $onSection = $section->name;
-                  }
-                  @endphp
-                  <section class="c-sRadioBtn__c--cDesign-1">
-                    <div class="c-sRadioBtn__c--cDesign-1__c">
-                    <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="{{ $section->id }}" {{$item->sections_id == $section->id ? 'checked' : ''}} id="{{ $onSection }}"/>
-                      <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
-                    </div>
-                    <label for="{{ $onSection }}" style="cursor:pointer;">{{ $onSection }}</label>
-                  </section>
-                  @endforeach
+                  @if($item->sections_id != 0)
+                    <section class="c-sRadioBtn__c--cDesign-1">
+                      <div class="c-sRadioBtn__c--cDesign-1__c">
+                      <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="0" id="0"/>
+                        <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
+                      </div>
+                      <label for="0" style="cursor:pointer;">Ninguna</label>
+                    </section>
+                    @foreach(DB::table('tbl_sections')->get() as $section)
+                      @php
+                      $onSection = "";
+                      if($section->name == "on_sale"){
+                        $onSection = "En promoción";
+                      }else if($section->name == "special_offer"){
+                        $onSection = "Oferta Especial";
+                      }else{
+                        $onSection = $section->name;
+                      }
+                      @endphp
+                      <section class="c-sRadioBtn__c--cDesign-1">
+                        <div class="c-sRadioBtn__c--cDesign-1__c">
+                        <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="{{ $section->id }}" {{$item->sections_id == $section->id ? 'checked' : ''}} id="{{ $onSection }}"/>
+                          <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
+                        </div>
+                        <label for="{{ $onSection }}" style="cursor:pointer;">{{ $onSection }}</label>
+                      </section>
+                    @endforeach
+                  @else
+                    <section class="c-sRadioBtn__c--cDesign-1">
+                      <div class="c-sRadioBtn__c--cDesign-1__c">
+                      <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" checked value="0" id="0"/>
+                        <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
+                      </div>
+                      <label for="0" style="cursor:pointer;">Ninguna</label>
+                    </section>
+                    @foreach(DB::table('tbl_sections')->get() as $section)
+                      @php
+                      $onSection = "";
+                      if($section->name == "on_sale"){
+                        $onSection = "En promoción";
+                      }else if($section->name == "special_offer"){
+                        $onSection = "Oferta Especial";
+                      }else{
+                        $onSection = $section->name;
+                      }
+                      @endphp
+                      <section class="c-sRadioBtn__c--cDesign-1">
+                        <div class="c-sRadioBtn__c--cDesign-1__c">
+                        <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="{{ $section->id }}" {{$item->sections_id == $section->id ? 'checked' : ''}} id="{{ $onSection }}"/>
+                          <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
+                        </div>
+                        <label for="{{ $onSection }}" style="cursor:pointer;">{{ $onSection }}</label>
+                      </section>
+                    @endforeach
+                  @endif
                 </div>
               </div>
             </div>

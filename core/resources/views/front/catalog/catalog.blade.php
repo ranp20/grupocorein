@@ -115,6 +115,8 @@ function renderStarRating($rating,$maxRating=5) {
                       <span>{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
                     @endif
                   @endif
+                @else
+                  <span>{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
                 @endif
             </h4>
             <div class="cWtspBtnCtc">

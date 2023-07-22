@@ -155,6 +155,8 @@
                   <span id="main_price" class="main-price"><?php echo e(PriceHelper::setCurrencyPrice($item->discount_price)); ?></span>
                 <?php endif; ?>
               <?php endif; ?>
+            <?php else: ?>
+              <span><?php echo e(PriceHelper::setCurrencyPrice($item->discount_price)); ?></span>
             <?php endif; ?>
             <?php if(isset($item->tax_id) && $item->tax_id == 1): ?>
             <span style="font-size: 13px;margin-left: 5px;">Inc. IGV</span>
