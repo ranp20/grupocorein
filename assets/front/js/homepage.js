@@ -350,5 +350,32 @@ $(() => {
     },
   });
 
+  // ----------- HACER HOVER EN UN ELEMENTO CON DROPDOWN
+	var namehoverAll = document.querySelectorAll("*[data-dropdown-custommenu]");
+	var backdropHome = document.querySelector("#backdrop");
+	namehoverAll.forEach(function(i,e){
+		var namehover = i;
+		namehover.addEventListener("mouseenter",function(){
+			var attrnamehov = this.getAttribute("data-dropdown-custommenu");
+			if(attrnamehov.value === ''){
+        console.log('No es un menu hover');
+      }else{
+        $("#backdrop").removeClass('hide');
+				$(this).addClass('active');
+				$(this).next().addClass('active');
+      }
+		});
+	});
+  // ----------- REMOVER ELEMENTO DROPDOWN AL HACER HOVER EN EL BACKDROP
+	backdropHome.addEventListener("mouseenter", function(){
+		namehoverAll.forEach(function(i,e){
+			var namehover = i;
+			if(namehover.classList.contains("active")){
+				backdropHome.classList.add("hide");
+				namehover.classList.remove('active');
+				namehover.nextElementSibling.classList.remove('active');
+			}
+		});
+	});
   
 });

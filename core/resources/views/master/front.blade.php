@@ -259,7 +259,1074 @@ body_theme4
                                         <li class="{{ request()->routeIs('front.onsaleproducts')  ? 'active' : '' }}"><a href="{{route('front.onsaleproducts')}}">{{__('Promotions')}}</a></li>
                                         <li class="{{ request()->routeIs('front.specialoffer')  ? 'active' : '' }}"><a href="{{route('front.specialoffer')}}">{{__('Special offers')}}</a></li>
                                         @if ($setting->is_brands == 1)
-                                        <li class="{{ request()->routeIs('front.brand')  ? 'active' : '' }}"><a href="{{route('front.brand')}}">{{__('Brands')}}</a></li>
+                                        <li class="{{ request()->routeIs('front.brand')  ? 'active' : '' }} allbrands_menulist">
+                                            <a href="{{route('front.brand')}}" class="allbrands-menu-item" data-dropdown-custommenu="brands-menu">{{__('Brands')}}</a>
+                                            <div class="allbrands-list-popup" data-allbrands-js="brands-popup">
+                                                <div class="allbrands-list-container">
+                                                    <div class="allbrands-letters-filter">
+                                                        <a href="https://www.promelsa.com.pe/marcas/" class="allbrands-letter -letter-all -active" title="Todas las marcas">Todas las marcas</a>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-A">A</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-B">B</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-C">C</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-D">D</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-E">E</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-F">F</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-G">G</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-H">H</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-I">I</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-J">J</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-K">K</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-L">L</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-M">M</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-N">N</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-O">O</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-P">P</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter -disabled">Q</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-R">R</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-S">S</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-T">T</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-U">U</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-V">V</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-W">W</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter -disabled">X</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter -disabled">Y</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter -disabled">Z</button>
+                                                        <button data-allbrands-js="popup-filter-letter" class="allbrands-letter letter-#">#</button>
+                                                    </div>
+                                                    <div class="allbrands-popup-items">
+                                                        <section class="allbrands-letters-list">
+                                                            <div class="allbrands-letter letter-#" data-allbrands-js="popup-brand-letter">
+                                                                <span class="allbrands-title">#</span>
+                                                                <div class="allbrands-content">
+                                                                    <div class="allbrands-brand-item -no-logo">
+                                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/3m" class="allbrands-inner" title="3M">
+                                                                            <span class="allbrands-label">3M</span>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                            <div class="allbrands-letter letter-A" data-allbrands-js="popup-brand-letter">
+                                                                <span class="allbrands-title">A</span>
+                                                                <div class="allbrands-content">
+                                                                <div class="allbrands-brand-item -no-logo">
+                                                                    <a href="https://www.promelsa.com.pe/todas-las-marcas/abb" class="allbrands-inner" title="ABB">
+                                                                        <span class="allbrands-label">ABB</span>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="allbrands-brand-item -no-logo">
+                                                                    <a href="https://www.promelsa.com.pe/todas-las-marcas/amprobe" class="allbrands-inner" title="AMPROBE">
+                                                                        <span class="allbrands-label">AMPROBE</span>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="allbrands-brand-item -no-logo">
+                                                                    <a href="https://www.promelsa.com.pe/todas-las-marcas/anako" class="allbrands-inner" title="ANAKO">
+                                                                        <span class="allbrands-label">ANAKO</span>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="allbrands-brand-item -no-logo">
+                                                                    <a href="https://www.promelsa.com.pe/todas-las-marcas/apc_fittings" class="allbrands-inner" title="APC FITTINGS">
+                                                                        <span class="allbrands-label">APC FITTINGS</span>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="allbrands-brand-item -no-logo">
+                                                                    <a href="https://www.promelsa.com.pe/todas-las-marcas/ardy" class="allbrands-inner" title="ARDY">
+                                                                        <span class="allbrands-label">ARDY</span>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="allbrands-brand-item -no-logo">
+                                                                    <a href="https://www.promelsa.com.pe/todas-las-marcas/ares" class="allbrands-inner" title="ARES">
+                                                                        <span class="allbrands-label">ARES</span>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="allbrands-brand-item -no-logo">
+                                                                    <a href="https://www.promelsa.com.pe/todas-las-marcas/aristoncavi" class="allbrands-inner" title="ARISTONCAVI">
+                                                                        <span class="allbrands-label">ARISTONCAVI</span>
+                                                                    </a>
+                                                                </div>
+                                                                </div>
+                                                            </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-B" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">B</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/baldor" class="allbrands-inner" title="BALDOR">
+                                                                <span class="allbrands-label">
+                                                        BALDOR                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/basf_engelhard" class="allbrands-inner" title="BASF/ENGELHARD">
+                                                                <span class="allbrands-label">
+                                                        BASF/ENGELHARD                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/basor" class="allbrands-inner" title="BASOR">
+                                                                <span class="allbrands-label">
+                                                        BASOR                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/bhartia" class="allbrands-inner" title="BHARTIA">
+                                                                <span class="allbrands-label">
+                                                        BHARTIA                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/bremas" class="allbrands-inner" title="BREMAS">
+                                                                <span class="allbrands-label">
+                                                        BREMAS                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/bticino" class="allbrands-inner" title="BTICINO">
+                                                                <span class="allbrands-label">
+                                                        BTICINO                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/burndy" class="allbrands-inner" title="BURNDY">
+                                                                <span class="allbrands-label">
+                                                        BURNDY                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-C" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">C</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/cablofil" class="allbrands-inner" title="CABLOFIL">
+                                                                <span class="allbrands-label">
+                                                        CABLOFIL                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/cadweld" class="allbrands-inner" title="CADWELD">
+                                                                <span class="allbrands-label">
+                                                        CADWELD                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/capt" class="allbrands-inner" title="CAPT">
+                                                                <span class="allbrands-label">
+                                                        CAPT                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/cargill" class="allbrands-inner" title="CARGILL">
+                                                                <span class="allbrands-label">
+                                                        CARGILL                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/carlon" class="allbrands-inner" title="CARLON">
+                                                                <span class="allbrands-label">
+                                                        CARLON                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/catu" class="allbrands-inner" title="CATU">
+                                                                <span class="allbrands-label">
+                                                        CATU                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/chemsearch" class="allbrands-inner" title="CHEMSEARCH">
+                                                                <span class="allbrands-label">
+                                                        CHEMSEARCH                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/coel" class="allbrands-inner" title="COEL">
+                                                                <span class="allbrands-label">
+                                                        COEL                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/colmena" class="allbrands-inner" title="COLMENA CONDUIT">
+                                                                <span class="allbrands-label">
+                                                        COLMENA CONDUIT                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/comar" class="allbrands-inner" title="COMAR">
+                                                                <span class="allbrands-label">
+                                                        COMAR                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/comem" class="allbrands-inner" title="COMEM">
+                                                                <span class="allbrands-label">
+                                                        COMEM                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/conducrete" class="allbrands-inner" title="CONDUCRETE">
+                                                                <span class="allbrands-label">
+                                                        CONDUCRETE                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/conexel" class="allbrands-inner" title="CONEXEL">
+                                                                <span class="allbrands-label">
+                                                        CONEXEL                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/connectwell" class="allbrands-inner" title="CONNECTWELL">
+                                                                <span class="allbrands-label">
+                                                        CONNECTWELL                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/control_switchgear" class="allbrands-inner" title="CONTROL SWITCHGEAR">
+                                                                <span class="allbrands-label">
+                                                        CONTROL SWITCHGEAR                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/cooper_b_line" class="allbrands-inner" title="COOPER B-LINE">
+                                                                <span class="allbrands-label">
+                                                        COOPER B-LINE                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/cooper_bussman" class="allbrands-inner" title="COOPER BUSSMAN">
+                                                                <span class="allbrands-label">
+                                                        COOPER BUSSMAN                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/cooper_power" class="allbrands-inner" title="COOPER POWER">
+                                                                <span class="allbrands-label">
+                                                        COOPER POWER                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/copperclad" class="allbrands-inner" title="COPPERCLAD">
+                                                                <span class="allbrands-label">
+                                                        COPPERCLAD                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/copperpro" class="allbrands-inner" title="COPPERPRO">
+                                                                <span class="allbrands-label">
+                                                        COPPERPRO                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/coppersteel" class="allbrands-inner" title="COPPERSTEEL">
+                                                                <span class="allbrands-label">
+                                                        COPPERSTEEL                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/crouse_hinds" class="allbrands-inner" title="CROUSE HINDS">
+                                                                <span class="allbrands-label">
+                                                        CROUSE HINDS                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/cz_ex" class="allbrands-inner" title="CZ-EX">
+                                                                <span class="allbrands-label">
+                                                        CZ-EX                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-D" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">D</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/delga" class="allbrands-inner" title="DELGA">
+                                                                <span class="allbrands-label">
+                                                        DELGA                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/derancourt" class="allbrands-inner" title="DERANCOURT">
+                                                                <span class="allbrands-label">
+                                                        DERANCOURT                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/df" class="allbrands-inner" title="DF">
+                                                                <span class="allbrands-label">
+                                                        DF                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-E" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">E</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/e_f" class="allbrands-inner" title="E.F.">
+                                                                <span class="allbrands-label">
+                                                        E.F.                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/elster" class="allbrands-inner" title="ELSTER">
+                                                                <span class="allbrands-label">
+                                                        ELSTER                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/erico" class="allbrands-inner" title="ERICO">
+                                                                <span class="allbrands-label">
+                                                        ERICO                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/ermco" class="allbrands-inner" title="ERMCO">
+                                                                <span class="allbrands-label">
+                                                        ERMCO                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/esitas" class="allbrands-inner" title="ESITAS">
+                                                                <span class="allbrands-label">
+                                                        ESITAS                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/eti" class="allbrands-inner" title="ETI">
+                                                                <span class="allbrands-label">
+                                                        ETI                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/extech" class="allbrands-inner" title="EXTECH">
+                                                                <span class="allbrands-label">
+                                                        EXTECH                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-F" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">F</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/fanox" class="allbrands-inner" title="FANOX">
+                                                                <span class="allbrands-label">
+                                                        FANOX                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/finder" class="allbrands-inner" title="FINDER">
+                                                                <span class="allbrands-label">
+                                                        FINDER                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/flir" class="allbrands-inner" title="FLIR">
+                                                                <span class="allbrands-label">
+                                                        FLIR                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-G" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">G</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/gala" class="allbrands-inner" title="GALA">
+                                                                <span class="allbrands-label">
+                                                        GALA                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/general_cable" class="allbrands-inner" title="GENERAL CABLE">
+                                                                <span class="allbrands-label">
+                                                        GENERAL CABLE                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/general_electric" class="allbrands-inner" title="GENERAL ELECTRIC">
+                                                                <span class="allbrands-label">
+                                                        GENERAL ELECTRIC                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/gewiss" class="allbrands-inner" title="GEWISS">
+                                                                <span class="allbrands-label">
+                                                        GEWISS                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/gqele" class="allbrands-inner" title="GQELE">
+                                                                <span class="allbrands-label">
+                                                        GQELE                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/grasslin" class="allbrands-inner" title="GRASSLIN">
+                                                                <span class="allbrands-label">
+                                                        GRASSLIN                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-H" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">H</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/haenke" class="allbrands-inner" title="HAENKE">
+                                                                <span class="allbrands-label">
+                                                        HAENKE                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/hastings" class="allbrands-inner" title="HASTINGS">
+                                                                <span class="allbrands-label">
+                                                        HASTINGS                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/hellermanntyton" class="allbrands-inner" title="HELLERMANNTYTON">
+                                                                <span class="allbrands-label">
+                                                        HELLERMANNTYTON                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/helukabel" class="allbrands-inner" title="HELUKABEL">
+                                                                <span class="allbrands-label">
+                                                        HELUKABEL                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/hex" class="allbrands-inner" title="HEX">
+                                                                <span class="allbrands-label">
+                                                        HEX                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/hioki" class="allbrands-inner" title="HIOKI">
+                                                                <span class="allbrands-label">
+                                                        HIOKI                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/hollingsworth" class="allbrands-inner" title="HOLLINGSWORTH">
+                                                                <span class="allbrands-label">
+                                                        HOLLINGSWORTH                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-I" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">I</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/icet" class="allbrands-inner" title="ICET">
+                                                                <span class="allbrands-label">
+                                                        ICET                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/inael" class="allbrands-inner" title="INAEL">
+                                                                <span class="allbrands-label">
+                                                        INAEL                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/indeco" class="allbrands-inner" title="INDECO">
+                                                                <span class="allbrands-label">
+                                                        INDECO                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/intelli" class="allbrands-inner" title="INTELLI">
+                                                                <span class="allbrands-label">
+                                                        INTELLI                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/inter_teknik" class="allbrands-inner" title="INTER-TEKNIK">
+                                                                <span class="allbrands-label">
+                                                        INTER-TEKNIK                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/italian_cable_company" class="allbrands-inner" title="ITALIAN CABLE COMPANY">
+                                                                <span class="allbrands-label">
+                                                        ITALIAN CABLE COMPANY                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-J" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">J</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/jean_muller" class="allbrands-inner" title="JEAN MULLER">
+                                                                <span class="allbrands-label">
+                                                        JEAN MULLER                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/jng" class="allbrands-inner" title="JNG">
+                                                                <span class="allbrands-label">
+                                                        JNG                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-K" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">K</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/kap" class="allbrands-inner" title="KAP">
+                                                                <span class="allbrands-label">
+                                                        KAP                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/kcl" class="allbrands-inner" title="KCL">
+                                                                <span class="allbrands-label">
+                                                        KCL                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/kess" class="allbrands-inner" title="KESS">
+                                                                <span class="allbrands-label">
+                                                        KESS                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/kurt_haufe" class="allbrands-inner" title="KURT HAUFE">
+                                                                <span class="allbrands-label">
+                                                        KURT HAUFE                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-L" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">L</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/ledvance" class="allbrands-inner" title="LEDVANCE">
+                                                                <span class="allbrands-label">
+                                                        LEDVANCE                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/legrand" class="allbrands-inner" title="LEGRAND">
+                                                                <span class="allbrands-label">
+                                                        LEGRAND                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/leviton" class="allbrands-inner" title="LEVITON">
+                                                                <span class="allbrands-label">
+                                                        LEVITON                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/liat" class="allbrands-inner" title="LIAT">
+                                                                <span class="allbrands-label">
+                                                        LIAT                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/lifasa" class="allbrands-inner" title="LIFASA">
+                                                                <span class="allbrands-label">
+                                                        LIFASA                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/linkwell" class="allbrands-inner" title="LINKWELL">
+                                                                <span class="allbrands-label">
+                                                        LINKWELL                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/longxiang" class="allbrands-inner" title="LONGXIANG">
+                                                                <span class="allbrands-label">
+                                                        LONGXIANG                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-M" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">M</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/maclean" class="allbrands-inner" title="MACLEAN">
+                                                                <span class="allbrands-label">
+                                                        MACLEAN                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/macroled" class="allbrands-inner" title="MACROLED">
+                                                                <span class="allbrands-label">
+                                                        MACROLED                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/matsu" class="allbrands-inner" title="MATSU">
+                                                                <span class="allbrands-label">
+                                                        MATSU                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/megabras" class="allbrands-inner" title="MEGABRAS">
+                                                                <span class="allbrands-label">
+                                                        MEGABRAS                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/metal_coraza" class="allbrands-inner" title="METAL CORAZA">
+                                                                <span class="allbrands-label">
+                                                        METAL CORAZA                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/metelsa" class="allbrands-inner" title="METELSA">
+                                                                <span class="allbrands-label">
+                                                        METELSA                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/miguelez" class="allbrands-inner" title="MIGUELEZ">
+                                                                <span class="allbrands-label">
+                                                        MIGUELEZ                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/milwaukee" class="allbrands-inner" title="MILWAUKEE">
+                                                                <span class="allbrands-label">
+                                                        MILWAUKEE                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-N" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">N</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/naci_com" class="allbrands-inner" title="NACI_COM">
+                                                                <span class="allbrands-label">
+                                                        NACI_COM                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/njz_lighting" class="allbrands-inner" title="NJZ LIGHTING">
+                                                                <span class="allbrands-label">
+                                                        NJZ LIGHTING                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-O" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">O</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/ocal_blue" class="allbrands-inner" title="OCAL BLUE">
+                                                                <span class="allbrands-label">
+                                                        OCAL BLUE                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/osram" class="allbrands-inner" title="OSRAM">
+                                                                <span class="allbrands-label">
+                                                        OSRAM                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-P" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">P</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/pavco" class="allbrands-inner" title="PAVCO">
+                                                                <span class="allbrands-label">
+                                                        PAVCO                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/philips" class="allbrands-inner" title="PHILIPS">
+                                                                <span class="allbrands-label">
+                                                        PHILIPS                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/plastica" class="allbrands-inner" title="PLASTICA">
+                                                                <span class="allbrands-label">
+                                                        PLASTICA                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/plus_rite" class="allbrands-inner" title="PLUS RITE">
+                                                                <span class="allbrands-label">
+                                                        PLUS RITE                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/plyon" class="allbrands-inner" title="PLYON">
+                                                                <span class="allbrands-label">
+                                                        PLYON                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/produit" class="allbrands-inner" title="PRODUIT">
+                                                                <span class="allbrands-label">
+                                                        PRODUIT                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/promelsa" class="allbrands-inner" title="PROMELSA">
+                                                                <span class="allbrands-label">
+                                                        PROMELSA                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/promelux" class="allbrands-inner" title="PROMELUX">
+                                                                <span class="allbrands-label">
+                                                        PROMELUX                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-R" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">R</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/raas_controls" class="allbrands-inner" title="RAAS-CONTROLS">
+                                                                <span class="allbrands-label">
+                                                        RAAS-CONTROLS                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/ramcro" class="allbrands-inner" title="RAMCRO">
+                                                                <span class="allbrands-label">
+                                                        RAMCRO                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/raychem_rpg" class="allbrands-inner" title="RAYCHEM RPG">
+                                                                <span class="allbrands-label">
+                                                        RAYCHEM RPG                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/releco" class="allbrands-inner" title="RELECO">
+                                                                <span class="allbrands-label">
+                                                        RELECO                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/rishabh" class="allbrands-inner" title="RISHABH">
+                                                                <span class="allbrands-label">
+                                                        RISHABH                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/rittal" class="allbrands-inner" title="RITTAL">
+                                                                <span class="allbrands-label">
+                                                        RITTAL                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-S" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">S</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/safybox" class="allbrands-inner" title="SAFYBOX">
+                                                                <span class="allbrands-label">
+                                                        SAFYBOX                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/scame" class="allbrands-inner" title="SCAME">
+                                                                <span class="allbrands-label">
+                                                        SCAME                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/schirtec" class="allbrands-inner" title="SCHIRTEC">
+                                                                <span class="allbrands-label">
+                                                        SCHIRTEC                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/schneider_electric" class="allbrands-inner" title="SCHNEIDER ELECTRIC">
+                                                                <span class="allbrands-label">
+                                                        SCHNEIDER ELECTRIC                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/semikron" class="allbrands-inner" title="SEMIKRON">
+                                                                <span class="allbrands-label">
+                                                        SEMIKRON                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/sew" class="allbrands-inner" title="SEW">
+                                                                <span class="allbrands-label">
+                                                        SEW                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/shenzen_woer" class="allbrands-inner" title="SHENZEN WOER">
+                                                                <span class="allbrands-label">
+                                                        SHENZEN WOER                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/shurtape" class="allbrands-inner" title="SHURTAPE">
+                                                                <span class="allbrands-label">
+                                                        SHURTAPE                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/siemens" class="allbrands-inner" title="SIEMENS">
+                                                                <span class="allbrands-label">
+                                                        SIEMENS                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/sirena" class="allbrands-inner" title="SIRENA">
+                                                                <span class="allbrands-label">
+                                                        SIRENA                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/skyscan" class="allbrands-inner" title="SKYSCAN">
+                                                                <span class="allbrands-label">
+                                                        SKYSCAN                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/sofamel" class="allbrands-inner" title="SOFAMEL">
+                                                                <span class="allbrands-label">
+                                                        SOFAMEL                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/solsa" class="allbrands-inner" title="SOLSA">
+                                                                <span class="allbrands-label">
+                                                        SOLSA                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/sonel" class="allbrands-inner" title="SONEL">
+                                                                <span class="allbrands-label">
+                                                        SONEL                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/stielectronica" class="allbrands-inner" title="STIELECTRONICA">
+                                                                <span class="allbrands-label">
+                                                        STIELECTRONICA                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/sunj" class="allbrands-inner" title="SUNJ">
+                                                                <span class="allbrands-label">
+                                                        SUNJ                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/super_strut" class="allbrands-inner" title="SUPER STRUT">
+                                                                <span class="allbrands-label">
+                                                        SUPER STRUT                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/sylvania" class="allbrands-inner" title="SYLVANIA">
+                                                                <span class="allbrands-label">
+                                                        SYLVANIA                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-T" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">T</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/talma" class="allbrands-inner" title="TALMA">
+                                                                <span class="allbrands-label">
+                                                        TALMA                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/tc" class="allbrands-inner" title="TC">
+                                                                <span class="allbrands-label">
+                                                        TC                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/tec" class="allbrands-inner" title="TEC">
+                                                                <span class="allbrands-label">
+                                                        TEC                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/tecfuse" class="allbrands-inner" title="TECFUSE">
+                                                                <span class="allbrands-label">
+                                                        TECFUSE                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/tee" class="allbrands-inner" title="TEE">
+                                                                <span class="allbrands-label">
+                                                        TEE                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/telergon" class="allbrands-inner" title="TELERGON">
+                                                                <span class="allbrands-label">
+                                                        TELERGON                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/terasaki" class="allbrands-inner" title="TERASAKI">
+                                                                <span class="allbrands-label">
+                                                        TERASAKI                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/thermoweld" class="allbrands-inner" title="THERMOWELD">
+                                                                <span class="allbrands-label">
+                                                        THERMOWELD                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/thomas_betts" class="allbrands-inner" title="THOMAS &amp; BETTS">
+                                                                <span class="allbrands-label">
+                                                        THOMAS &amp; BETTS                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/thor_cem" class="allbrands-inner" title="THOR CEM">
+                                                                <span class="allbrands-label">
+                                                        THOR CEM                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/thor_gel" class="allbrands-inner" title="THOR-GEL">
+                                                                <span class="allbrands-label">
+                                                        THOR-GEL                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/tramontina" class="allbrands-inner" title="TRAMONTINA">
+                                                                <span class="allbrands-label">
+                                                        TRAMONTINA                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/tuboplas" class="allbrands-inner" title="TUBOPLAS">
+                                                                <span class="allbrands-label">
+                                                        TUBOPLAS                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/tyco_electronics" class="allbrands-inner" title="TYCO ELECTRONICS">
+                                                                <span class="allbrands-label">
+                                                        TYCO ELECTRONICS                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-U" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">U</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/unex" class="allbrands-inner" title="UNEX">
+                                                                <span class="allbrands-label">
+                                                        UNEX                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/uskuna" class="allbrands-inner" title="USKUNA">
+                                                                <span class="allbrands-label">
+                                                        USKUNA                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-V" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">V</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/veneta_isolatori" class="allbrands-inner" title="VENETA ISOLATORI">
+                                                                <span class="allbrands-label">
+                                                        VENETA ISOLATORI                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                        <section class="allbrands-letters-list">
+                                                        <div class="allbrands-letter letter-W" data-allbrands-js="popup-brand-letter">
+                                                        <span class="allbrands-title">W</span>
+                                                        <div class="allbrands-content">
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/weifang" class="allbrands-inner" title="WEIFANG">
+                                                                <span class="allbrands-label">
+                                                        WEIFANG                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        <div class="allbrands-brand-item -no-logo">
+                                                        <a href="https://www.promelsa.com.pe/todas-las-marcas/wheatland" class="allbrands-inner" title="WHEATLAND">
+                                                                <span class="allbrands-label">
+                                                        WHEATLAND                                                                                                    </span>
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </section>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
                                         @endif
                                         @if ($setting->is_blog == 1)
                                         <!-- <li class="{{ request()->routeIs('front.blog*') ? 'active' : '' }}"><a href="{{route('front.blog')}}">{{__('Blog')}}</a></li> -->
@@ -436,6 +1503,7 @@ body_theme4
       <p class="footer-copyright"> {{$setting->copy_right}}</p>
     </div>
 </footer>
+<div class="dark-backdrop hide" id="backdrop"></div>
 <a class="scroll-to-top-btn" href="javascript:void(0);">
     <i class="icon-chevron-up"></i>
 </a>
