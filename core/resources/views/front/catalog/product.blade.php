@@ -327,45 +327,49 @@
                   <div class="modal-body">
                     <div class="pt-1 cBodyMdBy__c">
                       <div class="d-block cBodyMdBy__c__cList">
-                        @php
+                        <?php
                           $StoresAll = "";
                           $arrStoresAdd = [];
                           if(isset($item->store_availables) && $item->store_availables != ""){
                             $storesAvailables = json_decode($item->store_availables, TRUE);
                             $storesAvailables_list = $storesAvailables['store'];
                             foreach($storesAvailables_list as $key => $val){
-                              $arrStoresAdd['id'] = $val['id'];
+                              $arrStoresAdd[$key]['id'] = $val['id'];
                             }
                           }
-                          if(isset($arrStoresAdd['id'])){
-                            $StoresAll = DB::table('tbl_stores')->where('id',$arrStoresAdd['id'])->get();
+                          $StoresAll = [];
+                          if(count($arrStoresAdd) > 0){
+                            foreach($arrStoresAdd as $k => $v){
+                              $StoresAll[$k]['store'] = DB::table('tbl_stores')->where('id',$v['id'])->get()->toArray()[0];
+                            }
                           }
-                        @endphp
+                        ?>                        
                         @if(!empty($StoresAll) && count($StoresAll) > 0)
                         <ul class="cBodyMdBy__c__cList__m">
-                          @foreach(json_decode($StoresAll, TRUE) as $stores)
+                          @foreach($StoresAll as $key => $stores)                          
                           <li href="javascript:void(0);" class="cBodyMdBy__c__cList__m__i">
                             <div style="display: block;width:100%;">
                               <div class="cBodyMdBy__c__cList__m__i__cTop">
                                 <div class="cBodyMdBy__c__cList__m__i__cTop__cIcon">
                                   <img src="{{route('front.index')}}/assets/images/1669243349tienda.png" target="_blank">
                                 </div>
-                                <div class="cBodyMdBy__c__cList__m__i__cTop__cNameStr">{{ $stores['name'] }}</div>
+                                <div class="cBodyMdBy__c__cList__m__i__cTop__cNameStr">{{ $stores['store']->name }}</div>
                               </div>
                             </div>
                             <div class="cBodyMdBy__c__cList__m__i__cBott">
                               <ul class="cBodyMdBy__c__cList__m__i__cBott__m">
-                                <li><span><strong>Dirección: </strong>{{ $stores['address'] }}</span></li>
-                                <li><span><strong>Teléfono: </strong>{{ $stores['telephone'] }}</span></li>
+                                <li><span><strong>Dirección: </strong>{{ $stores['store']->address }}</span></li>
+                                <li><span><strong>Teléfono: </strong>{{ $stores['store']->telephone }}</span></li>
                               </ul>
                             </div>
-                          </li>
+                          </li>                          
                         @endforeach
                         @else
                         <div class="text-center">
                           <h5>Sin tiendas disponibles.</h5>
                         </div>
                         @endif
+                        
                         </ul>
                       </div>
                     </div>

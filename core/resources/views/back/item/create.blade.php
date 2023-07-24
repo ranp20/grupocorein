@@ -77,11 +77,11 @@
           <div class="card-body">
             <div class="form-group">
               <label for="sort_details">{{ __('Short Description') }} *</label>
-              <textarea name="sort_details" id="sort_details" class="form-control" placeholder="{{ __('Short Description') }}">{{ old('sort_details') }}</textarea>
+              <textarea name="sort_details" id="sort_details" class="form-control" placeholder="{{ __('Short Description') }}" required>{{ old('sort_details') }}</textarea>
             </div>
             <div class="form-group">
               <label for="details">{{ __('Description') }} *</label>
-              <textarea name="details" id="details" class="form-control text-editor" rows="6" placeholder="{{ __('Enter Description') }}">{{ old('details') }}</textarea>
+              <textarea name="details" id="details" class="form-control text-editor" rows="6" placeholder="{{ __('Enter Description') }}" required>{{ old('details') }}</textarea>
             </div>
           </div>
         </div>
@@ -146,7 +146,7 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text">{{ PriceHelper::adminCurrency() }}</span>
                 </div>
-                <input type="text" id="discount_price" name="discount_price" class="form-control" placeholder="{{ __('Enter Current Price') }}" min="1" step="0.1" value="{{ old('discount_price') }}" >
+                <input type="text" id="discount_price" name="discount_price" class="form-control" placeholder="{{ __('Enter Current Price') }}" min="1" step="0.1" value="{{ old('discount_price') }}" required>
               </div>
             </div>
             <div class="form-group">

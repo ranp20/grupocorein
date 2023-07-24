@@ -88,11 +88,11 @@
           <div class="card-body">
             <div class="form-group">
               <label for="sort_details"><?php echo e(__('Short Description')); ?> *</label>
-              <textarea name="sort_details" id="sort_details" class="form-control" placeholder="<?php echo e(__('Short Description')); ?>"><?php echo e($item->sort_details); ?></textarea>
+              <textarea name="sort_details" id="sort_details" class="form-control" placeholder="<?php echo e(__('Short Description')); ?>" required><?php echo e($item->sort_details); ?></textarea>
             </div>
             <div class="form-group">
               <label for="details"><?php echo e(__('Description')); ?> *</label>
-              <textarea name="details" id="details" class="form-control text-editor" rows="6" placeholder="<?php echo e(__('Enter Description')); ?>"><?php echo e($item->details); ?></textarea>
+              <textarea name="details" id="details" class="form-control text-editor" rows="6" placeholder="<?php echo e(__('Enter Description')); ?>" required><?php echo e($item->details); ?></textarea>
             </div>
           </div>
         </div>
@@ -181,7 +181,7 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text"><?php echo e($curr->sign); ?></span>
                 </div>
-                <input type="text" id="discount_price" name="discount_price" class="form-control" placeholder="<?php echo e(__('Enter Current Price')); ?>" min="1" step="0.1" value="<?php echo e(round($item->discount_price * $curr->value,2)); ?>" >
+                <input type="text" id="discount_price" name="discount_price" class="form-control" placeholder="<?php echo e(__('Enter Current Price')); ?>" min="1" step="0.1" value="<?php echo e(round($item->discount_price * $curr->value,2)); ?>" required>
               </div>
             </div>
             <div class="form-group">
@@ -383,24 +383,34 @@
               $storesAvailables = json_decode($item->store_availables, TRUE);
               $storesAvailables_list = $storesAvailables['store'];
               foreach($storesAvailables_list as $key => $val){
-                $arrStoresAdd['id'] = $val['id'];
+                $arrStoresAdd[$key]['id'] = $val['id'];
               }
+            }
+            $StoresAll = [];
+            $StoresAll2 = [];
+            if(count($arrStoresAdd) > 0){
+              foreach($arrStoresAdd as $k => $v){
+                $StoresAll[$k]['store'] = DB::table('tbl_stores')->where('id',$v['id'])->get()->toArray()[0];
+              }
+            }
+            foreach($selectedIds as $k => $v){
+              $StoresAll2[$k] = $v['id'];
             }
             ?>
             <div class="form-group">
               <label for=""><?php echo e(__('Seleccionar Tiendas')); ?> *</label>
-              <div class="border-list-switchs">                
-                <?php $__currentLoopData = DB::table('tbl_stores')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+              <div class="border-list-switchs">
+                <?php $__currentLoopData = DB::table('tbl_stores')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>                
                 <div class="form-check pb-0">
                   <section class="c-sWitch__c--cDesign-1">
                     <div class="c-sWitch__c--cDesign-1__c">
-                      <input type="checkbox" class="c-sWitch__c--cDesign-1__c__input" name="store_availables[]" id="<?php echo e($v->name); ?>" value="<?php echo e((isset($arrStoresAdd['id']) && $v->id == $arrStoresAdd['id']) ? $arrStoresAdd['id'] : $v->id); ?>" <?php echo e((isset($arrStoresAdd['id']) && $v->id == $arrStoresAdd['id']) ? 'checked' : ''); ?>/>
+                      <input type="checkbox" class="c-sWitch__c--cDesign-1__c__input" name="store_availables[]" id="<?php echo e($v->name); ?>" value="<?php echo e((isset($arrStoresAdd[$k]['id']) && $v->id == $arrStoresAdd[$k]['id']) ? $arrStoresAdd[$k]['id'] : $v->id); ?>" <?php $__currentLoopData = $selectedIds; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $v2): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?> <?php echo e(($v->id == $v2['id'])? 'checked':'gggg'); ?> <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>/>
                       <label class="c-sWitch__c--cDesign-1__c__label"></label>
                     </div>
                     <label for="<?php echo e($v->name); ?>" style="cursor:pointer;"><?php echo e($v->name); ?></label>
                   </section>
-                </div>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </div>                
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>                
               </div>
             </div>
             <div class="form-group">

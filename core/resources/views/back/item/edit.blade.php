@@ -89,11 +89,11 @@
           <div class="card-body">
             <div class="form-group">
               <label for="sort_details">{{ __('Short Description') }} *</label>
-              <textarea name="sort_details" id="sort_details" class="form-control" placeholder="{{ __('Short Description') }}">{{$item->sort_details}}</textarea>
+              <textarea name="sort_details" id="sort_details" class="form-control" placeholder="{{ __('Short Description') }}" required>{{$item->sort_details}}</textarea>
             </div>
             <div class="form-group">
               <label for="details">{{ __('Description') }} *</label>
-              <textarea name="details" id="details" class="form-control text-editor" rows="6" placeholder="{{ __('Enter Description') }}">{{$item->details}}</textarea>
+              <textarea name="details" id="details" class="form-control text-editor" rows="6" placeholder="{{ __('Enter Description') }}" required>{{$item->details}}</textarea>
             </div>
           </div>
         </div>
@@ -182,7 +182,7 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text">{{ $curr->sign }}</span>
                 </div>
-                <input type="text" id="discount_price" name="discount_price" class="form-control" placeholder="{{ __('Enter Current Price') }}" min="1" step="0.1" value="{{ round($item->discount_price * $curr->value,2) }}" >
+                <input type="text" id="discount_price" name="discount_price" class="form-control" placeholder="{{ __('Enter Current Price') }}" min="1" step="0.1" value="{{ round($item->discount_price * $curr->value,2) }}" required>
               </div>
             </div>
             <div class="form-group">
@@ -384,24 +384,34 @@
               $storesAvailables = json_decode($item->store_availables, TRUE);
               $storesAvailables_list = $storesAvailables['store'];
               foreach($storesAvailables_list as $key => $val){
-                $arrStoresAdd['id'] = $val['id'];
+                $arrStoresAdd[$key]['id'] = $val['id'];
               }
+            }
+            $StoresAll = [];
+            $StoresAll2 = [];
+            if(count($arrStoresAdd) > 0){
+              foreach($arrStoresAdd as $k => $v){
+                $StoresAll[$k]['store'] = DB::table('tbl_stores')->where('id',$v['id'])->get()->toArray()[0];
+              }
+            }
+            foreach($selectedIds as $k => $v){
+              $StoresAll2[$k] = $v['id'];
             }
             ?>
             <div class="form-group">
               <label for="">{{ __('Seleccionar Tiendas') }} *</label>
-              <div class="border-list-switchs">                
-                @foreach(DB::table('tbl_stores')->get() as $k => $v)
+              <div class="border-list-switchs">
+                @foreach(DB::table('tbl_stores')->get() as $k => $v)                
                 <div class="form-check pb-0">
                   <section class="c-sWitch__c--cDesign-1">
                     <div class="c-sWitch__c--cDesign-1__c">
-                      <input type="checkbox" class="c-sWitch__c--cDesign-1__c__input" name="store_availables[]" id="{{ $v->name }}" value="{{ (isset($arrStoresAdd['id']) && $v->id == $arrStoresAdd['id']) ? $arrStoresAdd['id'] : $v->id }}" {{ (isset($arrStoresAdd['id']) && $v->id == $arrStoresAdd['id']) ? 'checked' : '' }}/>
+                      <input type="checkbox" class="c-sWitch__c--cDesign-1__c__input" name="store_availables[]" id="{{ $v->name }}" value="{{ (isset($arrStoresAdd[$k]['id']) && $v->id == $arrStoresAdd[$k]['id']) ? $arrStoresAdd[$k]['id'] : $v->id }}" @foreach($selectedIds as $v2) {{($v->id == $v2['id'])? 'checked':'gggg'}} @endforeach/>
                       <label class="c-sWitch__c--cDesign-1__c__label"></label>
                     </div>
                     <label for="{{ $v->name }}" style="cursor:pointer;">{{ $v->name }}</label>
                   </section>
-                </div>
-                @endforeach
+                </div>                
+                @endforeach                
               </div>
             </div>
             <div class="form-group">
