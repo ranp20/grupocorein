@@ -835,4 +835,9 @@ class FrontendController extends Controller{
     }
     return response()->json(['data'=>$data]);
   }
+  public function getAllBrands(Request $request){
+    $brands = Brand::select("id","name","slug")->get()->toArray();
+    $data = $brands;
+    return response()->json(['data'=>$data]);
+  }
 }

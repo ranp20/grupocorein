@@ -135,7 +135,7 @@ class ItemController extends Controller
             'social_links' => json_decode($item->social_links,true),
             'specification_name' => json_decode($item->specification_name,true),
             'specification_description' => json_decode($item->specification_description,true),
-            'selectedIds' => json_decode($item->store_availables, TRUE)['store']
+            'selectedIds' => ($item->store_availables && $item->store_availables != "") ? json_decode($item->store_availables, TRUE)['store'] : ''
         ]);
     }
 

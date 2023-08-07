@@ -314,11 +314,13 @@ Route::group(['middleware' => 'maintainance'], function (){
     Route::get('/', 'Front\FrontendController@index')->name('front.index');
     Route::get('/extra-index', 'Front\FrontendController@extraIndex')->name('front.extraindex');
     Route::get('/product/{slug}', 'Front\FrontendController@product')->name('front.product');
+    Route::post('/product/{slug}', 'Front\FrontendController@product')->name('front.product');
     // ----------- NUEVO CONTENIDO (INICIO)
     Route::post('/departamento', 'Front\FrontendController@getAllDepartamentos')->name('front.departamento');
     Route::get('/provincia', 'Front\FrontendController@getProvinciaByIdDepartamento')->name('front.provincia');
     Route::get('/distrito', 'Front\FrontendController@getDistritoByIdProvincia')->name('front.distrito');
     Route::get('/getammountdispath', 'Front\FrontendController@getAmmountDispathByDistrito')->name('front.getammountdispath');
+    Route::post('/getallbrands', 'Front\FrontendController@getAllBrands')->name('getallbrands');
     // ----------- NUEVO CONTENIDO (FIN)
     Route::get('/campaign/products', 'Front\FrontendController@compaignProduct')->name('front.campaign');
     Route::get('/onsaleproducts/products', 'Front\FrontendController@onsaleproducts')->name('front.onsaleproducts');

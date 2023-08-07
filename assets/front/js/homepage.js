@@ -350,6 +350,7 @@ $(() => {
     },
   });
 
+  
   // ----------- HACER HOVER EN UN ELEMENTO CON DROPDOWN
 	var namehoverAll = document.querySelectorAll("*[data-dropdown-custommenu]");
 	var backdropHome = document.querySelector("#backdrop");
@@ -377,5 +378,133 @@ $(() => {
 			}
 		});
 	});
+  // ----------- LISTADO DE MARCAS EN HEADERTOP
+  var locationsGET = window.location.href;
+  var csrfTokenFrm = $("#csl-fGv8n09c__sGaYs45").find("input[name='_token']").val();
   
+  // var tmpLisAllBrands = [];
+  const brandList = document.querySelector('.brand-list');
+  const filterButtonsContainer = document.querySelector('.filter-buttons');
+  const availableLetters = new Set();
+  const numericButton = document.createElement('button'); // Create a button for numeric characters
+  numericButton.textContent = '#';
+  numericButton.disabled = true;
+
+  getAllBrands();
+  var tmpLisAllBrands = [];
+  function getAllBrands(){
+    // e.preventDefault();
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': csrfTokenFrm
+      },
+      url: locationsGET+"getallbrands",
+      type: "POST",
+      dataType: "JSON",
+      success: function(e){
+        if(e.length != "undefined" || e != ""){
+          var r = e.data;
+          $.each(r, function(i,e){
+            tmpLisAllBrands[i] = e;
+          });
+          
+          const result = {};
+          tmpLisAllBrands.forEach(brand => {
+            // const firstChar = brand.name[0].toUpperCase();
+            const firstChar = brand.name.charAt(0).toUpperCase();
+            const initial = isNaN(firstChar) ? firstChar.toUpperCase() : '#';
+            const brandGroup = document.getElementById(initial);
+          
+            if(!brandGroup){
+          
+              // console.error(`Brand group ${firstChar} not found.`);
+              // return; // Skip this iteration          
+              const newBrandGroup = document.createElement('div');
+              newBrandGroup.classList.add('brand-group');
+              newBrandGroup.id = firstChar;
+              const header = document.createElement('h2');
+              header.textContent = firstChar;
+              newBrandGroup.appendChild(header);
+              brandList.appendChild(newBrandGroup);
+            }
+
+            availableLetters.add(initial);
+
+            // Check if the header for this group already exists
+            const existingHeader = brandGroup.querySelector('h2');
+            if(!existingHeader){
+              const header = document.createElement('h2');
+              header.textContent = isNaN(firstChar) ? firstChar.toUpperCase() : '#';
+              brandGroup.appendChild(header);
+            }
+
+            const brandLink = document.createElement('a');
+            brandLink.href = 'catalog?brand=' + brand.slug;
+            brandLink.title = brand.name;
+            brandLink.textContent = brand.name;
+            brandLink.classList.add("brand-group-item");
+
+            brandGroup.appendChild(brandLink);
+
+            // Create filter button if it doesn't exist
+            const existingFilterButton = filterButtonsContainer.querySelector(`button[data-letter="${initial}"]`);
+            if (!existingFilterButton) {
+              const filterButton = document.createElement('button');
+              filterButton.textContent = initial;
+              filterButton.setAttribute('data-letter', initial);
+              filterButtonsContainer.appendChild(filterButton);
+              
+              // Add click event listener to filter buttons
+              filterButton.addEventListener('click', () => {
+                const groups = document.querySelectorAll('.brand-group');
+                
+                groups.forEach(group => {
+                  if (group.id === initial) {
+                    group.style.display = 'block';
+                  } else {
+                    group.style.display = 'none';
+                  }
+                });
+              });
+
+              // Check if the button corresponds to a numeric character
+              if (/^\d/.test(firstChar)) {
+                filterButtonsContainer.insertBefore(numericButton, filterButton); // Insert the numeric button before the current button
+                filterButton.style.display = 'none'; // Hide the original numeric button
+              }
+            }
+          });
+          
+        }else{
+          console.log("Lo sentimos, hubo un error al obtener la información");
+        }
+      }
+    });
+  }
+  // Disable unused filter buttons
+  filterButtonsContainer.querySelectorAll('button').forEach(button => {
+    const initialBtn = button.getAttribute('data-letter');
+    
+    if (!availableLetters.has(button.getAttribute('data-letter'))){
+      button.disabled = true;
+    }
+    
+  });
+
+  // Add click event listeners to filter buttons
+  const filterButtons = document.querySelectorAll('.filter-button');
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const letter = button.textContent;
+      const groups = document.querySelectorAll('.brand-group');
+      
+      groups.forEach(group => {
+        if (group.id === letter) {
+          group.style.display = 'block';
+        } else {
+          group.style.display = 'none';
+        }
+      });
+    });
+  });
 });

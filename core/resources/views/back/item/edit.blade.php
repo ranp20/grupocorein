@@ -380,6 +380,8 @@
             @endif
             <?php
             $arrStoresAdd = [];
+            $StoresAll = [];
+            $StoresAll2 = [];
             if(isset($item->store_availables) && $item->store_availables != ""){
               $storesAvailables = json_decode($item->store_availables, TRUE);
               $storesAvailables_list = $storesAvailables['store'];
@@ -387,17 +389,20 @@
                 $arrStoresAdd[$key]['id'] = $val['id'];
               }
             }
-            $StoresAll = [];
-            $StoresAll2 = [];
+
             if(count($arrStoresAdd) > 0){
               foreach($arrStoresAdd as $k => $v){
                 $StoresAll[$k]['store'] = DB::table('tbl_stores')->where('id',$v['id'])->get()->toArray()[0];
               }
             }
-            foreach($selectedIds as $k => $v){
-              $StoresAll2[$k] = $v['id'];
+
+            if($selectedIds != ""){
+              foreach($selectedIds as $k => $v){
+                $StoresAll2[$k] = $v['id'];
+              }
             }
             ?>
+            
             <div class="form-group">
               <label for="">{{ __('Seleccionar Tiendas') }} *</label>
               <div class="border-list-switchs">
@@ -405,7 +410,7 @@
                 <div class="form-check pb-0">
                   <section class="c-sWitch__c--cDesign-1">
                     <div class="c-sWitch__c--cDesign-1__c">
-                      <input type="checkbox" class="c-sWitch__c--cDesign-1__c__input" name="store_availables[]" id="{{ $v->name }}" value="{{ (isset($arrStoresAdd[$k]['id']) && $v->id == $arrStoresAdd[$k]['id']) ? $arrStoresAdd[$k]['id'] : $v->id }}" @foreach($selectedIds as $v2) {{($v->id == $v2['id'])? 'checked':'gggg'}} @endforeach/>
+                      <input type="checkbox" class="c-sWitch__c--cDesign-1__c__input" name="store_availables[]" id="{{ $v->name }}" value="{{ (isset($arrStoresAdd[$k]['id']) && $v->id == $arrStoresAdd[$k]['id']) ? $arrStoresAdd[$k]['id'] : $v->id }}" @if($selectedIds != '') @foreach($selectedIds as $v2) {{($v->id == $v2['id'])? 'checked':''}} @endforeach @endif />
                       <label class="c-sWitch__c--cDesign-1__c__label"></label>
                     </div>
                     <label for="{{ $v->name }}" style="cursor:pointer;">{{ $v->name }}</label>
@@ -414,6 +419,7 @@
                 @endforeach                
               </div>
             </div>
+            
             <div class="form-group">
               <label for="sku">{{ __('SKU') }} *</label>
               <input type="text" name="sku" class="form-control" id="sku" placeholder="{{ __('Enter SKU') }}" value="{{$item->sku}}" >
