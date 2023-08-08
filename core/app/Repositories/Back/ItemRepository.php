@@ -12,6 +12,12 @@ use Illuminate\Http\UploadedFile;
 class ItemRepository{
   public function store($request){
     $input = $request->all();
+    if($request->has('unidadraiz')){
+      $input['unidad_raiz'] = $request->unidadraiz;
+    }
+    if($request->has('atributoraiz')){
+      $input['atributo_raiz'] = $request->atributoraiz;
+    }
     $stores = [];
     if($request->has('store_availables')){
       foreach($request->store_availables as $key => $store){
@@ -89,6 +95,7 @@ class ItemRepository{
         $input['adj_doc'] = $namecomplete;
       }
     }
+    
     /*
     echo "<pre>";
     print_r($request->all());
@@ -98,8 +105,7 @@ class ItemRepository{
     print_r($input);
     echo "</pre>";
     exit();
-    */
-    
+    */    
 
     /*-- NUEVO CONTENIDO (FIN) --*/
     $item_id = Item::create($input)->id;
@@ -110,6 +116,12 @@ class ItemRepository{
   }
   public function update($item,$request){
     $input = $request->all();
+    if($request->has('unidadraiz')){
+      $input['unidad_raiz'] = $request->unidadraiz;
+    }
+    if($request->has('atributoraiz')){
+      $input['atributo_raiz'] = $request->atributoraiz;
+    }
     $stores = [];
     if($request->has('store_availables')){
       foreach($request->store_availables as $key => $store){

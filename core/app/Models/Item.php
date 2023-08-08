@@ -13,6 +13,8 @@ class Item extends Model
         'subcategory_id',
         'childcategory_id',
         'brand_id',
+        'unidad_raiz',
+        'atributo_raiz',
         'name',
         'slug',
         'sku',

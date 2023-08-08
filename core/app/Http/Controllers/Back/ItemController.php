@@ -254,4 +254,21 @@ class ItemController extends Controller
         $data = $taxes;
         return response()->json(['data'=>$data]);
     }
+
+    public function getProductName(Request $request){
+        $namProduct = $request->productname;
+        // $names = Item::where('name', 'like', '%'.$request->productname.'%')->select('name')->get()->toArray();
+        $names = Item::where('name', 'like', '%'.$request->productname.'%')->select('name')->get()->toArray();
+
+        foreach($names as $name){
+            if($name['name'] == $namProduct){
+                $data = "equals";
+            }else{
+                $data = "not-equals";
+            }
+        }
+
+        // $data = $names;
+        return response()->json(['data'=>$data]);
+    }
 }

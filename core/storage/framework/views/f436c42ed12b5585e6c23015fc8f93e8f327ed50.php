@@ -24,8 +24,31 @@
         <div class="card">
           <div class="card-body">
             <div class="form-group">
+              <label for="unidadraiz"><?php echo e(__('Select Root Unit')); ?> *</label>
+              <select name="unidadraiz" id="unidadraiz" class="form-control" required>
+                <option value="" selected><?php echo e(__('Select One')); ?></option>
+                <?php $__currentLoopData = DB::table('tbl_unidadraiz')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $uraiz): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <option value="<?php echo e($uraiz->id); ?>"><?php echo e($uraiz->name); ?></option>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="atributoraiz"><?php echo e(__('Select Root Attribute')); ?> </label>
+              <select name="atributoraiz" id="atributoraiz" class="form-control" required>
+                <option value="" selected><?php echo e(__('Select One')); ?></option>
+                <?php $__currentLoopData = DB::table('tbl_atributoraiz')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attraiz): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <option value="<?php echo e($attraiz->id); ?>"><?php echo e($attraiz->name); ?></option>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="form-group">
               <label for="name"><?php echo e(__('Name')); ?> *</label>
               <input type="text" name="name" class="form-control item-name" id="name" placeholder="<?php echo e(__('Enter Name')); ?>" value="<?php echo e(old('name')); ?>" required>
+              <span id="spn__iptequalsmssg"></span>
             </div>
             <div class="form-group">
               <label for="slug"><?php echo e(__('Slug')); ?> *</label>

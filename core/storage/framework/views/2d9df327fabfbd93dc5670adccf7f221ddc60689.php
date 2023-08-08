@@ -412,7 +412,19 @@
               <div class="pt-1 mb-1"><span class="text-medium">CÓDIGO SAP:</span> <?php echo e($item->sap_code); ?></div>
               <?php endif; ?>
               <?php if($item->item_type == 'normal'): ?>
-              <div class="pt-1 mb-4"><span class="text-medium"><?php echo e(__('SKU')); ?>:</span><?php echo e($item->sku); ?></div>
+              <div class="pt-1 mb-1"><span class="text-medium"><?php echo e(__('SKU')); ?>:</span><?php echo e($item->sku); ?></div>
+              <?php endif; ?>
+              <?php if($item->unidad_raiz): ?>
+              <?php
+                $unidad_raiz_byItem = DB::table('tbl_unidadraiz')->where('id',$item->unidad_raiz)->get()->toArray()[0];
+              ?>
+              <div class="pt-1 mb-1"><span class="text-medium"><?php echo e(__('Root Unit')); ?>:</span> <strong><?php echo e($unidad_raiz_byItem->name); ?></strong></div>
+              <?php endif; ?>
+              <?php if($item->atributo_raiz): ?>
+              <?php
+                $atributo_raiz_byItem = DB::table('tbl_atributoraiz')->where('id',$item->atributo_raiz)->get()->toArray()[0];
+              ?>
+              <div class="pt-1 mb-1"><span class="text-medium"><?php echo e(__('Root Attribute')); ?>:</span> <strong><?php echo e($atributo_raiz_byItem->name); ?></strong></div>
               <?php endif; ?>
               <!-- NUEVO CONTENIDO (INICIO) -->
               <?php if($item->adj_doc != "" && $item->adj_doc != null): ?>

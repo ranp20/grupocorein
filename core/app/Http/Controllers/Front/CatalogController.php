@@ -12,6 +12,11 @@ use App\Helpers\PriceHelper;
 use App\Models\Attribute;
 use App\Models\AttributeOption;
 use App\Models\Brand;
+
+use App\Models\RootUnit;
+use App\Models\RootAttribute;
+
+
 use App\Models\ChieldCategory;
 use App\Models\Setting;
 use App\Models\Subcategory;
@@ -48,6 +53,11 @@ class CatalogController extends Controller{
     $best = $request->has('quick_filter') ?  ( !empty($request->quick_filter == 'best') ? 1 : null ) : null;
     $new = $request->has('quick_filter') ?  ( !empty($request->quick_filter == 'new') ? 1 : null ) : null;
     $brand = $request->has('brand') ?  ( !empty($request->brand) ? Brand::whereSlug($request->brand)->firstOrFail() : null ) : null;
+    
+    $unidadraiz = $request->has('unidadraiz') ?  ( !empty($request->unidadraiz) ? RootUnit::whereSlug($request->unidadraiz)->firstOrFail() : null ) : null;
+    $atributoraiz = $request->has('atributoraiz') ?  ( !empty($request->atributoraiz) ? RootAttribute::whereSlug($request->atributoraiz)->firstOrFail() : null ) : null;
+
+
     $search = $request->has('search') ?  ( !empty($request->search) ? $request->search : null ) : null;
     $category = $request->has('category') ? ( !empty($request->category) ? Category::whereSlug($request->category)->firstOrFail() : null ) : null;
     $subcategory = $request->has('subcategory') ? ( !empty($request->subcategory) ? Subcategory::whereSlug($request->subcategory)->firstOrFail() : null ) : null;
@@ -82,6 +92,14 @@ class CatalogController extends Controller{
     ->when($brand, function ($query, $brand){
       return $query->where('brand_id', $brand->id);
     })
+    
+    ->when($unidadraiz, function ($query, $unidadraiz){
+      return $query->where('unidadraiz', $unidadraiz->id);
+    })
+    ->when($atributoraiz, function ($query, $atributoraiz){
+      return $query->where('atributoraiz', $atributoraiz->id);
+    })
+    
     ->when($search, function ($query, $search){
       return $query->whereStatus(1)->where('name', 'like', '%' . $search . '%')
       /* -- NUEVO CONTENIDO (INICIO) -- */
@@ -139,8 +157,8 @@ class CatalogController extends Controller{
       'attrubutes' => $attrubutes,
       'options' => $options,
       'brand' => $brand,
-      'brand' => $brand,
-      'brand' => $brand,
+      'unidadraiz' => $unidadraiz,
+      'atributoraiz' => $atributoraiz,
       'items' => $items,
       'name_string_count' => $name_string_count,
       'category' => $category,

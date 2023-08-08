@@ -22,6 +22,8 @@ class CreateItemsTable extends Migration
             $table->integer('tax_id')->nullable();
             $table->integer('sections_id')->nullable();
             $table->integer('brand_id')->default(0)->nullable();
+            $table->integer('unidad_raiz')->default(0)->nullable();
+            $table->integer('atributo_raiz')->default(0)->nullable();
             $table->text('name')->nullable();
             $table->text('slug')->nullable();
             $table->string('sku')->nullable();

@@ -265,7 +265,7 @@ body_theme4
                                                             <div class="filter-buttons">
                                                                 <!-- Add buttons for each letter of the alphabet -->
                                                                 <a class="letter-all" href="<?php echo e(route('front.brand')); ?>">Todas las Marcas</a>
-<!--                                                                 
+                                                                                                                                 
                                                                 <button class="filter-button" data-letter="#">#</button>
                                                                 <button class="filter-button" data-letter="A">A</button>
                                                                 <button class="filter-button" data-letter="B">B</button>
@@ -292,9 +292,8 @@ body_theme4
                                                                 <button class="filter-button" data-letter="W">W</button>
                                                                 <button class="filter-button" data-letter="X">X</button>
                                                                 <button class="filter-button" data-letter="Y">Y</button>
-                                                                <button class="filter-button" data-letter="Z">Z</button> -->
+                                                                <button class="filter-button" data-letter="Z">Z</button>
 
-                                                                <!-- Repeat for other letters -->
                                                             </div>
                                                             <div class="brand-list">
                                                                 <div class="brand-group" id="#"></div>

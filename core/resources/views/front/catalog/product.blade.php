@@ -412,7 +412,19 @@
               <div class="pt-1 mb-1"><span class="text-medium">CÓDIGO SAP:</span> {{$item->sap_code}}</div>
               @endif
               @if ($item->item_type == 'normal')
-              <div class="pt-1 mb-4"><span class="text-medium">{{__('SKU')}}:</span>{{$item->sku}}</div>
+              <div class="pt-1 mb-1"><span class="text-medium">{{__('SKU')}}:</span>{{$item->sku}}</div>
+              @endif
+              @if ($item->unidad_raiz)
+              <?php
+                $unidad_raiz_byItem = DB::table('tbl_unidadraiz')->where('id',$item->unidad_raiz)->get()->toArray()[0];
+              ?>
+              <div class="pt-1 mb-1"><span class="text-medium">{{__('Root Unit')}}:</span> <strong>{{ $unidad_raiz_byItem->name }}</strong></div>
+              @endif
+              @if ($item->atributo_raiz)
+              <?php
+                $atributo_raiz_byItem = DB::table('tbl_atributoraiz')->where('id',$item->atributo_raiz)->get()->toArray()[0];
+              ?>
+              <div class="pt-1 mb-1"><span class="text-medium">{{__('Root Attribute')}}:</span> <strong>{{ $atributo_raiz_byItem->name }}</strong></div>
               @endif
               <!-- NUEVO CONTENIDO (INICIO) -->
               @if($item->adj_doc != "" && $item->adj_doc != null)

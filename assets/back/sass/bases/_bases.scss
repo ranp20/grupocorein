@@ -412,3 +412,18 @@ img{
 	opacity: .5;
 	font-size: 15px;
 }
+
+.equals-values{
+	border: 2px solid rgb(173, 204, 204) !important;
+	box-shadow: 0px 0px 27px rgb(204, 204, 204) inset !important;
+	// transition: 500ms all ease !important;
+	border: 1px solid red !important;
+}
+#spn__iptequalsmssg.active{
+	
+		padding: 5px 0 0 5px !important;
+    margin: 5px 0px 0px 1px !important;
+    display: block !important;
+		color: red !important;
+	
+}

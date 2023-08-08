@@ -33,7 +33,44 @@ $(() => {
         }
       }
     });
-  }  
+  }
+  // --------------- KEYUP INPUTS NAME = ITEM-NAME - TEXT
+  $(document).on("keyup keypress input","input.item-name",function(e){
+    var val = e.target.value;
+    if(val != ""){
+      getNameofProduct(val);
+    }
+  });
+  function getNameofProduct(productname){
+    // e.preventDefault();
+    var mssageAlertProd = "";
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': csrfTokenFrm
+      },
+      url: locationGETFormat+"/getproductname/"+productname,
+      type: "GET",
+      dataType: "JSON",
+      success: function(e){
+        if(e.length != "undefined" || e != ""){
+          var r = e.data;
+          if(r == "equals"){
+            $("input.item-name").addClass("equals-values");
+            $("#spn__iptequalsmssg").addClass("active");
+            $("#spn__iptequalsmssg").text("El nombre del producto es idéntico a otro ya ingresado. Por favor, ingrese un nuevo nombre*");
+          }else{
+            $("input.item-name").removeClass("equals-values");
+            $("#spn__iptequalsmssg").removeClass("active");
+            $("#spn__iptequalsmssg").text("");
+          }
+        }else{
+          console.log("Lo sentimos, hubo un error al obtener la información");
+        }
+      }
+    });
+    return mssageAlertProd;
+  }
+
   $(document).on("keyup", "input[data-valformat=withcomedecimal]", function(e){
     let val = e.target.value;
     let val_formatNumber = val.toString().replace(/[^\d.]/g, "").replace(/^(\d*\.)(.*)\.(.*)$/, '$1$2$3').replace(/\.(\d{2})\d+/, '.$1').replace(/\B(?=(\d{3})+(?!\d))/g, ",");

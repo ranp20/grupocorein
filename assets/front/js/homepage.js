@@ -447,13 +447,18 @@ $(() => {
             brandGroup.appendChild(brandLink);
 
             // Create filter button if it doesn't exist
+            
+            
             const existingFilterButton = filterButtonsContainer.querySelector(`button[data-letter="${initial}"]`);
             if (!existingFilterButton) {
               const filterButton = document.createElement('button');
               filterButton.textContent = initial;
               filterButton.setAttribute('data-letter', initial);
               filterButtonsContainer.appendChild(filterButton);
-              
+              let getAttrLetter = filterButton.getAttribute("data-letter");
+              if(getAttrLetter == "#"){
+                filterButton.classList.add("order-0");
+              }
               // Add click event listener to filter buttons
               filterButton.addEventListener('click', () => {
                 const groups = document.querySelectorAll('.brand-group');
@@ -469,10 +474,12 @@ $(() => {
 
               // Check if the button corresponds to a numeric character
               if (/^\d/.test(firstChar)) {
-                filterButtonsContainer.insertBefore(numericButton, filterButton); // Insert the numeric button before the current button
-                filterButton.style.display = 'none'; // Hide the original numeric button
+                // filterButtonsContainer.insertBefore(numericButton, filterButton); // Insert the numeric button before the current button
+                // filterButton.style.display = 'none'; // Hide the original numeric button
               }
             }
+            
+
           });
           
         }else{
@@ -484,9 +491,13 @@ $(() => {
   // Disable unused filter buttons
   filterButtonsContainer.querySelectorAll('button').forEach(button => {
     const initialBtn = button.getAttribute('data-letter');
-    
-    if (!availableLetters.has(button.getAttribute('data-letter'))){
-      button.disabled = true;
+    // console.log(availableLetters);
+    // console.log(availableLetters.size);
+    // console.log(availableLetters.entries());
+    if (!availableLetters.has(initialBtn)){
+      // button.disabled = true;
+    }else{
+      button.disabled = false;
     }
     
   });

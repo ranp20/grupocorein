@@ -25,8 +25,31 @@
         <div class="card">
           <div class="card-body">
             <div class="form-group">
+              <label for="unidadraiz">{{ __('Select Root Unit') }} *</label>
+              <select name="unidadraiz" id="unidadraiz" class="form-control" required>
+                <option value="" selected>{{__('Select One')}}</option>
+                @foreach(DB::table('tbl_unidadraiz')->get() as $uraiz)
+                <option value="{{ $uraiz->id }}">{{ $uraiz->name }}</option>
+                @endforeach
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="atributoraiz">{{ __('Select Root Attribute') }} </label>
+              <select name="atributoraiz" id="atributoraiz" class="form-control" required>
+                <option value="" selected>{{__('Select One')}}</option>
+                @foreach(DB::table('tbl_atributoraiz')->get() as $attraiz)
+                <option value="{{ $attraiz->id }}">{{ $attraiz->name }}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="form-group">
               <label for="name">{{ __('Name') }} *</label>
               <input type="text" name="name" class="form-control item-name" id="name" placeholder="{{ __('Enter Name') }}" value="{{ old('name') }}" required>
+              <span id="spn__iptequalsmssg"></span>
             </div>
             <div class="form-group">
               <label for="slug">{{ __('Slug') }} *</label>
