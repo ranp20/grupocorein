@@ -378,6 +378,7 @@ $(() => {
 			}
 		});
 	});
+  /*
   // ----------- LISTADO DE MARCAS EN HEADERTOP
   var locationsGET = window.location.href;
   var csrfTokenFrm = $("#csl-fGv8n09c__sGaYs45").find("input[name='_token']").val();
@@ -390,6 +391,7 @@ $(() => {
   numericButton.textContent = '#';
   numericButton.disabled = true;
 
+  
   getAllBrands();
   var tmpLisAllBrands = [];
   function getAllBrands(){
@@ -501,6 +503,7 @@ $(() => {
     }
     
   });
+  */
 
   // Add click event listeners to filter buttons
   const filterButtons = document.querySelectorAll('.filter-button');

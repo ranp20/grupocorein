@@ -38,7 +38,7 @@ $(() => {
   $(document).on("keyup keypress input","input.item-name",function(e){
     var val = e.target.value;
     if(val != ""){
-      getNameofProduct(val);
+      getNameofProduct(encodeURIComponent(val));
     }
   });
   function getNameofProduct(productname){

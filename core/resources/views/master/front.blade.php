@@ -250,6 +250,98 @@ body_theme4
                                         @if ($setting->is_shop == 1)
                                         <li class="{{ request()->routeIs('front.catalog*')  ? 'active' : '' }}"><a href="{{route('front.catalog')}}">{{__('Shop')}}</a></li>
                                         @endif
+                                        @if ($setting->is_brands == 1)
+                                        <li class="{{ request()->routeIs('front.brand')  ? 'active' : '' }} allbrands_menulist">
+                                            <a href="{{route('front.brand')}}" class="allbrands-menu-item" data-dropdown-custommenu="brands-menu">{{__('Brands')}}</a>
+                                            
+                                            
+                                            
+                                            <div class="allbrands-list-popup" data-allbrands-js="brands-popup">
+                                                <div class="allbrands-list-container">
+                                                    <?php
+                                                        $Allbrands = DB::table('brands')->select('name','slug')->get()->toArray();
+                                                        // $Allbrands2 = json_decode($Allbrands, TRUE);
+
+                                                        $brandGroups = [];
+                                                        
+                                                        // Check if a letter is a number and replace it with #
+                                                        function sanitizeLetter($letter) {
+                                                            return is_numeric($letter) ? '#' : $letter;
+                                                        }
+
+                                                        foreach ($Allbrands as $brand) {
+                                                            // $firstLetter = strtoupper(substr($brand["name"], 0, 1));
+                                                            $firstLetter = strtoupper(substr($brand->name, 0, 1));
+                                                            $groupName = is_numeric($firstLetter) ? '#' : $firstLetter;
+                                                              if (!isset($brandGroups[$groupName])) {
+                                                                $brandGroups[$groupName] = [];
+                                                              }
+                                                            
+                                                              $brandGroups[$groupName][] = $brand;
+                                                            
+                                                        }
+
+                                                        // Move # group to the front if present
+                                                        if (isset($brandGroups['#'])) {
+                                                            $hashGroup = $brandGroups['#'];
+                                                            unset($brandGroups['#']);
+                                                            $brandGroups = array_merge(['#' => $hashGroup], $brandGroups);
+                                                        }
+
+                                                        $availableLetters = array_keys($brandGroups);
+                                                        $filteredLetters = array_map('sanitizeLetter', $availableLetters);
+
+                                                        // Sort the letters
+                                                        sort($filteredLetters);
+
+                                                        // Move # to the front if present
+                                                        if (($key = array_search('#', $filteredLetters)) !== false) {
+                                                            unset($filteredLetters[$key]);
+                                                            array_unshift($filteredLetters, '#');
+                                                        }
+                                                    ?>
+                                                    <div class="cgBtns">
+                                                        <div class="cgBtns__List">
+                                                            <div class="filter-buttons">
+                                                                <!-- Add buttons for each letter of the alphabet -->
+                                                                <a class="letter-all" href="{{route('front.brand')}}">Todas las Marcas</a>
+                                                                <?php
+                                                                    foreach ($filteredLetters as $letter) {
+                                                                        $disabled = $letter === '#' ? '' : (in_array($letter, range('0', '9')) ? 'disabled' : '');
+                                                                        // echo "<button class='filter-button' data-letter='$letter' $disabled>$letter</button>";
+                                                                        echo "<button class='filter-button' data-letter='$letter'>$letter</button>";
+                                                                    }
+                                                                ?>
+                                                            </div>
+                                                            <div class="brand-list">
+                                                                <?php
+                                                                    // Move # to the front if present
+                                                                    if (isset($filteredLetters['#'])) {
+                                                                        $hashGroup = $brandGroups['#'];
+                                                                        unset($brandGroups['#']);
+                                                                        $brandGroups = array_merge(['#' => $hashGroup], $brandGroups);
+                                                                    }
+
+                                                                    foreach ($brandGroups as $letter => $group) {
+                                                                        echo "<div class='brand-group' id='$letter'>";
+                                                                        echo "<h2 class='brand-group-title'><strong>$letter</strong></h2>";
+                                                                        
+                                                                        foreach ($group as $brand){
+                                                                            $urlBrand = route('front.catalog') . '?brand=' . $brand->slug;
+                                                                            // echo "<a href='#{$brand['slug']}' class='brand-group-item' title='{$brand['name']}'>{$brand['name']}</a>";
+                                                                            echo "<a href='{$urlBrand}' class='brand-group-item' title='{$brand->name}'><span>{$brand->name}</span></a>";
+                                                                        }
+                                                                        
+                                                                        echo "</div>";
+                                                                    }
+                                                                ?>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        @endif
                                         {{--
                                         <!--
                                         @if ($setting->is_campaign == 1)
@@ -259,86 +351,7 @@ body_theme4
                                         --}}
                                         <li class="{{ request()->routeIs('front.onsaleproducts')  ? 'active' : '' }}"><a href="{{route('front.onsaleproducts')}}">{{__('Promotions')}}</a></li>
                                         <li class="{{ request()->routeIs('front.specialoffer')  ? 'active' : '' }}"><a href="{{route('front.specialoffer')}}">{{__('Special offers')}}</a></li>
-                                        @if ($setting->is_brands == 1)
-                                        <li class="{{ request()->routeIs('front.brand')  ? 'active' : '' }} allbrands_menulist">
-                                            <a href="{{route('front.brand')}}" class="allbrands-menu-item" data-dropdown-custommenu="brands-menu">{{__('Brands')}}</a>
-                                            
-                                            
-                                            
-                                            <div class="allbrands-list-popup" data-allbrands-js="brands-popup">
-                                                <div class="allbrands-list-container">
-                                                    
-                                                    <div class="cgBtns">
-                                                        <div class="cgBtns__List">
-                                                            <div class="filter-buttons">
-                                                                <!-- Add buttons for each letter of the alphabet -->
-                                                                <a class="letter-all" href="{{route('front.brand')}}">Todas las Marcas</a>
-                                                                                                                                 
-                                                                <button class="filter-button" data-letter="#">#</button>
-                                                                <button class="filter-button" data-letter="A">A</button>
-                                                                <button class="filter-button" data-letter="B">B</button>
-                                                                <button class="filter-button" data-letter="C">C</button>
-                                                                <button class="filter-button" data-letter="D">D</button>
-                                                                <button class="filter-button" data-letter="E">E</button>
-                                                                <button class="filter-button" data-letter="F">F</button>
-                                                                <button class="filter-button" data-letter="G">G</button>
-                                                                <button class="filter-button" data-letter="H">H</button>
-                                                                <button class="filter-button" data-letter="I">I</button>
-                                                                <button class="filter-button" data-letter="J">J</button>
-                                                                <button class="filter-button" data-letter="K">K</button>
-                                                                <button class="filter-button" data-letter="L">L</button>
-                                                                <button class="filter-button" data-letter="M">M</button>
-                                                                <button class="filter-button" data-letter="N">N</button>
-                                                                <button class="filter-button" data-letter="O">O</button>
-                                                                <button class="filter-button" data-letter="P">P</button>
-                                                                <button class="filter-button" data-letter="Q">Q</button>
-                                                                <button class="filter-button" data-letter="R">R</button>
-                                                                <button class="filter-button" data-letter="S">S</button>
-                                                                <button class="filter-button" data-letter="T">T</button>
-                                                                <button class="filter-button" data-letter="U">U</button>
-                                                                <button class="filter-button" data-letter="V">V</button>
-                                                                <button class="filter-button" data-letter="W">W</button>
-                                                                <button class="filter-button" data-letter="X">X</button>
-                                                                <button class="filter-button" data-letter="Y">Y</button>
-                                                                <button class="filter-button" data-letter="Z">Z</button>
-
-                                                            </div>
-                                                            <div class="brand-list">
-                                                                <div class="brand-group" id="#"></div>
-                                                                <div class="brand-group" id="A"></div>
-                                                                <div class="brand-group" id="B"></div>
-                                                                <div class="brand-group" id="C"></div>
-                                                                <div class="brand-group" id="D"></div>
-                                                                <div class="brand-group" id="E"></div>
-                                                                <div class="brand-group" id="F"></div>
-                                                                <div class="brand-group" id="G"></div>
-                                                                <div class="brand-group" id="H"></div>
-                                                                <div class="brand-group" id="I"></div>
-                                                                <div class="brand-group" id="J"></div>
-                                                                <div class="brand-group" id="K"></div>
-                                                                <div class="brand-group" id="L"></div>
-                                                                <div class="brand-group" id="M"></div>
-                                                                <div class="brand-group" id="N"></div>
-                                                                <div class="brand-group" id="O"></div>
-                                                                <div class="brand-group" id="P"></div>
-                                                                <div class="brand-group" id="Q"></div>
-                                                                <div class="brand-group" id="R"></div>
-                                                                <div class="brand-group" id="S"></div>
-                                                                <div class="brand-group" id="T"></div>
-                                                                <div class="brand-group" id="U"></div>
-                                                                <div class="brand-group" id="V"></div>
-                                                                <div class="brand-group" id="W"></div>
-                                                                <div class="brand-group" id="X"></div>
-                                                                <div class="brand-group" id="Y"></div>
-                                                                <div class="brand-group" id="Z"></div>
-                                                                <!-- Repeat the .brand-group div for each letter of the alphabet -->
-                                                            </div>
-                                                            </div>
-                                                        </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        @endif
+                                        
                                         @if ($setting->is_blog == 1)
                                         <!-- <li class="{{ request()->routeIs('front.blog*') ? 'active' : '' }}"><a href="{{route('front.blog')}}">{{__('Blog')}}</a></li> -->
                                         @endif                                        
@@ -367,45 +380,8 @@ body_theme4
         </div>
     </div>
 </header>
-
 <?php
-/*
-    $arrBrands_1 = [];
-    // Initialize arrays to hold the separated words
-    $general_index = array();
-    $letter_index = array();
-    // Process the words and separate them based on the first character
-    if (count($brands) > 0) {
-        foreach($brands as $k => $v){
-            $name = $v->name;
-            $slug = $v->slug;
-            $firstChar = substr($name, 0, 1);
-
-            if (ctype_alpha($firstChar)) {
-                // If the first character is a letter
-                $letter_index[$firstChar][]['name'] = $name;
-                $letter_index[$firstChar][]['slug'] = $slug;
-            } else {
-                // If the first character is a number or other symbol
-                $general_index['#'][]['name'] = $name;
-                $general_index['#'][]['slug'] = $slug;
-            }
-        }
-    }
-
-    $merged_array = array_merge($general_index, $letter_index);
-
-    $tmpBrandList = '';
-    foreach($merged_array as $key => $val){
-        foreach($val as $key2 => $val2){
-            echo "<pre>";
-            print_r($val2);
-            echo "</pre>";
-        }        
-    }
-    */
 ?>
-
 @yield('content')
 <a class="announcement-banner" href="#announcement-modal"></a>
 <div id="announcement-modal" class="mfp-hide white-popup">

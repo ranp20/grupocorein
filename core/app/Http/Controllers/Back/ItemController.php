@@ -256,7 +256,11 @@ class ItemController extends Controller
     }
 
     public function getProductName(Request $request){
-        $namProduct = $request->productname;
+        // print_r(urldecode($request->productname));
+        // print_r(urldecode($request->input['productname']));
+        // exit();
+        // $namProduct = addslashes($request->productname);
+        $namProduct = e($request->productname);
         // $names = Item::where('name', 'like', '%'.$request->productname.'%')->select('name')->get()->toArray();
         $names = Item::where('name', 'like', '%'.$request->productname.'%')->select('name')->get()->toArray();
 
