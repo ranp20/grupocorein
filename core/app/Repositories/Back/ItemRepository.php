@@ -12,6 +12,7 @@ use Illuminate\Http\UploadedFile;
 class ItemRepository{
   public function store($request){
     $input = $request->all();
+
     if($request->has('unidadraiz')){
       $input['unidad_raiz'] = $request->unidadraiz;
     }

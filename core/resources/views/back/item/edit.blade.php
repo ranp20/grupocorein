@@ -47,6 +47,7 @@
             <div class="form-group">
               <label for="name">{{ __('Name') }} *</label>
               <input type="text" name="name" class="form-control item-name" id="name" placeholder="{{ __('Enter Name') }}" value="{{ $item->name }}" >
+              <span id="spn__iptequalsmssg"></span>
             </div>
             <div class="form-group">
               <label for="slug">{{ __('Slug') }} *</label>

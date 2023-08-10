@@ -116,7 +116,13 @@ class ItemController extends Controller
         $request->request->add(['on_sale_price' => $rComeFunction_on_sale_price]);
         $request->request->add(['special_offer_price' => $rComeFunction_special_offer_price]);
 
-        // $request->request->add(['special_offer_price' => $rComeFunction_special_offer_price]);
+        $namProduct = e($request->post('name'));
+        $names = Item::where('name', 'like', '%'.$namProduct.'%')->select('name')->get()->toArray();
+        foreach($names as $name){
+            if($name['name'] == $namProduct){
+                return redirect()->route('back.item.create')->withErrors(__('El nombre del producto es idéntico a otro ya ingresado. Por favor, ingrese un nuevo nombre*.'));
+            }
+        }
 
         $item_id = $this->repository->store($request);
 
@@ -146,6 +152,16 @@ class ItemController extends Controller
         
         $request->request->add(['on_sale_price' => $rComeFunction_on_sale_price]);
         $request->request->add(['special_offer_price' => $rComeFunction_special_offer_price]);
+
+        $item_id = $item->id;
+
+        $namProduct = e($request->post('name'));
+        $names = Item::where('name', 'like', '%'.$namProduct.'%')->select('name')->get()->toArray();
+        foreach($names as $name){
+            if($name['name'] == $namProduct){
+                return redirect()->route('back.item.edit', $item_id)->withErrors(__('El nombre del producto es idéntico a otro ya ingresado. Por favor, ingrese un nuevo nombre*.'));
+            }
+        }
 
         $this->repository->update($item, $request);
 

@@ -46,6 +46,7 @@
             <div class="form-group">
               <label for="name"><?php echo e(__('Name')); ?> *</label>
               <input type="text" name="name" class="form-control item-name" id="name" placeholder="<?php echo e(__('Enter Name')); ?>" value="<?php echo e($item->name); ?>" >
+              <span id="spn__iptequalsmssg"></span>
             </div>
             <div class="form-group">
               <label for="slug"><?php echo e(__('Slug')); ?> *</label>
