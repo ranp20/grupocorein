@@ -11559,3 +11559,9 @@ body{
         }
     }
 }
+// RESPONSIVE OF PRODUCTS LIST
+@media (min-width: 1024px){
+    .col-gd{
+      width: 25%;
+    }
+}
