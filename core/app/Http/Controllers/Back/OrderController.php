@@ -202,7 +202,16 @@ class OrderController extends Controller{
         }else if(empty($get_ShippingAddress['ship_address1']) && !empty($get_ShippingAddress['ship_address2'])){
           $reg_addressFinal = $get_ShippingAddress['ship_address2'];
         }else{
-          $reg_addressFinal = '';
+          // $reg_addressFinal = $get_BillingAddress['bill_address1'] . " " . $get_BillingAddress['bill_address2'];
+          // $reg_addressFinal = $get_BillingAddress['billing_info'];
+          // $reg_addressFinal = $get_BillingAddress;
+          $reg_addressFinal = 'No especificado';
+          // foreach($get_BillingAddress->billing_info as $k => $v){
+          //   $reg_addressFinal = [
+          //     'bill_address1' => $v['bill_address1'],
+          //     'bill_address2' => $v['bill_address2'],
+          //   ];
+          // }
         }
       }
       // ---------- TELÉFONO
@@ -220,7 +229,11 @@ class OrderController extends Controller{
       if(!empty($reg_razonsocial)){
         $reg_razonsocialFinal = $reg_razonsocial;
       }else{
-        $reg_razonsocialFinal = $user['reg_razonsocial'];
+        if($user['reg_razonsocial'] || $user['reg_razonsocial'] != ""){
+          $reg_razonsocialFinal = $user['reg_razonsocial'];
+        }else{
+          $reg_razonsocialFinal = $user['first_name'] . " " . $user['last_name'];
+        }
       }
 
       // MONTO DE DELIVERY

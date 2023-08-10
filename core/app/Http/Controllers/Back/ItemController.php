@@ -156,7 +156,7 @@ class ItemController extends Controller
         $item_id = $item->id;
 
         $namProduct = e($request->post('name'));
-        $names = Item::where('name', 'like', '%'.$namProduct.'%')->select('name')->get()->toArray();
+        $names = Item::where('name', 'like', '%'.$namProduct.'%')->where('id','!=',$item_id)->select('name')->get()->toArray();
         foreach($names as $name){
             if($name['name'] == $namProduct){
                 return redirect()->route('back.item.edit', $item_id)->withErrors(__('El nombre del producto es idéntico a otro ya ingresado. Por favor, ingrese un nuevo nombre*.'));

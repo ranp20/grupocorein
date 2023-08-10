@@ -460,8 +460,12 @@
               </div>
               <div class="form-group position-relative ">
                 <label class="file">
-                  <input type="file" accept="application/pdf" class="upload-photo" name="adj_doc" id="adj_doc" aria-label="File browser example">
+                  <input type="file" accept="application/pdf" class="upload-photo" name="adj_doc" id="adj_doc" aria-label="File browser example" value="{{ $item->adj_doc }}">
+                  @if($item->adj_doc)
+                  <span class="file-custom text-left">{{ $item->adj_doc }}</span>
+                  @else
                   <span class="file-custom text-left">{{ __('Adjuntar PDF...') }}</span>
+                  @endif
                 </label>
               </div>
             </div>

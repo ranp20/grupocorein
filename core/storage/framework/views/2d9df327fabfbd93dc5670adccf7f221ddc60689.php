@@ -7,6 +7,12 @@
 <meta name="description" content="<?php echo e($item->meta_description); ?>">
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
+  <script type="text/javascript" src="<?php echo e(asset('assets/front/js/plugins/jquery-3.7.0.min.js')); ?>"></script>
+  <link rel="stylesheet" href="<?php echo e(asset('node_modules/owl-carousel/owl-carousel/owl.carousel.css')); ?>">
+  <link rel="stylesheet" href="<?php echo e(asset('node_modules/owl-carousel/owl-carousel/owl.theme.css')); ?>">
+  <script type="text/javascript" src="<?php echo e(asset('node_modules/owl-carousel/owl-carousel/owl.carousel.min.js')); ?>"></script>
+  <script type="text/javascript" src="<?php echo e(asset('assets/front/js/extraindex.js')); ?>"></script>
+
 <div class="page-title">
   <div class="container">
     <div class="row">
@@ -418,7 +424,7 @@
               <?php
                 $unidad_raiz_byItem = DB::table('tbl_unidadraiz')->where('id',$item->unidad_raiz)->get()->toArray()[0];
               ?>
-              <div class="pt-1 mb-1"><span class="text-medium"><?php echo e(__('Root Unit')); ?>:</span> <strong><?php echo e($unidad_raiz_byItem->name); ?></strong></div>
+              <div class="pt-1 mb-1"><span class="text-medium"><?php echo e(__('Unidad de medida')); ?>:</span> <strong><?php echo e($unidad_raiz_byItem->name); ?></strong></div>
               <?php endif; ?>
               <?php if($item->atributo_raiz): ?>
               <?php
@@ -530,7 +536,7 @@
     <div class="col-lg-12">
       <div class="relatedproductslider owl-carousel" >
         <?php $__currentLoopData = $related_items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $related): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-          <div class="slider-item">
+          <div class="slider-item" style="margin-right: 15px;">
             <div class="product-card">
               <?php if($related->is_stock()): ?>
                 <?php if($related->is_type == 'new'): ?>

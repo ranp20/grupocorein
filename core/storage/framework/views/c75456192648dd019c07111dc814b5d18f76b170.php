@@ -31,6 +31,16 @@
   </td>
   <td>
     <?php
+    $brandName = DB::table('brands')->where('id', $data->brand_id)->get();
+    ?>
+    <?php $__currentLoopData = $brandName; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+    <?php echo e($v->name); ?>
+
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+    
+  </td>
+  <td>
+    <?php
     $nameSection = "";
     $nameSectionClassSpan = "";
     ?>

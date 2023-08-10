@@ -200,4 +200,19 @@ $(() => {
   $(document).on('click','.remove-spcification',function(){
     $(this).parent().parent().remove();
   });
+  // --------------- CARGAR EL ARCHIVO EN EL INPUT
+  document.getElementById('adj_doc').onchange = function () {
+    let fi = this;
+    var totalFileSize = 0;
+    if (fi.files.length > 0){
+      for (var i = 0; i <= fi.files.length - 1; i++){
+        var fsize = fi.files.item(i).size;
+        var ftype = fi.files.item(i).type
+        var fname = fi.files.item(i).name;
+        this.nextElementSibling.innerHTML = fname;
+      }
+    }else{
+      this.nextElementSibling.innerHTML = "Nada seleccionado";
+    }
+  };
 });

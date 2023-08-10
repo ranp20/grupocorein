@@ -7,6 +7,12 @@
 <meta name="description" content="{{$item->meta_description}}">
 @endsection
 @section('content')
+  <script type="text/javascript" src="{{ asset('assets/front/js/plugins/jquery-3.7.0.min.js') }}"></script>
+  <link rel="stylesheet" href="{{ asset('node_modules/owl-carousel/owl-carousel/owl.carousel.css')}}">
+  <link rel="stylesheet" href="{{ asset('node_modules/owl-carousel/owl-carousel/owl.theme.css')}}">
+  <script type="text/javascript" src="{{ asset('node_modules/owl-carousel/owl-carousel/owl.carousel.min.js')}}"></script>
+  <script type="text/javascript" src="{{ asset('assets/front/js/extraindex.js') }}"></script>
+
 <div class="page-title">
   <div class="container">
     <div class="row">
@@ -418,7 +424,7 @@
               <?php
                 $unidad_raiz_byItem = DB::table('tbl_unidadraiz')->where('id',$item->unidad_raiz)->get()->toArray()[0];
               ?>
-              <div class="pt-1 mb-1"><span class="text-medium">{{__('Root Unit')}}:</span> <strong>{{ $unidad_raiz_byItem->name }}</strong></div>
+              <div class="pt-1 mb-1"><span class="text-medium">{{__('Unidad de medida')}}:</span> <strong>{{ $unidad_raiz_byItem->name }}</strong></div>
               @endif
               @if ($item->atributo_raiz)
               <?php
@@ -529,7 +535,7 @@
     <div class="col-lg-12">
       <div class="relatedproductslider owl-carousel" >
         @foreach ($related_items as $related)
-          <div class="slider-item">
+          <div class="slider-item" style="margin-right: 15px;">
             <div class="product-card">
               @if ($related->is_stock())
                 @if($related->is_type == 'new')

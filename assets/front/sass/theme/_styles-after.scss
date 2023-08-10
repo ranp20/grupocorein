@@ -9273,6 +9273,8 @@ z-index:99999;
 .newproduct-slider.owl-carousel .owl-prev,
 .popular-category-slider.owl-carousel .owl-next,
 .popular-category-slider.owl-carousel .owl-prev,
+.relatedproductslider.owl-carousel .owl-next,
+.relatedproductslider.owl-carousel .owl-prev,
 .toprated-slider.owl-carousel .owl-next,
 .toprated-slider.owl-carousel .owl-prev{
     width: 26px;
@@ -9284,7 +9286,8 @@ z-index:99999;
 }
 
 .home-blog-slider .owl-nav div,
-.popular-category-slider .owl-nav div{
+.popular-category-slider .owl-nav div,
+.relatedproductslider .owl-nav div{
     opacity: 1 !important;
     top: 50%;
     transform: unset;
@@ -9294,16 +9297,19 @@ z-index:99999;
 }
 
 .home-blog-slider.owl-carousel .owl-next,
-.popular-category-slider.owl-carousel .owl-next{
+.popular-category-slider.owl-carousel .owl-next,
+.relatedproductslider.owl-carousel .owl-next{
     right: -10px
 }
 
 .home-blog-slider.owl-carousel .owl-prev,
-.popular-category-slider.owl-carousel .owl-prev{
+.popular-category-slider.owl-carousel .owl-prev,
+.relatedproductslider.owl-carousel .owl-prev{
     left: -10px
 }
 
-.popular-category-slider.owl-carousel .owl-nav div.disabled{
+.popular-category-slider.owl-carousel .owl-nav div.disabled,
+.relatedproductslider.owl-carousel .owl-nav div.disabled{
     background: #f5f6f9
 }
 
@@ -9314,6 +9320,7 @@ z-index:99999;
 .home-blog-slider.owl-carousel .owl-nav div:hover,
 .newproduct-slider.owl-carousel .owl-nav div:hover,
 .popular-category-slider.owl-carousel .owl-nav div:hover,
+.relatedproductslider.owl-carousel .owl-nav div:hover,
 .toprated-slider.owl-carousel .owl-nav div:hover{
     background: #377dff;
     color: #fff
@@ -9336,6 +9343,7 @@ z-index:99999;
 .home-blog-slider.owl-carousel .owl-nav div.disabled:hover,
 .newproduct-slider.owl-carousel .owl-nav div.disabled:hover,
 .popular-category-slider.owl-carousel .owl-nav div.disabled:hover,
+.relatedproductslider.owl-carousel .owl-nav div.disabled:hover,
 .toprated-slider.owl-carousel .owl-nav div.disabled:hover{
     background: 0 0 !important;
     color: #241e1e

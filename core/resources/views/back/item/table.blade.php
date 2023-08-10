@@ -30,6 +30,15 @@
   </td>
   <td>
     @php
+    $brandName = DB::table('brands')->where('id', $data->brand_id)->get();
+    @endphp
+    @foreach($brandName as $k => $v)
+    {{ $v->name }}
+    @endforeach
+    
+  </td>
+  <td>
+    @php
     $nameSection = "";
     $nameSectionClassSpan = "";
     @endphp

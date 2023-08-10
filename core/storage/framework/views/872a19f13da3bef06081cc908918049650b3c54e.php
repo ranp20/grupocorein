@@ -99,6 +99,7 @@
 							<th><?php echo e(__('Image')); ?></th>
               <th width="30%"><?php echo e(__('Name')); ?></th>
               <th><?php echo e(__('Price')); ?></th>
+              <th><?php echo e(__('Marca')); ?></th>
               <th><?php echo e(__('Sección')); ?></th>
 							<th><?php echo e(__('Status')); ?></th>
 							<!-- <th><?php echo e(__('Type')); ?></th> -->

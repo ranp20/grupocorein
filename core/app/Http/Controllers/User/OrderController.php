@@ -36,11 +36,14 @@ class OrderController extends Controller{
     $order = "";
     if(isset($request->id_order) && $request->id_order != ""){
       $order = Order::where('id', $request->id_order)->get()->toArray()[0];
+      $orderBillingInfo = Order::where('id', $request->id_order)->select('billing_info')->get();
+      // $orderBillingInfo = Order::findOrfail($request->id_order);
       $user = User::where('id', $order['user_id'])->get()->toArray()[0];
             
       $get_idUser = $user['id'];
       $nextIdGenCode = $order['id_gencode'];
-      $get_BillingAddress = $order['billing_info'];
+      // $get_BillingAddress = json_decode($orderBillingInfo->billing_info,true);
+      $get_BillingAddress = $orderBillingInfo;
       $get_ShippingAddress = $order['shipping_info'];
       $get_SessionCart = json_decode($order['cart'], TRUE);
       $get_SessionCartFormat = [];
@@ -92,7 +95,16 @@ class OrderController extends Controller{
         }else if(empty($get_ShippingAddress['ship_address1']) && !empty($get_ShippingAddress['ship_address2'])){
           $reg_addressFinal = $get_ShippingAddress['ship_address2'];
         }else{
-          $reg_addressFinal = '';
+          // $reg_addressFinal = $get_BillingAddress['bill_address1'] . " " . $get_BillingAddress['bill_address2'];
+          // $reg_addressFinal = $get_BillingAddress['billing_info'];
+          // $reg_addressFinal = $get_BillingAddress;
+          $reg_addressFinal = 'No especificado';
+          // foreach($get_BillingAddress->billing_info as $k => $v){
+          //   $reg_addressFinal = [
+          //     'bill_address1' => $v['bill_address1'],
+          //     'bill_address2' => $v['bill_address2'],
+          //   ];
+          // }
         }
       }
       // ---------- TELÉFONO
@@ -110,7 +122,11 @@ class OrderController extends Controller{
       if(!empty($reg_razonsocial)){
         $reg_razonsocialFinal = $reg_razonsocial;
       }else{
-        $reg_razonsocialFinal = $user['reg_razonsocial'];
+        if($user['reg_razonsocial'] || $user['reg_razonsocial'] != ""){
+          $reg_razonsocialFinal = $user['reg_razonsocial'];
+        }else{
+          $reg_razonsocialFinal = $user['first_name'] . " " . $user['last_name'];
+        }
       }
 
       // MONTO DE DELIVERY
@@ -119,7 +135,7 @@ class OrderController extends Controller{
       $get_SessionUserInfo = [
         'date' => date('Y/m/d H:i:s'),
         'client' => $reg_razonsocialFinal,
-        'name' => $user['first_name'] . $user['last_name'],
+        'name' => $user['first_name'] . " " . $user['last_name'],
         'ruc' => (isset($user['reg_ruc']) && !empty($user['reg_ruc']))? $user['reg_ruc'] : 'No especificado',
         'user' => (isset($user['email']) && !empty($user['email']))? $user['email'] : 'No especificado',
         'address' => $reg_addressFinal,

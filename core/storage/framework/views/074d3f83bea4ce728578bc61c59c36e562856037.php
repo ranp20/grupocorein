@@ -459,8 +459,12 @@
               </div>
               <div class="form-group position-relative ">
                 <label class="file">
-                  <input type="file" accept="application/pdf" class="upload-photo" name="adj_doc" id="adj_doc" aria-label="File browser example">
+                  <input type="file" accept="application/pdf" class="upload-photo" name="adj_doc" id="adj_doc" aria-label="File browser example" value="<?php echo e($item->adj_doc); ?>">
+                  <?php if($item->adj_doc): ?>
+                  <span class="file-custom text-left"><?php echo e($item->adj_doc); ?></span>
+                  <?php else: ?>
                   <span class="file-custom text-left"><?php echo e(__('Adjuntar PDF...')); ?></span>
+                  <?php endif; ?>
                 </label>
               </div>
             </div>

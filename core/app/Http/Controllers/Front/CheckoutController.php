@@ -103,11 +103,11 @@ class CheckoutController extends Controller{
     $total_amount = $grand_total;
 
     $getUserInfo = Auth::user() ? Auth::user() : null;
-    $regDistritoId = (isset($getUserInfo['reg_distrito_id']) && $getUserInfo['reg_distrito_id'] != "") ? $getUserInfo['reg_distrito_id'] : 0;
-    $distritoGet = Distrito::where('id',$regDistritoId)->select('id','distrito_name','distrito_min_amount','distrito_max_amount')->first();
+    $regDistritoCode = (isset($getUserInfo['reg_distrito_id']) && $getUserInfo['reg_distrito_id'] != "") ? $getUserInfo['reg_distrito_id'] : 1;
+    $distritoGet = Distrito::where('id',$regDistritoCode)->select('id','distrito_name','distrito_min_amount','distrito_max_amount')->first();
     $minAmountValidate = 1600.00;
-    $minAmountDelivery = floatval($distritoGet->distrito_min_amount);
-    $maxAmountDelivery = floatval($distritoGet->distrito_max_amount);
+    $minAmountDelivery = ($distritoGet->distrito_min_amount != "") ? floatval($distritoGet->distrito_min_amount) : 15.00;
+    $maxAmountDelivery = ($distritoGet->distrito_max_amount != "") ? floatval($distritoGet->distrito_max_amount) : 0;
     $ship_data['ship_amountaddress'] = 0;
     if($total_amount >= $minAmountValidate){
       $data['amountaddress'] = $maxAmountDelivery;
@@ -235,11 +235,11 @@ class CheckoutController extends Controller{
     $total_amount = $grand_total;
     
     $getUserInfo = Auth::user() ? Auth::user() : null;
-    $regDistritoId = (isset($getUserInfo['reg_distrito_id']) && $getUserInfo['reg_distrito_id'] != "") ? $getUserInfo['reg_distrito_id'] : 0;
-    $distritoGet = Distrito::where('id',$regDistritoId)->select('id','distrito_name','distrito_min_amount','distrito_max_amount')->first();
+    $regDistritoCode = (isset($getUserInfo['reg_distrito_id']) && $getUserInfo['reg_distrito_id'] != "") ? $getUserInfo['reg_distrito_id'] : 1;
+    $distritoGet = Distrito::where('id',$regDistritoCode)->select('id','distrito_name','distrito_min_amount','distrito_max_amount')->first();
     $minAmountValidate = 1600.00;
-    $minAmountDelivery = floatval($distritoGet->distrito_min_amount);
-    $maxAmountDelivery = floatval($distritoGet->distrito_max_amount);
+    $minAmountDelivery = ($distritoGet->distrito_min_amount != "") ? floatval($distritoGet->distrito_min_amount) : 15.00;
+    $maxAmountDelivery = ($distritoGet->distrito_max_amount != "") ? floatval($distritoGet->distrito_max_amount) : 0;
     $ship_data['ship_amountaddress'] = 0;
     if($total_amount >= $minAmountValidate){
       $data['amountaddress'] = $maxAmountDelivery;
@@ -412,11 +412,11 @@ class CheckoutController extends Controller{
     $total_amount = $grand_total;
 
     $getUserInfo = Auth::user() ? Auth::user() : null;
-    $regDistritoCode = (isset($request['distrito_code']) && $request['distrito_code'] != "") ? $request['distrito_code'] : 0;
+    $regDistritoCode = (isset($request['distrito_code']) && $request['distrito_code'] != "") ? $request['distrito_code'] : 1;
     $distritoGet = Distrito::where('distrito_code',$regDistritoCode)->select('id','distrito_name','distrito_min_amount','distrito_max_amount')->first();
     $minAmountValidate = 1600.00;
-    $minAmountDelivery = floatval($distritoGet->distrito_min_amount);
-    $maxAmountDelivery = floatval($distritoGet->distrito_max_amount);
+    $minAmountDelivery = ($distritoGet->distrito_min_amount != "") ? floatval($distritoGet->distrito_min_amount) : 15.00;
+    $maxAmountDelivery = ($distritoGet->distrito_max_amount != "") ? floatval($distritoGet->distrito_max_amount) : 0;
     if($total_amount >= $minAmountValidate){
       $total_amount_operation = $grand_total + $maxAmountDelivery;
       $total_amount = floatval($total_amount_operation);
@@ -511,19 +511,21 @@ class CheckoutController extends Controller{
     // $grand_total = $grand_total + $state_tax;
     $grand_total = $cart_total;
     $total_amount = $grand_total;
-    $regDistritoId = 0;
+    $regDistritoCode = 0;
     $getUserInfo = Auth::user() ? Auth::user() : null;
     if(isset($getUserInfo['reg_distrito_id']) && $getUserInfo['reg_distrito_id'] != ""){
       if(Session::has('shipping_address.ship_amountaddressId') && Session::get('shipping_address.ship_amountaddressId') != ""){
-        $regDistritoId = Session::get('shipping_address.ship_amountaddressId');
+        $regDistritoCode = Session::get('shipping_address.ship_amountaddressId');
       }else{
-        $regDistritoId = $getUserInfo['reg_distrito_id'];
+        $regDistritoCode = $getUserInfo['reg_distrito_id'];
       }
+    }else{
+      $regDistritoCode = 1;
     }
-    $distritoGet = Distrito::where('id',$regDistritoId)->select('id','distrito_name','distrito_min_amount','distrito_max_amount')->first();
+    $distritoGet = Distrito::where('id',$regDistritoCode)->select('id','distrito_name','distrito_min_amount','distrito_max_amount')->first();
     $minAmountValidate = 1600.00;
-    $minAmountDelivery = floatval($distritoGet->distrito_min_amount);
-    $maxAmountDelivery = floatval($distritoGet->distrito_max_amount);
+    $minAmountDelivery = ($distritoGet->distrito_min_amount != "") ? floatval($distritoGet->distrito_min_amount) : 15.00;
+    $maxAmountDelivery = ($distritoGet->distrito_max_amount != "") ? floatval($distritoGet->distrito_max_amount) : 0;
     $ship_data['ship_amountaddress'] = 0;
     if($total_amount >= $minAmountValidate){
       $data['amountaddress'] = $maxAmountDelivery;
@@ -921,16 +923,20 @@ class CheckoutController extends Controller{
     if(!empty($reg_razonsocial)){
       $reg_razonsocialFinal = $reg_razonsocial;
     }else{
-      $reg_razonsocialFinal = Auth::user()->reg_razonsocial;
+      if(Auth::user()->reg_razonsocial || Auth::user()->reg_razonsocial != ""){
+        $reg_razonsocialFinal = Auth::user()->reg_razonsocial;
+      }else{
+        $reg_razonsocialFinal = Auth::user()->first_name . " " . Auth::user()->last_name;
+      }
     }
 
     // MONTO DE DELIVERY
     $ammountDeliveryShipping = (isset($get_ShippingAddress['ship_amountaddress']) && !empty($get_ShippingAddress['ship_amountaddress'])) ? $get_ShippingAddress['ship_amountaddress'] : 0;
 
     $get_SessionUserInfo = [
-      'date' => date('Y/m/d H:i:s'),
+      'date' => date('Y/m/d - H:i:s'),
       'client' => $reg_razonsocialFinal,
-      'name' => Auth::user()->first_name . Auth::user()->last_name,
+      'name' => Auth::user()->first_name . " " . Auth::user()->last_name,
       'ruc' => (isset(Auth::user()->reg_ruc) && !empty(Auth::user()->reg_ruc))? Auth::user()->reg_ruc : 'No especificado',
       'user' => (isset(Auth::user()->email) && !empty(Auth::user()->email))? Auth::user()->email : 'No especificado',
       'address' => $reg_addressFinal,

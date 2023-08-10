@@ -241,8 +241,10 @@ $(function ($) {
     // toprated-slider Area Start
     var $relatedproductsliderv = $(".relatedproductslider");
     $relatedproductsliderv.owlCarousel({
-        nav: false,
-        dots: true,
+        navText: [],
+        nav: true,
+        dots: false,
+        loop: false,
         autoplayTimeout: 6000,
         smartSpeed: 1200,
         margin: 15,
