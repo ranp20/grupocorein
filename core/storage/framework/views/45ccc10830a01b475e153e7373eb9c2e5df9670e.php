@@ -301,7 +301,8 @@ body_theme4
                                                         // Move # to the front if present
                                                         if (($key = array_search('#', $filteredLetters)) !== false) {
                                                             unset($filteredLetters[$key]);
-                                                            array_unshift($filteredLetters, '#');
+                                                            // array_unshift($filteredLetters, '#');
+                                                            array_push($filteredLetters, '#');
                                                         }
                                                     ?>
                                                     <div class="cgBtns">
