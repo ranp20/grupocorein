@@ -289,7 +289,13 @@ body_theme4
                                                         }
 
                                                         $availableLetters = array_keys($brandGroups);
-                                                        $filteredLetters = array_map('sanitizeLetter', $availableLetters);
+                                                        // Create an array with all letters of the alphabet
+                                                        $alphabetLetters = range('A', 'Z');
+                                                        // Combine the available letters from the groups with the alphabet letters
+                                                        $allLetters = array_unique(array_merge($availableLetters, $alphabetLetters));
+
+                                                        $filteredLetters = array_map('sanitizeLetter', $allLetters);
+                                                        // $filteredLetters = array_map('sanitizeLetter', $availableLetters);
 
                                                         // Sort the letters
                                                         sort($filteredLetters);
@@ -307,9 +313,10 @@ body_theme4
                                                                 <a class="letter-all" href="{{route('front.brand')}}">Todas las Marcas</a>
                                                                 <?php
                                                                     foreach ($filteredLetters as $letter) {
-                                                                        $disabled = $letter === '#' ? '' : (in_array($letter, range('0', '9')) ? 'disabled' : '');
-                                                                        // echo "<button class='filter-button' data-letter='$letter' $disabled>$letter</button>";
-                                                                        echo "<button class='filter-button' data-letter='$letter'>$letter</button>";
+                                                                        // $disabled = $letter === '#' ? '' : (in_array($letter, range('0', '9')) ? 'disabled' : '');
+                                                                        $disabled = $letter === '#' ? '' : (!in_array($letter, $availableLetters) ? 'disabled' : '');
+                                                                        echo "<button class='filter-button' data-letter='$letter' $disabled>$letter</button>";
+                                                                        // echo "<button class='filter-button' data-letter='$letter'>$letter</button>";
                                                                     }
                                                                 ?>
                                                             </div>
