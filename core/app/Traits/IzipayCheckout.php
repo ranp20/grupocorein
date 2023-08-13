@@ -50,6 +50,13 @@ trait IzipayCheckout{
     $nextIdGenCode = $this->getUltimateIdGenCode($ultimateIdGenCode);
     if(isset($data['kr-answer']) && $data['kr-answer'] != ""){
       $izzipay_r = json_decode($data['kr-answer'], TRUE);
+      /*
+      echo "<pre>";
+      print_r($izzipay_r);
+      echo "</pre>";
+      exit();
+      */
+      
       $_token = uniqid('fk-srWong'); // TRANSACTION DATE
       $transactionDate = $izzipay_r['serverDate']; // TRANSACTION DATE
       $datetransacString = strtotime($transactionDate);

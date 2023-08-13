@@ -191,7 +191,7 @@
           <div class="card-body">
             <input type="hidden" class="check_button" name="is_button" value="0">
             <button type="submit" class="btn btn-secondary mr-2"><?php echo e(__('Update')); ?></button>
-            <a class="btn btn-success" href="<?php echo e(route('back.attribute.index',$item->id)); ?>"><?php echo e(__('Manage Attributes')); ?></a>
+            
           </div>
         </div>
         <div class="card">

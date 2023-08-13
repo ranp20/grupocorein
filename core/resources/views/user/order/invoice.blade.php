@@ -61,7 +61,23 @@
         <span class="text-muted">{{__('Código de Pedido')}} : </span>{{ $order->id_gencode }}<br>
         <span class="text-muted">{{__('Transaction Id')}} : </span>{{$order->txnid}}<br>
         <span class="text-muted">{{__('Order Id')}} : </span>{{$order->transaction_number}}<br>
-        <span class="text-muted">{{__('Order Date')}} : </span>{{$order->created_at->format('M d, Y')}}<br>
+        <?php
+          // $notifCreate = \Carbon\Carbon::parse($notf->created_at);
+          // $notifDate = $notifCreate->locale('es_ES')->diffForHumans(null, false, false, 1);
+          date_default_timezone_set('America/Lima');
+          // setlocale('es_ES');
+          /*
+          $formatter = new IntlDateFormatter(
+            'es_ES',
+            IntlDateFormatter::FULL,
+            IntlDateFormatter::FULL,
+            'America/Lima',
+            IntlDateFormatter::TRADITIONAL
+          );
+          echo $formatter->parse($formatter->format(strtotime($order->created_at)));
+          */
+        ?>
+        <span class="text-muted">{{__('Order Date')}} : </span>{{ $order->created_at->format('M d, Y')}}<br>
         <span class="text-muted">{{__('Payment Status')}} : </span>
         @if($order->payment_status == 'Paid')
         <div class="badge badge-success">{{__('Paid')}}</div>

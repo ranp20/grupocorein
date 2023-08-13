@@ -178,7 +178,7 @@ $orderIdGenFirst = genCodeRandom();
               <div class="col-sm-12">
                 <div class="form-group">
                   <!-- <label for="reg-slOpts__voucher">Tipo de comprobante</label> -->
-                  <select class="form-control" name="reg_slOpts__voucher" id="reg-slOpts__voucher" required>
+                  <select class="form-control" name="reg_slOpts__voucher" id="reg-slOpts__voucher" data-href="{{ route('front.checkout.setdatavoucher') }}" required>
                     <option selected value="">Elige una opción</option>
                     @foreach($selOptsTable as $k => $v)
                     <option value="{{ (isset($selOptVoucher['selOptSelectedId']) && $selOptVoucher['selOptSelectedId'] != '' && $v['id'] == $selOptVoucher['selOptSelectedId']) ? $selOptVoucher['selOptSelectedId'] : $v['id'] }}" {{ (isset($selOptVoucher['selOptSelected']) && $selOptVoucher['selOptSelected'] != '' && $v['id'] == $selOptVoucher['selOptSelectedId']) ? 'selected' : '' }}>{{ (isset($selOptVoucher['selOptSelected']) && $selOptVoucher['selOptSelected'] != '' && $v['name'] == $selOptVoucher['selOptSelected']) ? ucfirst($selOptVoucher['selOptSelected']) : ucfirst($v['name']) }}</option>

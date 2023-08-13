@@ -559,10 +559,14 @@ class CheckoutController extends Controller{
     $data['payments'] = PaymentSetting::whereStatus(1)->get();
     return view('front.checkout.payment',$data);
   }
-  /* ---------------- AL ENVIAR DATOS DE COMPROBANTE ---------------- */
-  public function sendDataVoucher(Request $request){    
+  /* ---------------- AL SELECCIONAR UN TIPO DE COMPROBANTE ---------------- */
+  public function selTypeOfVoucher(Request $request){
     $input = $request->all();
     $selOptSelected = (isset($input['chckpay_selOpt']) && $input['chckpay_selOpt'] != "") ? $input['chckpay_selOpt'] : '';
+    $user_ruc = "";
+    $user_razonsocial = "";
+    $user_addressfiscal = "";
+    $user_phone = "";
     // $arrDataVoucher = [];
     if($selOptSelected == 'boleta'){
       $arrDataVoucher = [
@@ -573,13 +577,87 @@ class CheckoutController extends Controller{
         "phone" => (isset($input['chckpay_phone']) && $input['chckpay_phone'] != "") ? $input['chckpay_phone'] : '',
       ];
     }else if($selOptSelected == 'factura'){
+      if(isset($input['chckpay_ruc']) && $input['chckpay_ruc'] != ""){
+        $user_ruc = $input['chckpay_ruc'];
+      }else{
+        $user_ruc = (Auth::user()->reg_ruc != "" || Auth::user()->reg_ruc) ? Auth::user()->reg_ruc : "";
+      }
+      if(isset($input['chckpay_razonsocial']) && $input['chckpay_razonsocial'] != ""){
+        $user_razonsocial = $input['chckpay_razonsocial'];
+      }else{
+        $user_razonsocial = (Auth::user()->reg_razonsocial != "" || Auth::user()->reg_razonsocial) ? Auth::user()->reg_razonsocial : "";
+      }
+      if(isset($input['chckpay_address']) && $input['chckpay_address'] != ""){
+        $user_addressfiscal = $input['chckpay_address'];
+      }else{
+        $user_addressfiscal = (Auth::user()->reg_addressfiscal != "" || Auth::user()->reg_addressfiscal) ? Auth::user()->reg_addressfiscal : "";
+      }
+      if(isset($input['chckpay_phone']) && $input['chckpay_phone'] != ""){
+        $user_phone = $input['chckpay_phone'];
+      }else{
+        $user_phone = (Auth::user()->phone != "" || Auth::user()->phone) ? Auth::user()->phone : "";
+      }
+      
       $arrDataVoucher = [
         "selOptSelected" => 'factura',
         "selOptSelectedId" => 2,
-        "ruc" => (isset($input['chckpay_ruc']) && $input['chckpay_ruc'] != "") ? $input['chckpay_ruc'] : '',
-        "razonsocial" => (isset($input['chckpay_razonsocial']) && $input['chckpay_razonsocial'] != "") ? $input['chckpay_razonsocial'] : '',
-        "address" => (isset($input['chckpay_address']) && $input['chckpay_address'] != "") ? $input['chckpay_address'] : '',
+        "ruc" => $user_ruc,
+        "razonsocial" => $user_razonsocial,
+        "address" => $user_addressfiscal,
+        "phone" => $user_phone,
+      ];
+    }else{
+      $arrDataVoucher = [];
+    }
+    return response()->json($arrDataVoucher);
+  }
+
+  /* ---------------- AL ENVIAR DATOS DE COMPROBANTE ---------------- */
+  public function sendDataVoucher(Request $request){    
+    $input = $request->all();
+    $selOptSelected = (isset($input['chckpay_selOpt']) && $input['chckpay_selOpt'] != "") ? $input['chckpay_selOpt'] : '';
+    $user_ruc = "";
+    $user_razonsocial = "";
+    $user_addressfiscal = "";
+    $user_phone = "";
+    // $arrDataVoucher = [];
+    if($selOptSelected == 'boleta'){
+      $arrDataVoucher = [
+        "selOptSelected" => 'boleta',
+        "selOptSelectedId" => 1,
+        "first_name" => (isset($input['chckpay_firt_name']) && $input['chckpay_firt_name'] != "") ? $input['chckpay_firt_name'] : '',
+        "dni" => (isset($input['chckpay_dni']) && $input['chckpay_dni'] != "") ? $input['chckpay_dni'] : '',
         "phone" => (isset($input['chckpay_phone']) && $input['chckpay_phone'] != "") ? $input['chckpay_phone'] : '',
+      ];
+    }else if($selOptSelected == 'factura'){
+      if(isset($input['chckpay_ruc']) && $input['chckpay_ruc'] != ""){
+        $user_ruc = $input['chckpay_ruc'];
+      }else{
+        $user_ruc = (Auth::user()->reg_ruc != "" || Auth::user()->reg_ruc) ? Auth::user()->reg_ruc : "";
+      }
+      if(isset($input['chckpay_razonsocial']) && $input['chckpay_razonsocial'] != ""){
+        $user_razonsocial = $input['chckpay_razonsocial'];
+      }else{
+        $user_razonsocial = (Auth::user()->reg_razonsocial != "" || Auth::user()->reg_razonsocial) ? Auth::user()->reg_razonsocial : "";
+      }
+      if(isset($input['chckpay_address']) && $input['chckpay_address'] != ""){
+        $user_addressfiscal = $input['chckpay_address'];
+      }else{
+        $user_addressfiscal = (Auth::user()->reg_addressfiscal != "" || Auth::user()->reg_addressfiscal) ? Auth::user()->reg_addressfiscal : "";
+      }
+      if(isset($input['chckpay_phone']) && $input['chckpay_phone'] != ""){
+        $user_phone = $input['chckpay_phone'];
+      }else{
+        $user_phone = (Auth::user()->reg_phone != "" || Auth::user()->reg_phone) ? Auth::user()->reg_phone : "";
+      }
+      
+      $arrDataVoucher = [
+        "selOptSelected" => 'factura',
+        "selOptSelectedId" => 2,
+        "ruc" => $user_ruc,
+        "razonsocial" => $user_razonsocial,
+        "address" => $user_addressfiscal,
+        "phone" => $user_phone,
       ];
     }else{
       $arrDataVoucher = [];
@@ -932,6 +1010,8 @@ class CheckoutController extends Controller{
 
     // MONTO DE DELIVERY
     $ammountDeliveryShipping = (isset($get_ShippingAddress['ship_amountaddress']) && !empty($get_ShippingAddress['ship_amountaddress'])) ? $get_ShippingAddress['ship_amountaddress'] : 0;
+
+    date_default_timezone_set('America/Lima');
 
     $get_SessionUserInfo = [
       'date' => date('Y/m/d - H:i:s'),

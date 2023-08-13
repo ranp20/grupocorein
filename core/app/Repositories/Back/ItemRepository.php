@@ -87,7 +87,8 @@ class ItemRepository{
         $file = $request->file('adj_doc');
         $filename = pathinfo($request->file('adj_doc')->getClientOriginalName(), PATHINFO_FILENAME);
         $name_replace = str_replace(' ', '', $filename);
-        $nameFinal = time()."-".date('h-i-s')."-".$name_replace;
+        // $nameFinal = time()."-".date('h-i-s')."-".$name_replace;
+        $nameFinal = $name_replace;
         $destination = 'assets/files/item/adj_doc'.'/';
         $ext= $file->getClientOriginalExtension();
         $namecomplete = $nameFinal.".".$ext;
@@ -106,7 +107,7 @@ class ItemRepository{
     print_r($input);
     echo "</pre>";
     exit();
-    */    
+    */
 
     /*-- NUEVO CONTENIDO (FIN) --*/
     $item_id = Item::create($input)->id;

@@ -388,6 +388,7 @@ Route::group(['middleware' => 'maintainance'], function (){
     Route::get('/checkout/shpping/address/distrito', 'Front\CheckoutController@getDistritoByIdProvincia')->name('front.checkout.distrito');
     Route::get('/checkout/shpping/address/updateamountcart', 'Front\CheckoutController@updateAmountCart')->name('front.checkout.updateamountcart');
     Route::post('/checkout/pdforderpreview', 'Front\CheckoutController@getGeneratePDFOrderPreview')->name('front.checkout.pdforderpreview');
+    Route::post('/checkout/setdatavoucher', 'Front\CheckoutController@selTypeOfVoucher')->name('front.checkout.setdatavoucher');
     Route::post('/checkout/datavoucher', 'Front\CheckoutController@sendDataVoucher')->name('front.checkout.submitdatavoucher');
     //------------ NUEVO CONTENIDO(FIN)
     

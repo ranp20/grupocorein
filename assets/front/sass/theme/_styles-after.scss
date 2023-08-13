@@ -7879,7 +7879,9 @@ video{
 .product-card .product-title{
     margin-bottom: 5px;
     font-size: 16px;
-    font-weight: 400
+    font-weight: 400;
+    height: auto;
+    max-height: 54px;
 }
 
 .product-card .product-title>a{
@@ -7887,7 +7889,6 @@ video{
     color: #232323;
     text-decoration: none;
     font-size: 14px;
-    height: 37px;
     display: block;
     font-weight: 500;
     line-height: 18px;

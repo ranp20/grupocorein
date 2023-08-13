@@ -192,7 +192,11 @@
           <div class="card-body">
             <input type="hidden" class="check_button" name="is_button" value="0">
             <button type="submit" class="btn btn-secondary mr-2">{{ __('Update') }}</button>
+            {{--
+            <!--
             <a class="btn btn-success" href="{{ route('back.attribute.index',$item->id) }}">{{ __('Manage Attributes') }}</a>
+            -->
+            --}}
           </div>
         </div>
         <div class="card">

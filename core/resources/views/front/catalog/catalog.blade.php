@@ -62,7 +62,9 @@ function renderStarRating($rating,$maxRating=5) {
               <a href="{{route('front.catalog').'?category='.$item->category->slug}}">{{$item->category->name}}</a>
             </div>
             <h3 class="product-title">
-              <a href="{{route('front.product',$item->slug)}}">{{ strlen(strip_tags($item->name)) > $name_string_count ? substr(strip_tags($item->name), 0, 38) : strip_tags($item->name) }}</a>
+              <a href="{{route('front.product',$item->slug)}}">
+                <span>{{ strlen(strip_tags($item->name)) > $name_string_count ? substr(strip_tags($item->name), 0, 38) . '...' : strip_tags($item->name) }}</span>
+              </a>
             </h3>
             <h4 class="product-price">
               @if ($item->previous_price !=0)
@@ -193,7 +195,9 @@ function renderStarRating($rating,$maxRating=5) {
                   <a href="{{route('front.catalog').'?category='.$item->category->slug}}">{{$item->category->name}}</a>
                 </div>
                 <h3 class="product-title">
-                  <a href="{{route('front.product',$item->slug)}}">{{ strlen(strip_tags($item->name)) > $name_string_count ? substr(strip_tags($item->name), 0, 52) .'...': strip_tags($item->name) }}</a>
+                  <a href="{{route('front.product',$item->slug)}}">
+                    <span>{{ strlen(strip_tags($item->name)) > $name_string_count ? substr(strip_tags($item->name), 0, 75) . '...' : strip_tags($item->name) }}</span>
+                  </a>
                 </h3>
                 {{--
                 <!--

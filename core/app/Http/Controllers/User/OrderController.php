@@ -132,8 +132,11 @@ class OrderController extends Controller{
       // MONTO DE DELIVERY
       $ammountDeliveryShipping = (isset($get_ShippingAddress['ship_amountaddress']) && !empty($get_ShippingAddress['ship_amountaddress'])) ? $get_ShippingAddress['ship_amountaddress'] : 0;
 
+      date_default_timezone_set('America/Lima');
+      $newDateOrder = date("Y/m/d H:i:s", strtotime($order['created_at']));
+
       $get_SessionUserInfo = [
-        'date' => date('Y/m/d H:i:s'),
+        'date' => $newDateOrder,
         'client' => $reg_razonsocialFinal,
         'name' => $user['first_name'] . " " . $user['last_name'],
         'ruc' => (isset($user['reg_ruc']) && !empty($user['reg_ruc']))? $user['reg_ruc'] : 'No especificado',

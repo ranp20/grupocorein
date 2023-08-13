@@ -174,7 +174,7 @@ unset($__errorArgs, $__bag); ?>
               <div class="col-sm-12">
                 <div class="form-group">
                   <!-- <label for="reg-slOpts__voucher">Tipo de comprobante</label> -->
-                  <select class="form-control" name="reg_slOpts__voucher" id="reg-slOpts__voucher" required>
+                  <select class="form-control" name="reg_slOpts__voucher" id="reg-slOpts__voucher" data-href="<?php echo e(route('front.checkout.setdatavoucher')); ?>" required>
                     <option selected value="">Elige una opción</option>
                     <?php $__currentLoopData = $selOptsTable; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <option value="<?php echo e((isset($selOptVoucher['selOptSelectedId']) && $selOptVoucher['selOptSelectedId'] != '' && $v['id'] == $selOptVoucher['selOptSelectedId']) ? $selOptVoucher['selOptSelectedId'] : $v['id']); ?>" <?php echo e((isset($selOptVoucher['selOptSelected']) && $selOptVoucher['selOptSelected'] != '' && $v['id'] == $selOptVoucher['selOptSelectedId']) ? 'selected' : ''); ?>><?php echo e((isset($selOptVoucher['selOptSelected']) && $selOptVoucher['selOptSelected'] != '' && $v['name'] == $selOptVoucher['selOptSelected']) ? ucfirst($selOptVoucher['selOptSelected']) : ucfirst($v['name'])); ?></option>

@@ -62,7 +62,9 @@ function renderStarRating($rating,$maxRating=5) {
               <a href="<?php echo e(route('front.catalog').'?category='.$item->category->slug); ?>"><?php echo e($item->category->name); ?></a>
             </div>
             <h3 class="product-title">
-              <a href="<?php echo e(route('front.product',$item->slug)); ?>"><?php echo e(strlen(strip_tags($item->name)) > $name_string_count ? substr(strip_tags($item->name), 0, 38) : strip_tags($item->name)); ?></a>
+              <a href="<?php echo e(route('front.product',$item->slug)); ?>">
+                <span><?php echo e(strlen(strip_tags($item->name)) > $name_string_count ? substr(strip_tags($item->name), 0, 38) . '...' : strip_tags($item->name)); ?></span>
+              </a>
             </h3>
             <h4 class="product-price">
               <?php if($item->previous_price !=0): ?>
@@ -193,7 +195,9 @@ function renderStarRating($rating,$maxRating=5) {
                   <a href="<?php echo e(route('front.catalog').'?category='.$item->category->slug); ?>"><?php echo e($item->category->name); ?></a>
                 </div>
                 <h3 class="product-title">
-                  <a href="<?php echo e(route('front.product',$item->slug)); ?>"><?php echo e(strlen(strip_tags($item->name)) > $name_string_count ? substr(strip_tags($item->name), 0, 52) .'...': strip_tags($item->name)); ?></a>
+                  <a href="<?php echo e(route('front.product',$item->slug)); ?>">
+                    <span><?php echo e(strlen(strip_tags($item->name)) > $name_string_count ? substr(strip_tags($item->name), 0, 75) . '...' : strip_tags($item->name)); ?></span>
+                  </a>
                 </h3>
                 
                 <h4 class="product-price">
