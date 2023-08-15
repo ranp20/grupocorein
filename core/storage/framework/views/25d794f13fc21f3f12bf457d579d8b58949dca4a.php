@@ -38,7 +38,15 @@
         <div  class="hero-area3" >
             <div class="background"></div>
             <div class="heroarea-slider owl-carousel">
+                <?php
+                /*
+                echo "<pre>";
+                print_r($sliders);
+                echo "</pre>";
+                */
+                ?>
                 <?php $__currentLoopData = $sliders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $slider): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                
                 <div class="item" style="background: url('<?php echo e(asset('assets/images/' . $slider->photo)); ?>')">
                     <div class="container">
                     <div class="row">

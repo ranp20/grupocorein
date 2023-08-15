@@ -26,6 +26,22 @@ class ItemRepository{
       }
       $input['store_availables'] = json_encode($stores, true);
     }
+    $atributoraiz_collection = [];
+    // $code = "";
+    if($request->has('color_code')){
+      foreach($request->color_code as $key => $code){
+        // echo $code."<br>";
+        // if($code != null && $code != ""){
+          $atributoraiz_collection['atributoraiz_collection']['color'][$key]['code'] = $code;
+        // }
+      }
+    }
+    if($request->has('color_name')){
+      foreach($request->color_name as $key => $name){
+        $atributoraiz_collection['atributoraiz_collection']['color'][$key]['name'] = $name;
+      }
+    }
+    $input['atributoraiz_collection'] = json_encode($atributoraiz_collection, true);
     if ($file = $request->file('photo')) {
       $images_name = ImageHelper::ItemhandleUploadedImage($request->file('photo'),'assets/images');
       $input['photo'] = $images_name[0];
@@ -108,6 +124,7 @@ class ItemRepository{
     echo "</pre>";
     exit();
     */
+    
 
     /*-- NUEVO CONTENIDO (FIN) --*/
     $item_id = Item::create($input)->id;
@@ -133,6 +150,22 @@ class ItemRepository{
     }else{
       $input['store_availables'] = null;
     }
+    $atributoraiz_collection = [];
+    // $code = "";
+    if($request->has('color_code')){
+      foreach($request->color_code as $key => $code){
+        // echo $code."<br>";
+        // if($code != null && $code != ""){
+          $atributoraiz_collection['atributoraiz_collection']['color'][$key]['code'] = $code;
+        // }
+      }
+    }
+    if($request->has('color_name')){
+      foreach($request->color_name as $key => $name){
+        $atributoraiz_collection['atributoraiz_collection']['color'][$key]['name'] = $name;
+      }
+    }
+    $input['atributoraiz_collection'] = json_encode($atributoraiz_collection, true);
     if($request->file('photo')){
       $images_name = ImageHelper::ItemhandleUpdatedUploadedImage($request->photo,'/assets/images',$item,'/assets/images/','photo');
       $input['photo'] = $images_name[0];

@@ -15,6 +15,7 @@ class Item extends Model
         'brand_id',
         'unidad_raiz',
         'atributo_raiz',
+        'atributoraiz_collection',
         'name',
         'slug',
         'sku',

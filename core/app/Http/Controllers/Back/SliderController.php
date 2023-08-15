@@ -11,55 +11,28 @@ use App\{
 };
 
 use App\Helpers\ImageHelper;
+use App\Models\HomeCutomize;
 use Illuminate\Http\Request;
 
-class SliderController extends Controller
-{
-    /**
-     * Constructor Method.
-     *
-     * Setting Authentication
-     *
-     * @param  \App\Repositories\Back\SliderRepository $repository
-     *
-     */
-    public function __construct(SliderRepository $repository)
-    {
+class SliderController extends Controller{
+
+    public function __construct(SliderRepository $repository){
         $this->middleware('auth:admin');
         $this->middleware('adminlocalize');
         $this->repository = $repository;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
+    public function index(){
         return view('back.slider.index',[
             'datas' => Slider::orderBy('id','desc')->get()
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
+    public function create(){
         return view('back.slider.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         
         if(!empty($request->file('photo'))){
 
@@ -73,10 +46,14 @@ class SliderController extends Controller
             // ImageHelper::handleUploadedImage($request->$single_image,'assets/images',$check[$single_image]);
 
         }
+        /*
+        echo "<pre>";
+        print_r($request->all());
+        echo "</pre>";
         exit();
         
-        /*
-        if($request->hasFile()){
+        
+        if($request->hasFile('photo')){
             $data = HomeCutomize::first();
             $check = json_decode($data->banner_first,true);
             $input[$single_image] = ImageHelper::handleUploadedImage($request->$single_image,'assets/images',$check[$single_image]);
@@ -85,6 +62,7 @@ class SliderController extends Controller
             $input[$single_image] = $check[$single_image];
         }
         */
+        
        
         $request->validate([
             'logo' => 'image',
@@ -97,26 +75,11 @@ class SliderController extends Controller
         return redirect()->route('back.slider.index')->withSuccess(__('New Slider Added Successfully.'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Slider $slider)
-    {
+    public function edit(Slider $slider){
         return view('back.slider.edit',compact('slider'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(ImageUpdateRequest $request, Slider $slider)
-    {
+    public function update(ImageUpdateRequest $request, Slider $slider){
         $request->validate([
             'title' => 'required|max:100',
             'link' => 'required|max:255',
@@ -128,14 +91,7 @@ class SliderController extends Controller
         return redirect()->route('back.slider.index')->withSuccess(__('Slider Updated Successfully.'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Slider $slider)
-    {
+    public function destroy(Slider $slider){
         $this->repository->delete($slider);
         return redirect()->route('back.slider.index')->withSuccess(__('Slider Deleted Successfully.'));
     }

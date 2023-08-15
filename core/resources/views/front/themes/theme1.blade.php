@@ -39,7 +39,15 @@
         <div  class="hero-area3" >
             <div class="background"></div>
             <div class="heroarea-slider owl-carousel">
+                <?php
+                /*
+                echo "<pre>";
+                print_r($sliders);
+                echo "</pre>";
+                */
+                ?>
                 @foreach ($sliders as $slider)
+                
                 <div class="item" style="background: url('{{ asset('assets/images/' . $slider->photo) }}')">
                     <div class="container">
                     <div class="row">

@@ -39,6 +39,85 @@
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
               </select>
             </div>
+            <?php if($item->atributoraiz_collection != ""): ?>
+            <div id="cTentr-af172698__p-adm">
+              <div class="d-flex">
+                <div class="flex-grow-1">
+                  <div class="form-group">
+                    <span><strong>Lista de colores</strong></span>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex">
+                <div class="flex-grow-1">
+                  <div class="form-group">
+                    <input type="text" class="form-control" name="color_code[]" placeholder="Código de Producto" value="">
+                  </div>
+                </div>
+                <div class="flex-grow-1">
+                  <div class="form-group">
+                    <label class="color-picker">
+                      <span>
+                        <input type="color" class="form-control" name="color_name[]" placeholder="Código de Color" value="">
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <div class="flex-btn">
+                  <button type="button" class="btn btn-success add-color" data-text="" data-text1=""> <i class="fa fa-plus"></i> </button>
+                </div>
+              </div>
+              <?php
+                $arrColorAdd = [];
+                $ColorAll = [];
+                $ColorAll2 = [];
+                if(isset($item->atributoraiz_collection) && $item->atributoraiz_collection != ""){
+                  $colorsAvailables = json_decode($item->atributoraiz_collection, TRUE);
+                  $colorsAvailables_list = $colorsAvailables['atributoraiz_collection']['color'];
+                  
+                  foreach($colorsAvailables_list as $key => $val){
+                    $arrColorAdd[$key]['code'] = $val['code'];
+                    $arrColorAdd[$key]['name'] = $val['name'];
+                  }
+                }
+
+              ?>
+
+              
+              <?php $__currentLoopData = $arrColorAdd; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php if($v['code'] != null && $v['code'] != ""): ?>
+                
+                <div class="d-flex">
+                  <div class="flex-grow-1">
+                    <div class="form-group">
+                      <input type="text" class="form-control" name="color_code[]" placeholder="Código de Producto" value="<?php echo e($v['code']); ?>">
+                    </div>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="form-group">
+                      <label class="color-picker">
+                        <span>
+                          <input type="color" class="form-control" name="color_name[]" placeholder="Código de Color" value="<?php echo e($v['name']); ?>">
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="flex-btn">
+                    <button type="button" class="btn btn-danger remove-color">
+                      <i class="fa fa-minus"></i>
+                    </button>
+                  </div>
+                </div>
+                <?php endif; ?>
+                
+                
+              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+              
+
+            </div>
+            <?php else: ?>
+            <div id="cTentr-af172698__p-adm"></div>
+            <?php endif; ?>
           </div>
         </div>
         <div class="card">
@@ -113,7 +192,7 @@
             </div>
             <div class="form-group">
               <label for="details"><?php echo e(__('Description')); ?> *</label>
-              <textarea name="details" id="details" class="form-control text-editor" rows="6" placeholder="<?php echo e(__('Enter Description')); ?>" required><?php echo e($item->details); ?></textarea>
+              <textarea name="details" id="details" class="form-control text-editor" rows="6" placeholder="<?php echo e(__('Enter Description')); ?>"><?php echo e($item->details); ?></textarea>
             </div>
           </div>
         </div>

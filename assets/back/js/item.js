@@ -35,6 +35,91 @@ $(() => {
     });
   }
   // --------------- KEYUP INPUTS NAME = ITEM-NAME - TEXT
+  $(document).on("change","#atributoraiz",function(e){
+    e.preventDefault();
+    let optSelected = $("#atributoraiz option:selected").val();
+    if(optSelected == 1){
+      $("#cTentr-af172698__p-adm").html(`
+      <div class="d-flex">
+        <div class="flex-grow-1">
+          <div class="form-group">
+            <span><strong>Lista de colores</strong></span>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex">
+        <div class="flex-grow-1">
+          <div class="form-group">
+            <input type="text" class="form-control aia848d__clrcode" name="color_code[]" placeholder="Código de Producto" value="">
+          </div>
+        </div>
+        <div class="flex-grow-1">
+          <div class="form-group">
+            <label class="color-picker">
+              <span>
+                <input type="color" class="form-control aia848d__clrname" name="color_name[]" placeholder="Código de Color" value="">
+              </span>
+            </label>
+          </div>
+        </div>
+        <div class="flex-btn">
+          <button type="button" class="btn btn-success add-color" data-text="" data-text1=""> <i class="fa fa-plus"></i> </button>
+        </div>
+      </div>
+      `);
+    }else{
+      $("#cTentr-af172698__p-adm").html(``);
+    }
+  });
+  // --------------- KEYUP INPUTS COLOR - TEXT
+  $(document).on("keyup","input[name='color_code[]']",function(e){
+    let val = e.target.value;
+    let btnAddSpecification = $(this).parent().parent().parent().find(".add-color");
+    btnAddSpecification.attr('data-text', val);
+  });
+  // --------------- KEYUP INPUTS COLOR - DESCRIPTION
+  $(document).on("input change","input[name='color_name[]']",function(e){
+    let val = e.target.value;
+    let btnAddSpecification = $(this).parent().parent().parent().parent().parent().find(".add-color");
+    btnAddSpecification.attr('data-text1', val);
+  });
+  // --------------- ADD COLOR
+  $(document).on("click",".add-color",function(){
+    var text = $(this).parent().parent().parent().find("input[name='color_code[]").val();
+    var text1 = $(this).parent().parent().parent().find("input[name='color_name[]").val();
+    $('#cTentr-af172698__p-adm').append(`
+    <div class="d-flex">
+      <div class="flex-grow-1">
+        <div class="form-group">
+          <input type="text" class="form-control" name="color_code[]" placeholder="${text}" value="${text}">
+        </div>
+      </div>
+      <div class="flex-grow-1">
+        <div class="form-group">
+          <label class="color-picker">
+            <span>
+              <input type="color" class="form-control" name="color_name[]" placeholder="${text1}" value="${text1}">
+            </span>
+          </label>
+        </div>
+      </div>
+      <div class="flex-btn">
+        <button type="button" class="btn btn-danger remove-color">
+          <i class="fa fa-minus"></i>
+        </button>
+      </div>
+    </div>
+    `);
+    $(this).data('text', '');
+    $(this).data('text1', '');
+    $(".aia848d__clrcode").val('');
+    $(".aia848d__clrname").val('');
+  });  
+  // --------------- REMOVE COLOR
+  $(document).on('click','.remove-color',function(){
+    $(this).parent().parent().remove();
+  });
+  // --------------- KEYUP INPUTS NAME = ITEM-NAME - TEXT
   $(document).on("keyup keypress input","input.item-name",function(e){
     var val = e.target.value;
     if(val != ""){
@@ -87,28 +172,33 @@ $(() => {
     $("#c-prevammt__igvGs23s").text('S/. '+val_formatNumberWithIGV);
   });
   function addIGVintoTag(elementOrTag){
-    let val_formatNumberWithoutCome = elementOrTag.replace(/,/g,"");
-    let incIGV = taxesObj[0];
-    let incIGVFormat = incIGV / 100;
-    let incIGVFormatOpe = parseFloat(val_formatNumberWithoutCome);
-    let incIGVFormatOpeMoreIGV = incIGVFormatOpe * incIGVFormat;
-    let incIGVFormatOpeMoreIGVCalc = incIGVFormatOpe + incIGVFormatOpeMoreIGV;
-    let val_formatNumberWithIGV = incIGVFormatOpeMoreIGVCalc.toString().replace(/[^\d.]/g, "").replace(/^(\d*\.)(.*)\.(.*)$/, '$1$2$3').replace(/\.(\d{2})\d+/, '.$1').replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    var val_formatNumberWithIGV = "";
+    if(elementOrTag != ""){
+      let val_formatNumberWithoutCome = elementOrTag.replace(/,/g,"");
+      let incIGV = taxesObj[0];
+      let incIGVFormat = incIGV / 100;
+      let incIGVFormatOpe = parseFloat(val_formatNumberWithoutCome);
+      let incIGVFormatOpeMoreIGV = incIGVFormatOpe * incIGVFormat;
+      let incIGVFormatOpeMoreIGVCalc = incIGVFormatOpe + incIGVFormatOpeMoreIGV;
+      val_formatNumberWithIGV = incIGVFormatOpeMoreIGVCalc.toString().replace(/[^\d.]/g, "").replace(/^(\d*\.)(.*)\.(.*)$/, '$1$2$3').replace(/\.(\d{2})\d+/, '.$1').replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
     return val_formatNumberWithIGV;
   }
   $(document).on("change","#tax_id",function(){
     let tId = $(this).val();
     // console.log(tId);
-    if(tId != "" && tId != 0 && tId == 1){
-      $(".c_cPreviewAmmountIGV").html(`
-      <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
-        <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
-        <span>Monto Final: </span>
-        <span id="c-prevammt__igvGs23s">S/. ${addIGVintoTag($("input[data-archorigv='product']").val())}</span>
-      </div>
-      `);
-    }else{
-      $(".c_cPreviewAmmountIGV").html("");
+    if($(".c_cPreviewAmmountIGV").length > 0){
+      if(tId != "" && tId != 0 && tId == 1){
+        $(".c_cPreviewAmmountIGV").html(`
+        <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+          <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
+          <span>Monto Final: </span>
+          <span id="c-prevammt__igvGs23s">S/. ${addIGVintoTag($("input[data-archorigv='product']").val())}</span>
+        </div>
+        `);
+      }else{
+        $(".c_cPreviewAmmountIGV").html("");
+      }
     }
   });
   $(document).on("click","input[name=sections_id]",function(){

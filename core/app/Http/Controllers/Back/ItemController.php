@@ -277,18 +277,18 @@ class ItemController extends Controller
         // exit();
         // $namProduct = addslashes($request->productname);
         $namProduct = e($request->productname);
-        // $names = Item::where('name', 'like', '%'.$request->productname.'%')->select('name')->get()->toArray();
+        // $namProduct = $request->productname;
+        $data = "";
         $names = Item::where('name', 'like', '%'.$request->productname.'%')->select('name')->get()->toArray();
-
-        foreach($names as $name){
-            if($name['name'] == $namProduct){
+        foreach($names as $n){
+            if($n['name'] == $namProduct){
                 $data = "equals";
             }else{
                 $data = "not-equals";
             }
         }
 
-        // $data = $names;
-        return response()->json(['data'=>$data]);
+        return response()->json(['data' => $data]);
+
     }
 }

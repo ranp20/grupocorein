@@ -227,8 +227,6 @@ class FrontendController extends Controller{
       $sliders = Slider::where('home_page','theme4')->get();
     }
 
-    // {"title1":"Watchtt","subtitle1":"50% OFF","url1":"#","title2":"Man","subtitle2":"40% OFF","url2":"#","img1":"1637766462banner-h2-4-1.jpeg","img2":"1637766420banner-h2-4-1.jpeg"}
-
     return view('front.index',[
       'hero_banner'   => $home_customize->hero_banner != '[]' ? json_decode($home_customize->hero_banner,true) : null,
       'banner_first'   => json_decode($home_customize->banner_first,true),

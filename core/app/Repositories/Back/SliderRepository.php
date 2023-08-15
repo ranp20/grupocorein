@@ -7,33 +7,16 @@ use App\{
     Helpers\ImageHelper
 };
 
-class SliderRepository
-{
+class SliderRepository{
 
-    /**
-     * Store slider.
-     *
-     * @param  \App\Http\Requests\ImageStoreRequest  $request
-     * @return void
-     */
-
-    public function store($request)
-    {
+    public function store($request){
         $input = $request->all();
         $input['photo'] = ImageHelper::handleUploadedImage($request->file('photo'),'assets/images');
         $input['logo'] = ImageHelper::handleUploadedImage($request->file('logo'),'assets/images');
         Slider::create($input);
     }
 
-    /**
-     * Update slider.
-     *
-     * @param  \App\Http\Requests\ImageUpdateRequest  $request
-     * @return void
-     */
-
-    public function update($slider, $request)
-    {
+    public function update($slider, $request){
         $input = $request->all();
         if ($file = $request->file('photo')) {
             $input['photo'] = ImageHelper::handleUpdatedUploadedImage($file,'/assets/images/',$slider,'/assets/images/','photo');
@@ -44,15 +27,7 @@ class SliderRepository
         $slider->update($input);
     }
 
-    /**
-     * Delete slider.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-
-    public function delete($slider)
-    {
+    public function delete($slider){
         ImageHelper::handleDeletedImage($slider,'photo','assets/images/');
         ImageHelper::handleDeletedImage($slider,'logo','assets/images/');
         $slider->delete();

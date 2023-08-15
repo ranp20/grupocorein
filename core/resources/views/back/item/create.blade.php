@@ -42,6 +42,7 @@
                 @endforeach
               </select>
             </div>
+            <div id="cTentr-af172698__p-adm"></div>
           </div>
         </div>
         <div class="card">
@@ -104,7 +105,7 @@
             </div>
             <div class="form-group">
               <label for="details">{{ __('Description') }} *</label>
-              <textarea name="details" id="details" class="form-control text-editor" rows="6" placeholder="{{ __('Enter Description') }}" required>{{ old('details') }}</textarea>
+              <textarea name="details" id="details" class="form-control text-editor" rows="6" placeholder="{{ __('Enter Description') }}">{{ old('details') }}</textarea>
             </div>
           </div>
         </div>
