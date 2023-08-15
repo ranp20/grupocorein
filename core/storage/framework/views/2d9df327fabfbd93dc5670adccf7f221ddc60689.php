@@ -171,6 +171,41 @@
             <?php endif; ?>
           </span>
           <p class="text-muted"><?php echo e($item->sort_details); ?> <a href="#details" class="txtd-underline scroll-to"><?php echo e(__('Read more')); ?></a></p>
+          <?php if($item->atributoraiz_collection != ""): ?>
+          <div>
+            <p><strong>Número</strong></p>
+            <div>
+              <ul class="variable-items-wrapper color-variable-wrapper" data-attribute_name="attribute_pa_numero">
+                <?php
+                $arrColorAdd = [];
+                $ColorAll = [];
+                $ColorAll2 = [];
+                if(isset($item->atributoraiz_collection) && $item->atributoraiz_collection != ""){
+                  $colorsAvailables = json_decode($item->atributoraiz_collection, TRUE);
+                  $colorsAvailables_list = $colorsAvailables['atributoraiz_collection']['color'];
+                  
+                  foreach($colorsAvailables_list as $key => $val){
+                    $arrColorAdd[$key]['code'] = $val['code'];
+                    $arrColorAdd[$key]['name'] = $val['name'];
+                  }
+                }
+                $countColors = 0;
+                ?>
+                <?php $__currentLoopData = $arrColorAdd; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                  <?php if($v['code'] != null && $v['code'] != ""): ?>
+                  <li data-toggle="tooltip" data-placement="bottom" title="<?php echo e($countColors); ?>" data-original-title="<?php echo e($countColors); ?>" class="variable-item red-tooltip" data-value="<?php echo e($countColors); ?>" role="button" tabindex="<?php echo e($countColors); ?>">
+                    <span class="variable-item-span variable-item-span-color" style="background-color:<?php echo e($v['name']); ?>;"></span>
+                  </li>
+                  <?php endif; ?>
+                  <?php
+                  $countColors++;
+                  ?>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                
+              </ul>
+            </div>
+          </div>
+          <?php endif; ?>
           <div class="row margin-top-1x">
             <?php $__currentLoopData = $attributes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attribute): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <?php if($attribute->options->count() != 0): ?>

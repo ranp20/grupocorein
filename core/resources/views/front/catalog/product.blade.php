@@ -171,6 +171,41 @@
             @endif
           </span>
           <p class="text-muted">{{$item->sort_details}} <a href="#details" class="txtd-underline scroll-to">{{__('Read more')}}</a></p>
+          @if($item->atributoraiz_collection != "")
+          <div>
+            <p><strong>Número</strong></p>
+            <div>
+              <ul class="variable-items-wrapper color-variable-wrapper" data-attribute_name="attribute_pa_numero">
+                <?php
+                $arrColorAdd = [];
+                $ColorAll = [];
+                $ColorAll2 = [];
+                if(isset($item->atributoraiz_collection) && $item->atributoraiz_collection != ""){
+                  $colorsAvailables = json_decode($item->atributoraiz_collection, TRUE);
+                  $colorsAvailables_list = $colorsAvailables['atributoraiz_collection']['color'];
+                  
+                  foreach($colorsAvailables_list as $key => $val){
+                    $arrColorAdd[$key]['code'] = $val['code'];
+                    $arrColorAdd[$key]['name'] = $val['name'];
+                  }
+                }
+                $countColors = 0;
+                ?>
+                @foreach($arrColorAdd as $k => $v)
+                  @if($v['code'] != null && $v['code'] != "")
+                  <li data-toggle="tooltip" data-placement="bottom" title="{{ $countColors }}" data-original-title="{{ $countColors }}" class="variable-item red-tooltip" data-value="{{ $countColors }}" role="button" tabindex="{{ $countColors }}">
+                    <span class="variable-item-span variable-item-span-color" style="background-color:{{ $v['name'] }};"></span>
+                  </li>
+                  @endif
+                  <?php
+                  $countColors++;
+                  ?>
+                @endforeach
+                
+              </ul>
+            </div>
+          </div>
+          @endif
           <div class="row margin-top-1x">
             @foreach($attributes as $attribute)
             @if($attribute->options->count() != 0)
