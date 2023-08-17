@@ -135,4 +135,41 @@ $(() => {
     $(this).addClass("tggle-select").siblings().removeClass("tggle-select");
     $("#aHJ8K4__98Gas").html(codeprod);
   });
+  // ---------- ZOOM Y CAROUSEL PARA IMÁGENES CON BACKDROP
+  
+  Fancybox.bind('[data-fancybox="gallery"]', {
+    Toolbar: {
+      display: {
+        left: ["infobar"],
+        middle: [
+          "zoomIn",
+          "zoomOut",
+          "toggle1to1",
+          // "toggleZoom",
+          // "zoomToMax",
+          // "iterateZoom",
+          "panLeft",
+          "panRight",
+          "panUp",
+          "panDown",
+          "rotateCCW",
+          "rotateCW",
+          "flipX",
+          "flipY",
+          "fitX",
+          "fitY",
+          "reset",
+          "toggleFS"
+        ],
+        right: ["slideshow", "fullscreen", "thumbs", "close"],
+      },
+    },
+  });
+
+  $(".cntAds--i__itm--cInfo figure").on( "mouseenter", function(){
+    $(this).parent().parent().addClass("hoverInFigure");
+  }).on( "mouseleave", function(){
+    $(this).parent().parent().removeClass("hoverInFigure");
+  });
+  
 });

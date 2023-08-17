@@ -11609,4 +11609,21 @@ body{
 .bs-tooltip-bottom .arrow::before {
     border-bottom-color: red !important;
     background-color: red !important;
-  }
+}
+.cntAds--i__itm--cInfo{
+    user-select: auto !important;
+    figure{
+        user-select: auto !important;
+        a{
+            user-select: auto !important;
+        }
+    }
+    .zoomImg{
+        position: relative;
+        opacity: 0;
+        width: 0;
+        height: 0;
+        visibility: hidden;
+        display: none;
+    }
+}

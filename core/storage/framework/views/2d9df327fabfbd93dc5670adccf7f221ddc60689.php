@@ -13,6 +13,11 @@
   <script type="text/javascript" src="<?php echo e(asset('node_modules/owl-carousel/owl-carousel/owl.carousel.min.js')); ?>"></script>
   <script type="text/javascript" src="<?php echo e(asset('assets/front/js/extraindex.js')); ?>"></script>
 
+  
+  <script src="<?php echo e(asset('node_modules/@fancyapps/ui/dist/fancybox/fancybox.umd.js')); ?>"></script>
+  <link rel="stylesheet" href="<?php echo e(asset('node_modules/@fancyapps/ui/dist/fancybox/fancybox.css')); ?>"/>
+ 
+
 <div class="page-title">
   <div class="container">
     <div class="row">
@@ -61,10 +66,34 @@
         <div class="product-badge bg-goldenrod  ppp-t"> -<?php echo e(PriceHelper::DiscountPercentage($item)); ?></div>
         <?php endif; ?>
         <div class="product-thumbnails insize">
-          <div class="product-details-slider owl-carousel" >
-            <div class="item"><img src="<?php echo e(asset('assets/images/'.$item->photo)); ?>" alt="zoom"  /></div>
+          <div class="product-details-slider owl-carousel">
+            <?php
+              $imgUrlPhoto = asset('assets/images/'.$item->photo);
+              $imgPhoto = getimagesize($imgUrlPhoto);
+              $anchoPhoto = $imgPhoto[0];
+              $altoPhoto = $imgPhoto[1];
+            ?>
+            <div class="item cntAds--i__itm--cInfo">
+              <figure class="ads_dashboard" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+                <a href="<?php echo e(asset('assets/images/'.$item->photo)); ?>" data-size="<?php echo e($anchoPhoto); ?>x<?php echo e($altoPhoto); ?>" data-index="0" data-fancybox="gallery">
+                  <img src="<?php echo e(asset('assets/images/'.$item->photo)); ?>" alt="zoom"/>
+                </a>
+              </figure>
+            </div>
             <?php $__currentLoopData = $galleries; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $gallery): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-            <div class="item"><img src="<?php echo e(asset('assets/images/'.$gallery->photo)); ?>" alt="zoom"  /></div>
+            <?php
+              $imgUrlGallery = asset('assets/images/'.$gallery->photo);
+              $imgGallery = getimagesize($imgUrlGallery);
+              $anchoGallery = $imgGallery[0];
+              $altoGallery = $imgGallery[1];
+            ?>
+            <div class="item cntAds--i__itm--cInfo">
+              <figure class="ads_dashboard" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+                <a href="<?php echo e(asset('assets/images/'.$gallery->photo)); ?>" data-size="<?php echo e($anchoGallery); ?>x<?php echo e($altoGallery); ?>" data-index="0" data-fancybox="gallery">
+                  <img src="<?php echo e(asset('assets/images/'.$gallery->photo)); ?>" alt="zoom"/>
+                </a>
+              </figure>
+            </div>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
           </div>
         </div>
@@ -531,7 +560,7 @@
                 <span class="wishlist2 d-none"><?php echo e(__('Added To Wishlist')); ?></span>
                 <?php endif; ?>
                 </a>
-                <button class="btn btn-primary btn-sm  product_compare" data-target="<?php echo e(route('fornt.compare.product',$item->id)); ?>" ><span><i class="icon-repeat"></i><?php echo e(__('Compare')); ?></span></button>
+                <button class="btn btn-primary btn-sm  product_compare" data-target="<?php echo e(route('fornt.compare.product',$item->id)); ?>"><span><i class="icon-repeat"></i><?php echo e(__('Compare')); ?></span></button>
               </div>
               <div class="d-flex align-items-center">
                 <span class="text-muted mr-1">Compartir: </span>
@@ -613,7 +642,7 @@
   </div>
   <div class="row">
     <div class="col-lg-12">
-      <div class="relatedproductslider owl-carousel" >
+      <div class="relatedproductslider owl-carousel">
         <?php $__currentLoopData = $related_items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $related): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
           <div class="slider-item" style="margin-right: 15px;">
             <div class="product-card">

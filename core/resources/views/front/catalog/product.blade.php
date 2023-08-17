@@ -13,6 +13,11 @@
   <script type="text/javascript" src="{{ asset('node_modules/owl-carousel/owl-carousel/owl.carousel.min.js')}}"></script>
   <script type="text/javascript" src="{{ asset('assets/front/js/extraindex.js') }}"></script>
 
+  
+  <script src="{{ asset('node_modules/@fancyapps/ui/dist/fancybox/fancybox.umd.js') }}"></script>
+  <link rel="stylesheet" href="{{ asset('node_modules/@fancyapps/ui/dist/fancybox/fancybox.css') }}"/>
+ 
+
 <div class="page-title">
   <div class="container">
     <div class="row">
@@ -61,10 +66,34 @@
         <div class="product-badge bg-goldenrod  ppp-t"> -{{PriceHelper::DiscountPercentage($item)}}</div>
         @endif
         <div class="product-thumbnails insize">
-          <div class="product-details-slider owl-carousel" >
-            <div class="item"><img src="{{asset('assets/images/'.$item->photo)}}" alt="zoom"  /></div>
+          <div class="product-details-slider owl-carousel">
+            <?php
+              $imgUrlPhoto = asset('assets/images/'.$item->photo);
+              $imgPhoto = getimagesize($imgUrlPhoto);
+              $anchoPhoto = $imgPhoto[0];
+              $altoPhoto = $imgPhoto[1];
+            ?>
+            <div class="item cntAds--i__itm--cInfo">
+              <figure class="ads_dashboard" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+                <a href="{{ asset('assets/images/'.$item->photo) }}" data-size="{{ $anchoPhoto }}x{{ $altoPhoto }}" data-index="0" data-fancybox="gallery">
+                  <img src="{{asset('assets/images/'.$item->photo)}}" alt="zoom"/>
+                </a>
+              </figure>
+            </div>
             @foreach ($galleries as $key => $gallery)
-            <div class="item"><img src="{{asset('assets/images/'.$gallery->photo)}}" alt="zoom"  /></div>
+            <?php
+              $imgUrlGallery = asset('assets/images/'.$gallery->photo);
+              $imgGallery = getimagesize($imgUrlGallery);
+              $anchoGallery = $imgGallery[0];
+              $altoGallery = $imgGallery[1];
+            ?>
+            <div class="item cntAds--i__itm--cInfo">
+              <figure class="ads_dashboard" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+                <a href="{{ asset('assets/images/'.$gallery->photo) }}" data-size="{{ $anchoGallery }}x{{ $altoGallery }}" data-index="0" data-fancybox="gallery">
+                  <img src="{{ asset('assets/images/'.$gallery->photo) }}" alt="zoom"/>
+                </a>
+              </figure>
+            </div>
             @endforeach
           </div>
         </div>
@@ -531,7 +560,7 @@
                 <span class="wishlist2 d-none">{{__('Added To Wishlist')}}</span>
                 @endif
                 </a>
-                <button class="btn btn-primary btn-sm  product_compare" data-target="{{route('fornt.compare.product',$item->id)}}" ><span><i class="icon-repeat"></i>{{__('Compare')}}</span></button>
+                <button class="btn btn-primary btn-sm  product_compare" data-target="{{route('fornt.compare.product',$item->id)}}"><span><i class="icon-repeat"></i>{{__('Compare')}}</span></button>
               </div>
               <div class="d-flex align-items-center">
                 <span class="text-muted mr-1">Compartir: </span>
@@ -612,7 +641,7 @@
   </div>
   <div class="row">
     <div class="col-lg-12">
-      <div class="relatedproductslider owl-carousel" >
+      <div class="relatedproductslider owl-carousel">
         @foreach ($related_items as $related)
           <div class="slider-item" style="margin-right: 15px;">
             <div class="product-card">
