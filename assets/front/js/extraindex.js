@@ -15,9 +15,9 @@ $(function ($) {
 			});
 		}
 
-		$(document).ready(function(){
-			lazy();
-		})
+		// $(document).ready(function(){
+		// 	lazy();
+		// });
 
 	// Flash Deal Area Start
     var $hero_slider_main = $(".hero-slider-main");

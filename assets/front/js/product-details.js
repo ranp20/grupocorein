@@ -127,4 +127,8 @@ $(() => {
       }
     });
   }
+  $(document).on("click",".variable-item",function(){
+    let codeprod = $(this).attr("data-codeprod");
+    $("#aHJ8K4__98Gas").html(codeprod);
+  });
 });

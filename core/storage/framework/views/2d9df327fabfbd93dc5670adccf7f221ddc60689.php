@@ -96,6 +96,12 @@
           <input type="hidden" value="<?php echo e(PriceHelper::setCurrencySign()); ?>" id="set_currency">
           <input type="hidden" value="<?php echo e(PriceHelper::setCurrencyValue()); ?>" id="set_currency_val">
           <input type="hidden" value="<?php echo e($setting->currency_direction); ?>" id="currency_direction">
+          <?php if($item->atributoraiz_collection != ""): ?>
+          <p class="mb-1">
+            <span><strong>Código: </strong></span>
+            <span id="aHJ8K4__98Gas"><?php echo e($item->sku); ?></span>
+          </p>
+          <?php endif; ?>
           <h4 class="mb-2 p-title-main"><?php echo e($item->name); ?></h4>
           <div class="mb-3">
             <?php if($item->is_stock()): ?>
@@ -193,7 +199,7 @@
                 ?>
                 <?php $__currentLoopData = $arrColorAdd; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                   <?php if($v['code'] != null && $v['code'] != ""): ?>
-                  <li data-toggle="tooltip" data-placement="bottom" title="<?php echo e($countColors); ?>" data-original-title="<?php echo e($countColors); ?>" class="variable-item red-tooltip" data-value="<?php echo e($countColors); ?>" role="button" tabindex="<?php echo e($countColors); ?>">
+                  <li data-toggle="tooltip" data-placement="bottom" title="<?php echo e($countColors); ?>" data-original-title="<?php echo e($countColors); ?>" data-codeprod="<?php echo e($v['code']); ?>" class="variable-item red-tooltip" data-value="<?php echo e($countColors); ?>" role="button" tabindex="<?php echo e($countColors); ?>">
                     <span class="variable-item-span variable-item-span-color" style="background-color:<?php echo e($v['name']); ?>;"></span>
                   </li>
                   <?php endif; ?>

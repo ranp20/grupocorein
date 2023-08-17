@@ -96,6 +96,12 @@
           <input type="hidden" value="{{PriceHelper::setCurrencySign()}}" id="set_currency">
           <input type="hidden" value="{{PriceHelper::setCurrencyValue()}}" id="set_currency_val">
           <input type="hidden" value="{{$setting->currency_direction}}" id="currency_direction">
+          @if($item->atributoraiz_collection != "")
+          <p class="mb-1">
+            <span><strong>Código: </strong></span>
+            <span id="aHJ8K4__98Gas">{{$item->sku}}</span>
+          </p>
+          @endif
           <h4 class="mb-2 p-title-main">{{$item->name}}</h4>
           <div class="mb-3">
             @if ($item->is_stock())
@@ -193,7 +199,7 @@
                 ?>
                 @foreach($arrColorAdd as $k => $v)
                   @if($v['code'] != null && $v['code'] != "")
-                  <li data-toggle="tooltip" data-placement="bottom" title="{{ $countColors }}" data-original-title="{{ $countColors }}" class="variable-item red-tooltip" data-value="{{ $countColors }}" role="button" tabindex="{{ $countColors }}">
+                  <li data-toggle="tooltip" data-placement="bottom" title="{{ $countColors }}" data-original-title="{{ $countColors }}" data-codeprod="{{ $v['code'] }}" class="variable-item red-tooltip" data-value="{{ $countColors }}" role="button" tabindex="{{ $countColors }}">
                     <span class="variable-item-span variable-item-span-color" style="background-color:{{ $v['name'] }};"></span>
                   </li>
                   @endif
