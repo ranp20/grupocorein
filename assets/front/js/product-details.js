@@ -129,6 +129,7 @@ $(() => {
   }
   $(document).on("click",".variable-item",function(){
     let codeprod = $(this).attr("data-codeprod");
+    $(this).addClass("tggle-select").siblings().removeClass("tggle-select");
     $("#aHJ8K4__98Gas").html(codeprod);
   });
 });
