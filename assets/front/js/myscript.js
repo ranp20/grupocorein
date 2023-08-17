@@ -635,8 +635,16 @@ $(function($){
       } else{
         $('#main_price').html(setCurrency + mainPrice);
       }
+
+      let colorCode = ($("#set_colr-code") && $("#set_colr-code").length > 0) ? $("#set_colr-code").val() : "0";
+      let colorName = ($("#set_colr-name") && $("#set_colr-name").length > 0) ? encodeURIComponent($("#set_colr-name").val()) : "0";
+      let colorAttrCollection = {
+        "color_code" : (colorCode != "") ? colorCode : "0",
+        "color_name" : (colorName != "") ? colorName : "0"
+      };
+
       if(status == 1){
-        let addToCartUrl = `${mainurl}/product/add/cart?item_id=${itemId}&options_ids=${options_ids}&attribute_ids=${attribute_ids}&quantity=${quantity}&type=${type}&item_key=${item_key}&add_type=${add_type}`;
+        let addToCartUrl = `${mainurl}/product/add/cart?item_id=${itemId}&options_ids=${options_ids}&attribute_ids=${attribute_ids}&quantity=${quantity}&type=${type}&item_key=${item_key}&add_type=${add_type}&attr_color_code=${colorAttrCollection['color_code']}&attr_color_name=${colorAttrCollection['color_name']}`;
         $.ajax({
           type: "GET",
           url: addToCartUrl,

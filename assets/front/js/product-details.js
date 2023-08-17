@@ -129,6 +129,9 @@ $(() => {
   }
   $(document).on("click",".variable-item",function(){
     let codeprod = $(this).attr("data-codeprod");
+    let nameprod = $(this).attr("data-nameprod");
+    $("#set_colr-code").val(codeprod);
+    $("#set_colr-name").val(nameprod);
     $(this).addClass("tggle-select").siblings().removeClass("tggle-select");
     $("#aHJ8K4__98Gas").html(codeprod);
   });

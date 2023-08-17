@@ -96,12 +96,65 @@
           <input type="hidden" value="<?php echo e(PriceHelper::setCurrencySign()); ?>" id="set_currency">
           <input type="hidden" value="<?php echo e(PriceHelper::setCurrencyValue()); ?>" id="set_currency_val">
           <input type="hidden" value="<?php echo e($setting->currency_direction); ?>" id="currency_direction">
+
+          <input type="hidden" class="d-non hdd-control non-visvalipt h-alternative-shwnon s-fkeynone-step" f-hidden="aria-hidden" value="" name="set_colr-code" id="set_colr-code">
+          <input type="hidden" class="d-non hdd-control non-visvalipt h-alternative-shwnon s-fkeynone-step" f-hidden="aria-hidden" value="" name="set_colr-name" id="set_colr-name">
+          <?php
+          // -------------- RECORRER LOS COLORES ASOCIADOS AL PRODUCTO
+          $arrColorAdd = [];
+          $ColorAll = [];
+          $ColorAll2 = [];
+          if(isset($item->atributoraiz_collection) && $item->atributoraiz_collection != ""){
+            $colorsAvailables = json_decode($item->atributoraiz_collection, TRUE);
+            $colorsAvailables_list = $colorsAvailables['atributoraiz_collection']['color'];
+            
+            foreach($colorsAvailables_list as $key => $val){
+              $arrColorAdd[$key]['code'] = $val['code'];
+              $arrColorAdd[$key]['name'] = $val['name'];
+            }
+          }
+          $countColors = 0;
+          $arrDataProd = [];
+          if(Session::has('cart') && count(Session::get('cart')) > 0){
+            $cart = Session::get('cart');
+            foreach($cart as $k => $v){
+              $idItem = str_replace('-','',$k);
+              if($item->id == $idItem){
+                $arrDataProd = $v;
+              }
+            }
+          }
+          $arrColorSelProd = [];
+          if(count($arrDataProd) > 0){
+            if($arrDataProd['attribute_collection']){
+              $arrCountDataProd = json_decode($arrDataProd['attribute_collection'], TRUE);
+              if($arrCountDataProd['attr_color_code'] != "0"){
+                $arrColorSelProd['color_code'] = $arrCountDataProd['attr_color_code'];
+                $arrColorSelProd['color_name'] = $arrCountDataProd['attr_color_name'];
+              }
+            }
+          }
+          ?>
           <?php if($item->atributoraiz_collection != ""): ?>
-          <p class="mb-1">
-            <span><strong>Código: </strong></span>
-            <span id="aHJ8K4__98Gas"><?php echo e($item->sku); ?></span>
-          </p>
+            <?php if(count($arrColorSelProd) > 0): ?>
+              <?php $__currentLoopData = $arrColorAdd; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php if($v['code'] != null && $v['code'] != ""): ?>
+                  <?php if($arrColorSelProd['color_name'] == $v['name']): ?>
+                  <p class="mb-1">
+                    <span><strong>Código: </strong></span>
+                    <span id="aHJ8K4__98Gas"><?php echo e($arrColorSelProd['color_code']); ?></span>
+                  </p>
+                  <?php endif; ?>
+                <?php endif; ?>
+              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            <?php else: ?>
+            <p class="mb-1">
+              <span><strong>Código: </strong></span>
+              <span id="aHJ8K4__98Gas"><?php echo e($item->sku); ?></span>
+            </p>
+            <?php endif; ?>
           <?php endif; ?>
+          
           <h4 class="mb-2 p-title-main"><?php echo e($item->name); ?></h4>
           <div class="mb-3">
             <?php if($item->is_stock()): ?>
@@ -181,25 +234,10 @@
           <div>
             <p><strong>Número</strong></p>
             <div>
-              <ul class="variable-items-wrapper color-variable-wrapper" data-attribute_name="attribute_pa_numero">
-                <?php
-                $arrColorAdd = [];
-                $ColorAll = [];
-                $ColorAll2 = [];
-                if(isset($item->atributoraiz_collection) && $item->atributoraiz_collection != ""){
-                  $colorsAvailables = json_decode($item->atributoraiz_collection, TRUE);
-                  $colorsAvailables_list = $colorsAvailables['atributoraiz_collection']['color'];
-                  
-                  foreach($colorsAvailables_list as $key => $val){
-                    $arrColorAdd[$key]['code'] = $val['code'];
-                    $arrColorAdd[$key]['name'] = $val['name'];
-                  }
-                }
-                $countColors = 0;
-                ?>
+              <ul class="variable-items-wrapper color-variable-wrapper" data-attribute_name="attribute_pa_numero">                
                 <?php $__currentLoopData = $arrColorAdd; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                   <?php if($v['code'] != null && $v['code'] != ""): ?>
-                  <li data-toggle="tooltip" data-placement="bottom" title="<?php echo e($countColors); ?>" data-original-title="<?php echo e($countColors); ?>" data-codeprod="<?php echo e($v['code']); ?>" class="variable-item red-tooltip" data-value="<?php echo e($countColors); ?>" role="button" tabindex="<?php echo e($countColors); ?>">
+                  <li data-toggle="tooltip" data-placement="bottom" title="<?php echo e($countColors); ?>" data-original-title="<?php echo e($countColors); ?>" data-codeprod="<?php echo e($v['code']); ?>" data-nameprod="<?php echo e($v['name']); ?>" class="variable-item red-tooltip <?php echo e((count($arrColorSelProd) > 0 && $arrColorSelProd['color_name'] == $v['name']) ? 'tggle-select' : ''); ?>" data-value="<?php echo e($countColors); ?>" role="button" tabindex="<?php echo e($countColors); ?>">
                     <span class="variable-item-span variable-item-span-color" style="background-color:<?php echo e($v['name']); ?>;"></span>
                   </li>
                   <?php endif; ?>
@@ -459,7 +497,7 @@
               <div class="pt-1 mb-1"><span class="text-medium">CÓDIGO SAP:</span> <?php echo e($item->sap_code); ?></div>
               <?php endif; ?>
               <?php if($item->item_type == 'normal'): ?>
-              <div class="pt-1 mb-1"><span class="text-medium"><?php echo e(__('SKU')); ?>:</span><?php echo e($item->sku); ?></div>
+              <div class="pt-1 mb-1"><span class="text-medium"><?php echo e(__('SKU')); ?>:</span> <?php echo e($item->sku); ?></div>
               <?php endif; ?>
               <?php if($item->unidad_raiz): ?>
               <?php

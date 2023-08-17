@@ -96,12 +96,65 @@
           <input type="hidden" value="{{PriceHelper::setCurrencySign()}}" id="set_currency">
           <input type="hidden" value="{{PriceHelper::setCurrencyValue()}}" id="set_currency_val">
           <input type="hidden" value="{{$setting->currency_direction}}" id="currency_direction">
+
+          <input type="hidden" class="d-non hdd-control non-visvalipt h-alternative-shwnon s-fkeynone-step" f-hidden="aria-hidden" value="" name="set_colr-code" id="set_colr-code">
+          <input type="hidden" class="d-non hdd-control non-visvalipt h-alternative-shwnon s-fkeynone-step" f-hidden="aria-hidden" value="" name="set_colr-name" id="set_colr-name">
+          <?php
+          // -------------- RECORRER LOS COLORES ASOCIADOS AL PRODUCTO
+          $arrColorAdd = [];
+          $ColorAll = [];
+          $ColorAll2 = [];
+          if(isset($item->atributoraiz_collection) && $item->atributoraiz_collection != ""){
+            $colorsAvailables = json_decode($item->atributoraiz_collection, TRUE);
+            $colorsAvailables_list = $colorsAvailables['atributoraiz_collection']['color'];
+            
+            foreach($colorsAvailables_list as $key => $val){
+              $arrColorAdd[$key]['code'] = $val['code'];
+              $arrColorAdd[$key]['name'] = $val['name'];
+            }
+          }
+          $countColors = 0;
+          $arrDataProd = [];
+          if(Session::has('cart') && count(Session::get('cart')) > 0){
+            $cart = Session::get('cart');
+            foreach($cart as $k => $v){
+              $idItem = str_replace('-','',$k);
+              if($item->id == $idItem){
+                $arrDataProd = $v;
+              }
+            }
+          }
+          $arrColorSelProd = [];
+          if(count($arrDataProd) > 0){
+            if($arrDataProd['attribute_collection']){
+              $arrCountDataProd = json_decode($arrDataProd['attribute_collection'], TRUE);
+              if($arrCountDataProd['attr_color_code'] != "0"){
+                $arrColorSelProd['color_code'] = $arrCountDataProd['attr_color_code'];
+                $arrColorSelProd['color_name'] = $arrCountDataProd['attr_color_name'];
+              }
+            }
+          }
+          ?>
           @if($item->atributoraiz_collection != "")
-          <p class="mb-1">
-            <span><strong>Código: </strong></span>
-            <span id="aHJ8K4__98Gas">{{$item->sku}}</span>
-          </p>
+            @if(count($arrColorSelProd) > 0)
+              @foreach($arrColorAdd as $k => $v)
+                @if($v['code'] != null && $v['code'] != "")
+                  @if($arrColorSelProd['color_name'] == $v['name'])
+                  <p class="mb-1">
+                    <span><strong>Código: </strong></span>
+                    <span id="aHJ8K4__98Gas">{{ $arrColorSelProd['color_code'] }}</span>
+                  </p>
+                  @endif
+                @endif
+              @endforeach
+            @else
+            <p class="mb-1">
+              <span><strong>Código: </strong></span>
+              <span id="aHJ8K4__98Gas">{{$item->sku}}</span>
+            </p>
+            @endif
           @endif
+          
           <h4 class="mb-2 p-title-main">{{$item->name}}</h4>
           <div class="mb-3">
             @if ($item->is_stock())
@@ -181,25 +234,10 @@
           <div>
             <p><strong>Número</strong></p>
             <div>
-              <ul class="variable-items-wrapper color-variable-wrapper" data-attribute_name="attribute_pa_numero">
-                <?php
-                $arrColorAdd = [];
-                $ColorAll = [];
-                $ColorAll2 = [];
-                if(isset($item->atributoraiz_collection) && $item->atributoraiz_collection != ""){
-                  $colorsAvailables = json_decode($item->atributoraiz_collection, TRUE);
-                  $colorsAvailables_list = $colorsAvailables['atributoraiz_collection']['color'];
-                  
-                  foreach($colorsAvailables_list as $key => $val){
-                    $arrColorAdd[$key]['code'] = $val['code'];
-                    $arrColorAdd[$key]['name'] = $val['name'];
-                  }
-                }
-                $countColors = 0;
-                ?>
+              <ul class="variable-items-wrapper color-variable-wrapper" data-attribute_name="attribute_pa_numero">                
                 @foreach($arrColorAdd as $k => $v)
                   @if($v['code'] != null && $v['code'] != "")
-                  <li data-toggle="tooltip" data-placement="bottom" title="{{ $countColors }}" data-original-title="{{ $countColors }}" data-codeprod="{{ $v['code'] }}" class="variable-item red-tooltip" data-value="{{ $countColors }}" role="button" tabindex="{{ $countColors }}">
+                  <li data-toggle="tooltip" data-placement="bottom" title="{{ $countColors }}" data-original-title="{{ $countColors }}" data-codeprod="{{ $v['code'] }}" data-nameprod="{{ $v['name'] }}" class="variable-item red-tooltip {{ (count($arrColorSelProd) > 0 && $arrColorSelProd['color_name'] == $v['name']) ? 'tggle-select' : '' }}" data-value="{{ $countColors }}" role="button" tabindex="{{ $countColors }}">
                     <span class="variable-item-span variable-item-span-color" style="background-color:{{ $v['name'] }};"></span>
                   </li>
                   @endif
@@ -459,7 +497,7 @@
               <div class="pt-1 mb-1"><span class="text-medium">CÓDIGO SAP:</span> {{$item->sap_code}}</div>
               @endif
               @if ($item->item_type == 'normal')
-              <div class="pt-1 mb-1"><span class="text-medium">{{__('SKU')}}:</span>{{$item->sku}}</div>
+              <div class="pt-1 mb-1"><span class="text-medium">{{__('SKU')}}:</span> {{$item->sku}}</div>
               @endif
               @if ($item->unidad_raiz)
               <?php
