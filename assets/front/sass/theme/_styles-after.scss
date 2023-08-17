@@ -11627,3 +11627,8 @@ body{
         display: none;
     }
 }
+.rst_varscolors{
+    &__link{
+        text-decoration: underline !important;
+    }
+}

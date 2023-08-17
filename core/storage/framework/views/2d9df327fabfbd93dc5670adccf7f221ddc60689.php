@@ -125,7 +125,8 @@
           <input type="hidden" value="<?php echo e(PriceHelper::setCurrencySign()); ?>" id="set_currency">
           <input type="hidden" value="<?php echo e(PriceHelper::setCurrencyValue()); ?>" id="set_currency_val">
           <input type="hidden" value="<?php echo e($setting->currency_direction); ?>" id="currency_direction">
-
+          
+          <input type="hidden" value="<?php echo e($item->sku); ?>" id="prod-crr_sku">
           <input type="hidden" class="d-non hdd-control non-visvalipt h-alternative-shwnon s-fkeynone-step" f-hidden="aria-hidden" value="" name="set_colr-code" id="set_colr-code">
           <input type="hidden" class="d-non hdd-control non-visvalipt h-alternative-shwnon s-fkeynone-step" f-hidden="aria-hidden" value="" name="set_colr-name" id="set_colr-name">
           <?php
@@ -155,7 +156,7 @@
           }
           $arrColorSelProd = [];
           if(count($arrDataProd) > 0){
-            if($arrDataProd['attribute_collection']){
+            if(isset($arrDataProd['attribute_collection'])){
               $arrCountDataProd = json_decode($arrDataProd['attribute_collection'], TRUE);
               if($arrCountDataProd['attr_color_code'] != "0"){
                 $arrColorSelProd['color_code'] = $arrCountDataProd['attr_color_code'];
@@ -274,8 +275,20 @@
                   $countColors++;
                   ?>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                
               </ul>
+              <?php if(count($arrColorSelProd) > 0): ?>
+              <div id="rst_varscolors">
+                <a class="rst_varscolors__link" href="javascript:void(0);" data-href="<?php echo e(route('front.removevarscolors',$item->id)); ?>" data-getsend="<?php echo e($item->id); ?>">Limpiar</a>
+              </div>
+              <?php else: ?>
+              <div id="rst_varscolors"></div>
+              <?php endif; ?>
+              <?php
+              // $cartsdasd = Session::get('cart');
+              // // echo "<pre>";
+              // // print_r($cartsdasd);
+              // // echo "</pre>";
+              ?>
             </div>
           </div>
           <?php endif; ?>
@@ -319,6 +332,7 @@
                     <img src="../assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" width="100" height="100" decoding="sync">
                   </a>
                   <div class="cWtspBtnCtc__pSubM">
+                    
                   <?php if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers)): ?>
                   <?php
                     $titles = json_decode($setting->whatsapp_numbers,true)['title'];

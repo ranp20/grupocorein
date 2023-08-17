@@ -1,4 +1,5 @@
 $(() => {
+  var csrfTokenFrm = $("#csl-fGv8n09c__sGaYs45").find("input[name='_token']").val();
   // Product details main slider
   $('.product-details-slider').owlCarousel({
     loop: true,
@@ -132,11 +133,39 @@ $(() => {
     let nameprod = $(this).attr("data-nameprod");
     $("#set_colr-code").val(codeprod);
     $("#set_colr-name").val(nameprod);
-    $(this).addClass("tggle-select").siblings().removeClass("tggle-select");
+    $(this).toggleClass("tggle-select").siblings().removeClass("tggle-select");
+    var siblingCount = $(this).parent().find(".tggle-select").length;
+    if(siblingCount != 0){
+      $("#rst_varscolors").html(`<a class="rst_varscolors__link" href="javascript:void(0);">Limpiar</a>`);
+    }else{
+      $("#rst_varscolors").html(``);
+    }
     $("#aHJ8K4__98Gas").html(codeprod);
   });
+  $(document).on("click",".rst_varscolors__link",function(evt){
+    evt.preventDefault();
+    $.each($(".variable-item"), function(i,e){
+      $(this).removeClass("tggle-select");
+    });
+    $("#aHJ8K4__98Gas").html($("#prod-crr_sku").val());
+    let dataHrefURL = $(this).data("href");
+    $.ajax({
+      headers:{
+        'X-CSRF-TOKEN': csrfTokenFrm
+      },
+      type: 'GET',
+      url: dataHrefURL,
+      data: {'id_prod':$(this).attr('data-getsend')},
+      success: function(e){
+        if(e.res == "true"){
+          $(".rst_varscolors__link").remove();
+        }else{
+          console.log("Error al eliminar los agregados");
+        }
+      }
+    });
+  });
   // ---------- ZOOM Y CAROUSEL PARA IMÁGENES CON BACKDROP
-  
   Fancybox.bind('[data-fancybox="gallery"]', {
     Toolbar: {
       display: {

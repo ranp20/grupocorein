@@ -46,6 +46,7 @@ class LoginController extends Controller{
             'options_id' => [],
             'attribute' => [],
             'attribute_price' => [],
+            "attribute_collection" => $v['attribute_collection'],
             "name" => $v['name'],
             "slug" => $v['slug'],
             "sku" => $v['sku'],

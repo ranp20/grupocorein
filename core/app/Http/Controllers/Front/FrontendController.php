@@ -838,4 +838,13 @@ class FrontendController extends Controller{
     $data = $brands;
     return response()->json(['data'=>$data]);
   }
+  public function removeVarsColorsByIdProd(Request $request){
+    $cart = Session::get('cart', []);
+    $itemId = $request->id_prod;
+    if(isset($cart)){
+      $cart[$itemId.'-']['attribute_collection'] =  json_encode(['attr_color_code' => "0",'attr_color_name' => "0"], TRUE);
+    }
+    Session::put('cart', $cart);
+    return response()->json(['res' => "true"]);
+  }
 }
