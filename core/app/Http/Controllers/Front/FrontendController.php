@@ -37,6 +37,8 @@ use Illuminate\Validation\Validator;
 use App\Helpers\PriceHelper;
 use App\Models\Attribute;
 use App\Models\AttributeOption;
+use App\Models\TempCart;
+use Illuminate\Support\Facades\Auth;
 use Redirect;
 
 use function GuzzleHttp\json_decode;
@@ -843,8 +845,14 @@ class FrontendController extends Controller{
     $itemId = $request->id_prod;
     if(isset($cart)){
       $cart[$itemId.'-']['attribute_collection'] =  json_encode(['attr_color_code' => "0",'attr_color_name' => "0"], TRUE);
+      $idItem = str_replace('-','',$itemId);
+      Session::put('cart', $cart);
+      if(Auth::check() && Auth::user()->role !== 'admin'){
+        if(!empty(auth()->user()) || auth()->user() != ""){
+          TempCart::where("user_id", "=", Auth::user()->id)->where("item_id", "=", $idItem)->update(['attribute_collection' => json_encode(['attr_color_code' => "0",'attr_color_name' => "0"], TRUE)]);
+        }
+      }
     }
-    Session::put('cart', $cart);
     return response()->json(['res' => "true"]);
   }
 }
