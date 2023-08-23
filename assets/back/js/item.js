@@ -87,7 +87,7 @@ $(() => {
   $(document).on("click",".add-color",function(){
     var text = $(this).parent().parent().parent().find("input.aia848d__clrcode").val();
     var text1 = $(this).parent().parent().parent().find("input.aia848d__clrname").val();
-    var textFirstVal2 = (text != "" && text != null) ? text : "Código de Producto";
+    var textFirstVal2 = (text != "" && text != null && text != undefined) ? text : "Código de Producto";
     $('#cTentr-af172698__p-adm').append(`
     <div class="d-flex">
       <div class="flex-grow-1">

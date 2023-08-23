@@ -12,6 +12,15 @@
   <div id="iptc-A3gs4FS_token">
     @csrf
   </div>
+  <?php
+    $getAllTaxes = DB::table('taxes')->get()->toArray();
+    $arrTaxesValue = [];
+    foreach($getAllTaxes as $k => $v){
+      $arrTaxesValue[$k]['value'] = $v->value;
+    }
+  ?>
+  <input class="hidden" placeholder="" value="<?= $arrTaxesValue[0]['value'];?>" style="visibility:hidden;display:none;" id="e_hY-596kjkJN79">
+  <input class="hidden" placeholder="" value="<?= $arrTaxesValue[1]['value'];?>" style="visibility:hidden;display:none;" id="e_hD-123kjkJN79">
   <div class="row">
     <div class="col-lg-12">
       @include('alerts.alerts')

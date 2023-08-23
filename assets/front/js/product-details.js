@@ -149,21 +149,27 @@ $(() => {
     });
     $("#aHJ8K4__98Gas").html($("#prod-crr_sku").val());
     let dataHrefURL = $(this).data("href");
-    $.ajax({
-      headers:{
-        'X-CSRF-TOKEN': csrfTokenFrm
-      },
-      type: 'GET',
-      url: dataHrefURL,
-      data: {'id_prod':$(this).attr('data-getsend')},
-      success: function(e){
-        if(e.res == "true"){
-          $(".rst_varscolors__link").remove();
-        }else{
-          console.log("Error al eliminar los agregados");
+    if(dataHrefURL != undefined){
+      $.ajax({
+        headers:{
+          'X-CSRF-TOKEN': csrfTokenFrm
+        },
+        type: 'GET',
+        url: dataHrefURL,
+        data: {'id_prod':$(this).attr('data-getsend')},
+        success: function(e){
+          console.log(e);
+          if(e.res == "true"){
+            $(".rst_varscolors__link").remove();
+          }else{
+            console.log("Error al eliminar los agregados");
+          }
         }
-      }
-    });
+      });
+    }else{
+      $(".rst_varscolors__link").remove();
+    }
+    
   });
   // ---------- ZOOM Y CAROUSEL PARA IMÁGENES CON BACKDROP
   Fancybox.bind('[data-fancybox="gallery"]', {
