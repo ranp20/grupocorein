@@ -136,11 +136,13 @@
           $ColorAll2 = [];
           if(isset($item->atributoraiz_collection) && $item->atributoraiz_collection != ""){
             $colorsAvailables = json_decode($item->atributoraiz_collection, TRUE);
-            $colorsAvailables_list = $colorsAvailables['atributoraiz_collection']['color'];
+            if(count($colorsAvailables) > 0){
+              $colorsAvailables_list = $colorsAvailables['atributoraiz_collection']['color'];
             
-            foreach($colorsAvailables_list as $key => $val){
-              $arrColorAdd[$key]['code'] = $val['code'];
-              $arrColorAdd[$key]['name'] = $val['name'];
+              foreach($colorsAvailables_list as $key => $val){
+                $arrColorAdd[$key]['code'] = $val['code'];
+                $arrColorAdd[$key]['name'] = $val['name'];
+              }
             }
           }
           $countColors = 0;
@@ -261,36 +263,41 @@
           </span>
           <p class="text-muted">{{$item->sort_details}} <a href="#details" class="txtd-underline scroll-to">{{__('Read more')}}</a></p>
           @if($item->atributoraiz_collection != "")
-          <div>
-            <p><strong>Número</strong></p>
+            @php
+              $colorsAvailables2 = json_decode($item->atributoraiz_collection, TRUE);
+            @endphp
+            @if(count($colorsAvailables2) > 0)
             <div>
-              <ul class="variable-items-wrapper color-variable-wrapper" data-attribute_name="attribute_pa_numero">                
-                @foreach($arrColorAdd as $k => $v)
-                  @if($v['code'] != null && $v['code'] != "")
-                  <li data-toggle="tooltip" data-placement="bottom" title="{{ $countColors }}" data-original-title="{{ $countColors }}" data-codeprod="{{ $v['code'] }}" data-nameprod="{{ $v['name'] }}" class="variable-item red-tooltip {{ (count($arrColorSelProd) > 0 && $arrColorSelProd['color_name'] == $v['name']) ? 'tggle-select' : '' }}" data-value="{{ $countColors }}" role="button" tabindex="{{ $countColors }}">
-                    <span class="variable-item-span variable-item-span-color" style="background-color:{{ $v['name'] }};"></span>
-                  </li>
-                  @endif
-                  <?php
-                  $countColors++;
-                  ?>
-                @endforeach
-              </ul>
-              @if(count($arrColorSelProd) > 0)
-              <div id="rst_varscolors">
-                <a class="rst_varscolors__link" href="javascript:void(0);" data-href="{{ route('front.removevarscolors',$item->id) }}" data-getsend="{{ $item->id }}">Limpiar</a>
+              <p><strong>Número</strong></p>
+              <div>
+                <ul class="variable-items-wrapper color-variable-wrapper" data-attribute_name="attribute_pa_numero">                
+                  @foreach($arrColorAdd as $k => $v)
+                    @if($v['code'] != null && $v['code'] != "")
+                    <li data-toggle="tooltip" data-placement="bottom" title="{{ $countColors }}" data-original-title="{{ $countColors }}" data-codeprod="{{ $v['code'] }}" data-nameprod="{{ $v['name'] }}" class="variable-item red-tooltip {{ (count($arrColorSelProd) > 0 && $arrColorSelProd['color_name'] == $v['name']) ? 'tggle-select' : '' }}" data-value="{{ $countColors }}" role="button" tabindex="{{ $countColors }}">
+                      <span class="variable-item-span variable-item-span-color" style="background-color:{{ $v['name'] }};"></span>
+                    </li>
+                    @endif
+                    <?php
+                    $countColors++;
+                    ?>
+                  @endforeach
+                </ul>
+                @if(count($arrColorSelProd) > 0)
+                <div id="rst_varscolors">
+                  <a class="rst_varscolors__link" href="javascript:void(0);" data-href="{{ route('front.removevarscolors',$item->id) }}" data-getsend="{{ $item->id }}">Limpiar</a>
+                </div>
+                @else
+                <div id="rst_varscolors"></div>
+                @endif
+                <?php
+                // $cartsdasd = Session::get('cart');
+                // // echo "<pre>";
+                // // print_r($cartsdasd);
+                // // echo "</pre>";
+                ?>
               </div>
-              @else
-              <div id="rst_varscolors"></div>
-              @endif
-              <?php
-              // $cartsdasd = Session::get('cart');
-              // // echo "<pre>";
-              // // print_r($cartsdasd);
-              // // echo "</pre>";
-              ?>
             </div>
-          </div>
+            @endif
           @endif
           <div class="row margin-top-1x">
             @foreach($attributes as $attribute)

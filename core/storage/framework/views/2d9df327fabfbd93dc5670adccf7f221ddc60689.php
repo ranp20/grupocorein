@@ -136,11 +136,13 @@
           $ColorAll2 = [];
           if(isset($item->atributoraiz_collection) && $item->atributoraiz_collection != ""){
             $colorsAvailables = json_decode($item->atributoraiz_collection, TRUE);
-            $colorsAvailables_list = $colorsAvailables['atributoraiz_collection']['color'];
+            if(count($colorsAvailables) > 0){
+              $colorsAvailables_list = $colorsAvailables['atributoraiz_collection']['color'];
             
-            foreach($colorsAvailables_list as $key => $val){
-              $arrColorAdd[$key]['code'] = $val['code'];
-              $arrColorAdd[$key]['name'] = $val['name'];
+              foreach($colorsAvailables_list as $key => $val){
+                $arrColorAdd[$key]['code'] = $val['code'];
+                $arrColorAdd[$key]['name'] = $val['name'];
+              }
             }
           }
           $countColors = 0;
@@ -261,36 +263,41 @@
           </span>
           <p class="text-muted"><?php echo e($item->sort_details); ?> <a href="#details" class="txtd-underline scroll-to"><?php echo e(__('Read more')); ?></a></p>
           <?php if($item->atributoraiz_collection != ""): ?>
-          <div>
-            <p><strong>Número</strong></p>
+            <?php
+              $colorsAvailables2 = json_decode($item->atributoraiz_collection, TRUE);
+            ?>
+            <?php if(count($colorsAvailables2) > 0): ?>
             <div>
-              <ul class="variable-items-wrapper color-variable-wrapper" data-attribute_name="attribute_pa_numero">                
-                <?php $__currentLoopData = $arrColorAdd; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                  <?php if($v['code'] != null && $v['code'] != ""): ?>
-                  <li data-toggle="tooltip" data-placement="bottom" title="<?php echo e($countColors); ?>" data-original-title="<?php echo e($countColors); ?>" data-codeprod="<?php echo e($v['code']); ?>" data-nameprod="<?php echo e($v['name']); ?>" class="variable-item red-tooltip <?php echo e((count($arrColorSelProd) > 0 && $arrColorSelProd['color_name'] == $v['name']) ? 'tggle-select' : ''); ?>" data-value="<?php echo e($countColors); ?>" role="button" tabindex="<?php echo e($countColors); ?>">
-                    <span class="variable-item-span variable-item-span-color" style="background-color:<?php echo e($v['name']); ?>;"></span>
-                  </li>
-                  <?php endif; ?>
-                  <?php
-                  $countColors++;
-                  ?>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-              </ul>
-              <?php if(count($arrColorSelProd) > 0): ?>
-              <div id="rst_varscolors">
-                <a class="rst_varscolors__link" href="javascript:void(0);" data-href="<?php echo e(route('front.removevarscolors',$item->id)); ?>" data-getsend="<?php echo e($item->id); ?>">Limpiar</a>
+              <p><strong>Número</strong></p>
+              <div>
+                <ul class="variable-items-wrapper color-variable-wrapper" data-attribute_name="attribute_pa_numero">                
+                  <?php $__currentLoopData = $arrColorAdd; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php if($v['code'] != null && $v['code'] != ""): ?>
+                    <li data-toggle="tooltip" data-placement="bottom" title="<?php echo e($countColors); ?>" data-original-title="<?php echo e($countColors); ?>" data-codeprod="<?php echo e($v['code']); ?>" data-nameprod="<?php echo e($v['name']); ?>" class="variable-item red-tooltip <?php echo e((count($arrColorSelProd) > 0 && $arrColorSelProd['color_name'] == $v['name']) ? 'tggle-select' : ''); ?>" data-value="<?php echo e($countColors); ?>" role="button" tabindex="<?php echo e($countColors); ?>">
+                      <span class="variable-item-span variable-item-span-color" style="background-color:<?php echo e($v['name']); ?>;"></span>
+                    </li>
+                    <?php endif; ?>
+                    <?php
+                    $countColors++;
+                    ?>
+                  <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </ul>
+                <?php if(count($arrColorSelProd) > 0): ?>
+                <div id="rst_varscolors">
+                  <a class="rst_varscolors__link" href="javascript:void(0);" data-href="<?php echo e(route('front.removevarscolors',$item->id)); ?>" data-getsend="<?php echo e($item->id); ?>">Limpiar</a>
+                </div>
+                <?php else: ?>
+                <div id="rst_varscolors"></div>
+                <?php endif; ?>
+                <?php
+                // $cartsdasd = Session::get('cart');
+                // // echo "<pre>";
+                // // print_r($cartsdasd);
+                // // echo "</pre>";
+                ?>
               </div>
-              <?php else: ?>
-              <div id="rst_varscolors"></div>
-              <?php endif; ?>
-              <?php
-              // $cartsdasd = Session::get('cart');
-              // // echo "<pre>";
-              // // print_r($cartsdasd);
-              // // echo "</pre>";
-              ?>
             </div>
-          </div>
+            <?php endif; ?>
           <?php endif; ?>
           <div class="row margin-top-1x">
             <?php $__currentLoopData = $attributes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attribute): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>

@@ -50,14 +50,14 @@ $(() => {
       <div class="d-flex">
         <div class="flex-grow-1">
           <div class="form-group">
-            <input type="text" class="form-control aia848d__clrcode" name="color_code[]" placeholder="Código de Producto" value="">
+            <input type="text" class="form-control aia848d__clrcode" placeholder="Código de Producto" value="">
           </div>
         </div>
         <div class="flex-grow-1">
           <div class="form-group">
             <label class="color-picker">
               <span>
-                <input type="color" class="form-control aia848d__clrname" name="color_name[]" placeholder="Código de Color" value="">
+                <input type="color" class="form-control aia848d__clrname" placeholder="Código de Color" value="">
               </span>
             </label>
           </div>
@@ -72,26 +72,27 @@ $(() => {
     }
   });
   // --------------- KEYUP INPUTS COLOR - TEXT
-  $(document).on("keyup","input[name='color_code[]']",function(e){
+  $(document).on("keyup","input.aia848d__clrcode",function(e){
     let val = e.target.value;
     let btnAddSpecification = $(this).parent().parent().parent().find(".add-color");
     btnAddSpecification.attr('data-text', val);
   });
   // --------------- KEYUP INPUTS COLOR - DESCRIPTION
-  $(document).on("input change","input[name='color_name[]']",function(e){
+  $(document).on("input change","input.aia848d__clrname",function(e){
     let val = e.target.value;
     let btnAddSpecification = $(this).parent().parent().parent().parent().parent().find(".add-color");
     btnAddSpecification.attr('data-text1', val);
   });
   // --------------- ADD COLOR
   $(document).on("click",".add-color",function(){
-    var text = $(this).parent().parent().parent().find("input[name='color_code[]").val();
-    var text1 = $(this).parent().parent().parent().find("input[name='color_name[]").val();
+    var text = $(this).parent().parent().parent().find("input.aia848d__clrcode").val();
+    var text1 = $(this).parent().parent().parent().find("input.aia848d__clrname").val();
+    var textFirstVal2 = (text != "" && text != null) ? text : "Código de Producto";
     $('#cTentr-af172698__p-adm').append(`
     <div class="d-flex">
       <div class="flex-grow-1">
         <div class="form-group">
-          <input type="text" class="form-control" name="color_code[]" placeholder="${text}" value="${text}">
+          <input type="text" class="form-control" name="color_code[]" placeholder="${textFirstVal2}" value="${text}" required>
         </div>
       </div>
       <div class="flex-grow-1">
@@ -157,12 +158,14 @@ $(() => {
   }
 
   $(document).on("keyup", "input[data-valformat=withcomedecimal]", function(e){
+    let cautionIncIGV = $("#e_hY-596kjkJN79").val();
+    let cautionSinIGV = $("#e_hD-123kjkJN79").val();
     let val = e.target.value;
     let val_formatNumber = val.toString().replace(/[^\d.]/g, "").replace(/^(\d*\.)(.*)\.(.*)$/, '$1$2$3').replace(/\.(\d{2})\d+/, '.$1').replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     let val_formatNumberWithoutCome = val_formatNumber.replace(/,/g,"");
     $(this).val(val_formatNumber);
-    let incIGV = taxesObj[0];
-    let sincIGV = taxesObj[1];
+    let incIGV = (typeof taxesObj[0] != 'undefined') ? taxesObj[0] : cautionIncIGV;
+    let sincIGV = (typeof taxesObj[1] != 'undefined') ? taxesObj[1] : cautionSinIGV;
     let incIGVFormat = incIGV / 100;
     let sincIGVFormat = sincIGV;
     let incIGVFormatOpe = parseFloat(val_formatNumberWithoutCome);
@@ -172,10 +175,12 @@ $(() => {
     $("#c-prevammt__igvGs23s").text('S/. '+val_formatNumberWithIGV);
   });
   function addIGVintoTag(elementOrTag){
+    let cautionIncIGV = $("#e_hY-596kjkJN79").val();
+    let cautionSinIGV = $("#e_hD-123kjkJN79").val();
     var val_formatNumberWithIGV = "";
     if(elementOrTag != ""){
       let val_formatNumberWithoutCome = elementOrTag.replace(/,/g,"");
-      let incIGV = taxesObj[0];
+      let incIGV = (typeof taxesObj[0] != 'undefined') ? taxesObj[0] : cautionIncIGV;
       let incIGVFormat = incIGV / 100;
       let incIGVFormatOpe = parseFloat(val_formatNumberWithoutCome);
       let incIGVFormatOpeMoreIGV = incIGVFormatOpe * incIGVFormat;

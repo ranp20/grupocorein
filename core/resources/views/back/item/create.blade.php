@@ -197,13 +197,13 @@
             </div>
             <div class="form-group">
               <label for="subcategory_id">{{ __('Select Sub Category') }} </label>
-              <select name="subcategory_id" id="subcategory_id" data-href="{{route('back.get.childcategory')}}" class="form-control" required>
+              <select name="subcategory_id" id="subcategory_id" data-href="{{route('back.get.childcategory')}}" class="form-control">
                 <option value="">{{__('Select One')}}</option>
               </select>
             </div>
             <div class="form-group">
               <label for="childcategory_id">{{ __('Select Child Category') }} </label>
-              <select name="childcategory_id" id="childcategory_id" class="form-control" required>
+              <select name="childcategory_id" id="childcategory_id" class="form-control">
                 <option value="">{{__('Select One')}}</option>
               </select>
             </div>

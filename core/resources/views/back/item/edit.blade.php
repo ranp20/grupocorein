@@ -12,6 +12,15 @@
   <div id="iptc-A3gs4FS_token">
     @csrf
   </div>
+  <?php
+    $getAllTaxes = DB::table('taxes')->get()->toArray();
+    $arrTaxesValue = [];
+    foreach($getAllTaxes as $k => $v){
+      $arrTaxesValue[$k]['value'] = $v->value;
+    }
+  ?>
+  <input class="hidden" placeholder="" value="<?= $arrTaxesValue[0]['value'];?>" style="visibility:hidden;display:none;" id="e_hY-596kjkJN79">
+  <input class="hidden" placeholder="" value="<?= $arrTaxesValue[1]['value'];?>" style="visibility:hidden;display:none;" id="e_hD-123kjkJN79">
   <div class="row">
     <div class="col-lg-12">
       @include('alerts.alerts')
@@ -52,14 +61,14 @@
               <div class="d-flex">
                 <div class="flex-grow-1">
                   <div class="form-group">
-                    <input type="text" class="form-control" name="color_code[]" placeholder="Código de Producto" value="">
+                    <input type="text" class="form-control aia848d__clrcode" placeholder="Código de Producto" value="">
                   </div>
                 </div>
                 <div class="flex-grow-1">
                   <div class="form-group">
                     <label class="color-picker">
                       <span>
-                        <input type="color" class="form-control" name="color_name[]" placeholder="Código de Color" value="">
+                        <input type="color" class="form-control aia848d__clrname" placeholder="Código de Color" value="">
                       </span>
                     </label>
                   </div>
@@ -74,11 +83,13 @@
                 $ColorAll2 = [];
                 if(isset($item->atributoraiz_collection) && $item->atributoraiz_collection != ""){
                   $colorsAvailables = json_decode($item->atributoraiz_collection, TRUE);
-                  $colorsAvailables_list = $colorsAvailables['atributoraiz_collection']['color'];
+                  if(count($colorsAvailables) > 0){
+                    $colorsAvailables_list = $colorsAvailables['atributoraiz_collection']['color'];
                   
-                  foreach($colorsAvailables_list as $key => $val){
-                    $arrColorAdd[$key]['code'] = $val['code'];
-                    $arrColorAdd[$key]['name'] = $val['name'];
+                    foreach($colorsAvailables_list as $key => $val){
+                      $arrColorAdd[$key]['code'] = $val['code'];
+                      $arrColorAdd[$key]['name'] = $val['name'];
+                    }
                   }
                 }
 

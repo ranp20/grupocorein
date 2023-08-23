@@ -196,13 +196,13 @@
             </div>
             <div class="form-group">
               <label for="subcategory_id"><?php echo e(__('Select Sub Category')); ?> </label>
-              <select name="subcategory_id" id="subcategory_id" data-href="<?php echo e(route('back.get.childcategory')); ?>" class="form-control" required>
+              <select name="subcategory_id" id="subcategory_id" data-href="<?php echo e(route('back.get.childcategory')); ?>" class="form-control">
                 <option value=""><?php echo e(__('Select One')); ?></option>
               </select>
             </div>
             <div class="form-group">
               <label for="childcategory_id"><?php echo e(__('Select Child Category')); ?> </label>
-              <select name="childcategory_id" id="childcategory_id" class="form-control" required>
+              <select name="childcategory_id" id="childcategory_id" class="form-control">
                 <option value=""><?php echo e(__('Select One')); ?></option>
               </select>
             </div>

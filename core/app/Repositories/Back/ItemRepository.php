@@ -42,6 +42,7 @@ class ItemRepository{
       }
     }
     $input['atributoraiz_collection'] = json_encode($atributoraiz_collection, true);
+    
     if ($file = $request->file('photo')) {
       $images_name = ImageHelper::ItemhandleUploadedImage($request->file('photo'),'assets/images');
       $input['photo'] = $images_name[0];
@@ -119,6 +120,8 @@ class ItemRepository{
     print_r($request->all());
     echo "</pre>";
     echo "<br>";
+    */
+    /*
     echo "<pre>";
     print_r($input);
     echo "</pre>";
