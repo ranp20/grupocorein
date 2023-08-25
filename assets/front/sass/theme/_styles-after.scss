@@ -3103,7 +3103,7 @@ button:focus{
 }
 
 .scroll-to-top-btn.visible{
-    bottom: 120px;
+    bottom: 45px;
     opacity: 1
 }
 
@@ -11635,6 +11635,7 @@ body{
 #WAButton{
     font-family: Arial, Helvetica, sans-serif !important;
     z-index: 9999;
+    bottom: 90px;
     .floating-wpp-button{
         z-index: 99;
     }

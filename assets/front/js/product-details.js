@@ -151,14 +151,11 @@ $(() => {
           url: dataHrefURL,
           data: {'id_prod':dataColorsByProd},
           success: function(e){
-            console.log(e);
-            /*
             if(e.res == "true"){
               $(".rst_varscolors__link").remove();
             }else{
               console.log("Error al eliminar los agregados");
             }
-            */
           }
         });
       }else{
@@ -180,14 +177,11 @@ $(() => {
           url: dataHrefURL,
           data: {'id_prod':dataColorsByProd},
           success: function(e){
-            console.log(e);
-            /*
             if(e.res == "true"){
-              $(".rst_varscolors__link").remove();
+              // $(".rst_varscolors__link").remove();
             }else{
               console.log("Error al eliminar los agregados");
             }
-            */
           }
         });
       }else{

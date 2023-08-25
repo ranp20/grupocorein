@@ -3,6 +3,14 @@
   $qty = 0;
   $option_price = 0;
 @endphp
+<?php
+/*
+echo "<pre>";
+print_r(Session::get('cart'));
+echo "</pre>";
+exit();
+*/
+?>
 @if (Session::has('cart'))
 @foreach (Session::get('cart') as $key => $cart)
 @php

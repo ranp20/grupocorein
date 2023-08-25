@@ -448,6 +448,9 @@ img{
 			user-select: auto;
 			width: auto;
 			height: auto;
+			&:hover{
+				text-decoration: underline !important;
+			}
 		}
 	}
 }

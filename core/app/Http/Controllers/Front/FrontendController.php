@@ -858,29 +858,52 @@ class FrontendController extends Controller{
   public function updateVarsColorByIdProd(Request $request){
     $cart = Session::get('cart', []);
     $itemId = $request->id_prod;
+    
     if(isset($cart)){
       $idProd = $itemId['id_prod'];
       $color_code = $itemId['color_code'];
       $color_name = $itemId['color_name'];
-      echo "<pre>";
-      print_r($cart);
-      echo "</pre>";
-      exit();
-
-      echo "<pre>";
-      print_r($itemId);
-      echo "</pre>";
-      exit();
-
-      $cart[$idProd.'-']['attribute_collection'] =  json_encode(['attr_color_code' => "0",'attr_color_name' => "0"], TRUE);
-      $idItem = str_replace('-','',$idProd);
-      Session::put('cart', $cart);
-      if(Auth::check() && Auth::user()->role !== 'admin'){
-        if(!empty(auth()->user()) || auth()->user() != ""){
-          TempCart::where("user_id", "=", Auth::user()->id)->where("item_id", "=", $idItem)->update(['attribute_collection' => json_encode(['attr_color_code' => "0",'attr_color_name' => "0"], TRUE)]);
+      if($color_code != "0" && $color_name != "0"){
+        $arrAttrCollection = [
+          "atributoraiz_collection" => [
+            "color" => [
+              'code' => $color_code,
+              'name' => $color_name
+            ]
+          ]
+        ];
+        if(isset($cart[$idProd.'-']['qty'])){
+          $cart[$idProd.'-']['attribute_collection'] =  json_encode($arrAttrCollection, TRUE);
+          $idItem = str_replace('-','',$idProd);
+          Session::put('cart', $cart);
+          if(Auth::check() && Auth::user()->role !== 'admin'){
+            if(!empty(auth()->user()) || auth()->user() != ""){
+              TempCart::where("user_id", "=", Auth::user()->id)->where("item_id", "=", $idItem)->update(['attribute_collection' => json_encode($arrAttrCollection, TRUE)]);
+            }
+          }
+        }
+      }else{
+        $arrAttrCollection = [
+          "atributoraiz_collection" => [
+            "color" => [
+              'code' => "0",
+              'name' => "0"
+            ]
+          ]
+        ];
+        if(isset($cart[$idProd.'-']['qty'])){
+          $cart[$idProd.'-']['attribute_collection'] =  json_encode($arrAttrCollection, TRUE);
+          $idItem = str_replace('-','',$idProd);
+          Session::put('cart', $cart);
+          if(Auth::check() && Auth::user()->role !== 'admin'){
+            if(!empty(auth()->user()) || auth()->user() != ""){
+              TempCart::where("user_id", "=", Auth::user()->id)->where("item_id", "=", $idItem)->update(['attribute_collection' => json_encode($arrAttrCollection, TRUE)]);
+            }
+          }
         }
       }
     }
     return response()->json(['res' => "true"]);
+
   }
 }

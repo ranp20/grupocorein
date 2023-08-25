@@ -272,22 +272,24 @@
                                                 <img src="{{route('front.index')}}/assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" alt="whatsapp_icon" width="100" height="100" decoding="sync">
                                             </a>
                                             <div class="cWtspBtnCtc__pSubM">
-                                                {{--
-                                                <!--
                                                 @if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers))
-                                                @php
-                                                    $titles = json_decode($setting->whatsapp_numbers,true)['title'];
-                                                    $texts = json_decode($setting->whatsapp_numbers,true)['text'];
-                                                    $numbers = json_decode($setting->whatsapp_numbers,true)['number'];
-                                                @endphp
+                                                <?php
+                                                    $whatsappCollection = json_decode($setting->whatsapp_numbers, TRUE);
+                                                    $ArrwpsNumbers = "";
+                                                    $wps_inproducts = [];
+                                                    if(isset($whatsappCollection['whatsapp_numbers'])){
+                                                        $ArrwpsNumbers = $whatsappCollection['whatsapp_numbers'];
+                                                        if(isset($ArrwpsNumbers['in_product'])){
+                                                            $wps_inproducts = $ArrwpsNumbers['in_product'];
+                                                        }
+                                                    }
+                                                ?>
                                                 <ul class="cWtspBtnCtc__pSubM__m">
-                                                    @foreach ($numbers as $key => $number)
+                                                    @foreach ($wps_inproducts as $k => $v)
                                                     <li class="cWtspBtnCtc__pSubM__m__i">
-                                                        <a title="{{ $titles[$key] }}" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51{{ $numbers[$key] }}&text={{ $texts[$key] }}" target="_blank">
-                                                            
-                                                            <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                                                            
-                                                            <span>{{ $titles[$key] }}</span>
+                                                        <a title="{{ $v['title'] }}" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51{{ $v['number'] }}&text={{ $v['text'] }}" target="_blank">
+                                                            <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">                                                            
+                                                            <span>{{ $v['title'] }}</span>
                                                         </a>
                                                     </li>
                                                     @endforeach
@@ -295,8 +297,8 @@
                                                 @else
                                                 <p>No hay información</p>
                                                 @endif
-                                                -->
-                                                --}}
+                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -421,19 +423,23 @@
                                             </a>
                                             <div class="cWtspBtnCtc__pSubM">
                                                 @if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers))
-                                                @php
-                                                    $titles = json_decode($setting->whatsapp_numbers,true)['title'];
-                                                    $texts = json_decode($setting->whatsapp_numbers,true)['text'];
-                                                    $numbers = json_decode($setting->whatsapp_numbers,true)['number'];
-                                                @endphp
+                                                <?php
+                                                    $whatsappCollection = json_decode($setting->whatsapp_numbers, TRUE);
+                                                    $ArrwpsNumbers = "";
+                                                    $wps_inproducts = [];
+                                                    if(isset($whatsappCollection['whatsapp_numbers'])){
+                                                        $ArrwpsNumbers = $whatsappCollection['whatsapp_numbers'];
+                                                        if(isset($ArrwpsNumbers['in_product'])){
+                                                            $wps_inproducts = $ArrwpsNumbers['in_product'];
+                                                        }
+                                                    }
+                                                ?>
                                                 <ul class="cWtspBtnCtc__pSubM__m">
-                                                    @foreach ($numbers as $key => $number)
+                                                    @foreach ($wps_inproducts as $k => $v)
                                                     <li class="cWtspBtnCtc__pSubM__m__i">
-                                                        <a title="{{ $titles[$key] }}" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51{{ $numbers[$key] }}&text={{ $texts[$key] }}" target="_blank">
-                                                            <!-- <img src="{{ asset('assets/back/images/WhatsApp') }}/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
+                                                        <a title="{{ $v['title'] }}" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51{{ $v['number'] }}&text={{ $v['text'] }}" target="_blank">
                                                             <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                                                            <!-- <span>912 831 232</span> -->
-                                                            <span>{{ $titles[$key] }}</span>
+                                                            <span>{{ $v['title'] }}</span>
                                                         </a>
                                                     </li>
                                                     @endforeach

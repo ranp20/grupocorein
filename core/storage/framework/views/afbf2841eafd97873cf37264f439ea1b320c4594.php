@@ -312,7 +312,11 @@
           </div>
           <hr>
         </div>
-        <div id="cTentr-af1698__1prevChckp-show"></div>
+        <div id="cTentr-af1698__1prevChckp-show">
+          <div class="d-flex align-items-center justify-content-center mx-auto py-5" style="max-width: 60px;width:60px;height:60px;">
+            <img src="../../../assets/images/Utilities/loader.gif" alt="icon-update" width="100" height="100" decoding="sync">
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

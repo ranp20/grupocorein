@@ -271,7 +271,33 @@
                                                 <img src="<?php echo e(route('front.index')); ?>/assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" alt="whatsapp_icon" width="100" height="100" decoding="sync">
                                             </a>
                                             <div class="cWtspBtnCtc__pSubM">
+                                                <?php if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers)): ?>
+                                                <?php
+                                                    $whatsappCollection = json_decode($setting->whatsapp_numbers, TRUE);
+                                                    $ArrwpsNumbers = "";
+                                                    $wps_inproducts = [];
+                                                    if(isset($whatsappCollection['whatsapp_numbers'])){
+                                                        $ArrwpsNumbers = $whatsappCollection['whatsapp_numbers'];
+                                                        if(isset($ArrwpsNumbers['in_product'])){
+                                                            $wps_inproducts = $ArrwpsNumbers['in_product'];
+                                                        }
+                                                    }
+                                                ?>
+                                                <ul class="cWtspBtnCtc__pSubM__m">
+                                                    <?php $__currentLoopData = $wps_inproducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <li class="cWtspBtnCtc__pSubM__m__i">
+                                                        <a title="<?php echo e($v['title']); ?>" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51<?php echo e($v['number']); ?>&text=<?php echo e($v['text']); ?>" target="_blank">
+                                                            <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">                                                            
+                                                            <span><?php echo e($v['title']); ?></span>
+                                                        </a>
+                                                    </li>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                </ul>
+                                                <?php else: ?>
+                                                <p>No hay información</p>
+                                                <?php endif; ?>
                                                 
+
                                             </div>
                                         </div>
                                     </div>
@@ -398,18 +424,22 @@
                                             <div class="cWtspBtnCtc__pSubM">
                                                 <?php if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers)): ?>
                                                 <?php
-                                                    $titles = json_decode($setting->whatsapp_numbers,true)['title'];
-                                                    $texts = json_decode($setting->whatsapp_numbers,true)['text'];
-                                                    $numbers = json_decode($setting->whatsapp_numbers,true)['number'];
+                                                    $whatsappCollection = json_decode($setting->whatsapp_numbers, TRUE);
+                                                    $ArrwpsNumbers = "";
+                                                    $wps_inproducts = [];
+                                                    if(isset($whatsappCollection['whatsapp_numbers'])){
+                                                        $ArrwpsNumbers = $whatsappCollection['whatsapp_numbers'];
+                                                        if(isset($ArrwpsNumbers['in_product'])){
+                                                            $wps_inproducts = $ArrwpsNumbers['in_product'];
+                                                        }
+                                                    }
                                                 ?>
                                                 <ul class="cWtspBtnCtc__pSubM__m">
-                                                    <?php $__currentLoopData = $numbers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $number): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php $__currentLoopData = $wps_inproducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                     <li class="cWtspBtnCtc__pSubM__m__i">
-                                                        <a title="<?php echo e($titles[$key]); ?>" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51<?php echo e($numbers[$key]); ?>&text=<?php echo e($texts[$key]); ?>" target="_blank">
-                                                            <!-- <img src="<?php echo e(asset('assets/back/images/WhatsApp')); ?>/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
+                                                        <a title="<?php echo e($v['title']); ?>" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51<?php echo e($v['number']); ?>&text=<?php echo e($v['text']); ?>" target="_blank">
                                                             <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                                                            <!-- <span>912 831 232</span> -->
-                                                            <span><?php echo e($titles[$key]); ?></span>
+                                                            <span><?php echo e($v['title']); ?></span>
                                                         </a>
                                                     </li>
                                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

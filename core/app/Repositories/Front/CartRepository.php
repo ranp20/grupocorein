@@ -112,12 +112,37 @@ class CartRepository{
     $date = date('Y-m-d H:i:s');
 
     $colorCollection = [];
+    $itemAllData = $cart[$item->id.'-'.$cart_item_key];
+    $attrColorCollection = [];
+    if(isset($itemAllData['attribute_collection'])){
+      $arrCountDataProd = json_decode($itemAllData['attribute_collection'], TRUE);
+      if(isset($arrCountDataProd['atributoraiz_collection'])){
+        if(isset($arrCountDataProd['atributoraiz_collection']['color'])){
+          $attrColorCollection['color_code'] = $arrCountDataProd['atributoraiz_collection']['color']['code'];
+          $attrColorCollection['color_name'] = $arrCountDataProd['atributoraiz_collection']['color']['name'];
+        }
+      }
+    }
+
     if(isset($request->attr_color_code)){
-      $colorCollection['atributoraiz_collection']['color']['code'] = $input['attr_color_code'];
+      if($attrColorCollection['color_code'] != "0" && $attrColorCollection['color_name'] != "0"){
+        $colorCollection['atributoraiz_collection']['color']['code'] = $attrColorCollection['color_code'];
+      }else{
+        $colorCollection['atributoraiz_collection']['color']['code'] = $input['attr_color_code'];
+      }
     }
     if(isset($request->attr_color_name)){
-      $colorCollection['atributoraiz_collection']['color']['name'] = $input['attr_color_name'];
+      if($attrColorCollection['color_code'] != "0" && $attrColorCollection['color_name'] != "0"){
+        $colorCollection['atributoraiz_collection']['color']['name'] = $attrColorCollection['color_name'];
+      }else{
+        $colorCollection['atributoraiz_collection']['color']['name'] = $input['attr_color_name'];
+      }
     }
+    
+    // echo "<pre>";
+    // print_r($cart);
+    // echo "</pre>";
+    // exit();
     /*
     echo "<pre>";
     print_r($request->all());

@@ -106,20 +106,24 @@
           </a>
           <div class="cWtspBtnCtc__pSubM">
             @if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers))
-            @php
-                $titles = json_decode($setting->whatsapp_numbers,true)['title'];
-                $texts = json_decode($setting->whatsapp_numbers,true)['text'];
-                $numbers = json_decode($setting->whatsapp_numbers,true)['number'];
-            @endphp
+            <?php
+              $whatsappCollection = json_decode($setting->whatsapp_numbers, TRUE);
+              $ArrwpsNumbers = "";
+              $wps_inproducts = [];
+              if(isset($whatsappCollection['whatsapp_numbers'])){
+                $ArrwpsNumbers = $whatsappCollection['whatsapp_numbers'];
+                if(isset($ArrwpsNumbers['in_product'])){
+                  $wps_inproducts = $ArrwpsNumbers['in_product'];
+                }
+              }
+            ?>
             <ul class="cWtspBtnCtc__pSubM__m">
-              @foreach ($numbers as $key => $number)
+              @foreach ($wps_inproducts as $k => $v)
               <li class="cWtspBtnCtc__pSubM__m__i">
-                  <a title="{{ $titles[$key] }}" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51{{ $numbers[$key] }}&text={{ $texts[$key] }}" target="_blank">
-                      <!-- <img src="{{ asset('assets/back/images/WhatsApp') }}/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
-                      <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                      <!-- <span>912 831 232</span> -->
-                      <span>{{ $titles[$key] }}</span>
-                  </a>
+                <a title="{{ $v['title'] }}" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51{{ $v['number'] }}&text={{ $v['text'] }}" target="_blank">
+                  <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
+                  <span>{{ $v['title'] }}</span>
+                </a>
               </li>
               @endforeach
             </ul>

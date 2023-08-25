@@ -27,7 +27,9 @@
         <?php if($item->previous_price && $item->previous_price != 0): ?>
           <div class="product-badge product-badge2 bg-info"> -<?php echo e(PriceHelper::DiscountPercentage($item)); ?></div>
         <?php endif; ?>
-        <a href="<?php echo e(route('front.product',$item->slug)); ?>"> <img src="<?php echo e(asset('assets/images/'.$item->thumbnail)); ?>" alt="Product"></a>
+        <a href="<?php echo e(route('front.product',$item->slug)); ?>" class="d-flex align-items-center justify-content-center">
+          <img src="<?php echo e(asset('assets/images/'.$item->thumbnail)); ?>" alt="Product">
+        </a>
         <div class="product-button-group">
           <a class="product-button wishlist_store" href="<?php echo e(route('user.wishlist.store',$item->id)); ?>" title="<?php echo e(__('Wishlist')); ?>"><i class="icon-heart"></i></a>
           <a data-target="<?php echo e(route('fornt.compare.product',$item->id)); ?>" class="product-button product_compare" href="javascript:;" title="<?php echo e(__('Compare')); ?>"><i class="icon-repeat"></i></a>
@@ -106,19 +108,23 @@
           <div class="cWtspBtnCtc__pSubM">
             <?php if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers)): ?>
             <?php
-              $titles = json_decode($setting->whatsapp_numbers,true)['title'];
-              $texts = json_decode($setting->whatsapp_numbers,true)['text'];
-              $numbers = json_decode($setting->whatsapp_numbers,true)['number'];
+              $whatsappCollection = json_decode($setting->whatsapp_numbers, TRUE);
+              $ArrwpsNumbers = "";
+              $wps_inproducts = [];
+              if(isset($whatsappCollection['whatsapp_numbers'])){
+                $ArrwpsNumbers = $whatsappCollection['whatsapp_numbers'];
+                if(isset($ArrwpsNumbers['in_product'])){
+                  $wps_inproducts = $ArrwpsNumbers['in_product'];
+                }
+              }
             ?>
             <ul class="cWtspBtnCtc__pSubM__m">
-              <?php $__currentLoopData = $numbers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $number): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+              <?php $__currentLoopData = $wps_inproducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
               <li class="cWtspBtnCtc__pSubM__m__i">
-                  <a title="<?php echo e($titles[$key]); ?>" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51<?php echo e($numbers[$key]); ?>&text=<?php echo e($texts[$key]); ?>" target="_blank">
-                      <!-- <img src="<?php echo e(asset('assets/back/images/WhatsApp')); ?>/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
-                      <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                      <!-- <span>912 831 232</span> -->
-                      <span><?php echo e($titles[$key]); ?></span>
-                  </a>
+                <a title="<?php echo e($v['title']); ?>" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51<?php echo e($v['number']); ?>&text=<?php echo e($v['text']); ?>" target="_blank">
+                  <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
+                  <span><?php echo e($v['title']); ?></span>
+                </a>
               </li>
               <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </ul>

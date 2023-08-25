@@ -3,6 +3,14 @@
   $qty = 0;
   $option_price = 0;
 ?>
+<?php
+/*
+echo "<pre>";
+print_r(Session::get('cart'));
+echo "</pre>";
+exit();
+*/
+?>
 <?php if(Session::has('cart')): ?>
 <?php $__currentLoopData = Session::get('cart'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $cart): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 <?php

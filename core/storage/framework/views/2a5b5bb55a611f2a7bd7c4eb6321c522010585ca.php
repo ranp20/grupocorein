@@ -49,11 +49,11 @@
           </div>
           <div class="row">
             <div class="col-12">
-              <h5><b><?php echo e(__('Order Details')); ?> :</b></h5>
-              <span class="text-muted"><?php echo e(__('Transaction Id')); ?> :</span><?php echo e($order->txnid); ?><br>
-              <span class="text-muted"><?php echo e(__('Order Id')); ?> :</span><?php echo e($order->transaction_number); ?><br>
-              <span class="text-muted"><?php echo e(__('Order Date')); ?> :</span><?php echo e($order->created_at->format('M d, Y')); ?><br>
-              <span class="text-muted"><?php echo e(__('Payment Status')); ?> :</span>
+              <h2><strong><b><?php echo e(__('Order Details')); ?> :</b></strong></h2>
+              <span class="text-muted"><?php echo e(__('Transaction Id')); ?> : </span><?php echo e($order->id_gencode); ?><br>
+              <span class="text-muted"><?php echo e(__('Order Id')); ?> : </span><?php echo e($order->transaction_number); ?><br>
+              <span class="text-muted"><?php echo e(__('Order Date')); ?> : </span><?php echo e($order->created_at->format('M d, Y')); ?><br>
+              <span class="text-muted"><?php echo e(__('Payment Status')); ?> : </span>
               <?php if($order->payment_status == 'Paid'): ?>
               <div class="badge badge-success">
                 <?php echo e(__('Paid')); ?>
@@ -66,14 +66,14 @@
               </div>
               <?php endif; ?>
               <br>
-              <span class="text-muted"><?php echo e(__('Payment Method')); ?> :</span><?php echo e($order->payment_method); ?><br>
+              <span class="text-muted"><?php echo e(__('Payment Method')); ?> : </span><?php echo e($order->payment_method); ?><br>
               <br>
               <br>
             </div>
           </div>
           <div class="row">
             <div class="col-12 col-md-6">
-              <h5><?php echo e(__('Billing Address')); ?> :</h5>
+              <h2><strong><?php echo e(__('Billing Address')); ?> :</strong></h2>
               <?php
                 $bill = json_decode($order->billing_info,true);
               ?>
@@ -100,7 +100,7 @@
               <?php endif; ?>
             </div>
             <div class="col-12 col-md-6">
-              <h5><?php echo e(__('Shipping Address')); ?> :</h5>
+              <h2><strong><?php echo e(__('Shipping Address')); ?> :</strong></h2>
               <?php
                 $ship = json_decode($order->shipping_info,true)
               ?>

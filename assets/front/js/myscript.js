@@ -588,7 +588,7 @@ $(function($){
       getData();
     });
     function cartSubmit(item_key,item_id,cartQty){
-      // console.log(item_key,cartQty);
+      console.log(item_key,cartQty);
       getData(1, item_key,item_id, cartQty);
     };
     function getData(status = 0, check = 0, item_key = 0, qty = 0, add_type = 0){
