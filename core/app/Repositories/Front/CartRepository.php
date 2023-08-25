@@ -112,7 +112,7 @@ class CartRepository{
     $date = date('Y-m-d H:i:s');
 
     $colorCollection = [];
-    $itemAllData = $cart[$item->id.'-'.$cart_item_key];
+    $itemAllData = (isset($cart[$item->id.'-'.$cart_item_key])) ? $cart[$item->id.'-'.$cart_item_key] : [];
     $attrColorCollection = [];
     if(isset($itemAllData['attribute_collection'])){
       $arrCountDataProd = json_decode($itemAllData['attribute_collection'], TRUE);
@@ -125,18 +125,26 @@ class CartRepository{
     }
 
     if(isset($request->attr_color_code)){
-      if($attrColorCollection['color_code'] != "0" && $attrColorCollection['color_name'] != "0"){
-        $colorCollection['atributoraiz_collection']['color']['code'] = $attrColorCollection['color_code'];
+      if(isset($attrColorCollection['color_code']) && $attrColorCollection['color_name']){
+        if($attrColorCollection['color_code'] != "0" && $attrColorCollection['color_name'] != "0"){
+          $colorCollection['atributoraiz_collection']['color']['code'] = $attrColorCollection['color_code'];
+        }else{
+          $colorCollection['atributoraiz_collection']['color']['code'] = $input['attr_color_code'];
+        }
       }else{
         $colorCollection['atributoraiz_collection']['color']['code'] = $input['attr_color_code'];
       }
     }
     if(isset($request->attr_color_name)){
-      if($attrColorCollection['color_code'] != "0" && $attrColorCollection['color_name'] != "0"){
-        $colorCollection['atributoraiz_collection']['color']['name'] = $attrColorCollection['color_name'];
+      if(isset($attrColorCollection['color_code']) && $attrColorCollection['color_name']){
+        if($attrColorCollection['color_code'] != "0" && $attrColorCollection['color_name'] != "0"){
+          $colorCollection['atributoraiz_collection']['color']['name'] = $attrColorCollection['color_name'];
+        }else{
+          $colorCollection['atributoraiz_collection']['color']['name'] = $input['attr_color_name'];
+        }
       }else{
         $colorCollection['atributoraiz_collection']['color']['name'] = $input['attr_color_name'];
-      }
+      }      
     }
     
     // echo "<pre>";
