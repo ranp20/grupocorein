@@ -113,11 +113,17 @@ class CartRepository{
 
     $colorCollection = [];
     if(isset($request->attr_color_code)){
-      $colorCollection['attr_color_code'] = $input['attr_color_code'];
+      $colorCollection['atributoraiz_collection']['color']['code'] = $input['attr_color_code'];
     }
     if(isset($request->attr_color_name)){
-      $colorCollection['attr_color_name'] = $input['attr_color_name'];
+      $colorCollection['atributoraiz_collection']['color']['name'] = $input['attr_color_name'];
     }
+    /*
+    echo "<pre>";
+    print_r($request->all());
+    echo "</pre>";
+    exit();
+    */
 
     // if cart is empty then this the first product
     if(!$cart || !isset($cart[$item->id.'-'.$cart_item_key])){
@@ -132,8 +138,8 @@ class CartRepository{
         "name" => $item->name,
         "slug" => $item->slug,
         "sku" => $item->sku,
-        "brand_id" => $brand->id,
-        "brand_name" => $brand->name,
+        "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
+        "brand_name" => (isset($brand->name) && $brand->name != "") ? $brand->name : "",
         "qty" => $qty,
         "price" => PriceHelper::grandPrice($item),
         "main_price" => $item->discount_price,
@@ -154,7 +160,7 @@ class CartRepository{
             "name" => $item->name,
             "slug" => $item->slug,
             "sku" => $item->sku,
-            "brand_id" => $brand->id,
+            "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
             "quantity" => $qty,
             "price" => PriceHelper::grandPrice($item),
             "main_price" => $item->discount_price,

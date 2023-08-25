@@ -11632,3 +11632,24 @@ body{
         text-decoration: underline !important;
     }
 }
+#WAButton{
+    font-family: Arial, Helvetica, sans-serif !important;
+    z-index: 9999;
+    .floating-wpp-button{
+        z-index: 99;
+    }
+    .floating-wpp-popup{
+        max-width: 260px;
+        width: auto;
+        z-index: 99;
+        @media (min-width: 1024px){
+            max-width: 280px;
+            width: 280px;
+        }
+        .floating-wpp-head{
+            strong{
+                color: #fff;
+            }
+        }
+    }
+}

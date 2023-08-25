@@ -151,6 +151,14 @@ trait IzipayCheckout{
       $orderData['currency_value'] = PriceHelper::setCurrencyValue();
       $orderData['payment_status'] = 'Unpaid';
       $orderData['order_status'] = 'Pending';
+
+      /*
+      echo "<pre>";
+      print_r($orderData);
+      echo "</pre>";
+      exit();
+      */
+
       $order = Order::create($orderData);
       TrackOrder::create([
         'title' => 'Pending',

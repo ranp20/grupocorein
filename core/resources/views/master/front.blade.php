@@ -61,9 +61,12 @@ body_theme4
 </div>
 @endif
 <link rel="preload" href="{{asset('assets/front/css/styles.min.css')}}" as="style">
-<script rel="preload" href="{{asset('assets/front/js/plugins/jquery-3.6.4.min.js')}}" as="script"></script>
+<script rel="preload" href="{{asset('assets/front/js/plugins/jquery-3.4.1.min.js')}}" as="script"></script>
 <link id="mainStyles" rel="stylesheet" media="screen" href="{{asset('assets/front/css/styles.min.css')}}">
-<script type="text/javascript" src="{{asset('assets/front/js/plugins/jquery-3.6.4.min.js')}}" as="script"></script>
+<script type="text/javascript" src="{{asset('assets/front/js/plugins/jquery-3.4.1.min.js')}}" as="script"></script>
+
+
+
 @include('includes.apiwhatsappbutton')
 <header class="site-header navbar-sticky">
     <div class="menu-top-area">
@@ -571,6 +574,41 @@ body_theme4
 <script type="text/javascript" src="{{asset('assets/front/js/lazy.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('assets/front/js/lazy.plugin.js')}}"></script>
 <script type="text/javascript" src="{{asset('assets/front/js/myscript.js')}}"></script>
+
+<?php
+  $wstpCollection = json_decode($setting->whatsapp_numbers, TRUE);
+  $ArrwpsNumbersButton = "";
+  $wps_generalButton = [];
+  if(isset($wstpCollection['whatsapp_numbers'])){
+    $ArrwpsNumbersButton = $wstpCollection['whatsapp_numbers'];
+    if(isset($ArrwpsNumbersButton['general'])){
+      $wps_generalButton = $ArrwpsNumbersButton['general'][0];
+    }
+  }
+?>
+<div id="WAButton"></div>
+
+<script type="text/javascript" src="{{ asset('assets/front/js/plugins/floating-whatsapp/floating-wpp.min.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('assets/front/js/plugins/floating-whatsapp/floating-wpp.min.css') }}">
+
+<script type="text/javascript">
+  $(function() {
+    let imgWAButton = "{{ asset('assets/front/js/plugins/floating-whatsapp/whatsapp.svg') }}";
+    $('#WAButton').floatingWhatsApp({
+      phone: '+51<?php echo $wps_generalButton['number']; ?>', //WhatsApp Business phone number International format-
+      //Get it with Toky at https://toky.co/en/features/whatsapp.
+      headerTitle: '¡Chatea con nosotros en WhatsApp!', //Popup Title
+      popupMessage: 'Hola, ¿Cómo podemos ayudarte?', //Popup Message
+      showPopup: true, //Enables popup display
+      buttonImage: `<img src="${imgWAButton}" />`, //Button Image
+      //headerColor: 'crimson', //Custom header color
+      //backgroundColor: 'crimson', //Custom background button color
+      position: "right"    
+    });
+  });
+</script>
+
+
 @yield('script')
 @if($setting->is_facebook_messenger	== '1')
  {!!  $setting->facebook_messenger !!}

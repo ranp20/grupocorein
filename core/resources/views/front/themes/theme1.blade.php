@@ -4,7 +4,7 @@
     <meta name="description" content="{{ $setting->meta_description }}">
 @endsection
 @section('content')
-    <script type="text/javascript" src="{{ asset('assets/front/js/plugins/jquery-3.7.0.min.js') }}"></script>
+
     <link rel="stylesheet" href="{{ asset('node_modules/owl-carousel/owl-carousel/owl.carousel.css')}}">
     <link rel="stylesheet" href="{{ asset('node_modules/owl-carousel/owl-carousel/owl.theme.css')}}">
     <script type="text/javascript" src="{{ asset('node_modules/owl-carousel/owl-carousel/owl.carousel.min.js')}}"></script>
@@ -272,6 +272,8 @@
                                                 <img src="{{route('front.index')}}/assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" alt="whatsapp_icon" width="100" height="100" decoding="sync">
                                             </a>
                                             <div class="cWtspBtnCtc__pSubM">
+                                                {{--
+                                                <!--
                                                 @if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers))
                                                 @php
                                                     $titles = json_decode($setting->whatsapp_numbers,true)['title'];
@@ -282,9 +284,9 @@
                                                     @foreach ($numbers as $key => $number)
                                                     <li class="cWtspBtnCtc__pSubM__m__i">
                                                         <a title="{{ $titles[$key] }}" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51{{ $numbers[$key] }}&text={{ $texts[$key] }}" target="_blank">
-                                                            <!-- <img src="{{ asset('assets/back/images/WhatsApp') }}/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
+                                                            
                                                             <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                                                            <!-- <span>912 831 232</span> -->
+                                                            
                                                             <span>{{ $titles[$key] }}</span>
                                                         </a>
                                                     </li>
@@ -293,6 +295,8 @@
                                                 @else
                                                 <p>No hay información</p>
                                                 @endif
+                                                -->
+                                                --}}
                                             </div>
                                         </div>
                                     </div>

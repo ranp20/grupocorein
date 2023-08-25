@@ -65,9 +65,12 @@ body_theme4
 </div>
 <?php endif; ?>
 <link rel="preload" href="<?php echo e(asset('assets/front/css/styles.min.css')); ?>" as="style">
-<script rel="preload" href="<?php echo e(asset('assets/front/js/plugins/jquery-3.6.4.min.js')); ?>" as="script"></script>
+<script rel="preload" href="<?php echo e(asset('assets/front/js/plugins/jquery-3.4.1.min.js')); ?>" as="script"></script>
 <link id="mainStyles" rel="stylesheet" media="screen" href="<?php echo e(asset('assets/front/css/styles.min.css')); ?>">
-<script type="text/javascript" src="<?php echo e(asset('assets/front/js/plugins/jquery-3.6.4.min.js')); ?>" as="script"></script>
+<script type="text/javascript" src="<?php echo e(asset('assets/front/js/plugins/jquery-3.4.1.min.js')); ?>" as="script"></script>
+
+
+
 <?php echo $__env->make('includes.apiwhatsappbutton', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 <header class="site-header navbar-sticky">
     <div class="menu-top-area">
@@ -563,6 +566,41 @@ body_theme4
 <script type="text/javascript" src="<?php echo e(asset('assets/front/js/lazy.min.js')); ?>"></script>
 <script type="text/javascript" src="<?php echo e(asset('assets/front/js/lazy.plugin.js')); ?>"></script>
 <script type="text/javascript" src="<?php echo e(asset('assets/front/js/myscript.js')); ?>"></script>
+
+<?php
+  $wstpCollection = json_decode($setting->whatsapp_numbers, TRUE);
+  $ArrwpsNumbersButton = "";
+  $wps_generalButton = [];
+  if(isset($wstpCollection['whatsapp_numbers'])){
+    $ArrwpsNumbersButton = $wstpCollection['whatsapp_numbers'];
+    if(isset($ArrwpsNumbersButton['general'])){
+      $wps_generalButton = $ArrwpsNumbersButton['general'][0];
+    }
+  }
+?>
+<div id="WAButton"></div>
+
+<script type="text/javascript" src="<?php echo e(asset('assets/front/js/plugins/floating-whatsapp/floating-wpp.min.js')); ?>"></script>
+<link rel="stylesheet" href="<?php echo e(asset('assets/front/js/plugins/floating-whatsapp/floating-wpp.min.css')); ?>">
+
+<script type="text/javascript">
+  $(function() {
+    let imgWAButton = "<?php echo e(asset('assets/front/js/plugins/floating-whatsapp/whatsapp.svg')); ?>";
+    $('#WAButton').floatingWhatsApp({
+      phone: '+51<?php echo $wps_generalButton['number']; ?>', //WhatsApp Business phone number International format-
+      //Get it with Toky at https://toky.co/en/features/whatsapp.
+      headerTitle: '¡Chatea con nosotros en WhatsApp!', //Popup Title
+      popupMessage: 'Hola, ¿Cómo podemos ayudarte?', //Popup Message
+      showPopup: true, //Enables popup display
+      buttonImage: `<img src="${imgWAButton}" />`, //Button Image
+      //headerColor: 'crimson', //Custom header color
+      //backgroundColor: 'crimson', //Custom background button color
+      position: "right"    
+    });
+  });
+</script>
+
+
 <?php echo $__env->yieldContent('script'); ?>
 <?php if($setting->is_facebook_messenger	== '1'): ?>
  <?php echo $setting->facebook_messenger; ?>

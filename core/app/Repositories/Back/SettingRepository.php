@@ -22,18 +22,38 @@ class SettingRepository{
       ];
       $input['social_link'] = json_encode($links,true);
     }
-    if($request->wtspnumbers_number){
-      $whatsapp_numbers = [
-        // 'icons'=>$request->wtspnumbers_icon,
-        'title'=>$request->wtspnumbers_title,
-        'text'=>$request->wtspnumbers_text,
-        'number'=> str_replace(" ", "", $request->wtspnumbers_number)
-      ];
-      $input['whatsapp_numbers'] = json_encode($whatsapp_numbers,true);
-    }else{
-      $whatsapp_numbers = [];
-      $input['whatsapp_numbers'] = json_encode($whatsapp_numbers,true);
+    $whatsAppCollection = [];
+    if(isset($request->wtspnumbersgeneral_title)){
+      foreach($request->wtspnumbersgeneral_title as $k => $v){
+        $whatsAppCollection['whatsapp_numbers']['general'][$k]['title'] = $v;
+      }
     }
+    if(isset($request->wtspnumbersgeneral_text)){
+      foreach($request->wtspnumbersgeneral_text as $k => $v){
+        $whatsAppCollection['whatsapp_numbers']['general'][$k]['text'] = $v;
+      }
+    }
+    if(isset($request->wtspnumbersgeneral_number)){
+      foreach($request->wtspnumbersgeneral_number as $k => $v){
+        $whatsAppCollection['whatsapp_numbers']['general'][$k]['number'] = str_replace(" ","",$v);
+      }
+    }
+    if(isset($request->wtspnumbers_title)){
+      foreach($request->wtspnumbers_title as $k => $v){
+        $whatsAppCollection['whatsapp_numbers']['in_product'][$k]['title'] = $v;
+      }
+    }
+    if(isset($request->wtspnumbers_text)){
+      foreach($request->wtspnumbers_text as $k => $v){
+        $whatsAppCollection['whatsapp_numbers']['in_product'][$k]['text'] = $v;
+      }
+    }
+    if(isset($request->wtspnumbers_number)){
+      foreach($request->wtspnumbers_number as $k => $v){
+        $whatsAppCollection['whatsapp_numbers']['in_product'][$k]['number'] = str_replace(" ","",$v);
+      }
+    }
+    $input['whatsapp_numbers'] = json_encode($whatsAppCollection);
     // message text json encode
     if(isset($input['twilio_section'])){
       $input['twilio_section'] = json_encode($input['twilio_section'],true);

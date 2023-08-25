@@ -322,6 +322,7 @@ Route::group(['middleware' => 'maintainance'], function (){
     Route::get('/distrito', 'Front\FrontendController@getDistritoByIdProvincia')->name('front.distrito');
     Route::get('/getammountdispath', 'Front\FrontendController@getAmmountDispathByDistrito')->name('front.getammountdispath');
     Route::get('/removevarscolors/{idprod}', 'Front\FrontendController@removeVarsColorsByIdProd')->name('front.removevarscolors');
+    Route::get('/updatevarscolors/{idprod}', 'Front\FrontendController@updateVarsColorByIdProd')->name('front.updatevarscolors');
     Route::post('/getallbrands', 'Front\FrontendController@getAllBrands')->name('getallbrands');
     // ----------- NUEVO CONTENIDO (FIN)
     Route::get('/campaign/products', 'Front\FrontendController@compaignProduct')->name('front.campaign');

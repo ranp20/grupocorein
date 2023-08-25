@@ -128,12 +128,73 @@ $(() => {
       }
     });
   }
-  $(document).on("click",".variable-item",function(){
+  $(document).on("click",".variable-item",function(event){
+    event.preventDefault();
+    let dataHrefURL = $(this).data("href");
     let codeprod = $(this).attr("data-codeprod");
     let nameprod = $(this).attr("data-nameprod");
     $("#set_colr-code").val(codeprod);
     $("#set_colr-name").val(nameprod);
-    $(this).toggleClass("tggle-select").siblings().removeClass("tggle-select");
+    if($(this).hasClass("tggle-select")){
+      $(this).removeClass("tggle-select").siblings().removeClass("tggle-select");
+      let dataColorsByProd = {
+        "id_prod": $(this).attr('data-getsend'),
+        "color_code": 0,
+        "color_name": 0,
+      };
+      if(dataHrefURL != undefined){
+        $.ajax({
+          headers:{
+            'X-CSRF-TOKEN': csrfTokenFrm
+          },
+          type: 'GET',
+          url: dataHrefURL,
+          data: {'id_prod':dataColorsByProd},
+          success: function(e){
+            console.log(e);
+            /*
+            if(e.res == "true"){
+              $(".rst_varscolors__link").remove();
+            }else{
+              console.log("Error al eliminar los agregados");
+            }
+            */
+          }
+        });
+      }else{
+        $("#rst_varscolors").html(``);
+      }
+    }else{
+      $(this).addClass("tggle-select").siblings().removeClass("tggle-select");
+      let dataColorsByProd = {
+        "id_prod": $(this).attr('data-getsend'),
+        "color_code": codeprod,
+        "color_name": nameprod,
+      };
+      if(dataHrefURL != undefined){
+        $.ajax({
+          headers:{
+            'X-CSRF-TOKEN': csrfTokenFrm
+          },
+          type: 'GET',
+          url: dataHrefURL,
+          data: {'id_prod':dataColorsByProd},
+          success: function(e){
+            console.log(e);
+            /*
+            if(e.res == "true"){
+              $(".rst_varscolors__link").remove();
+            }else{
+              console.log("Error al eliminar los agregados");
+            }
+            */
+          }
+        });
+      }else{
+        $("#rst_varscolors").html(``);
+      }
+    }
+    // $(this).toggleClass("tggle-select").siblings().removeClass("tggle-select");
     var siblingCount = $(this).parent().find(".tggle-select").length;
     if(siblingCount != 0){
       $("#rst_varscolors").html(`<a class="rst_varscolors__link" href="javascript:void(0);">Limpiar</a>`);

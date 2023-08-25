@@ -125,13 +125,13 @@ $(() => {
         $(`<div class="d-flex cCt_wtpsNmbrs__c__m">
         <div class="flex-grow-1 cCt_wtpsNmbrs__c__m__i">
           <div class="form-group">
-            <input type="text" class="form-control" name="wtspnumbers_title[]" placeholder="" value="">
+            <input type="text" class="form-control" name="wtspnumbers_title[]" placeholder="" value="" required>
           </div>
           <div class="form-group">
-            <input type="text" class="form-control" name="wtspnumbers_text[]" placeholder="" value="">
+            <input type="text" class="form-control" name="wtspnumbers_text[]" placeholder="" value="" required>
           </div>
           <div class="form-group">
-            <input type="text" class="form-control" name="wtspnumbers_number[]" placeholder="" value="" data-valformat="withspacesforthreenumbers" maxlength="9">
+            <input type="text" class="form-control" name="wtspnumbers_number[]" placeholder="" data-valformat="withspacesforthreenumbers" maxlength="9" value="" required>
           </div>
         </div>
         <div class="flex-btn">
@@ -144,13 +144,13 @@ $(() => {
         $('#wpsnumbsgadd_1Gdhj5-2lks').html(`<div class="d-flex cCt_wtpsNmbrs__c__m">
         <div class="flex-grow-1 cCt_wtpsNmbrs__c__m__i">
           <div class="form-group">
-            <input type="text" class="form-control" name="wtspnumbers_title[]" placeholder="" value="">
+            <input type="text" class="form-control" name="wtspnumbers_title[]" placeholder="" value="" required>
           </div>
           <div class="form-group">
-            <input type="text" class="form-control" name="wtspnumbers_text[]" placeholder="" value="">
+            <input type="text" class="form-control" name="wtspnumbers_text[]" placeholder="" value="" required>
           </div>
           <div class="form-group">
-            <input type="text" class="form-control" name="wtspnumbers_number[]" placeholder="" value="" data-valformat="withspacesforthreenumbers" maxlength="9">
+            <input type="text" class="form-control" name="wtspnumbers_number[]" placeholder="" data-valformat="withspacesforthreenumbers" maxlength="9" value="" required>
           </div>
         </div>
         <div class="flex-btn">

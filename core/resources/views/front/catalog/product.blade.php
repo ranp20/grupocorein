@@ -160,9 +160,11 @@
           if(count($arrDataProd) > 0){
             if(isset($arrDataProd['attribute_collection'])){
               $arrCountDataProd = json_decode($arrDataProd['attribute_collection'], TRUE);
-              if($arrCountDataProd['attr_color_code'] != "0"){
-                $arrColorSelProd['color_code'] = $arrCountDataProd['attr_color_code'];
-                $arrColorSelProd['color_name'] = $arrCountDataProd['attr_color_name'];
+              if(isset($arrCountDataProd['atributoraiz_collection'])){
+                if(isset($arrCountDataProd['atributoraiz_collection']['color'])){
+                  $arrColorSelProd['color_code'] = $arrCountDataProd['atributoraiz_collection']['color']['code'];
+                  $arrColorSelProd['color_name'] = $arrCountDataProd['atributoraiz_collection']['color']['name'];
+                }
               }
             }
           }
@@ -273,7 +275,7 @@
                 <ul class="variable-items-wrapper color-variable-wrapper" data-attribute_name="attribute_pa_numero">                
                   @foreach($arrColorAdd as $k => $v)
                     @if($v['code'] != null && $v['code'] != "")
-                    <li data-toggle="tooltip" data-placement="bottom" title="{{ $countColors }}" data-original-title="{{ $countColors }}" data-codeprod="{{ $v['code'] }}" data-nameprod="{{ $v['name'] }}" class="variable-item red-tooltip {{ (count($arrColorSelProd) > 0 && $arrColorSelProd['color_name'] == $v['name']) ? 'tggle-select' : '' }}" data-value="{{ $countColors }}" role="button" tabindex="{{ $countColors }}">
+                    <li data-toggle="tooltip" data-placement="bottom" title="{{ $countColors }}" data-original-title="{{ $countColors }}" data-codeprod="{{ $v['code'] }}" data-nameprod="{{ $v['name'] }}" class="variable-item red-tooltip {{ (count($arrColorSelProd) > 0 && $arrColorSelProd['color_name'] == $v['name']) ? 'tggle-select' : '' }}" data-value="{{ $countColors }}" role="button" tabindex="{{ $countColors }}" data-href="{{ route('front.updatevarscolors',$item->id) }}" data-getsend="{{ $item->id }}">
                       <span class="variable-item-span variable-item-span-color" style="background-color:{{ $v['name'] }};"></span>
                     </li>
                     @endif
