@@ -25,6 +25,9 @@
           <div class="padding-top-2x mt-2 hidden-lg-up"></div>
           <form class="row" action="<?php echo e(route('user.profile.update')); ?>" method="POST" enctype="multipart/form-data">
             <?php echo csrf_field(); ?>
+            <div>
+              <h5><?php echo e(__('Personal information')); ?></h5>
+            </div>
             <div class="col-md-6">
               <div class="form-group">
                 <label for="avater" class="form-label"><?php echo e(__('Avater Photo')); ?></label>
@@ -124,6 +127,55 @@ $message = $__bag->first($__errorArgs[0]); ?>
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
+              </div>
+            </div>
+            <div class="col-12"><hr class="mt-2 mb-3"></div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="reg-address1"><?php echo e(__('Address 1')); ?> *</label>
+                <input class="form-control" name="reg_address1" placeholder="<?php echo e((isset($user->reg_address1) && $user->reg_address1 != '') ? $user->reg_address1 : 'Dirección 1'); ?>" value="<?php echo e($user->reg_address1); ?>" type="text" id="reg-address1">
+                <?php $__errorArgs = ['reg_address1'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                <p class="text-danger"><?php echo e($message); ?></p>
+                <?php endif; ?>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="reg-address2"><?php echo e(__('Address 2 (Optional)')); ?> </label>
+                <input class="form-control" name="reg_address2" placeholder="<?php echo e((isset($user->reg_address2) && $user->reg_address2 != '') ? $user->reg_address2 : 'Dirección 2'); ?>" value="<?php echo e($user->reg_address2); ?>" type="text" id="reg-address2">
+                <?php $__errorArgs = ['reg_address2'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                <p class="text-danger"><?php echo e($message); ?></p>
+                <?php endif; ?>
+              </div>
+            </div>
+            <div class="col-12"><hr class="mt-2 mb-3"></div>
+            <div>
+              <h5><?php echo e(__('Enterprise data')); ?></h5>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="reg-ruc">RUC</label>
+                <input class="form-control" type="text" data-valformat="onlydigits" name="reg_ruc" placeholder="RUC" id="reg-ruc" value="<?php echo e($user->reg_ruc); ?>" maxlength="11">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="reg-razosocial">Razón social</label>
+                <input class="form-control" type="text" name="reg_razonsocial" placeholder="Razón social" id="reg-razosocial" value="<?php echo e($user->reg_razonsocial); ?>">
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label for="reg-addressfiscal">Dirección Fiscal</label>
+                <input class="form-control" type="text" name="reg_addressfiscal" placeholder="Dirección Fiscal" id="reg-addressfiscal" value="<?php echo e($user->reg_addressfiscal); ?>">
               </div>
             </div>
             <div class="col-12">

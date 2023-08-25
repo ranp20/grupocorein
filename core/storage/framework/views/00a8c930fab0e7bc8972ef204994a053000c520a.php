@@ -2,7 +2,8 @@
   <?php if($data->user_id): ?>
   <tr id="order-bulk-delete">
     <td><input type="checkbox" class="bulk-item" value="<?php echo e($data->id); ?>"></td>
-    <td><?php echo e($data->transaction_number); ?></td>
+    
+    <td><?php echo e($data->id_gencode); ?></td>
     <td><?php echo e(json_decode($data->billing_info,true)['bill_first_name']); ?></td>
     <td>
       <?php if($setting->currency_direction == 1): ?>

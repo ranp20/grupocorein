@@ -2,7 +2,8 @@
   @if($data->user_id)
   <tr id="order-bulk-delete">
     <td><input type="checkbox" class="bulk-item" value="{{$data->id}}"></td>
-    <td>{{ $data->transaction_number}}</td>
+    {{-- <!--<td>{{ $data->transaction_number}}</td> --> --}}
+    <td>{{ $data->id_gencode}}</td>
     <td>{{ json_decode($data->billing_info,true)['bill_first_name']}}</td>
     <td>
       @if ($setting->currency_direction == 1)
