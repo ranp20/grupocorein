@@ -36,7 +36,20 @@
               ?>
               <tr>
                 <td>
-                  <div class="product-item"><a class="product-thumb" href="<?php echo e(route('front.product',$item['slug'])); ?>"><img src="<?php echo e(asset('assets/images/'.$item['photo'])); ?>" alt="Product"></a>
+                  <div class="product-item">
+                    <?php
+                      $pathProductPhoto = 'assets/images/'.$item['photo'];
+                      $pathProductPhotoDefault = 'assets/images/Utilities/default_product.png';
+                    ?>
+                    <?php if(file_exists( $pathProductPhoto )): ?>
+                    <a class="product-thumb" href="<?php echo e(route('front.product',$item['slug'])); ?>">
+                      <img src="<?php echo e($pathProductPhoto); ?>" alt="Product">
+                    </a>
+                    <?php else: ?>
+                    <div class="product-thumb">
+                      <img src="<?php echo e($pathProductPhotoDefault); ?>" alt="ProductDefault">
+                    </div>
+                    <?php endif; ?>
                     <div class="product-info">
                       <h4 class="product-title">
                         <a href="<?php echo e(route('front.product',$item['slug'])); ?>">

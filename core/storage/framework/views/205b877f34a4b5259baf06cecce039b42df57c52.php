@@ -62,7 +62,21 @@
       <h3 class="widget-title"><?php echo e(__('Items In Your Cart')); ?></h3>
       <?php $__currentLoopData = $cart; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
       <div class="entry">
-        <div class="entry-thumb"><a href="<?php echo e(route('front.product',$item['slug'])); ?>"><img src="<?php echo e(asset('assets/images/'.$item['photo'])); ?>" alt="Product"></a></div>
+        <div class="entry-thumb">
+          <?php
+            $pathProductPhoto = 'assets/images/'.$item['photo'];
+            $pathProductPhotoDefault = 'assets/images/Utilities/default_product.png';
+          ?>
+          <?php if(file_exists( $pathProductPhoto )): ?>
+          <a href="<?php echo e(route('front.product',$item['slug'])); ?>">
+            <img src="<?php echo e(asset($pathProductPhoto)); ?>" alt="Product">
+          </a>
+          <?php else: ?>
+          <div class="product-thumb" style="display: block;border-radius: 5px;overflow: hidden;">
+            <img src="<?php echo e($pathProductPhotoDefault); ?>" alt="ProductDefault">
+          </div>
+          <?php endif; ?>
+        </div>
         <div class="entry-content">
           <h4 class="entry-title">
             <a href="<?php echo e(route('front.product',$item['slug'])); ?>"><?php echo e(strlen(strip_tags($item['name'])) > 45 ? substr(strip_tags($item['name']), 0, 45) . '...' : strip_tags($item['name'])); ?></a>

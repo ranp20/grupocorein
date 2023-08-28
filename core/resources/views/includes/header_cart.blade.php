@@ -19,9 +19,19 @@ exit();
 @endphp
 <div class="entry">
   <div class="entry-thumb">
+    @php
+      $pathProductCartPhoto = 'assets/images/'.$cart['photo'];
+      $pathProductCartPhotoDefault = 'assets/images/Utilities/default_product.png';
+    @endphp
+    @if(file_exists( $pathProductCartPhoto ))
     <a href="{{route('front.product',$cart['slug'])}}">
-      <img src="{{asset('assets/images/'.$cart['photo'])}}" alt="Product">
+      <img src="{{ asset($pathProductCartPhoto) }}" alt="Product">
     </a>
+    @else
+    <div class="product-thumb">
+      <img src="{{ asset($pathProductCartPhotoDefault) }}" alt="ProductDefault">
+    </div>
+    @endif
   </div>
   <div class="entry-content">
     <h4 class="entry-title"><a href="{{route('front.product',$cart['slug'])}}">

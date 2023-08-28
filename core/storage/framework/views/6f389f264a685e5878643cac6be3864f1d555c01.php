@@ -19,9 +19,19 @@ exit();
 ?>
 <div class="entry">
   <div class="entry-thumb">
+    <?php
+      $pathProductCartPhoto = 'assets/images/'.$cart['photo'];
+      $pathProductCartPhotoDefault = 'assets/images/Utilities/default_product.png';
+    ?>
+    <?php if(file_exists( $pathProductCartPhoto )): ?>
     <a href="<?php echo e(route('front.product',$cart['slug'])); ?>">
-      <img src="<?php echo e(asset('assets/images/'.$cart['photo'])); ?>" alt="Product">
+      <img src="<?php echo e($pathProductCartPhoto); ?>" alt="Product">
     </a>
+    <?php else: ?>
+    <div class="product-thumb">
+      <img src="<?php echo e($pathProductCartPhotoDefault); ?>" alt="ProductDefault">
+    </div>
+    <?php endif; ?>
   </div>
   <div class="entry-content">
     <h4 class="entry-title"><a href="<?php echo e(route('front.product',$cart['slug'])); ?>">

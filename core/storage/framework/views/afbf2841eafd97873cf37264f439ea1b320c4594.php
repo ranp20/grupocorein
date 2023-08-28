@@ -253,7 +253,7 @@
                   <?php else: ?>
                   --
                   <?php endif; ?>
-                </td>                
+                </td>
                 <td class="px-0"><?php echo e($item['qty']); ?></td>
                 <td class="px-0 text-right text-end">
                   <?php if($setting->currency_direction == 1): ?>

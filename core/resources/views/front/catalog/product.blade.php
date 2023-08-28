@@ -68,29 +68,48 @@
         <div class="product-thumbnails insize">
           <div class="product-details-slider owl-carousel">
             <?php
-              $imgUrlPhoto = asset('assets/images/'.$item->photo);
+              
+              $pathProductDetailsPhoto = 'assets/images/'.$item->photo;
+              $pathProductDetailsPhotoDefault = 'assets/images/Utilities/default_product.png';
+              $imgPathFileFinal = "";
+              if(file_exists( $pathProductDetailsPhoto )){
+                $imgPathFileFinal = $pathProductDetailsPhoto;
+              }else{
+                $imgPathFileFinal = $pathProductDetailsPhotoDefault;
+              }
+
+              $imgUrlPhoto = asset($imgPathFileFinal);
               $imgPhoto = getimagesize($imgUrlPhoto);
               $anchoPhoto = $imgPhoto[0];
               $altoPhoto = $imgPhoto[1];
             ?>
             <div class="item cntAds--i__itm--cInfo">
               <figure class="ads_dashboard" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
-                <a href="{{ asset('assets/images/'.$item->photo) }}" data-size="{{ $anchoPhoto }}x{{ $altoPhoto }}" data-index="0" data-fancybox="gallery">
-                  <img src="{{asset('assets/images/'.$item->photo)}}" alt="zoom"/>
+                <a href="{{ asset($imgPathFileFinal) }}" data-size="{{ $anchoPhoto }}x{{ $altoPhoto }}" data-index="0" data-fancybox="gallery">
+                  <img src="{{ asset($imgPathFileFinal) }}" alt="zoom"/>
                 </a>
               </figure>
             </div>
             @foreach ($galleries as $key => $gallery)
             <?php
-              $imgUrlGallery = asset('assets/images/'.$gallery->photo);
+              $pathProductDetailsGallery = 'assets/images/'.$gallery->photo;
+              $pathProductDetailsGalleryDefault = 'assets/images/Utilities/default_product.png';
+              $imgPathGalleryFileFinal = "";
+              if(file_exists( $pathProductDetailsGallery )){
+                $imgPathGalleryFileFinal = $pathProductDetailsGallery;
+              }else{
+                $imgPathGalleryFileFinal = $pathProductDetailsGalleryDefault;
+              }
+
+              $imgUrlGallery = asset($imgPathGalleryFileFinal);
               $imgGallery = getimagesize($imgUrlGallery);
               $anchoGallery = $imgGallery[0];
               $altoGallery = $imgGallery[1];
             ?>
             <div class="item cntAds--i__itm--cInfo">
               <figure class="ads_dashboard" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
-                <a href="{{ asset('assets/images/'.$gallery->photo) }}" data-size="{{ $anchoGallery }}x{{ $altoGallery }}" data-index="0" data-fancybox="gallery">
-                  <img src="{{ asset('assets/images/'.$gallery->photo) }}" alt="zoom"/>
+                <a href="{{ asset($imgPathGalleryFileFinal) }}" data-size="{{ $anchoGallery }}x{{ $altoGallery }}" data-index="0" data-fancybox="gallery">
+                  <img src="{{ asset($imgPathGalleryFileFinal) }}" alt="zoom"/>
                 </a>
               </figure>
             </div>

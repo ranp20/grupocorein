@@ -36,7 +36,20 @@
               @endphp
               <tr>
                 <td>
-                  <div class="product-item"><a class="product-thumb" href="{{route('front.product',$item['slug'])}}"><img src="{{asset('assets/images/'.$item['photo'])}}" alt="Product"></a>
+                  <div class="product-item">
+                    @php
+                      $pathProductPhoto = 'assets/images/'.$item['photo'];
+                      $pathProductPhotoDefault = 'assets/images/Utilities/default_product.png';
+                    @endphp
+                    @if(file_exists( $pathProductPhoto ))
+                    <a class="product-thumb" href="{{route('front.product',$item['slug'])}}">
+                      <img src="{{ asset($pathProductPhoto) }}" alt="Product">
+                    </a>
+                    @else
+                    <div class="product-thumb">
+                      <img src="{{ asset($pathProductPhotoDefault) }}" alt="ProductDefault">
+                    </div>
+                    @endif
                     <div class="product-info">
                       <h4 class="product-title">
                         <a href="{{route('front.product',$item['slug'])}}">
