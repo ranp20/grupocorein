@@ -458,3 +458,17 @@ label.color-picker > span > input[type=color]::-webkit-color-swatch-wrapper {
 label.color-picker > span > input[type=color]::-webkit-color-swatch {
   border: none; /* Remove browser's border around color in color picker */
 }
+/* CUSTOMS INVOICE ORDERS */
+.c-attrPrd__color{
+	&__title{
+			display: block;
+	}
+	&__m{
+			&__i{
+					display: inline-block;
+					width: 30px;
+					height: 30px;
+					border: thin solid #000;
+			}
+	}
+}

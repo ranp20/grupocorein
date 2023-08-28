@@ -11283,7 +11283,8 @@ body{
         background-color: #fff;
         padding: 0;
         border-radius: 4px;
-        box-shadow: 0 2px 2px 0 rgba(0,0,0,.2);
+        // box-shadow: 0 2px 2px 0 rgba(0,0,0,.2);
+        box-shadow: 0 2px 7px 0 rgba(0,0,0,.2);
         border: thin solid #eee;
         max-width: 160px;
         width: 80%;
@@ -11651,6 +11652,19 @@ body{
             strong{
                 color: #fff;
             }
+        }
+    }
+}
+.c-attrPrd__color{
+    &__title{
+        display: block;
+    }
+    &__m{
+        &__i{
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: thin solid #000;
         }
     }
 }

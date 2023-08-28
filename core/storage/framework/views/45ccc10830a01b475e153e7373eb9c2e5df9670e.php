@@ -492,11 +492,15 @@ body_theme4
           <div class="widget widget-links widget-light-skin">
             <h3 class="widget-title"><?php echo e(__('Usefull Links')); ?></h3>
             <ul>
-               <?php if($setting->is_contact == 1): ?>
-                <li class="<?php echo e(request()->routeIs('front.contact') ? 'active' : ''); ?>"><a href="<?php echo e(route('front.contact')); ?>"><?php echo e(__('Contact')); ?></a></li>
+                <?php if($setting->is_contact == 1): ?>
+                <li class="<?php echo e(request()->routeIs('front.contact') ? 'active' : ''); ?>">
+                    <a href="<?php echo e(route('front.contact')); ?>"><?php echo e(__('Contact')); ?></a>
+                </li>
                 <?php endif; ?>
                 <?php $__currentLoopData = DB::table('pages')->wherePos(2)->orwhere('pos',1)->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <li><a href="<?php echo e(route('front.page',$page->slug)); ?>"><?php echo e($page->title); ?></a></li>
+                <li>
+                    <a href="<?php echo e(route('front.page',$page->slug)); ?>"><?php echo e($page->title); ?></a>
+                </li>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </ul>
           </div>

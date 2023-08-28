@@ -500,11 +500,15 @@ body_theme4
           <div class="widget widget-links widget-light-skin">
             <h3 class="widget-title">{{__('Usefull Links')}}</h3>
             <ul>
-               @if ($setting->is_contact == 1)
-                <li class="{{ request()->routeIs('front.contact') ? 'active' : '' }}"><a href="{{route('front.contact')}}">{{__('Contact')}}</a></li>
+                @if ($setting->is_contact == 1)
+                <li class="{{ request()->routeIs('front.contact') ? 'active' : '' }}">
+                    <a href="{{route('front.contact')}}">{{__('Contact')}}</a>
+                </li>
                 @endif
                 @foreach (DB::table('pages')->wherePos(2)->orwhere('pos',1)->get() as $page)
-                <li><a href="{{route('front.page',$page->slug)}}">{{$page->title}}</a></li>
+                <li>
+                    <a href="{{route('front.page',$page->slug)}}">{{$page->title}}</a>
+                </li>
                 @endforeach
             </ul>
           </div>

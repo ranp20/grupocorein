@@ -155,7 +155,7 @@
             <thead>
               <tr>
                 <th width="50%" class="px-0 bg-transparent border-top-0"><span class="h6"><?php echo e(__('Products')); ?></span></th>
-                
+                <th class="px-0 bg-transparent border-top-0"><span class="h6"><?php echo e(__('Attribute')); ?></span></th>
                 <th class="px-0 bg-transparent border-top-0"><span class="h6"><?php echo e(__('Quantity')); ?></span></th>
                 <th class="px-0 bg-transparent border-top-0 text-right"><span class="h6"><?php echo e(__('Price')); ?></span></th>
               </tr>
@@ -164,6 +164,14 @@
               <?php
                 $option_price = 0;
                 $total = 0;
+              ?>
+              <?php
+                /*
+                echo "<pre>";
+                print_r(json_decode($order->cart, TRUE));
+                echo "</pre>";
+                exit();
+                */
               ?>
               <?php $__currentLoopData = json_decode($order->cart,true); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key  => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
               <?php
@@ -207,7 +215,45 @@
                   <?php endif; ?>
                   </p>
                 </td>
-                
+                <td class="px-0">
+                  <?php if(isset($item['attribute_collection'])): ?>
+                    <?php
+                      $attrCollection = json_decode($item['attribute_collection'], TRUE);
+                      $attrCollectionColor = "";
+                    ?>
+                    <?php if($attrCollection != "" && count($attrCollection) > 0): ?>
+                      <?php if(isset($attrCollection['atributoraiz_collection'])): ?>
+                        <?php
+                          $attrCollectionColor = $attrCollection['atributoraiz_collection'];
+                        ?>
+                        <?php if(isset($attrCollectionColor['color']) && count($attrCollectionColor['color']) > 0): ?>
+                          <?php
+                            $color_code = $attrCollectionColor['color']['code'];
+                            $color_name = $attrCollectionColor['color']['name'];
+                          ?>
+                          <?php if($color_code != "0" && $color_name != "0"): ?>
+                            <span class="c-attrPrd__color">
+                              <span class="c-attrPrd__color__title"><small>Color: </small></span>
+                              <span class="c-attrPrd__color__m">
+                                <span class="c-attrPrd__color__m__i" style="background-color: <?php echo e($color_name); ?>;"></span>
+                              </span>
+                            </span>
+                          <?php else: ?>
+                          --
+                          <?php endif; ?>
+                        <?php else: ?>
+                        --
+                        <?php endif; ?>
+                      <?php else: ?>
+                      --
+                      <?php endif; ?>
+                    <?php else: ?>
+                    --
+                    <?php endif; ?>
+                  <?php else: ?>
+                  --
+                  <?php endif; ?>
+                </td>                
                 <td class="px-0"><?php echo e($item['qty']); ?></td>
                 <td class="px-0 text-right text-end">
                   <?php if($setting->currency_direction == 1): ?>

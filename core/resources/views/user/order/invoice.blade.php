@@ -155,11 +155,7 @@
             <thead>
               <tr>
                 <th width="50%" class="px-0 bg-transparent border-top-0"><span class="h6">{{__('Products')}}</span></th>
-                {{--
-                <!--
                 <th class="px-0 bg-transparent border-top-0"><span class="h6">{{__('Attribute')}}</span></th>
-                -->
-                --}}
                 <th class="px-0 bg-transparent border-top-0"><span class="h6">{{__('Quantity')}}</span></th>
                 <th class="px-0 bg-transparent border-top-0 text-right"><span class="h6">{{__('Price')}}</span></th>
               </tr>
@@ -169,6 +165,14 @@
                 $option_price = 0;
                 $total = 0;
               @endphp
+              <?php
+                /*
+                echo "<pre>";
+                print_r(json_decode($order->cart, TRUE));
+                echo "</pre>";
+                exit();
+                */
+              ?>
               @foreach (json_decode($order->cart,true) as $key  => $item)
               @php
                 $total += $item['main_price'] * $item['qty'];
@@ -210,26 +214,45 @@
                   @endif
                   </p>
                 </td>
-                {{--
-                <!--
                 <td class="px-0">
-                  @if($item['attribute_price'] != "" && count($item['attribute_price']) > 0 && $item['attribute']['option_name'])
-                  @foreach ($item['attribute']['option_name'] as $optionkey => $option_name)
-                  <span class="entry-meta"><b>{{$option_name}}</b> :
-                    @if ($setting->currency_direction == 1)
-                    {{$order->currency_sign}}{{round($item['attribute']['option_price'][$optionkey]*$order->currency_value,2)}}
+                  @if(isset($item['attribute_collection']))
+                    @php
+                      $attrCollection = json_decode($item['attribute_collection'], TRUE);
+                      $attrCollectionColor = "";
+                    @endphp
+                    @if($attrCollection != "" && count($attrCollection) > 0)
+                      @if(isset($attrCollection['atributoraiz_collection']))
+                        @php
+                          $attrCollectionColor = $attrCollection['atributoraiz_collection'];
+                        @endphp
+                        @if(isset($attrCollectionColor['color']) && count($attrCollectionColor['color']) > 0)
+                          @php
+                            $color_code = $attrCollectionColor['color']['code'];
+                            $color_name = $attrCollectionColor['color']['name'];
+                          @endphp
+                          @if($color_code != "0" && $color_name != "0")
+                            <span class="c-attrPrd__color">
+                              <span class="c-attrPrd__color__title"><small>Color: </small></span>
+                              <span class="c-attrPrd__color__m">
+                                <span class="c-attrPrd__color__m__i" style="background-color: {{ $color_name }};"></span>
+                              </span>
+                            </span>
+                          @else
+                          --
+                          @endif
+                        @else
+                        --
+                        @endif
+                      @else
+                      --
+                      @endif
                     @else
-                    {{round($item['attribute']['option_price'][$optionkey]*$order->currency_value,2)}}{{$order->currency_sign}}
+                    --
                     @endif
-
-                  </span>
-                  @endforeach
                   @else
                   --
                   @endif
                 </td>
-                -->
-                --}}
                 <td class="px-0">{{$item['qty']}}</td>
                 <td class="px-0 text-right text-end">
                   @if ($setting->currency_direction == 1)
