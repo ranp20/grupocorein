@@ -73,7 +73,7 @@
           </a>
           <?php else: ?>
           <div class="product-thumb" style="display: block;border-radius: 5px;overflow: hidden;">
-            <img src="<?php echo e($pathProductPhotoDefault); ?>" alt="ProductDefault">
+            <img src="<?php echo e(asset($pathProductPhotoDefault)); ?>" alt="ProductDefault">
           </div>
           <?php endif; ?>
         </div>

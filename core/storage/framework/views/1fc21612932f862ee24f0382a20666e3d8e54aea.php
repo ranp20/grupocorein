@@ -43,11 +43,11 @@
                     ?>
                     <?php if(file_exists( $pathProductPhoto )): ?>
                     <a class="product-thumb" href="<?php echo e(route('front.product',$item['slug'])); ?>">
-                      <img src="<?php echo e($pathProductPhoto); ?>" alt="Product">
+                      <img src="<?php echo e(asset($pathProductPhoto)); ?>" alt="Product">
                     </a>
                     <?php else: ?>
                     <div class="product-thumb">
-                      <img src="<?php echo e($pathProductPhotoDefault); ?>" alt="ProductDefault">
+                      <img src="<?php echo e(asset($pathProductPhotoDefault)); ?>" alt="ProductDefault">
                     </div>
                     <?php endif; ?>
                     <div class="product-info">

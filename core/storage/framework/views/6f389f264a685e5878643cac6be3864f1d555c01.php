@@ -25,11 +25,11 @@ exit();
     ?>
     <?php if(file_exists( $pathProductCartPhoto )): ?>
     <a href="<?php echo e(route('front.product',$cart['slug'])); ?>">
-      <img src="<?php echo e($pathProductCartPhoto); ?>" alt="Product">
+      <img src="<?php echo e(asset($pathProductCartPhoto)); ?>" alt="Product">
     </a>
     <?php else: ?>
     <div class="product-thumb">
-      <img src="<?php echo e($pathProductCartPhotoDefault); ?>" alt="ProductDefault">
+      <img src="<?php echo e(asset($pathProductCartPhotoDefault)); ?>" alt="ProductDefault">
     </div>
     <?php endif; ?>
   </div>

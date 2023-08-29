@@ -969,19 +969,20 @@ class CheckoutController extends Controller{
     $reg_address1 = (isset(Auth::user()->reg_address1) && !empty(Auth::user()->reg_address1))? Auth::user()->reg_address1 : '';
     $reg_address2 = (isset(Auth::user()->reg_address2) && !empty(Auth::user()->reg_address2))? Auth::user()->reg_address2 : '';
     $reg_addressFinal = '';
-    if(!empty($reg_address1) && !empty($reg_address2)){
-      $reg_addressFinal = $reg_address1.", ".$reg_address2;
-    }else if(!empty($reg_address1) && empty($reg_address2)){
-      $reg_addressFinal = $reg_address1;
-    }else if(empty($reg_address1) && !empty($reg_address2)){
-      $reg_addressFinal = $reg_address2;
+    if(!empty($get_ShippingAddress['ship_address1']) && !empty($get_ShippingAddress['ship_address2'])){
+      $reg_addressFinal = $get_ShippingAddress['ship_address1'].", ".$get_ShippingAddress['ship_address2'];
+    }else if(!empty($get_ShippingAddress['ship_address1']) && empty($get_ShippingAddress['ship_address2'])){
+      $reg_addressFinal = $get_ShippingAddress['ship_address1'];
+    }else if(empty($get_ShippingAddress['ship_address1']) && !empty($get_ShippingAddress['ship_address2'])){
+      $reg_addressFinal = $get_ShippingAddress['ship_address2'];
     }else{
-      if(!empty($get_ShippingAddress['ship_address1']) && !empty($get_ShippingAddress['ship_address2'])){
-        $reg_addressFinal = $get_ShippingAddress['ship_address1'].", ".$get_ShippingAddress['ship_address2'];
-      }else if(!empty($get_ShippingAddress['ship_address1']) && empty($get_ShippingAddress['ship_address2'])){
-        $reg_addressFinal = $get_ShippingAddress['ship_address1'];
-      }else if(empty($get_ShippingAddress['ship_address1']) && !empty($get_ShippingAddress['ship_address2'])){
-        $reg_addressFinal = $get_ShippingAddress['ship_address2'];
+      $reg_addressFinal = '';
+      if(!empty($reg_address1) && !empty($reg_address2)){
+        $reg_addressFinal = $reg_address1.", ".$reg_address2;
+      }else if(!empty($reg_address1) && empty($reg_address2)){
+        $reg_addressFinal = $reg_address1;
+      }else if(empty($reg_address1) && !empty($reg_address2)){
+        $reg_addressFinal = $reg_address2;
       }else{
         $reg_addressFinal = '';
       }

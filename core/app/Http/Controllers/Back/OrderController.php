@@ -151,7 +151,7 @@ class OrderController extends Controller{
       $get_idUser = $user['id'];
       $nextIdGenCode = $order['id_gencode'];
       $get_BillingAddress = $order['billing_info'];
-      $get_ShippingAddress = $order['shipping_info'];
+      $get_ShippingAddress = json_decode($order['shipping_info'], TRUE);
       $get_SessionCart = json_decode($order['cart'], TRUE);
       $get_SessionCartFormat = [];
       $countAllProds = 0;
@@ -185,33 +185,24 @@ class OrderController extends Controller{
       }
 
       // ---------- DIRECCIÓN DE ENVÍO
-      $reg_address1 = (isset($user['reg_address1']) && !empty($user['reg_address1']))? $user['reg_address1'] : '';
-      $reg_address2 = (isset($user['reg_address2']) && !empty($user['reg_address2']))? $user['reg_address2'] : '';
+      $reg_address1 = (isset($user['reg_address1']) && !empty($user['reg_address1'])) ? $user['reg_address1'] : '';
+      $reg_address2 = (isset($user['reg_address2']) && !empty($user['reg_address2'])) ? $user['reg_address2'] : '';
       $reg_addressFinal = '';
-      if(!empty($reg_address1) && !empty($reg_address2)){
-        $reg_addressFinal = $reg_address1.", ".$reg_address2;
-      }else if(!empty($reg_address1) && empty($reg_address2)){
-        $reg_addressFinal = $reg_address1;
-      }else if(empty($reg_address1) && !empty($reg_address2)){
-        $reg_addressFinal = $reg_address2;
+      if(!empty($get_ShippingAddress['ship_address1']) && !empty($get_ShippingAddress['ship_address2'])){
+        $reg_addressFinal = $get_ShippingAddress['ship_address1'].", ".$get_ShippingAddress['ship_address2'];
+      }else if(!empty($get_ShippingAddress['ship_address1']) && empty($get_ShippingAddress['ship_address2'])){
+        $reg_addressFinal = $get_ShippingAddress['ship_address1'];
+      }else if(empty($get_ShippingAddress['ship_address1']) && !empty($get_ShippingAddress['ship_address2'])){
+        $reg_addressFinal = $get_ShippingAddress['ship_address2'];
       }else{
-        if(!empty($get_ShippingAddress['ship_address1']) && !empty($get_ShippingAddress['ship_address2'])){
-          $reg_addressFinal = $get_ShippingAddress['ship_address1'].", ".$get_ShippingAddress['ship_address2'];
-        }else if(!empty($get_ShippingAddress['ship_address1']) && empty($get_ShippingAddress['ship_address2'])){
-          $reg_addressFinal = $get_ShippingAddress['ship_address1'];
-        }else if(empty($get_ShippingAddress['ship_address1']) && !empty($get_ShippingAddress['ship_address2'])){
-          $reg_addressFinal = $get_ShippingAddress['ship_address2'];
+        if(!empty($reg_address1) && !empty($reg_address2)){
+          $reg_addressFinal = $reg_address1.", ".$reg_address2;
+        }else if(!empty($reg_address1) && empty($reg_address2)){
+          $reg_addressFinal = $reg_address1;
+        }else if(empty($reg_address1) && !empty($reg_address2)){
+          $reg_addressFinal = $reg_address2;
         }else{
-          // $reg_addressFinal = $get_BillingAddress['bill_address1'] . " " . $get_BillingAddress['bill_address2'];
-          // $reg_addressFinal = $get_BillingAddress['billing_info'];
-          // $reg_addressFinal = $get_BillingAddress;
           $reg_addressFinal = 'No especificado';
-          // foreach($get_BillingAddress->billing_info as $k => $v){
-          //   $reg_addressFinal = [
-          //     'bill_address1' => $v['bill_address1'],
-          //     'bill_address2' => $v['bill_address2'],
-          //   ];
-          // }
         }
       }
       // ---------- TELÉFONO
