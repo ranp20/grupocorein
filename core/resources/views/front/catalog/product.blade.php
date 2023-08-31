@@ -71,6 +71,8 @@
               
               $pathProductDetailsPhoto = 'assets/images/'.$item->photo;
               $pathProductDetailsPhotoDefault = 'assets/images/Utilities/default_product.png';
+              // $pathProductDetailsPhoto = asset('assets/images/'.$item->photo);
+              // $pathProductDetailsPhotoDefault = asset('assets/images/Utilities/default_product.png');
               $imgPathFileFinal = "";
               if(file_exists( $pathProductDetailsPhoto )){
                 $imgPathFileFinal = $pathProductDetailsPhoto;
@@ -79,14 +81,15 @@
               }
 
               $imgUrlPhoto = asset($imgPathFileFinal);
+              // $imgUrlPhoto = $imgPathFileFinal;
               $imgPhoto = getimagesize($imgUrlPhoto);
               $anchoPhoto = $imgPhoto[0];
               $altoPhoto = $imgPhoto[1];
             ?>
             <div class="item cntAds--i__itm--cInfo">
               <figure class="ads_dashboard" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
-                <a href="{{ asset($imgPathFileFinal) }}" data-size="{{ $anchoPhoto }}x{{ $altoPhoto }}" data-index="0" data-fancybox="gallery">
-                  <img src="{{ asset($imgPathFileFinal) }}" alt="zoom"/>
+                <a href="{{ $imgPathFileFinal }}" data-size="{{ $anchoPhoto }}x{{ $altoPhoto }}" data-index="0" data-fancybox="gallery">
+                  <img src="{{ $imgPathFileFinal }}" alt="zoom"/>
                 </a>
               </figure>
             </div>

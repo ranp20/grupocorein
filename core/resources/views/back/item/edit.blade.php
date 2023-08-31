@@ -35,7 +35,8 @@
           <div class="card-body">
             <div class="form-group">
               <label for="unidadraiz">{{ __('Select Root Unit') }} *</label>
-              <select name="unidadraiz" id="unidadraiz" class="form-control" >
+              <select name="unidadraiz" id="unidadraiz" class="form-control">
+                <option value="" selected>{{__('Select One')}}</option>
                 @foreach(DB::table('tbl_unidadraiz')->get() as $uraiz)
                 <option value="{{ $uraiz->id }}" {{ $uraiz->id == $item->unidad_raiz ? 'selected' : '' }}>{{ $uraiz->name }}</option>
                 @endforeach
@@ -43,92 +44,124 @@
             </div>
             <div class="form-group">
               <label for="atributoraiz">{{ __('Select Root Attribute') }} </label>
-              <select name="atributoraiz" id="atributoraiz" class="form-control" >
+              <select name="atributoraiz" id="atributoraiz" class="form-control">
+                <option value="" selected>{{__('Select One')}}</option>
                 @foreach(DB::table('tbl_atributoraiz')->get() as $attraiz)
                 <option value="{{ $attraiz->id }}" {{ $attraiz->id == $item->atributo_raiz ? 'selected' : '' }}>{{ $attraiz->name }}</option>
                 @endforeach
               </select>
             </div>
-            @if($item->atributoraiz_collection != "")
-            <div id="cTentr-af172698__p-adm">
-              <div class="d-flex">
-                <div class="flex-grow-1">
-                  <div class="form-group">
-                    <span><strong>Lista de colores</strong></span>
-                  </div>
-                </div>
-              </div>
-              <div class="d-flex">
-                <div class="flex-grow-1">
-                  <div class="form-group">
-                    <input type="text" class="form-control aia848d__clrcode" placeholder="Código de Producto" value="">
-                  </div>
-                </div>
-                <div class="flex-grow-1">
-                  <div class="form-group">
-                    <label class="color-picker">
-                      <span>
-                        <input type="color" class="form-control aia848d__clrname" placeholder="Código de Color" value="">
-                      </span>
-                    </label>
-                  </div>
-                </div>
-                <div class="flex-btn">
-                  <button type="button" class="btn btn-success add-color" data-text="" data-text1=""> <i class="fa fa-plus"></i> </button>
-                </div>
-              </div>
-              <?php
-                $arrColorAdd = [];
-                $ColorAll = [];
-                $ColorAll2 = [];
-                if(isset($item->atributoraiz_collection) && $item->atributoraiz_collection != ""){
-                  $colorsAvailables = json_decode($item->atributoraiz_collection, TRUE);
-                  if(count($colorsAvailables) > 0){
-                    $colorsAvailables_list = $colorsAvailables['atributoraiz_collection']['color'];
-                  
-                    foreach($colorsAvailables_list as $key => $val){
-                      $arrColorAdd[$key]['code'] = $val['code'];
-                      $arrColorAdd[$key]['name'] = $val['name'];
-                    }
-                  }
-                }
-
-              ?>
-
-              
-              @foreach($arrColorAdd as $k => $v)
-                @if($v['code'] != null && $v['code'] != "")
-                
+            @if($item->atributo_raiz != 0 && $item->atributo_raiz == 1)
+              @if($item->atributoraiz_collection != "" && $item->atributoraiz_collection != "[]")
+              <div id="cTentr-af172698__p-adm">
                 <div class="d-flex">
                   <div class="flex-grow-1">
                     <div class="form-group">
-                      <input type="text" class="form-control" name="color_code[]" placeholder="Código de Producto" value="{{ $v['code'] }}">
+                      <span><strong>Lista de colores</strong></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <div class="flex-grow-1">
+                    <div class="form-group">
+                      <input type="text" class="form-control aia848d__clrcode" placeholder="Código de Producto" value="">
                     </div>
                   </div>
                   <div class="flex-grow-1">
                     <div class="form-group">
                       <label class="color-picker">
                         <span>
-                          <input type="color" class="form-control" name="color_name[]" placeholder="Código de Color" value="{{ $v['name'] }}">
+                          <input type="color" class="form-control aia848d__clrname" placeholder="Código de Color" value="">
                         </span>
                       </label>
                     </div>
                   </div>
                   <div class="flex-btn">
-                    <button type="button" class="btn btn-danger remove-color">
-                      <i class="fa fa-minus"></i>
-                    </button>
+                    <button type="button" class="btn btn-success add-color" data-text="" data-text1=""> <i class="fa fa-plus"></i> </button>
                   </div>
                 </div>
-                @endif
-                
-                
-              @endforeach
-              
+                <?php
+                  $arrColorAdd = [];
+                  $ColorAll = [];
+                  $ColorAll2 = [];
+                  if(isset($item->atributoraiz_collection) && $item->atributoraiz_collection != ""){
+                    $colorsAvailables = json_decode($item->atributoraiz_collection, TRUE);
+                    if(count($colorsAvailables) > 0){
+                      $colorsAvailables_list = $colorsAvailables['atributoraiz_collection']['color'];
+                    
+                      foreach($colorsAvailables_list as $key => $val){
+                        $arrColorAdd[$key]['code'] = $val['code'];
+                        $arrColorAdd[$key]['name'] = $val['name'];
+                      }
+                    }
+                  }
 
-            </div>
+                ?>
+
+                
+                @foreach($arrColorAdd as $k => $v)
+                  @if($v['code'] != null && $v['code'] != "")
+                  
+                  <div class="d-flex">
+                    <div class="flex-grow-1">
+                      <div class="form-group">
+                        <input type="text" class="form-control" name="color_code[]" placeholder="Código de Producto" value="{{ $v['code'] }}">
+                      </div>
+                    </div>
+                    <div class="flex-grow-1">
+                      <div class="form-group">
+                        <label class="color-picker">
+                          <span>
+                            <input type="color" class="form-control" name="color_name[]" placeholder="Código de Color" value="{{ $v['name'] }}">
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="flex-btn">
+                      <button type="button" class="btn btn-danger remove-color">
+                        <i class="fa fa-minus"></i>
+                      </button>
+                    </div>
+                  </div>
+                  @endif
+                  
+                  
+                @endforeach
+                
+
+              </div>
+              @else
+              <div id="cTentr-af172698__p-adm">
+                <div class="d-flex">
+                  <div class="flex-grow-1">
+                    <div class="form-group">
+                      <span><strong>Lista de colores</strong></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <div class="flex-grow-1">
+                    <div class="form-group">
+                      <input type="text" class="form-control aia848d__clrcode" placeholder="Código de Producto" value="">
+                    </div>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="form-group">
+                      <label class="color-picker">
+                        <span>
+                          <input type="color" class="form-control aia848d__clrname" placeholder="Código de Color" value="">
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="flex-btn">
+                    <button type="button" class="btn btn-success add-color" data-text="" data-text1=""> <i class="fa fa-plus"></i> </button>
+                  </div>
+                </div>
+              </div>
+              @endif
             @else
-            <div id="cTentr-af172698__p-adm"></div>
+              <div id="cTentr-af172698__p-adm"></div>
             @endif
           </div>
         </div>
@@ -136,12 +169,12 @@
           <div class="card-body">
             <div class="form-group">
               <label for="name">{{ __('Name') }} *</label>
-              <input type="text" name="name" class="form-control item-name" id="name" placeholder="{{ __('Enter Name') }}" value="{{ $item->name }}" >
+              <input type="text" name="name" class="form-control item-name" id="name" placeholder="{{ __('Enter Name') }}" value="{{ $item->name }}">
               <span id="spn__iptequalsmssg"></span>
             </div>
             <div class="form-group">
               <label for="slug">{{ __('Slug') }} *</label>
-              <input type="text" name="slug" class="form-control" id="slug" placeholder="{{ __('Enter Slug') }}" value="{{ $item->slug }}" >
+              <input type="text" name="slug" class="form-control" id="slug" placeholder="{{ __('Enter Slug') }}" value="{{ $item->slug }}">
             </div>
           </div>
         </div>
@@ -151,7 +184,7 @@
               <label class="d-block">{{ __('Featured Image') }} *</label>
             </div>
             <div class="form-group pb-0 pt-0 mt-0 mb-0">
-              <img class="admin-img lg" src="{{ $item->photo ? asset('assets/images/'.$item->photo) : asset('assets/images/placeholder.png') }}" >
+              <img class="admin-img lg" src="{{ $item->photo ? asset('assets/images/'.$item->photo) : asset('assets/images/placeholder.png') }}">
             </div>
             <div class="form-group position-relative ">
               <label class="file">
@@ -306,7 +339,7 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text">{{ $curr->sign }}</span>
                 </div>
-                <input type="text" id="previous_price" name="previous_price" class="form-control" placeholder="{{ __('Enter Previous Price') }}" min="1" step="0.1" value="{{ round($item->previous_price*$curr->value ,2)}}" >
+                <input type="text" id="previous_price" name="previous_price" class="form-control" placeholder="{{ __('Enter Previous Price') }}" min="1" step="0.1" value="{{ round($item->previous_price*$curr->value ,2)}}">
               </div>
             </div>
           </div>
@@ -315,7 +348,7 @@
           <div class="card-body">
             <div class="form-group">
               <label for="category_id">{{ __('Select Category') }} *</label>
-              <select name="category_id" id="category_id" data-href="{{route('back.get.subcategory')}}" class="form-control" >
+              <select name="category_id" id="category_id" data-href="{{route('back.get.subcategory')}}" class="form-control">
                 @foreach(DB::table('categories')->whereStatus(1)->get() as $cat)
                 <option value="{{ $cat->id }}" {{ $cat->id == $item->category_id ? 'selected' : '' }}>{{ $cat->name }}</option>
                 @endforeach
@@ -341,7 +374,7 @@
             </div>
             <div class="form-group">
               <label for="brand_id">{{ __('Select Brand') }} </label>
-              <select name="brand_id" id="brand_id" class="form-control" >
+              <select name="brand_id" id="brand_id" class="form-control">
                 <option value="" selected>{{__('Select Brand')}}</option>
                 @foreach(DB::table('brands')->whereStatus(1)->get() as $brand)
                 <option value="{{ $brand->id }}" {{$brand->id == $item->brand_id ? 'selected' : ''}} >{{ $brand->name }}</option>
@@ -355,7 +388,7 @@
             <div class="form-group">
               <label for="stock">{{ __('Total in stock') }} *</label>
               <div class="input-group mb-3">
-                <input type="number" id="stock" name="stock" class="form-control" placeholder="{{ __('Total in stock') }}" value="{{$item->stock}}" >
+                <input type="number" id="stock" name="stock" class="form-control" placeholder="{{ __('Total in stock') }}" value="{{$item->stock}}">
               </div>
             </div>
             <div class="form-group">
@@ -537,16 +570,16 @@
             
             <div class="form-group">
               <label for="sku">{{ __('SKU') }} *</label>
-              <input type="text" name="sku" class="form-control" id="sku" placeholder="{{ __('Enter SKU') }}" value="{{$item->sku}}" >
+              <input type="text" name="sku" class="form-control" id="sku" placeholder="{{ __('Enter SKU') }}" value="{{$item->sku}}">
             </div>
             <div class="form-group">
               <label for="video">{{ __('Vido Link') }} </label>
-              <input type="text" name="video" class="form-control" id="video" placeholder="{{ __('Enter Video Link') }}" value="{{$item->video}}" >
+              <input type="text" name="video" class="form-control" id="video" placeholder="{{ __('Enter Video Link') }}" value="{{$item->video}}">
             </div>                    
             <!-- NUEVO CONTENIDO (INICIO) -->
             <div class="form-group">
               <label for="sku">{{ __('Código SAP') }} *</label>
-              <input type="text" name="sap_code" class="form-control" id="sap_code" placeholder="{{ __('Enter SAP code') }}" value="{{$item->sap_code}}" >
+              <input type="text" name="sap_code" class="form-control" id="sap_code" placeholder="{{ __('Enter SAP code') }}" value="{{$item->sap_code}}">
             </div>                    
             <div>
               <div class="form-group pb-0  mb-0">

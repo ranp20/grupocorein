@@ -34,7 +34,7 @@
           <div class="card-body">
             <div class="form-group">
               <label for="unidadraiz"><?php echo e(__('Select Root Unit')); ?> *</label>
-              <select name="unidadraiz" id="unidadraiz" class="form-control" required>
+              <select name="unidadraiz" id="unidadraiz" class="form-control">
                 <option value="" selected><?php echo e(__('Select One')); ?></option>
                 <?php $__currentLoopData = DB::table('tbl_unidadraiz')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $uraiz): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <option value="<?php echo e($uraiz->id); ?>"><?php echo e($uraiz->name); ?></option>
@@ -43,7 +43,7 @@
             </div>
             <div class="form-group">
               <label for="atributoraiz"><?php echo e(__('Select Root Attribute')); ?> </label>
-              <select name="atributoraiz" id="atributoraiz" class="form-control" required>
+              <select name="atributoraiz" id="atributoraiz" class="form-control">
                 <option value="" selected><?php echo e(__('Select One')); ?></option>
                 <?php $__currentLoopData = DB::table('tbl_atributoraiz')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attraiz): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <option value="<?php echo e($attraiz->id); ?>"><?php echo e($attraiz->name); ?></option>

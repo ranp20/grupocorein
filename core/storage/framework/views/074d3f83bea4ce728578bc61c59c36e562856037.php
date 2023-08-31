@@ -34,7 +34,8 @@
           <div class="card-body">
             <div class="form-group">
               <label for="unidadraiz"><?php echo e(__('Select Root Unit')); ?> *</label>
-              <select name="unidadraiz" id="unidadraiz" class="form-control" >
+              <select name="unidadraiz" id="unidadraiz" class="form-control">
+                <option value="" selected><?php echo e(__('Select One')); ?></option>
                 <?php $__currentLoopData = DB::table('tbl_unidadraiz')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $uraiz): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <option value="<?php echo e($uraiz->id); ?>" <?php echo e($uraiz->id == $item->unidad_raiz ? 'selected' : ''); ?>><?php echo e($uraiz->name); ?></option>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -42,92 +43,124 @@
             </div>
             <div class="form-group">
               <label for="atributoraiz"><?php echo e(__('Select Root Attribute')); ?> </label>
-              <select name="atributoraiz" id="atributoraiz" class="form-control" >
+              <select name="atributoraiz" id="atributoraiz" class="form-control">
+                <option value="" selected><?php echo e(__('Select One')); ?></option>
                 <?php $__currentLoopData = DB::table('tbl_atributoraiz')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attraiz): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <option value="<?php echo e($attraiz->id); ?>" <?php echo e($attraiz->id == $item->atributo_raiz ? 'selected' : ''); ?>><?php echo e($attraiz->name); ?></option>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
               </select>
             </div>
-            <?php if($item->atributoraiz_collection != ""): ?>
-            <div id="cTentr-af172698__p-adm">
-              <div class="d-flex">
-                <div class="flex-grow-1">
-                  <div class="form-group">
-                    <span><strong>Lista de colores</strong></span>
-                  </div>
-                </div>
-              </div>
-              <div class="d-flex">
-                <div class="flex-grow-1">
-                  <div class="form-group">
-                    <input type="text" class="form-control aia848d__clrcode" placeholder="Código de Producto" value="">
-                  </div>
-                </div>
-                <div class="flex-grow-1">
-                  <div class="form-group">
-                    <label class="color-picker">
-                      <span>
-                        <input type="color" class="form-control aia848d__clrname" placeholder="Código de Color" value="">
-                      </span>
-                    </label>
-                  </div>
-                </div>
-                <div class="flex-btn">
-                  <button type="button" class="btn btn-success add-color" data-text="" data-text1=""> <i class="fa fa-plus"></i> </button>
-                </div>
-              </div>
-              <?php
-                $arrColorAdd = [];
-                $ColorAll = [];
-                $ColorAll2 = [];
-                if(isset($item->atributoraiz_collection) && $item->atributoraiz_collection != ""){
-                  $colorsAvailables = json_decode($item->atributoraiz_collection, TRUE);
-                  if(count($colorsAvailables) > 0){
-                    $colorsAvailables_list = $colorsAvailables['atributoraiz_collection']['color'];
-                  
-                    foreach($colorsAvailables_list as $key => $val){
-                      $arrColorAdd[$key]['code'] = $val['code'];
-                      $arrColorAdd[$key]['name'] = $val['name'];
-                    }
-                  }
-                }
-
-              ?>
-
-              
-              <?php $__currentLoopData = $arrColorAdd; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <?php if($v['code'] != null && $v['code'] != ""): ?>
-                
+            <?php if($item->atributo_raiz != 0 && $item->atributo_raiz == 1): ?>
+              <?php if($item->atributoraiz_collection != "" && $item->atributoraiz_collection != "[]"): ?>
+              <div id="cTentr-af172698__p-adm">
                 <div class="d-flex">
                   <div class="flex-grow-1">
                     <div class="form-group">
-                      <input type="text" class="form-control" name="color_code[]" placeholder="Código de Producto" value="<?php echo e($v['code']); ?>">
+                      <span><strong>Lista de colores</strong></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <div class="flex-grow-1">
+                    <div class="form-group">
+                      <input type="text" class="form-control aia848d__clrcode" placeholder="Código de Producto" value="">
                     </div>
                   </div>
                   <div class="flex-grow-1">
                     <div class="form-group">
                       <label class="color-picker">
                         <span>
-                          <input type="color" class="form-control" name="color_name[]" placeholder="Código de Color" value="<?php echo e($v['name']); ?>">
+                          <input type="color" class="form-control aia848d__clrname" placeholder="Código de Color" value="">
                         </span>
                       </label>
                     </div>
                   </div>
                   <div class="flex-btn">
-                    <button type="button" class="btn btn-danger remove-color">
-                      <i class="fa fa-minus"></i>
-                    </button>
+                    <button type="button" class="btn btn-success add-color" data-text="" data-text1=""> <i class="fa fa-plus"></i> </button>
                   </div>
                 </div>
-                <?php endif; ?>
-                
-                
-              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-              
+                <?php
+                  $arrColorAdd = [];
+                  $ColorAll = [];
+                  $ColorAll2 = [];
+                  if(isset($item->atributoraiz_collection) && $item->atributoraiz_collection != ""){
+                    $colorsAvailables = json_decode($item->atributoraiz_collection, TRUE);
+                    if(count($colorsAvailables) > 0){
+                      $colorsAvailables_list = $colorsAvailables['atributoraiz_collection']['color'];
+                    
+                      foreach($colorsAvailables_list as $key => $val){
+                        $arrColorAdd[$key]['code'] = $val['code'];
+                        $arrColorAdd[$key]['name'] = $val['name'];
+                      }
+                    }
+                  }
 
-            </div>
+                ?>
+
+                
+                <?php $__currentLoopData = $arrColorAdd; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                  <?php if($v['code'] != null && $v['code'] != ""): ?>
+                  
+                  <div class="d-flex">
+                    <div class="flex-grow-1">
+                      <div class="form-group">
+                        <input type="text" class="form-control" name="color_code[]" placeholder="Código de Producto" value="<?php echo e($v['code']); ?>">
+                      </div>
+                    </div>
+                    <div class="flex-grow-1">
+                      <div class="form-group">
+                        <label class="color-picker">
+                          <span>
+                            <input type="color" class="form-control" name="color_name[]" placeholder="Código de Color" value="<?php echo e($v['name']); ?>">
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="flex-btn">
+                      <button type="button" class="btn btn-danger remove-color">
+                        <i class="fa fa-minus"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <?php endif; ?>
+                  
+                  
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                
+
+              </div>
+              <?php else: ?>
+              <div id="cTentr-af172698__p-adm">
+                <div class="d-flex">
+                  <div class="flex-grow-1">
+                    <div class="form-group">
+                      <span><strong>Lista de colores</strong></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <div class="flex-grow-1">
+                    <div class="form-group">
+                      <input type="text" class="form-control aia848d__clrcode" placeholder="Código de Producto" value="">
+                    </div>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="form-group">
+                      <label class="color-picker">
+                        <span>
+                          <input type="color" class="form-control aia848d__clrname" placeholder="Código de Color" value="">
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="flex-btn">
+                    <button type="button" class="btn btn-success add-color" data-text="" data-text1=""> <i class="fa fa-plus"></i> </button>
+                  </div>
+                </div>
+              </div>
+              <?php endif; ?>
             <?php else: ?>
-            <div id="cTentr-af172698__p-adm"></div>
+              <div id="cTentr-af172698__p-adm"></div>
             <?php endif; ?>
           </div>
         </div>
@@ -135,12 +168,12 @@
           <div class="card-body">
             <div class="form-group">
               <label for="name"><?php echo e(__('Name')); ?> *</label>
-              <input type="text" name="name" class="form-control item-name" id="name" placeholder="<?php echo e(__('Enter Name')); ?>" value="<?php echo e($item->name); ?>" >
+              <input type="text" name="name" class="form-control item-name" id="name" placeholder="<?php echo e(__('Enter Name')); ?>" value="<?php echo e($item->name); ?>">
               <span id="spn__iptequalsmssg"></span>
             </div>
             <div class="form-group">
               <label for="slug"><?php echo e(__('Slug')); ?> *</label>
-              <input type="text" name="slug" class="form-control" id="slug" placeholder="<?php echo e(__('Enter Slug')); ?>" value="<?php echo e($item->slug); ?>" >
+              <input type="text" name="slug" class="form-control" id="slug" placeholder="<?php echo e(__('Enter Slug')); ?>" value="<?php echo e($item->slug); ?>">
             </div>
           </div>
         </div>
@@ -150,7 +183,7 @@
               <label class="d-block"><?php echo e(__('Featured Image')); ?> *</label>
             </div>
             <div class="form-group pb-0 pt-0 mt-0 mb-0">
-              <img class="admin-img lg" src="<?php echo e($item->photo ? asset('assets/images/'.$item->photo) : asset('assets/images/placeholder.png')); ?>" >
+              <img class="admin-img lg" src="<?php echo e($item->photo ? asset('assets/images/'.$item->photo) : asset('assets/images/placeholder.png')); ?>">
             </div>
             <div class="form-group position-relative ">
               <label class="file">
@@ -301,7 +334,7 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text"><?php echo e($curr->sign); ?></span>
                 </div>
-                <input type="text" id="previous_price" name="previous_price" class="form-control" placeholder="<?php echo e(__('Enter Previous Price')); ?>" min="1" step="0.1" value="<?php echo e(round($item->previous_price*$curr->value ,2)); ?>" >
+                <input type="text" id="previous_price" name="previous_price" class="form-control" placeholder="<?php echo e(__('Enter Previous Price')); ?>" min="1" step="0.1" value="<?php echo e(round($item->previous_price*$curr->value ,2)); ?>">
               </div>
             </div>
           </div>
@@ -310,7 +343,7 @@
           <div class="card-body">
             <div class="form-group">
               <label for="category_id"><?php echo e(__('Select Category')); ?> *</label>
-              <select name="category_id" id="category_id" data-href="<?php echo e(route('back.get.subcategory')); ?>" class="form-control" >
+              <select name="category_id" id="category_id" data-href="<?php echo e(route('back.get.subcategory')); ?>" class="form-control">
                 <?php $__currentLoopData = DB::table('categories')->whereStatus(1)->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <option value="<?php echo e($cat->id); ?>" <?php echo e($cat->id == $item->category_id ? 'selected' : ''); ?>><?php echo e($cat->name); ?></option>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -336,7 +369,7 @@
             </div>
             <div class="form-group">
               <label for="brand_id"><?php echo e(__('Select Brand')); ?> </label>
-              <select name="brand_id" id="brand_id" class="form-control" >
+              <select name="brand_id" id="brand_id" class="form-control">
                 <option value="" selected><?php echo e(__('Select Brand')); ?></option>
                 <?php $__currentLoopData = DB::table('brands')->whereStatus(1)->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $brand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <option value="<?php echo e($brand->id); ?>" <?php echo e($brand->id == $item->brand_id ? 'selected' : ''); ?> ><?php echo e($brand->name); ?></option>
@@ -350,7 +383,7 @@
             <div class="form-group">
               <label for="stock"><?php echo e(__('Total in stock')); ?> *</label>
               <div class="input-group mb-3">
-                <input type="number" id="stock" name="stock" class="form-control" placeholder="<?php echo e(__('Total in stock')); ?>" value="<?php echo e($item->stock); ?>" >
+                <input type="number" id="stock" name="stock" class="form-control" placeholder="<?php echo e(__('Total in stock')); ?>" value="<?php echo e($item->stock); ?>">
               </div>
             </div>
             <div class="form-group">
@@ -532,16 +565,16 @@
             
             <div class="form-group">
               <label for="sku"><?php echo e(__('SKU')); ?> *</label>
-              <input type="text" name="sku" class="form-control" id="sku" placeholder="<?php echo e(__('Enter SKU')); ?>" value="<?php echo e($item->sku); ?>" >
+              <input type="text" name="sku" class="form-control" id="sku" placeholder="<?php echo e(__('Enter SKU')); ?>" value="<?php echo e($item->sku); ?>">
             </div>
             <div class="form-group">
               <label for="video"><?php echo e(__('Vido Link')); ?> </label>
-              <input type="text" name="video" class="form-control" id="video" placeholder="<?php echo e(__('Enter Video Link')); ?>" value="<?php echo e($item->video); ?>" >
+              <input type="text" name="video" class="form-control" id="video" placeholder="<?php echo e(__('Enter Video Link')); ?>" value="<?php echo e($item->video); ?>">
             </div>                    
             <!-- NUEVO CONTENIDO (INICIO) -->
             <div class="form-group">
               <label for="sku"><?php echo e(__('Código SAP')); ?> *</label>
-              <input type="text" name="sap_code" class="form-control" id="sap_code" placeholder="<?php echo e(__('Enter SAP code')); ?>" value="<?php echo e($item->sap_code); ?>" >
+              <input type="text" name="sap_code" class="form-control" id="sap_code" placeholder="<?php echo e(__('Enter SAP code')); ?>" value="<?php echo e($item->sap_code); ?>">
             </div>                    
             <div>
               <div class="form-group pb-0  mb-0">
