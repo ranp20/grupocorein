@@ -8,7 +8,7 @@
       @if($item->previous_price && $item->previous_price !=0)
         <div class="product-badge product-badge2 bg-info"> -{{PriceHelper::DiscountPercentage($item)}}</div>
       @endif
-      <img class="lazy" data-src="{{asset('assets/images/'.$item->thumbnail)}}" alt="Product">
+      <img class="lazy" src="{{asset('assets/images/'.$item->thumbnail)}}" data-src="{{asset('assets/images/'.$item->thumbnail)}}" alt="Product">
       <div class="product-button-group"><a class="product-button wishlist_store" href="{{route('user.wishlist.store',$item->id)}}" title="{{__('Wishlist')}}"><i class="icon-heart"></i></a>
         <a data-target="{{route('fornt.compare.product',$item->id)}}" class="product-button product_compare" href="javascript:;" class="{{__('Compare')}}"><i class="icon-repeat"></i></a>
           @include('includes.item_footer',['sitem' => $item])
@@ -73,25 +73,29 @@
         </a>
         <div class="cWtspBtnCtc__pSubM">
           @if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers))
-          @php
-            $titles = json_decode($setting->whatsapp_numbers,true)['title'];
-            $texts = json_decode($setting->whatsapp_numbers,true)['text'];
-            $numbers = json_decode($setting->whatsapp_numbers,true)['number'];
-          @endphp
+          <?php
+              $whatsappCollection = json_decode($setting->whatsapp_numbers, TRUE);
+              $ArrwpsNumbers = "";
+              $wps_inproducts = [];
+              if(isset($whatsappCollection['whatsapp_numbers'])){
+                  $ArrwpsNumbers = $whatsappCollection['whatsapp_numbers'];
+                  if(isset($ArrwpsNumbers['in_product'])){
+                      $wps_inproducts = $ArrwpsNumbers['in_product'];
+                  }
+              }
+          ?>
           <ul class="cWtspBtnCtc__pSubM__m">
-            @foreach ($numbers as $key => $number)
-            <li class="cWtspBtnCtc__pSubM__m__i">
-              <a title="{{ $titles[$key] }}" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51{{ $numbers[$key] }}&text={{ $texts[$key] }}" target="_blank">
-                <!-- <img src="{{ asset('assets/back/images/WhatsApp') }}/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
-                <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                <!-- <span>912 831 232</span> -->
-                <span>{{ $titles[$key] }}</span>
-              </a>
-            </li>
-            @endforeach
+              @foreach ($wps_inproducts as $k => $v)
+              <li class="cWtspBtnCtc__pSubM__m__i">
+                  <a title="{{ $v['title'] }}" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51{{ $v['number'] }}&text={{ $v['text'] }}" target="_blank">
+                      <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">                                                            
+                      <span>{{ $v['title'] }}</span>
+                  </a>
+              </li>
+              @endforeach
           </ul>
           @else
-            <p>No hay información</p>
+          <p>No hay información</p>
           @endif
         </div>
       </div>
