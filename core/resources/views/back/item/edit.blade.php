@@ -137,30 +137,46 @@
               </div>
               @else
               <div id="cTentr-af172698__p-adm">
-                <div class="d-flex">
-                  <div class="flex-grow-1">
-                    <div class="form-group">
-                      <span><strong>Lista de colores</strong></span>
+                <div id="attrcolors-section">
+                  <div class="d-flex">
+                    <div class="flex-grow-1">
+                      <div class="form-group">
+                        <span><strong>Lista de colores</strong></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="d-flex">
+                    <div class="flex-grow-1">
+                      <div class="form-group">
+                        <input type="text" class="form-control aia848d__clrcode" placeholder="Código de Producto" value="">
+                      </div>
+                    </div>
+                    <div class="flex-grow-1">
+                      <div class="form-group">
+                        <label class="color-picker">
+                          <span>
+                            <input type="color" class="form-control aia848d__clrname" placeholder="Código de Color" value="">
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="flex-btn">
+                      <button type="button" class="btn btn-success add-color" data-text="" data-text1=""> <i class="fa fa-plus"></i> </button>
                     </div>
                   </div>
                 </div>
-                <div class="d-flex">
+                <div class="d-flex c-sctGroupList">
                   <div class="flex-grow-1">
-                    <div class="form-group">
-                      <input type="text" class="form-control aia848d__clrcode" placeholder="Código de Producto" value="">
+                    <div class="scGroupElems-sectionList">
+                      <div class="c-zTitleSectionFloating">
+                        <span class="c-zTitleSectionFloating__txt">Lista de <strong>Colores Agregados</strong></span>
+                      </div>
+                      <div class="scGroupElems-sectionList__c" id="attrcolors-sectionList__c">
+                        <div class="scGroupElems-sectionList__c__deftxt" id="defTxt57vnj-attrclr__anyval">
+                          <p>Sin Colores</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div class="flex-grow-1">
-                    <div class="form-group">
-                      <label class="color-picker">
-                        <span>
-                          <input type="color" class="form-control aia848d__clrname" placeholder="Código de Color" value="">
-                        </span>
-                      </label>
-                    </div>
-                  </div>
-                  <div class="flex-btn">
-                    <button type="button" class="btn btn-success add-color" data-text="" data-text1=""> <i class="fa fa-plus"></i> </button>
                   </div>
                 </div>
               </div>

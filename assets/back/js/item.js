@@ -109,7 +109,7 @@ $(() => {
       <div class="d-flex attrcolor-item">
         <div class="flex-grow-1">
           <div class="form-group">
-            <input type="text" class="form-control" name="color_code[]" placeholder="${textFirstVal2}" value="${text}" required>
+            <input type="text" class="form-control" name="color_code[]" placeholder="${textFirstVal2}" value="${text}">
           </div>
         </div>
         <div class="flex-grow-1">

@@ -15,8 +15,7 @@ use App\Models\Subcategory;
 use App\Models\Tax;
 use Illuminate\Http\Request;
 
-class ItemController extends Controller
-{
+class ItemController extends Controller{
     public function __construct(ItemRepository $repository){
         $this->middleware('auth:admin');
         $this->middleware('adminlocalize');

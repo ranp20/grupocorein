@@ -27,12 +27,14 @@ class ItemRepository{
       $input['store_availables'] = json_encode($stores, true);
     }
     $atributoraiz_collection = [];
-    // $code = "";
+    $codeFinal = "";
+    $colorname = (isset($request->color_name)) ? $request->color_name : "";
     if($request->has('color_code')){
       foreach($request->color_code as $key => $code){
+        $codeFinal = ($code != "" && $code != null) ? $code : $colorname[$key];
         // echo $code."<br>";
         // if($code != null && $code != ""){
-          $atributoraiz_collection['atributoraiz_collection']['color'][$key]['code'] = $code;
+          $atributoraiz_collection['atributoraiz_collection']['color'][$key]['code'] = $codeFinal;
         // }
       }
     }
@@ -154,12 +156,14 @@ class ItemRepository{
       $input['store_availables'] = null;
     }
     $atributoraiz_collection = [];
-    // $code = "";
+    $codeFinal = "";
+    $colorname = (isset($request->color_name)) ? $request->color_name : "";
     if($request->has('color_code')){
       foreach($request->color_code as $key => $code){
+        $codeFinal = ($code != "" && $code != null) ? $code : $colorname[$key];
         // echo $code."<br>";
         // if($code != null && $code != ""){
-          $atributoraiz_collection['atributoraiz_collection']['color'][$key]['code'] = $code;
+          $atributoraiz_collection['atributoraiz_collection']['color'][$key]['code'] = $codeFinal;
         // }
       }
     }
@@ -250,8 +254,13 @@ class ItemRepository{
     echo "<pre>";
     print_r($input);
     echo "<pre>";
+    
+    echo "<pre>";
+    print_r(json_decode($input['atributoraiz_collection'], TRUE));
+    echo "<pre>";
     exit();
     */
+    
     $item->update($input);
     if(isset($input['galleries'])){
       $this->galleriesUpdate($request,$item->id);
