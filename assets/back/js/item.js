@@ -40,7 +40,7 @@ $(() => {
     let optSelected = $("#atributoraiz option:selected").val();
     if(optSelected == 1){
       $("#cTentr-af172698__p-adm").html(`
-      <div id="specifications-section">
+      <div id="attrcolors-section">
         <div class="d-flex">
           <div class="flex-grow-1">
             <div class="form-group">
@@ -70,13 +70,13 @@ $(() => {
       </div>
       <div class="d-flex c-sctGroupList">
         <div class="flex-grow-1">
-          <div id="specifications-sectionList">
+          <div class="scGroupElems-sectionList">
             <div class="c-zTitleSectionFloating">
-              <span class="c-zTitleSectionFloating__txt">Lista de especificaciones</span>
+              <span class="c-zTitleSectionFloating__txt">Lista de <strong>Colores Agregados</strong></span>
             </div>
-            <div id="specifications-sectionList__c">
-              <div class="specifications-sectionList__c__deftxt" id="defTxt57vnj-espc__anyval">
-                <p>Sin Especificaciones</p>
+            <div class="scGroupElems-sectionList__c" id="attrcolors-sectionList__c">
+              <div class="scGroupElems-sectionList__c__deftxt" id="defTxt57vnj-attrclr__anyval">
+                <p>Sin Colores</p>
               </div>
             </div>
           </div>
@@ -104,8 +104,9 @@ $(() => {
     var text = $(this).parent().parent().parent().find("input.aia848d__clrcode").val();
     var text1 = $(this).parent().parent().parent().find("input.aia848d__clrname").val();
     var textFirstVal2 = (text != "" && text != null && text != undefined) ? text : "Código de Producto";
-    $('#cTentr-af172698__p-adm').append(`
-      <div class="d-flex">
+    $("#defTxt57vnj-attrclr__anyval").remove();
+    $('#attrcolors-sectionList__c').append(`
+      <div class="d-flex attrcolor-item">
         <div class="flex-grow-1">
           <div class="form-group">
             <input type="text" class="form-control" name="color_code[]" placeholder="${textFirstVal2}" value="${text}" required>
@@ -135,6 +136,12 @@ $(() => {
   // --------------- REMOVE COLOR
   $(document).on('click','.remove-color',function(){
     $(this).parent().parent().remove();
+    if($(".attrcolor-item").length){
+    }else{
+      $('#attrcolors-sectionList__c').append(`<div class="scGroupElems-sectionList__c__deftxt" id="defTxt57vnj-attrclr__anyval">
+        <p>Sin Colores</p>
+      </div>`);
+    }
   });
   // --------------- KEYUP INPUTS NAME = ITEM-NAME - TEXT
   $(document).on("keyup keypress input","input.item-name",function(e){
@@ -291,12 +298,12 @@ $(() => {
       </div>
       <div class="d-flex c-sctGroupList">
         <div class="flex-grow-1">
-          <div id="specifications-sectionList">
+          <div class="scGroupElems-sectionList">
             <div class="c-zTitleSectionFloating">
               <span class="c-zTitleSectionFloating__txt">Lista de especificaciones</span>
             </div>
-            <div id="specifications-sectionList__c">
-              <div class="specifications-sectionList__c__deftxt" id="defTxt57vnj-espc__anyval">
+            <div class="scGroupElems-sectionList__c" id="specifications-sectionList__c">
+              <div class="scGroupElems-sectionList__c__deftxt" id="defTxt57vnj-espc__anyval">
                 <p>Sin Especificaciones</p>
               </div>
             </div>
@@ -320,7 +327,7 @@ $(() => {
     btnAddSpecification.attr('data-text1', val);
   });
   // --------------- ADD ESPECIFICATIONS
-  $('.add-specification').on('click',function(){
+  $(document).on("click",".add-specification",function(){
     var text = $(this).parent().parent().parent().find("input.aia843d__spcfname").val();
     var text1 = $(this).parent().parent().parent().find("input.aia843d__spcfdsc").val();
     $("#defTxt57vnj-espc__anyval").remove();
@@ -352,10 +359,8 @@ $(() => {
   $(document).on('click','.remove-spcification',function(){
     $(this).parent().parent().remove();
     if($(".specification-item").length){
-      console.log($(".specification-item").length);
     }else{
-      console.log("Mostrar texto de sin especificaciones");
-      $('#specifications-sectionList__c').append(`<div class="specifications-sectionList__c__deftxt" id="defTxt57vnj-espc__anyval">
+      $('#specifications-sectionList__c').append(`<div class="scGroupElems-sectionList__c__deftxt" id="defTxt57vnj-espc__anyval">
         <p>Sin Especificaciones</p>
       </div>`);
     }

@@ -54,81 +54,86 @@
             @if($item->atributo_raiz != 0 && $item->atributo_raiz == 1)
               @if($item->atributoraiz_collection != "" && $item->atributoraiz_collection != "[]")
               <div id="cTentr-af172698__p-adm">
-                <div class="d-flex">
-                  <div class="flex-grow-1">
-                    <div class="form-group">
-                      <span><strong>Lista de colores</strong></span>
-                    </div>
-                  </div>
-                </div>
-                <div class="d-flex">
-                  <div class="flex-grow-1">
-                    <div class="form-group">
-                      <input type="text" class="form-control aia848d__clrcode" placeholder="Código de Producto" value="">
-                    </div>
-                  </div>
-                  <div class="flex-grow-1">
-                    <div class="form-group">
-                      <label class="color-picker">
-                        <span>
-                          <input type="color" class="form-control aia848d__clrname" placeholder="Código de Color" value="">
-                        </span>
-                      </label>
-                    </div>
-                  </div>
-                  <div class="flex-btn">
-                    <button type="button" class="btn btn-success add-color" data-text="" data-text1=""> <i class="fa fa-plus"></i> </button>
-                  </div>
-                </div>
-                <?php
-                  $arrColorAdd = [];
-                  $ColorAll = [];
-                  $ColorAll2 = [];
-                  if(isset($item->atributoraiz_collection) && $item->atributoraiz_collection != ""){
-                    $colorsAvailables = json_decode($item->atributoraiz_collection, TRUE);
-                    if(count($colorsAvailables) > 0){
-                      $colorsAvailables_list = $colorsAvailables['atributoraiz_collection']['color'];
-                    
-                      foreach($colorsAvailables_list as $key => $val){
-                        $arrColorAdd[$key]['code'] = $val['code'];
-                        $arrColorAdd[$key]['name'] = $val['name'];
-                      }
-                    }
-                  }
-
-                ?>
-
-                
-                @foreach($arrColorAdd as $k => $v)
-                  @if($v['code'] != null && $v['code'] != "")
-                  
+                <div id="attrcolors-section">
                   <div class="d-flex">
                     <div class="flex-grow-1">
                       <div class="form-group">
-                        <input type="text" class="form-control" name="color_code[]" placeholder="Código de Producto" value="{{ $v['code'] }}">
+                        <span><strong>Lista de colores</strong></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="d-flex">
+                    <div class="flex-grow-1">
+                      <div class="form-group">
+                        <input type="text" class="form-control aia848d__clrcode" placeholder="Código de Producto" value="">
                       </div>
                     </div>
                     <div class="flex-grow-1">
                       <div class="form-group">
                         <label class="color-picker">
                           <span>
-                            <input type="color" class="form-control" name="color_name[]" placeholder="Código de Color" value="{{ $v['name'] }}">
+                            <input type="color" class="form-control aia848d__clrname" placeholder="Código de Color" value="">
                           </span>
                         </label>
                       </div>
                     </div>
                     <div class="flex-btn">
-                      <button type="button" class="btn btn-danger remove-color">
-                        <i class="fa fa-minus"></i>
-                      </button>
+                      <button type="button" class="btn btn-success add-color" data-text="" data-text1=""> <i class="fa fa-plus"></i> </button>
                     </div>
                   </div>
-                  @endif
-                  
-                  
-                @endforeach
-                
-
+                </div>
+                <div class="d-flex c-sctGroupList">
+                  <div class="flex-grow-1">
+                    <div class="scGroupElems-sectionList">
+                      <div class="c-zTitleSectionFloating">
+                        <span class="c-zTitleSectionFloating__txt">Lista de <strong>Colores Agregados</strong></span>
+                      </div>
+                      <div class="scGroupElems-sectionList__c" id="attrcolors-sectionList__c">
+                        <?php
+                          $arrColorAdd = [];
+                          $ColorAll = [];
+                          $ColorAll2 = [];
+                          if(isset($item->atributoraiz_collection) && $item->atributoraiz_collection != ""){
+                            $colorsAvailables = json_decode($item->atributoraiz_collection, TRUE);
+                            if(count($colorsAvailables) > 0){
+                              $colorsAvailables_list = $colorsAvailables['atributoraiz_collection']['color'];
+                            
+                              foreach($colorsAvailables_list as $key => $val){
+                                $arrColorAdd[$key]['code'] = $val['code'];
+                                $arrColorAdd[$key]['name'] = $val['name'];
+                              }
+                            }
+                          }
+                        ?>                
+                        @foreach($arrColorAdd as $k => $v)
+                          @if($v['code'] != null && $v['code'] != "")
+                          <div class="d-flex attrcolor-item">
+                            <div class="flex-grow-1">
+                              <div class="form-group">
+                                <input type="text" class="form-control" name="color_code[]" placeholder="Código de Producto" value="{{ $v['code'] }}">
+                              </div>
+                            </div>
+                            <div class="flex-grow-1">
+                              <div class="form-group">
+                                <label class="color-picker">
+                                  <span>
+                                    <input type="color" class="form-control" name="color_name[]" placeholder="Código de Color" value="{{ $v['name'] }}">
+                                  </span>
+                                </label>
+                              </div>
+                            </div>
+                            <div class="flex-btn">
+                              <button type="button" class="btn btn-danger remove-color">
+                                <i class="fa fa-minus"></i>
+                              </button>
+                            </div>
+                          </div>
+                          @endif
+                        @endforeach
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
               @else
               <div id="cTentr-af172698__p-adm">

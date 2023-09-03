@@ -151,12 +151,12 @@
               </div>
               <div class="d-flex c-sctGroupList">
                 <div class="flex-grow-1">
-                  <div id="specifications-sectionList">
+                  <div class="scGroupElems-sectionList">
                     <div class="c-zTitleSectionFloating">
                       <span class="c-zTitleSectionFloating__txt">Lista de especificaciones</span>
                     </div>
-                    <div id="specifications-sectionList__c">
-                      <div class="specifications-sectionList__c__deftxt" id="defTxt57vnj-espc__anyval">
+                    <div class="scGroupElems-sectionList__c" id="specifications-sectionList__c">
+                      <div class="scGroupElems-sectionList__c__deftxt" id="defTxt57vnj-espc__anyval">
                         <p>Sin Especificaciones</p>
                       </div>
                     </div>
