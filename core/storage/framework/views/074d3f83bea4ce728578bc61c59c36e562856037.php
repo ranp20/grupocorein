@@ -255,37 +255,42 @@
             </div>
             <div id="specifications-section" class="<?php echo e($item->is_specification == 0 ? 'd-none' : ''); ?>">
               <?php if(!empty($specification_name)): ?>
-              <?php $__currentLoopData = array_combine($specification_name,$specification_description); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $name => $description): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-              <div class="d-flex">
-                <div class="flex-grow-1">
-                  <div class="form-group">
-                    <input type="text" class="form-control" name="specification_name[]" placeholder="<?php echo e(__('Specification Name')); ?>" value="<?php echo e($name); ?>">
+                <?php
+                  echo "<pre>";
+                  print_r(array_combine($specification_name,$specification_description));
+                  echo "</pre>";
+                ?>
+                <?php $__currentLoopData = array_combine($specification_name,$specification_description); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $name => $description): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <div class="d-flex">
+                  <div class="flex-grow-1">
+                    <div class="form-group">
+                      <input type="text" class="form-control" name="specification_name[]" placeholder="<?php echo e(__('Specification Name')); ?>" value="<?php echo e($name); ?>">
+                    </div>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="form-group">
+                      <input type="text" class="form-control" name="specification_description[]" placeholder="<?php echo e(__('Specification description')); ?>" value="<?php echo e($description); ?>">
+                    </div>
+                  </div>
+                  <div class="flex-btn">
+                    <?php if($loop->first): ?>
+                    <button type="button" class="btn btn-success add-specification" data-text="<?php echo e(__('Specification Name')); ?>" data-text1="<?php echo e(__('Specification Description')); ?>"> <i class="fa fa-plus"></i> </button>
+                    <?php else: ?>
+                    <button type="button" class="btn btn-danger remove-spcification" data-text="<?php echo e(__('Specification Name')); ?>" data-text1="<?php echo e(__('Specification Description')); ?>"> <i class="fa fa-minus"></i> </button>
+                    <?php endif; ?>
                   </div>
                 </div>
-                <div class="flex-grow-1">
-                  <div class="form-group">
-                    <input type="text" class="form-control" name="specification_description[]" placeholder="<?php echo e(__('Specification description')); ?>" value="<?php echo e($description); ?>">
-                  </div>
-                </div>
-                <div class="flex-btn">
-                  <?php if($loop->first): ?>
-                  <button type="button" class="btn btn-success add-specification" data-text="<?php echo e(__('Specification Name')); ?>" data-text1="<?php echo e(__('Specification Description')); ?>"> <i class="fa fa-plus"></i> </button>
-                  <?php else: ?>
-                  <button type="button" class="btn btn-danger remove-spcification" data-text="<?php echo e(__('Specification Name')); ?>" data-text1="<?php echo e(__('Specification Description')); ?>"> <i class="fa fa-minus"></i> </button>
-                  <?php endif; ?>
-                </div>
-              </div>
-              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
               <?php else: ?>
               <div class="d-flex">
                 <div class="flex-grow-1">
                   <div class="form-group">
-                    <input type="text" class="form-control" name="specification_name[]" placeholder="<?php echo e(__('Specification Name')); ?>" value="">
+                    <input type="text" class="form-control aia843d__spcfname" name="specification_name[]" placeholder="<?php echo e(__('Specification Name')); ?>" value="">
                   </div>
                 </div>
                 <div class="flex-grow-1">
                   <div class="form-group">
-                    <input type="text" class="form-control" name="specification_description[]" placeholder="<?php echo e(__('Specification description')); ?>" value="">
+                    <input type="text" class="form-control aia843d__spcfdsc" name="specification_description[]" placeholder="<?php echo e(__('Specification description')); ?>" value="">
                   </div>
                 </div>
                 <div class="flex-btn">

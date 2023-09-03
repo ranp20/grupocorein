@@ -256,37 +256,37 @@
             </div>
             <div id="specifications-section" class="{{ $item->is_specification == 0 ? 'd-none' : '' }}">
               @if(!empty($specification_name))
-              @foreach(array_combine($specification_name,$specification_description) as  $name => $description)
-              <div class="d-flex">
-                <div class="flex-grow-1">
-                  <div class="form-group">
-                    <input type="text" class="form-control" name="specification_name[]" placeholder="{{ __('Specification Name') }}" value="{{$name}}">
+                @foreach(array_combine($specification_name,$specification_description) as $name => $description)
+                <div class="d-flex">
+                  <div class="flex-grow-1">
+                    <div class="form-group">
+                      <input type="text" class="form-control" name="specification_name[]" placeholder="{{ __('Specification Name') }}" value="{{$name}}">
+                    </div>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="form-group">
+                      <input type="text" class="form-control" name="specification_description[]" placeholder="{{ __('Specification description') }}" value="{{$description}}">
+                    </div>
+                  </div>
+                  <div class="flex-btn">
+                    @if($loop->first)
+                    <button type="button" class="btn btn-success add-specification" data-text="{{ __('Specification Name') }}" data-text1="{{ __('Specification Description') }}"> <i class="fa fa-plus"></i> </button>
+                    @else
+                    <button type="button" class="btn btn-danger remove-spcification" data-text="{{ __('Specification Name') }}" data-text1="{{ __('Specification Description') }}"> <i class="fa fa-minus"></i> </button>
+                    @endif
                   </div>
                 </div>
-                <div class="flex-grow-1">
-                  <div class="form-group">
-                    <input type="text" class="form-control" name="specification_description[]" placeholder="{{ __('Specification description') }}" value="{{$description}}">
-                  </div>
-                </div>
-                <div class="flex-btn">
-                  @if($loop->first)
-                  <button type="button" class="btn btn-success add-specification" data-text="{{ __('Specification Name') }}" data-text1="{{ __('Specification Description') }}"> <i class="fa fa-plus"></i> </button>
-                  @else
-                  <button type="button" class="btn btn-danger remove-spcification" data-text="{{ __('Specification Name') }}" data-text1="{{ __('Specification Description') }}"> <i class="fa fa-minus"></i> </button>
-                  @endif
-                </div>
-              </div>
-              @endforeach
+                @endforeach
               @else
               <div class="d-flex">
                 <div class="flex-grow-1">
                   <div class="form-group">
-                    <input type="text" class="form-control" name="specification_name[]" placeholder="{{ __('Specification Name') }}" value="">
+                    <input type="text" class="form-control aia843d__spcfname" name="specification_name[]" placeholder="{{ __('Specification Name') }}" value="">
                   </div>
                 </div>
                 <div class="flex-grow-1">
                   <div class="form-group">
-                    <input type="text" class="form-control" name="specification_description[]" placeholder="{{ __('Specification description') }}" value="">
+                    <input type="text" class="form-control aia843d__spcfdsc" name="specification_description[]" placeholder="{{ __('Specification description') }}" value="">
                   </div>
                 </div>
                 <div class="flex-btn">

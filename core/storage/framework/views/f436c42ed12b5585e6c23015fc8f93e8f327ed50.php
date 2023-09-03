@@ -130,23 +130,39 @@
                 <span class="switch-text"><?php echo e(__('Specifications')); ?></span>
               </label>
             </div>
-            <div id="specifications-section">
-              <div class="d-flex">
-                <div class="flex-grow-1">
-                  <div class="form-group">
-                    <input type="text" class="form-control" name="specification_name[]" placeholder="<?php echo e(__('Specification Name')); ?>" value="">
+            <div id="cTentr-af1728903__p-adm">
+              <div id="specifications-section">
+                <div class="d-flex">
+                  <div class="flex-grow-1">
+                    <div class="form-group">
+                      <input type="text" class="form-control aia843d__spcfname" name="specification_name[]" placeholder="<?php echo e(__('Specification Name')); ?>" value="">
+                    </div>
                   </div>
-                </div>
-                <div class="flex-grow-1">
-                  <div class="form-group">
-                    <input type="text" class="form-control" name="specification_description[]" placeholder="<?php echo e(__('Specification description')); ?>" value="">
+                  <div class="flex-grow-1">
+                    <div class="form-group">
+                      <input type="text" class="form-control aia843d__spcfdsc" name="specification_description[]" placeholder="<?php echo e(__('Specification description')); ?>" value="">
+                    </div>
                   </div>
-                </div>
-                <div class="flex-btn">
-                  <button type="button" class="btn btn-success add-specification" data-text="<?php echo e(__('Specification Name')); ?>" data-text1="<?php echo e(__('Specification Description')); ?>"> <i class="fa fa-plus"></i> </button>
+                  <div class="flex-btn">
+                    <button type="button" class="btn btn-success add-specification" data-text="<?php echo e(__('Specification Name')); ?>" data-text1="<?php echo e(__('Specification Description')); ?>"> <i class="fa fa-plus"></i> </button>
+                  </div>
                 </div>
               </div>
-            </div>
+              <div class="d-flex c-sctGroupList">
+                <div class="flex-grow-1">
+                  <div id="specifications-sectionList">
+                    <div class="c-zTitleSectionFloating">
+                      <span class="c-zTitleSectionFloating__txt">Lista de especificaciones</span>
+                    </div>
+                    <div id="specifications-sectionList__c">
+                      <div class="specifications-sectionList__c__deftxt" id="defTxt57vnj-espc__anyval">
+                        <p>Sin Especificaciones</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>            
           </div>
         </div>
         <div class="card">

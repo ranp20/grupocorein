@@ -40,30 +40,46 @@ $(() => {
     let optSelected = $("#atributoraiz option:selected").val();
     if(optSelected == 1){
       $("#cTentr-af172698__p-adm").html(`
-      <div class="d-flex">
-        <div class="flex-grow-1">
-          <div class="form-group">
-            <span><strong>Lista de colores</strong></span>
+      <div id="specifications-section">
+        <div class="d-flex">
+          <div class="flex-grow-1">
+            <div class="form-group">
+              <span><strong>Lista de colores</strong></span>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex">
+          <div class="flex-grow-1">
+            <div class="form-group">
+              <input type="text" class="form-control aia848d__clrcode" placeholder="Código de Producto" value="">
+            </div>
+          </div>
+          <div class="flex-grow-1">
+            <div class="form-group">
+              <label class="color-picker">
+                <span>
+                  <input type="color" class="form-control aia848d__clrname" placeholder="Código de Color" value="">
+                </span>
+              </label>
+            </div>
+          </div>
+          <div class="flex-btn">
+            <button type="button" class="btn btn-success add-color" data-text="" data-text1=""> <i class="fa fa-plus"></i> </button>
           </div>
         </div>
       </div>
-      <div class="d-flex">
+      <div class="d-flex c-sctGroupList">
         <div class="flex-grow-1">
-          <div class="form-group">
-            <input type="text" class="form-control aia848d__clrcode" placeholder="Código de Producto" value="">
+          <div id="specifications-sectionList">
+            <div class="c-zTitleSectionFloating">
+              <span class="c-zTitleSectionFloating__txt">Lista de especificaciones</span>
+            </div>
+            <div id="specifications-sectionList__c">
+              <div class="specifications-sectionList__c__deftxt" id="defTxt57vnj-espc__anyval">
+                <p>Sin Especificaciones</p>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="flex-grow-1">
-          <div class="form-group">
-            <label class="color-picker">
-              <span>
-                <input type="color" class="form-control aia848d__clrname" placeholder="Código de Color" value="">
-              </span>
-            </label>
-          </div>
-        </div>
-        <div class="flex-btn">
-          <button type="button" class="btn btn-success add-color" data-text="" data-text1=""> <i class="fa fa-plus"></i> </button>
         </div>
       </div>
       `);
@@ -89,27 +105,27 @@ $(() => {
     var text1 = $(this).parent().parent().parent().find("input.aia848d__clrname").val();
     var textFirstVal2 = (text != "" && text != null && text != undefined) ? text : "Código de Producto";
     $('#cTentr-af172698__p-adm').append(`
-    <div class="d-flex">
-      <div class="flex-grow-1">
-        <div class="form-group">
-          <input type="text" class="form-control" name="color_code[]" placeholder="${textFirstVal2}" value="${text}" required>
+      <div class="d-flex">
+        <div class="flex-grow-1">
+          <div class="form-group">
+            <input type="text" class="form-control" name="color_code[]" placeholder="${textFirstVal2}" value="${text}" required>
+          </div>
+        </div>
+        <div class="flex-grow-1">
+          <div class="form-group">
+            <label class="color-picker">
+              <span>
+                <input type="color" class="form-control" name="color_name[]" placeholder="${text1}" value="${text1}">
+              </span>
+            </label>
+          </div>
+        </div>
+        <div class="flex-btn">
+          <button type="button" class="btn btn-danger remove-color">
+            <i class="fa fa-minus"></i>
+          </button>
         </div>
       </div>
-      <div class="flex-grow-1">
-        <div class="form-group">
-          <label class="color-picker">
-            <span>
-              <input type="color" class="form-control" name="color_name[]" placeholder="${text1}" value="${text1}">
-            </span>
-          </label>
-        </div>
-      </div>
-      <div class="flex-btn">
-        <button type="button" class="btn btn-danger remove-color">
-          <i class="fa fa-minus"></i>
-        </button>
-      </div>
-    </div>
     `);
     $(this).data('text', '');
     $(this).data('text1', '');
@@ -252,24 +268,64 @@ $(() => {
       $("#cTentr-af1698__p-adm").html("");
     }
   });
+  // --------------- MOSTRAR/OCULTAR LAS ESPECIFICACIONES
+  $(document).on("click","input[name='is_specification']",function(){
+    if($(this).is(":checked")){
+      $("#cTentr-af1728903__p-adm").html(`
+      <div id="specifications-section">
+        <div class="d-flex">
+          <div class="flex-grow-1">
+            <div class="form-group">
+              <input type="text" class="form-control aia843d__spcfname" name="specification_name[]" placeholder="Nombre de la especificación" value="">
+            </div>
+          </div>
+          <div class="flex-grow-1">
+            <div class="form-group">
+              <input type="text" class="form-control aia843d__spcfdsc" name="specification_description[]" placeholder="Descripción de la especificacion" value="">
+            </div>
+          </div>
+          <div class="flex-btn">
+            <button type="button" class="btn btn-success add-specification" data-text="Nombre de la especificación" data-text1="Descripción de la especificacion"> <i class="fa fa-plus"></i> </button>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex c-sctGroupList">
+        <div class="flex-grow-1">
+          <div id="specifications-sectionList">
+            <div class="c-zTitleSectionFloating">
+              <span class="c-zTitleSectionFloating__txt">Lista de especificaciones</span>
+            </div>
+            <div id="specifications-sectionList__c">
+              <div class="specifications-sectionList__c__deftxt" id="defTxt57vnj-espc__anyval">
+                <p>Sin Especificaciones</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`);
+    }else{
+      $("#cTentr-af1728903__p-adm").html(``);
+    }
+  });
   // --------------- KEYUP INPUTS ESPECIFICATIONS - TEXT
-  $(document).on("keyup","input[name='specification_name[]']",function(e){
+  $(document).on("keyup","input.aia843d__spcfname",function(e){
     let val = e.target.value;
     let btnAddSpecification = $(this).parent().parent().parent().find(".add-specification");
     btnAddSpecification.attr('data-text', val);
   });
   // --------------- KEYUP INPUTS ESPECIFICATIONS - DESCRIPTION
-  $(document).on("keyup","input[name='specification_description[]']",function(e){
+  $(document).on("keyup","input.aia843d__spcfdsc",function(e){
     let val = e.target.value;
     let btnAddSpecification = $(this).parent().parent().parent().find(".add-specification");
     btnAddSpecification.attr('data-text1', val);
   });
   // --------------- ADD ESPECIFICATIONS
   $('.add-specification').on('click',function(){
-    var text = $(this).parent().parent().parent().find("input[name='specification_name[]").val();
-    var text1 = $(this).parent().parent().parent().find("input[name='specification_description[]").val();
-    $('#specifications-section').append(`
-    <div class="d-flex">
+    var text = $(this).parent().parent().parent().find("input.aia843d__spcfname").val();
+    var text1 = $(this).parent().parent().parent().find("input.aia843d__spcfdsc").val();
+    $("#defTxt57vnj-espc__anyval").remove();
+    $('#specifications-sectionList__c').append(`
+    <div class="d-flex specification-item">
       <div class="flex-grow-1">
         <div class="form-group">
           <input type="text" class="form-control" name="specification_name[]" placeholder="${text}" value="${text}">
@@ -289,11 +345,20 @@ $(() => {
     `);
     $(this).data('text', '');
     $(this).data('text1', '');
-    // $('.social-picker').iconpicker();
+    $(".aia843d__spcfname").val('');
+    $(".aia843d__spcfdsc").val('');
   });
   // --------------- REMOVE ESPECIFICATIONS
   $(document).on('click','.remove-spcification',function(){
     $(this).parent().parent().remove();
+    if($(".specification-item").length){
+      console.log($(".specification-item").length);
+    }else{
+      console.log("Mostrar texto de sin especificaciones");
+      $('#specifications-sectionList__c').append(`<div class="specifications-sectionList__c__deftxt" id="defTxt57vnj-espc__anyval">
+        <p>Sin Especificaciones</p>
+      </div>`);
+    }
   });
   // --------------- CARGAR EL ARCHIVO EN EL INPUT
   document.getElementById('adj_doc').onchange = function () {
