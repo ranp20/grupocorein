@@ -78,6 +78,12 @@ Route::group(['middleware' => 'adminlocalize'], function (){
       //------------ BRAND ------------
       Route::get('brand/status/{id}/{status}/{type}', 'Back\BrandController@status')->name('back.brand.status');
       Route::resource('brand', 'Back\BrandController', ['as' => 'back', 'except' => 'show']);
+      //------------ UNIDAD RAIZ ------------
+      Route::get('unitroot/status/{id}/{status}/{type}', 'Back\RootUnitController@status')->name('back.unitroot.status');
+      Route::resource('unitroot', 'Back\RootUnitController', ['as' => 'back', 'except' => 'show']);
+      //------------ ATRIBUTO RAIZ ------------
+      Route::get('attributeroot/status/{id}/{status}/{type}', 'Back\RootAttributeController@status')->name('back.attributeroot.status');
+      Route::resource('attributeroot', 'Back\RootAttributeController', ['as' => 'back', 'except' => 'show']);
       //------------ REVIEW ----------------//
       Route::get('review/status/{id}/{status}', 'Back\ReviewController@status')->name('back.review.status');
       Route::resource('review', 'Back\ReviewController', ['as' => 'back', 'except' => ['create', 'store', 'edit', 'update']]);
@@ -228,11 +234,17 @@ Route::group(['middleware' => 'adminlocalize'], function (){
       //------------ CIUDAD ------------
       // Route::resource('ciudad', 'Back\CiudadController', ['as' => 'back', 'except' => 'show']);
     });
-    Route::group(['middleware' => 'permissions:Manage Quotations'], function (){            
+    Route::group(['middleware' => 'permissions:Manage Quotations'], function (){
       //------------ QUOTATION ------------
       // Route::get('quotation/add', 'Back\QuotationSpreadsheetsController@add')->name('back.quotation.add');
       Route::resource('quotation', 'Back\QuotationSpreadsheetsController', ['as' => 'back', 'except' => 'show']);
       Route::post('/quotation/store', 'Back\QuotationSpreadsheetsValuesControlller@store')->name('back.quotationspreadsheetvalues.store');
+    });
+    Route::group(['middleware' => 'permissions:Manage Catalogs'], function (){
+      //------------ QUOTATION ------------
+      Route::get('catalog/status/{id}/{status}', 'Back\CatalogController@status')->name('back.catalog.status');
+      Route::resource('catalog', 'Back\CatalogController', ['as' => 'back', 'except' => 'show']);
+      Route::post('/catalog/store', 'Back\CatalogController@store')->name('back.catalog.store');
     });
     // --- NUEVO CONTENIDO (FIN) --- //
   });
@@ -371,6 +383,10 @@ Route::group(['middleware' => 'maintainance'], function (){
     Route::get('/catalog', 'Front\CatalogController@index')->name('front.catalog');
     Route::get('/search/suggest', 'Front\CatalogController@suggestSearch')->name('front.search.suggest');
     Route::get('/catalog/view/{type}', 'Front\CatalogController@viewType')->name('front.catalog.view');
+    //------------ CATALOGS ENTERPRISE ------------
+    Route::get('/catalogs', 'Front\CatalogsController@index')->name('front.catalogs');
+    // Route::get('/search/suggest', 'Front\CatalogsController@suggestSearch')->name('front.search.suggest');
+    // Route::get('/catalogs/view/{type}', 'Front\CatalogsController@viewType')->name('front.catalogs.view');
     //------------ CHECKOUT ------------
     Route::get('/checkout/billing/address', 'Front\CheckoutController@ship_address')->name('front.checkout.billing');
     Route::post('/checkout/billing/store', 'Front\CheckoutController@billingStore')->name('front.checkout.store');

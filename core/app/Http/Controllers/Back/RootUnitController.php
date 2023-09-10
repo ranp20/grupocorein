@@ -1,89 +1,38 @@
 <?php
-
 namespace App\Http\Controllers\Back;
-
 use App\{
     Models\RootUnit,
-    Http\Controllers\Controller,
+    Repositories\Back\RootUnitRepository,
+    Http\Requests\RootUnitRequest,
+    Http\Controllers\Controller
 };
-
-use Illuminate\Http\Request;
-
-class RootUnitController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+class RootUnitController extends Controller{
+    public function __construct(RootUnitRepository $repository){
+        $this->middleware('auth:admin');
+        $this->middleware('adminlocalize');
+        $this->repository = $repository;
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    public function index(){
+        return view('back.unitroot.index',[
+            'datas' => RootUnit::orderBy('id','desc')->get()
+        ]);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+    public function create(){
+        return view('back.unitroot.create');
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\RootUnit  $rootUnit
-     * @return \Illuminate\Http\Response
-     */
-    public function show(RootUnit $rootUnit)
-    {
-        //
+    public function store(RootUnitRequest $request){
+        $this->repository->store($request);
+        return redirect()->route('back.unitroot.index')->withSuccess(__('New UnitRoot Added Successfully.'));
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\RootUnit  $rootUnit
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(RootUnit $rootUnit)
-    {
-        //
+    public function edit(RootUnit $unitroot){
+        return view('back.unitroot.edit',compact('unitroot'));
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\RootUnit  $rootUnit
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, RootUnit $rootUnit)
-    {
-        //
+    public function update(RootUnitRequest $request, RootUnit $unitroot){
+        $this->repository->update($unitroot, $request);
+        return redirect()->route('back.unitroot.index')->withSuccess(__('UnitRoot Updated Successfully.'));
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\RootUnit  $rootUnit
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(RootUnit $rootUnit)
-    {
-        //
+    public function destroy(RootUnit $unitroot){
+        $this->repository->delete($unitroot);
+        return redirect()->route('back.unitroot.index')->withSuccess(__('UnitRoot Deleted Successfully.'));
     }
 }

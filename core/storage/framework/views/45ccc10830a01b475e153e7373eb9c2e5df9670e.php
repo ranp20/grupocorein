@@ -216,8 +216,9 @@ body_theme4
                                             <?php if($setting->is_blog == 1): ?>
                                             <!-- <li class="<?php echo e(request()->routeIs('front.blog*') ? 'active' : ''); ?>"><a href="<?php echo e(route('front.blog')); ?>"><i class="icon-chevron-right"></i><?php echo e(__('Blog')); ?></a></li> -->
                                             <?php endif; ?>
-                                            <?php if($setting->is_faq == 1): ?>
-                                            <li><a class="<?php echo e(request()->routeIs('front.faq*') ? 'active' : ''); ?>" href="<?php echo e(route('front.faq')); ?>"><i class="icon-chevron-right pr-2"></i>Catálogo</a></li>
+
+                                            <?php if($setting->is_catalogs == 1): ?>
+                                            <li><a class="<?php echo e(request()->routeIs('front.catalogs*') ? 'active' : ''); ?>" href="<?php echo e(route('front.catalogs')); ?>"></i>Catálogos</a></li>
                                             <?php endif; ?>
                                         </ul>
                                     </nav>
@@ -351,16 +352,17 @@ body_theme4
                                             </div>
                                         </li>
                                         <?php endif; ?>
-                                        
                                         <li class="<?php echo e(request()->routeIs('front.onsaleproducts')  ? 'active' : ''); ?>"><a href="<?php echo e(route('front.onsaleproducts')); ?>"><?php echo e(__('Promotions')); ?></a></li>
                                         <li class="<?php echo e(request()->routeIs('front.specialoffer')  ? 'active' : ''); ?>"><a href="<?php echo e(route('front.specialoffer')); ?>"><?php echo e(__('Special offers')); ?></a></li>
                                         
                                         <?php if($setting->is_blog == 1): ?>
                                         <!-- <li class="<?php echo e(request()->routeIs('front.blog*') ? 'active' : ''); ?>"><a href="<?php echo e(route('front.blog')); ?>"><?php echo e(__('Blog')); ?></a></li> -->
-                                        <?php endif; ?>                                        
-                                        <?php if($setting->is_faq == 1): ?>
-                                        <li><a class="<?php echo e(request()->routeIs('front.faq*') ? 'active' : ''); ?>" href="<?php echo e(route('front.faq')); ?>">Catálogo</a></li>
                                         <?php endif; ?>
+
+                                        <?php if($setting->is_catalogs == 1): ?>
+                                        <li><a class="<?php echo e(request()->routeIs('front.catalogs*') ? 'active' : ''); ?>" href="<?php echo e(route('front.catalogs')); ?>"></i>Catálogos</a></li>
+                                        <?php endif; ?>
+
                                     </ul>
                                 </nav>
                             </div>

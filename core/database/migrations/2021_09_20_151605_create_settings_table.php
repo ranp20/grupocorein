@@ -91,6 +91,7 @@ class CreateSettingsTable extends Migration
             $table->tinyInteger('is_twilio')->default(0)->nullable();
             $table->text('twilio_section')->nullable();
             $table->text('whatsapp_numbers')->nullable();
+            $table->tinyInteger('is_catalogs')->default(1)->nullable();
             $table->timestamps();
         });
     }

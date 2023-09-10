@@ -33,6 +33,16 @@
             <span class="sub-item"><?php echo e(__('Brands')); ?></span>
           </a>
         </li>
+        <li>
+          <a class="sub-link" href="<?php echo e(route('back.unitroot.index')); ?>">
+            <span class="sub-item"><?php echo e(__('Unidad Raíz')); ?></span>
+          </a>
+        </li>
+        <li>
+          <a class="sub-link" href="<?php echo e(route('back.attributeroot.index')); ?>">
+            <span class="sub-item"><?php echo e(__('Atributo Raíz')); ?></span>
+          </a>
+        </li>
         
       </ul>
     </div>
@@ -131,6 +141,26 @@
       </ul>
     </div>
   </li>
+  
+  
+  <li class="nav-item">
+    <a data-toggle="collapse" href="#catalog">
+      <i class="fas fa-percent"></i>
+      <p><?php echo e(__('Manage Catalogs')); ?> </p>
+      <span class="caret"></span>
+    </a>
+    <div class="collapse" id="catalog">
+      <ul class="nav nav-collapse">
+        <li>
+          <a class="sub-link" href="<?php echo e(route('back.catalog.index')); ?>">
+            <span class="sub-item"><?php echo e(__('All Catalogs')); ?></span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </li>
+  
+
   <li class="nav-item">
     <a href="<?php echo e(route('back.transaction.index')); ?>">
       <i class="fas fa-random"></i>

@@ -218,8 +218,9 @@ body_theme4
                                             @if ($setting->is_blog == 1)
                                             <!-- <li class="{{ request()->routeIs('front.blog*') ? 'active' : '' }}"><a href="{{route('front.blog')}}"><i class="icon-chevron-right"></i>{{__('Blog')}}</a></li> -->
                                             @endif
-                                            @if ($setting->is_faq == 1)
-                                            <li><a class="{{ request()->routeIs('front.faq*') ? 'active' : '' }}" href="{{route('front.faq')}}"><i class="icon-chevron-right pr-2"></i>Catálogo</a></li>
+
+                                            @if ($setting->is_catalogs == 1)
+                                            <li><a class="{{ request()->routeIs('front.catalogs*') ? 'active' : '' }}" href="{{route('front.catalogs')}}"></i>Catálogos</a></li>
                                             @endif
                                         </ul>
                                     </nav>
@@ -353,22 +354,17 @@ body_theme4
                                             </div>
                                         </li>
                                         @endif
-                                        {{--
-                                        <!--
-                                        @if ($setting->is_campaign == 1)
-                                        <li class="{{ request()->routeIs('front.campaign')  ? 'active' : '' }}"><a href="{{route('front.campaign')}}">Promociones</a></li>
-                                        @endif
-                                        -->
-                                        --}}
                                         <li class="{{ request()->routeIs('front.onsaleproducts')  ? 'active' : '' }}"><a href="{{route('front.onsaleproducts')}}">{{__('Promotions')}}</a></li>
                                         <li class="{{ request()->routeIs('front.specialoffer')  ? 'active' : '' }}"><a href="{{route('front.specialoffer')}}">{{__('Special offers')}}</a></li>
                                         
                                         @if ($setting->is_blog == 1)
                                         <!-- <li class="{{ request()->routeIs('front.blog*') ? 'active' : '' }}"><a href="{{route('front.blog')}}">{{__('Blog')}}</a></li> -->
-                                        @endif                                        
-                                        @if ($setting->is_faq == 1)
-                                        <li><a class="{{ request()->routeIs('front.faq*') ? 'active' : '' }}" href="{{route('front.faq')}}">Catálogo</a></li>
                                         @endif
+
+                                        @if ($setting->is_catalogs == 1)
+                                        <li><a class="{{ request()->routeIs('front.catalogs*') ? 'active' : '' }}" href="{{route('front.catalogs')}}"></i>Catálogos</a></li>
+                                        @endif
+
                                     </ul>
                                 </nav>
                             </div>

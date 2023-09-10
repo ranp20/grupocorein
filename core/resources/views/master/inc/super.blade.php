@@ -33,6 +33,16 @@
             <span class="sub-item">{{ __('Brands') }}</span>
           </a>
         </li>
+        <li>
+          <a class="sub-link" href="{{ route('back.unitroot.index') }}">
+            <span class="sub-item">{{ __('Unidad Raíz') }}</span>
+          </a>
+        </li>
+        <li>
+          <a class="sub-link" href="{{ route('back.attributeroot.index') }}">
+            <span class="sub-item">{{ __('Atributo Raíz') }}</span>
+          </a>
+        </li>
         {{--
         <!--
         <li>
@@ -148,6 +158,26 @@
       </ul>
     </div>
   </li>
+  
+  
+  <li class="nav-item">
+    <a data-toggle="collapse" href="#catalog">
+      <i class="fas fa-percent"></i>
+      <p>{{ __('Manage Catalogs') }} </p>
+      <span class="caret"></span>
+    </a>
+    <div class="collapse" id="catalog">
+      <ul class="nav nav-collapse">
+        <li>
+          <a class="sub-link" href="{{ route('back.catalog.index') }}">
+            <span class="sub-item">{{ __('All Catalogs') }}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </li>
+  
+
   <li class="nav-item">
     <a href="{{ route('back.transaction.index') }}">
       <i class="fas fa-random"></i>

@@ -38,7 +38,8 @@ $(() => {
   $(document).on("change","#atributoraiz",function(e){
     e.preventDefault();
     let optSelected = $("#atributoraiz option:selected").val();
-    if(optSelected == 1){
+    let optSelectedTxt = $("#atributoraiz option:selected").text();
+    if(optSelected == 1 || optSelectedTxt == "COLOR" || optSelectedTxt == "color" || optSelectedTxt == "COLORES" || optSelectedTxt == "colores"){
       $("#cTentr-af172698__p-adm").html(`
       <div id="attrcolors-section">
         <div class="d-flex">

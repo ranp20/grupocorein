@@ -1,89 +1,38 @@
 <?php
-
 namespace App\Http\Controllers\Back;
-
 use App\{
     Models\RootAttribute,
-    Http\Controllers\Controller,
+    Repositories\Back\RootAttributeRepository,
+    Http\Requests\RootAttributeRequest,
+    Http\Controllers\Controller
 };
-
-use Illuminate\Http\Request;
-
-class RootAttributeController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+class RootAttributeController extends Controller{
+    public function __construct(RootAttributeRepository $repository){
+        $this->middleware('auth:admin');
+        $this->middleware('adminlocalize');
+        $this->repository = $repository;
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    public function index(){
+        return view('back.attributeroot.index',[
+            'datas' => RootAttribute::orderBy('id','desc')->get()
+        ]);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+    public function create(){
+        return view('back.attributeroot.create');
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\RootAttribute  $rootAttribute
-     * @return \Illuminate\Http\Response
-     */
-    public function show(RootAttribute $rootAttribute)
-    {
-        //
+    public function store(RootAttributeRequest $request){
+        $this->repository->store($request);
+        return redirect()->route('back.attributeroot.index')->withSuccess(__('New AttributeRoot Added Successfully.'));
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\RootAttribute  $rootAttribute
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(RootAttribute $rootAttribute)
-    {
-        //
+    public function edit(RootAttribute $attributeroot){
+        return view('back.attributeroot.edit',compact('attributeroot'));
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\RootAttribute  $rootAttribute
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, RootAttribute $rootAttribute)
-    {
-        //
+    public function update(RootAttributeRequest $request, RootAttribute $attributeroot){
+        $this->repository->update($attributeroot, $request);
+        return redirect()->route('back.attributeroot.index')->withSuccess(__('AttributeRoot Updated Successfully.'));
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\RootAttribute  $rootAttribute
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(RootAttribute $rootAttribute)
-    {
-        //
+    public function destroy(RootAttribute $attributeroot){
+        $this->repository->delete($attributeroot);
+        return redirect()->route('back.attributeroot.index')->withSuccess(__('AttributeRoot Deleted Successfully.'));
     }
 }
