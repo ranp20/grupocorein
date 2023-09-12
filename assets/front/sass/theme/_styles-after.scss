@@ -10467,7 +10467,8 @@ body{
 
 .btn.btn-primary{
     position: relative;
-    overflow: hidden;background: #8bc82f !important;
+    overflow: hidden;
+    background: #8bc82f !important;
 
 }
 .btn.btn-primary span{
@@ -11665,6 +11666,80 @@ body{
             width: 30px;
             height: 30px;
             border: thin solid #000;
+        }
+    }
+}
+
+.cCatalogItm{
+    &__cImgItm{
+        border-radius: 4px !important;
+        a{
+            display: table;
+        }
+        img{
+            max-width: 100%;
+            max-height: 365px;
+            width: auto;
+            height: auto;
+            object-fit: cover;
+            object-position: center;
+        }
+    }
+    &__cBtnDownload__dcWb{
+        padding: 10px;
+        &__link{
+            position: relative;
+            text-align: center;
+            width: 100%;
+            background-color: #8bc82f;
+            transition: all ease-in-out .3s;
+            width: 100%;
+            display: block;
+            padding: 6px 5px 5px 5px;
+            border-radius: 4px;
+            overflow: hidden;
+            &::before{
+                position: absolute;
+                content: '';
+                top: 0px;
+                left: 0px;
+                width: 0px;
+                height: 100%;
+                background: #111;
+                -webkit-transition: all .3s linear;
+                -moz-transition: all .3s linear;
+                transition: all .3s linear;
+            }
+
+            span{
+                z-index: 9;
+                position: relative;
+            }
+
+            &__cIcon{
+                svg{
+                    fill: #fff;
+                }
+            }
+            &__cTxt{
+                font-weight: bold !important;
+                color: #fff;
+            }
+            &:hover{
+                // border: 3px solid #8bc82f;
+                // background-color: #fff;
+                // span:first-child{
+                //     svg{
+                //         fill: #8bc82f;
+                //     }
+                // }
+                // span:nth-child(2){
+                //     color: #8bc82f;
+                // }
+                &::before{
+                    width: 100%;
+                }
+            }
         }
     }
 }

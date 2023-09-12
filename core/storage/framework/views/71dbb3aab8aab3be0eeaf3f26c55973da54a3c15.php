@@ -145,7 +145,7 @@
   
   <li class="nav-item">
     <a data-toggle="collapse" href="#catalog">
-      <i class="fas fa-percent"></i>
+      <i class="fas fa-book"></i>
       <p><?php echo e(__('Manage Catalogs')); ?> </p>
       <span class="caret"></span>
     </a>

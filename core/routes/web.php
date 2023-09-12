@@ -1,4 +1,4 @@
-<?php
+  <?php
 // ************************************ ADMIN PANEL **********************************************
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -384,9 +384,7 @@ Route::group(['middleware' => 'maintainance'], function (){
     Route::get('/search/suggest', 'Front\CatalogController@suggestSearch')->name('front.search.suggest');
     Route::get('/catalog/view/{type}', 'Front\CatalogController@viewType')->name('front.catalog.view');
     //------------ CATALOGS ENTERPRISE ------------
-    Route::get('/catalogs', 'Front\CatalogsController@index')->name('front.catalogs');
-    // Route::get('/search/suggest', 'Front\CatalogsController@suggestSearch')->name('front.search.suggest');
-    // Route::get('/catalogs/view/{type}', 'Front\CatalogsController@viewType')->name('front.catalogs.view');
+    Route::get('/journals', 'Front\JournalController@index')->name('front.journals');
     //------------ CHECKOUT ------------
     Route::get('/checkout/billing/address', 'Front\CheckoutController@ship_address')->name('front.checkout.billing');
     Route::post('/checkout/billing/store', 'Front\CheckoutController@billingStore')->name('front.checkout.store');

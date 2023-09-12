@@ -218,7 +218,9 @@ body_theme4
                                             <?php endif; ?>
 
                                             <?php if($setting->is_catalogs == 1): ?>
-                                            <li><a class="<?php echo e(request()->routeIs('front.catalogs*') ? 'active' : ''); ?>" href="<?php echo e(route('front.catalogs')); ?>"></i>Catálogos</a></li>
+                                            <li class="<?php echo e((request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : ''); ?>">
+                                                <a class="<?php echo e((request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : ''); ?>" href="<?php echo e(route('front.journals')); ?>"></i>Catálogos</a>
+                                            </li>
                                             <?php endif; ?>
                                         </ul>
                                     </nav>
@@ -360,7 +362,9 @@ body_theme4
                                         <?php endif; ?>
 
                                         <?php if($setting->is_catalogs == 1): ?>
-                                        <li><a class="<?php echo e(request()->routeIs('front.catalogs*') ? 'active' : ''); ?>" href="<?php echo e(route('front.catalogs')); ?>"></i>Catálogos</a></li>
+                                        <li class="<?php echo e((request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : ''); ?>">
+                                            <a class="<?php echo e((request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : ''); ?>" href="<?php echo e(route('front.journals')); ?>"></i>Catálogos</a>
+                                        </li>
                                         <?php endif; ?>
 
                                     </ul>

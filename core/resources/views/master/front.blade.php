@@ -220,7 +220,9 @@ body_theme4
                                             @endif
 
                                             @if ($setting->is_catalogs == 1)
-                                            <li><a class="{{ request()->routeIs('front.catalogs*') ? 'active' : '' }}" href="{{route('front.catalogs')}}"></i>Catálogos</a></li>
+                                            <li class="{{ (request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : '' }}">
+                                                <a class="{{ (request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : '' }}" href="{{route('front.journals')}}"></i>Catálogos</a>
+                                            </li>
                                             @endif
                                         </ul>
                                     </nav>
@@ -362,7 +364,9 @@ body_theme4
                                         @endif
 
                                         @if ($setting->is_catalogs == 1)
-                                        <li><a class="{{ request()->routeIs('front.catalogs*') ? 'active' : '' }}" href="{{route('front.catalogs')}}"></i>Catálogos</a></li>
+                                        <li class="{{ (request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : '' }}">
+                                            <a class="{{ (request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : '' }}" href="{{route('front.journals')}}"></i>Catálogos</a>
+                                        </li>
                                         @endif
 
                                     </ul>
