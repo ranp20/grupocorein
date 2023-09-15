@@ -20,6 +20,13 @@
 									@csrf
 									@method('PUT')
 									@include('alerts.alerts')
+									<div class="d-flex align-items-center justify-content-end">
+										<label class="switch-primary">
+											<input type="checkbox" class="switch switch-bootstrap radio-check__vCatalog" name="status" value="{{ $catalog->status }}" {{ ($catalog->status != "" && $catalog->status != 0) ? "checked" : "" }}>
+											<span class="switch-body"></span>
+											<span class="switch-text">{{ __('Published') }}</span>
+										</label>
+									</div>
 									<div class="form-group">
 										<label for="name">{{ __('Name') }} *</label>
 										<input type="text" name="name" class="form-control item-name" id="name" placeholder="{{ __('Enter Name') }}" value="{{ $catalog->name }}" required>

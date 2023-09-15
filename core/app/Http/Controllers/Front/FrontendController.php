@@ -37,9 +37,11 @@ use Illuminate\Validation\Validator;
 use App\Helpers\PriceHelper;
 use App\Models\Attribute;
 use App\Models\AttributeOption;
+use App\Models\Catalog;
 use App\Models\TempCart;
 use Illuminate\Support\Facades\Auth;
 use Redirect;
+use Carbon\Carbon;
 
 use function GuzzleHttp\json_decode;
 
@@ -475,10 +477,24 @@ class FrontendController extends Controller{
     */
 	}
   public function getCatalogsByAnio(Request $request){
-    echo "<pre>";
-    print_r($request->post());
-    echo "<pre>";
-    exit();
+    $setting = Setting::first();
+    $sorting = $request->has('sorting_cataloganio') ?  ( !empty($request->sorting_cataloganio) ? $request->sorting_cataloganio : null ) : null;
+    // $yDate = str_replace("y-","",$sorting);
+    $catalogos = Catalog::when($sorting, function($query, $sorting){
+      $yDate = str_replace("y-","",$sorting);
+      if($sorting != ""){
+        return $query->where(Catalog::raw('YEAR(created_at)'), '=', $yDate);
+      }else{
+        return $query->orderby('id','desc');
+      }
+    })
+
+    ->where('status',1)->orderby('id','desc')->paginate($setting->view_product);
+    $blade = 'front.journals.index';
+
+    if($request->ajax()) $blade = 'front.journals.filter';
+    return view($blade,[ 'catalogos' => $catalogos ]);
+    // return view('front.journals.filter',compact('catalogos'));
   }
   public function getFilterOnSaleProducts(Request $request){
     /*

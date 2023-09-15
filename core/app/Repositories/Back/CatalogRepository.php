@@ -24,12 +24,22 @@ class CatalogRepository{
         $input['adj_doc'] = $namecomplete;
       }
     }
+    if($request->has('status')){
+      $input['status'] = $request->status;
+    }else{
+      $input['status'] = 0;
+    }
     Catalog::create($input);
   }
   public function update($catalog, $request){
     $input = $request->all();
     if ($file = $request->file('photo')){
       $input['photo'] = ImageHelper::handleUpdatedUploadedImage($file,'/assets/images/catalog',$catalog,'/assets/images/catalog/','photo');
+    }
+    if($request->has('status')){
+      $input['status'] = $request->status;
+    }else{
+      $input['status'] = 0;
     }
     $catalog->update($input);
   }
