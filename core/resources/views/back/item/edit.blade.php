@@ -108,7 +108,7 @@
                                 }
                               }
                             }
-                          ?>                
+                          ?>
                           @foreach($arrColorAdd as $k => $v)
                             @if($v['code'] != null && $v['code'] != "")
                             <div class="d-flex attrcolor-item">
@@ -283,63 +283,144 @@
               </label>
             </div>
             <div id="cTentr-af1728903__p-adm" class="{{ $item->is_specification == 0 ? 'd-none' : '' }}">
-              @if(!empty($specification_name))
-              <div id="specifications-section">
-                @foreach(array_combine($specification_name,$specification_description) as $name => $description)
-                <div class="d-flex">
-                  <div class="flex-grow-1">
-                    <div class="form-group">
-                      <input type="text" class="form-control" name="specification_name[]" placeholder="{{ __('Specification Name') }}" value="{{$name}}">
+              @if($item->is_specification != 0)
+                @if($item->specification_collection != "" && $item->specification_collection != "[]")
+                  <div id="specifications-section">
+                    <div class="d-flex">
+                      <div class="flex-grow-1">
+                        <div class="form-group">
+                          <input type="text" class="form-control aia843d__spcfname" placeholder="{{ __('Specification Name') }}" value="">
+                          <span id="ccffs89_51-2ifc099"></span>
+                        </div>
+                      </div>
+                      <div class="flex-grow-1">
+                        <div class="form-group">
+                          <input type="text" class="form-control aia843d__spcfdsc" placeholder="{{ __('Specification description') }}" value="">
+                        </div>
+                      </div>
+                      <div class="flex-btn">
+                        <button type="button" class="btn btn-success add-specification" data-text="{{ __('Specification Name') }}" data-text1="{{ __('Specification Description') }}"> <i class="fa fa-plus"></i> </button>
+                      </div>
                     </div>
                   </div>
-                  <div class="flex-grow-1">
-                    <div class="form-group">
-                      <input type="text" class="form-control" name="specification_description[]" placeholder="{{ __('Specification description') }}" value="{{$description}}">
+                  <div class="d-flex c-sctGroupList">
+                    <div class="flex-grow-1">
+                      <div class="scGroupElems-sectionList">
+                        <div class="c-zTitleSectionFloating">
+                          <span class="c-zTitleSectionFloating__txt">Lista de <strong>Especificaciones Agregadas</strong></span>
+                        </div>
+                        <div class="scGroupElems-sectionList__c" id="specifications-sectionList__c">
+                          
+                          <?php
+                            $arrSpecificationAdd = [];
+                            $ColorAll = [];
+                            $ColorAll2 = [];
+                            if(isset($item->specification_collection) && $item->specification_collection != ""){
+                              $specificationsAvailables = json_decode($item->specification_collection, TRUE);
+                              if(count($specificationsAvailables) > 0){
+                                $specificationsAvailables_list = $specificationsAvailables['specification_collection']['product'];
+                              
+                                foreach($specificationsAvailables_list as $key => $val){
+                                  $arrSpecificationAdd[$key]['name'] = $val['name'];
+                                  $arrSpecificationAdd[$key]['description'] = $val['description'];
+                                }
+                              }
+                            }
+                          ?>
+                          @foreach($arrSpecificationAdd as $k => $v)
+                            @if($v['name'] != null && $v['name'] != "")
+                            <div class="d-flex specification-item">
+                              <div class="flex-grow-1">
+                                <div class="form-group">
+                                  <input type="text" class="form-control" name="specification_name[]" placeholder="{{ $v['name'] }}" value="{{ $v['name'] }}">
+                                </div>
+                              </div>
+                              <div class="flex-grow-1">
+                                <div class="form-group">
+                                  <input type="text" class="form-control" name="specification_description[]" placeholder="{{ $v['description'] }}" value="{{ $v['description'] }}">
+                                </div>
+                              </div>
+                              <div class="flex-btn">
+                                <button type="button" class="btn btn-danger remove-spcification">
+                                  <i class="fa fa-minus"></i>
+                                </button>
+                              </div>
+                            </div>
+                            @endif
+                          @endforeach
+
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div class="flex-btn">
-                    @if($loop->first)
-                    <button type="button" class="btn btn-success add-specification" data-text="{{ __('Specification Name') }}" data-text1="{{ __('Specification Description') }}"> <i class="fa fa-plus"></i> </button>
-                    @else
-                    <button type="button" class="btn btn-danger remove-spcification" data-text="{{ __('Specification Name') }}" data-text1="{{ __('Specification Description') }}"> <i class="fa fa-minus"></i> </button>
-                    @endif
+                @else
+                  <div id="specifications-section">
+                    <div class="d-flex">
+                      <div class="flex-grow-1">
+                        <div class="form-group">
+                          <input type="text" class="form-control aia843d__spcfname" placeholder="{{ __('Specification Name') }}" value="">
+                          <span id="ccffs89_51-2ifc099"></span>
+                        </div>
+                      </div>
+                      <div class="flex-grow-1">
+                        <div class="form-group">
+                          <input type="text" class="form-control aia843d__spcfdsc" placeholder="{{ __('Specification description') }}" value="">
+                        </div>
+                      </div>
+                      <div class="flex-btn">
+                        <button type="button" class="btn btn-success add-specification" data-text="{{ __('Specification Name') }}" data-text1="{{ __('Specification Description') }}"> <i class="fa fa-plus"></i> </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                @endforeach
-              </div>
+                  <div class="d-flex c-sctGroupList">
+                    <div class="flex-grow-1">
+                      <div class="scGroupElems-sectionList">
+                        <div class="c-zTitleSectionFloating">
+                          <span class="c-zTitleSectionFloating__txt">Lista de <strong>Especificaciones Agregadas</strong></span>
+                        </div>
+                        <div class="scGroupElems-sectionList__c" id="specifications-sectionList__c">
+                          <div class="scGroupElems-sectionList__c__deftxt" id="defTxt57vnj-espc__anyval">
+                            <p>Sin Especificaciones</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                @endif
               @else
-              <div id="specifications-section">
-                <div class="d-flex">
-                  <div class="flex-grow-1">
-                    <div class="form-group">
-                      <input type="text" class="form-control aia843d__spcfname" name="specification_name[]" placeholder="{{ __('Specification Name') }}" value="">
+                <div id="specifications-section">
+                  <div class="d-flex">
+                    <div class="flex-grow-1">
+                      <div class="form-group">
+                        <input type="text" class="form-control aia843d__spcfname" placeholder="{{ __('Specification Name') }}" value="">
+                        <span id="ccffs89_51-2ifc099"></span>
+                      </div>
                     </div>
-                  </div>
-                  <div class="flex-grow-1">
-                    <div class="form-group">
-                      <input type="text" class="form-control aia843d__spcfdsc" name="specification_description[]" placeholder="{{ __('Specification description') }}" value="">
+                    <div class="flex-grow-1">
+                      <div class="form-group">
+                        <input type="text" class="form-control aia843d__spcfdsc" placeholder="{{ __('Specification description') }}" value="">
+                      </div>
                     </div>
-                  </div>
-                  <div class="flex-btn">
-                    <button type="button" class="btn btn-success add-specification" data-text="{{ __('Specification Name') }}" data-text1="{{ __('Specification Description') }}"> <i class="fa fa-plus"></i> </button>
+                    <div class="flex-btn">
+                      <button type="button" class="btn btn-success add-specification" data-text="{{ __('Specification Name') }}" data-text1="{{ __('Specification Description') }}"> <i class="fa fa-plus"></i> </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="d-flex c-sctGroupList">
-                <div class="flex-grow-1">
-                  <div class="scGroupElems-sectionList">
-                    <div class="c-zTitleSectionFloating">
-                      <span class="c-zTitleSectionFloating__txt">Lista de especificaciones</span>
-                    </div>
-                    <div class="scGroupElems-sectionList__c" id="specifications-sectionList__c">
-                      <div class="scGroupElems-sectionList__c__deftxt" id="defTxt57vnj-espc__anyval">
-                        <p>Sin Especificaciones</p>
+                <div class="d-flex c-sctGroupList">
+                  <div class="flex-grow-1">
+                    <div class="scGroupElems-sectionList">
+                      <div class="c-zTitleSectionFloating">
+                        <span class="c-zTitleSectionFloating__txt">Lista de <strong>Especificaciones Agregadas</strong></span>
+                      </div>
+                      <div class="scGroupElems-sectionList__c" id="specifications-sectionList__c">
+                        <div class="scGroupElems-sectionList__c__deftxt" id="defTxt57vnj-espc__anyval">
+                          <p>Sin Especificaciones</p>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              @endif              
+              @endif
             </div>
           </div>
         </div>

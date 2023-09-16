@@ -24,7 +24,7 @@ class CreateItemsTable extends Migration
             $table->integer('brand_id')->default(0)->nullable();
             $table->integer('unidad_raiz')->default(0)->nullable();
             $table->integer('atributo_raiz')->default(0)->nullable();
-            $table->integer('atributoraiz_collection')->default(0)->nullable();
+            $table->text('atributoraiz_collection')->nullable();
             $table->text('name')->nullable();
             $table->text('slug')->nullable();
             $table->string('sku')->nullable();
@@ -34,6 +34,7 @@ class CreateItemsTable extends Migration
             $table->text('specification_name')->nullable();
             $table->text('specification_description')->nullable();
             $table->tinyInteger('is_specification')->default(0)->nullable();
+            $table->text('specification_collection')->nullable();
             $table->text('details')->nullable();
             $table->string('photo')->nullable();
             $table->double('discount_price')->default(0)->nullable();

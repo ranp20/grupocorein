@@ -25,6 +25,7 @@ class Item extends Model
         'specification_name',
         'specification_description',
         'is_specification',
+        'specification_collection',
         'details',
         'photo',
         'thumbnail',

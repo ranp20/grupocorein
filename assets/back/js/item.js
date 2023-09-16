@@ -327,34 +327,48 @@ $(() => {
     let btnAddSpecification = $(this).parent().parent().parent().find(".add-specification");
     btnAddSpecification.attr('data-text1', val);
   });
+  // --------------- VALIDAR INPUT DE NOMBRE DE ESPEFICICACIÓN
+  $(document).on("input keyup", "input.aia843d__spcfname", function(e){
+    let valSpcfic = e.target.value;
+    if(valSpcfic.trim() != ""){
+      $("#ccffs89_51-2ifc099").text("");
+    }else{
+      $("#ccffs89_51-2ifc099").text("* Campo obligatorio");
+    }
+  });
   // --------------- ADD ESPECIFICATIONS
   $(document).on("click",".add-specification",function(){
     var text = $(this).parent().parent().parent().find("input.aia843d__spcfname").val();
     var text1 = $(this).parent().parent().parent().find("input.aia843d__spcfdsc").val();
-    $("#defTxt57vnj-espc__anyval").remove();
-    $('#specifications-sectionList__c').append(`
-    <div class="d-flex specification-item">
-      <div class="flex-grow-1">
-        <div class="form-group">
-          <input type="text" class="form-control" name="specification_name[]" placeholder="${text}" value="${text}">
+    if(text.trim() != "" && text.trim() != undefined){
+      $("#ccffs89_51-2ifc099").text("");
+      $("#defTxt57vnj-espc__anyval").remove();
+      $('#specifications-sectionList__c').append(`
+      <div class="d-flex specification-item">
+        <div class="flex-grow-1">
+          <div class="form-group">
+            <input type="text" class="form-control" name="specification_name[]" placeholder="${text}" value="${text}">
+          </div>
+        </div>
+        <div class="flex-grow-1">
+          <div class="form-group">
+            <input type="text" class="form-control" name="specification_description[]" placeholder="${text1}" value="${text1}">
+          </div>
+        </div>
+        <div class="flex-btn">
+          <button type="button" class="btn btn-danger remove-spcification">
+            <i class="fa fa-minus"></i>
+          </button>
         </div>
       </div>
-      <div class="flex-grow-1">
-        <div class="form-group">
-          <input type="text" class="form-control" name="specification_description[]" placeholder="${text1}" value="${text1}">
-        </div>
-      </div>
-      <div class="flex-btn">
-        <button type="button" class="btn btn-danger remove-spcification">
-          <i class="fa fa-minus"></i>
-        </button>
-      </div>
-    </div>
-    `);
-    $(this).data('text', '');
-    $(this).data('text1', '');
-    $(".aia843d__spcfname").val('');
-    $(".aia843d__spcfdsc").val('');
+      `);
+      $(this).data('text', '');
+      $(this).data('text1', '');
+      $(".aia843d__spcfname").val('');
+      $(".aia843d__spcfdsc").val('');
+    }else{
+      $("#ccffs89_51-2ifc099").text("* Campo obligatorio");
+    }    
   });
   // --------------- REMOVE ESPECIFICATIONS
   $(document).on('click','.remove-spcification',function(){
