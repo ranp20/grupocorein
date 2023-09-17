@@ -213,7 +213,7 @@ body_theme4
                                             <li class="{{ request()->routeIs('front.onsaleproducts')  ? 'active' : '' }}"><a href="{{route('front.onsaleproducts')}}"><i class="icon-chevron-right"></i>{{__('Promotions')}}</a></li>
                                             <li class="{{ request()->routeIs('front.specialoffer')  ? 'active' : '' }}"><a href="{{route('front.specialoffer')}}"><i class="icon-chevron-right"></i>{{__('Special offers')}}</a></li>
                                             @if ($setting->is_brands == 1)
-                                            <li class="{{ request()->routeIs('front.brand')  ? 'active' : '' }}"><a href="{{route('front.brand')}}"><i class="icon-chevron-right"></i>{{__('Brand')}}</a></li>
+                                            <li class="{{ request()->routeIs('front.brands')  ? 'active' : '' }}"><a href="{{route('front.brands')}}"><i class="icon-chevron-right"></i>{{__('Brand')}}</a></li>
                                             @endif
                                             @if ($setting->is_blog == 1)
                                             <!-- <li class="{{ request()->routeIs('front.blog*') ? 'active' : '' }}"><a href="{{route('front.blog')}}"><i class="icon-chevron-right"></i>{{__('Blog')}}</a></li> -->
@@ -257,8 +257,8 @@ body_theme4
                                         <li class="{{ request()->routeIs('front.catalog*')  ? 'active' : '' }}"><a href="{{route('front.catalog')}}">{{__('Shop')}}</a></li>
                                         @endif
                                         @if ($setting->is_brands == 1)
-                                        <li class="{{ request()->routeIs('front.brand')  ? 'active' : '' }} allbrands_menulist">
-                                            <a href="{{route('front.brand')}}" class="allbrands-menu-item" data-dropdown-custommenu="brands-menu">{{__('Brands')}}</a>
+                                        <li class="{{ request()->routeIs('front.brands')  ? 'active' : '' }} allbrands_menulist">
+                                            <a href="{{route('front.brands')}}" class="allbrands-menu-item" data-dropdown-custommenu="brands-menu">{{__('Brands')}}</a>
                                             
                                             
                                             
@@ -317,7 +317,7 @@ body_theme4
                                                         <div class="cgBtns__List">
                                                             <div class="filter-buttons">
                                                                 <!-- Add buttons for each letter of the alphabet -->
-                                                                <a class="letter-all" href="{{route('front.brand')}}">Todas las Marcas</a>
+                                                                <a class="letter-all" href="{{route('front.brands')}}">Todas las Marcas</a>
                                                                 <?php
                                                                     foreach ($filteredLetters as $letter) {
                                                                         // $disabled = $letter === '#' ? '' : (in_array($letter, range('0', '9')) ? 'disabled' : '');

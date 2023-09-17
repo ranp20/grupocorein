@@ -476,6 +476,7 @@ class FrontendController extends Controller{
     return view('front.specialoffer', compact('specialoffer_items'));
     */
 	}
+  /* ---------------------- FILTRAR - CATÁLOGOS ---------------------- */
   public function getCatalogsByAnio(Request $request){
     $setting = Setting::first();
     $sorting = $request->has('sorting_cataloganio') ?  ( !empty($request->sorting_cataloganio) ? $request->sorting_cataloganio : null ) : null;
@@ -488,12 +489,36 @@ class FrontendController extends Controller{
         return $query->orderby('id','desc');
       }
     })
-
     ->where('status',1)->orderby('id','desc')->paginate($setting->view_product);
     $blade = 'front.journals.index';
-
     if($request->ajax()) $blade = 'front.journals.filter';
     return view($blade,[ 'catalogos' => $catalogos ]);
+    // return view('front.journals.filter',compact('catalogos'));
+  }
+  /* ---------------------- FILTRAR - MARCAS ---------------------- */
+  public function getBrandsByLetter(Request $request){
+    $setting = Setting::first();
+    $sorting = $request->has('sorting_brandletter') ?  ( !empty($request->sorting_brandletter) ? $request->sorting_brandletter : null ) : null;
+    
+    $brands = Brand::when($sorting, function($query, $sorting){
+      $letterBrand = str_replace("letter-","",$sorting);
+      if($sorting != ""){
+        if($sorting == "#"){
+          // return $query->where(Brand::raw("SUBSTRING(name, 1, 1)", "REGEXP", "^[0-9]"));
+          // return $query->where(Brand::raw('name'), 'LIKE', '[0-9]%');
+          return $query->where('name', 'LIKE', '[0-9]%');
+          // return $query->where(Brand::whereRaw("name REGEXP '^[0-9]'"));
+        }else{
+          return $query->where('name', 'LIKE', $letterBrand . '%')->selectRaw('*, LEFT(name, 1) as first_char');
+        }
+      }else{
+        return $query->orderby('id','asc');
+      }
+    })
+    ->where('status',1)->orderby('id','asc')->paginate($setting->view_product);
+    $blade = 'front.brands.index';
+    if($request->ajax()) $blade = 'front.brands.filter';
+    return view($blade,[ 'brands' => $brands ]);
     // return view('front.journals.filter',compact('catalogos'));
   }
   public function getFilterOnSaleProducts(Request $request){

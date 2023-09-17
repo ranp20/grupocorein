@@ -343,9 +343,8 @@ Route::group(['middleware' => 'maintainance'], function (){
     Route::get('/getproductsbycategory/products', 'Front\FrontendController@getProductByCategoryName')->name('front.getproductsbycategory');
     Route::get('/onsaleproducts/getFilterOnSaleProducts', 'Front\FrontendController@getFilterOnSaleProducts')->name('front.getFilterOnSaleProducts');
     Route::get('/specialofferproducts/getFilterSpecialOfferProducts', 'Front\FrontendController@getFilterSpecialOfferProducts')->name('front.getFilterSpecialOfferProducts');
-    Route::get('/journals/getCatalogsByAnio', 'Front\FrontendController@getCatalogsByAnio')->name('front.getCatalogsByAnio');
     Route::get('/blog', 'Front\FrontendController@blog')->name('front.blog');
-    Route::get('/brands', 'Front\FrontendController@brands')->name('front.brand');
+    // Route::get('/brands', 'Front\FrontendController@brands')->name('front.brand');
     Route::get('/allcategories', 'Front\FrontendController@allCategories')->name('front.allcategories');
     Route::get('/blog/{slug}', 'Front\FrontendController@blogDetails')->name('front.blog.details');
     Route::get('/faq', 'Front\FrontendController@faq')->name('front.faq');
@@ -385,6 +384,10 @@ Route::group(['middleware' => 'maintainance'], function (){
     Route::get('/catalog/view/{type}', 'Front\CatalogController@viewType')->name('front.catalog.view');
     //------------ CATALOGS ENTERPRISE ------------
     Route::get('/journals', 'Front\JournalController@index')->name('front.journals');
+    Route::get('/journals/getCatalogsByAnio', 'Front\FrontendController@getCatalogsByAnio')->name('front.getCatalogsByAnio');
+    //------------ BRANDS ------------
+    Route::get('/brands', 'Front\BrandController@index')->name('front.brands');
+    Route::get('/brands/getBrandsByLetter', 'Front\FrontendController@getBrandsByLetter')->name('front.getBrandsByLetter');
     //------------ CHECKOUT ------------
     Route::get('/checkout/billing/address', 'Front\CheckoutController@ship_address')->name('front.checkout.billing');
     Route::post('/checkout/billing/store', 'Front\CheckoutController@billingStore')->name('front.checkout.store');

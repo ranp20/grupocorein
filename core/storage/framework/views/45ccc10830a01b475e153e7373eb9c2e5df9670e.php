@@ -211,7 +211,7 @@ body_theme4
                                             <li class="<?php echo e(request()->routeIs('front.onsaleproducts')  ? 'active' : ''); ?>"><a href="<?php echo e(route('front.onsaleproducts')); ?>"><i class="icon-chevron-right"></i><?php echo e(__('Promotions')); ?></a></li>
                                             <li class="<?php echo e(request()->routeIs('front.specialoffer')  ? 'active' : ''); ?>"><a href="<?php echo e(route('front.specialoffer')); ?>"><i class="icon-chevron-right"></i><?php echo e(__('Special offers')); ?></a></li>
                                             <?php if($setting->is_brands == 1): ?>
-                                            <li class="<?php echo e(request()->routeIs('front.brand')  ? 'active' : ''); ?>"><a href="<?php echo e(route('front.brand')); ?>"><i class="icon-chevron-right"></i><?php echo e(__('Brand')); ?></a></li>
+                                            <li class="<?php echo e(request()->routeIs('front.brands')  ? 'active' : ''); ?>"><a href="<?php echo e(route('front.brands')); ?>"><i class="icon-chevron-right"></i><?php echo e(__('Brand')); ?></a></li>
                                             <?php endif; ?>
                                             <?php if($setting->is_blog == 1): ?>
                                             <!-- <li class="<?php echo e(request()->routeIs('front.blog*') ? 'active' : ''); ?>"><a href="<?php echo e(route('front.blog')); ?>"><i class="icon-chevron-right"></i><?php echo e(__('Blog')); ?></a></li> -->
@@ -255,8 +255,8 @@ body_theme4
                                         <li class="<?php echo e(request()->routeIs('front.catalog*')  ? 'active' : ''); ?>"><a href="<?php echo e(route('front.catalog')); ?>"><?php echo e(__('Shop')); ?></a></li>
                                         <?php endif; ?>
                                         <?php if($setting->is_brands == 1): ?>
-                                        <li class="<?php echo e(request()->routeIs('front.brand')  ? 'active' : ''); ?> allbrands_menulist">
-                                            <a href="<?php echo e(route('front.brand')); ?>" class="allbrands-menu-item" data-dropdown-custommenu="brands-menu"><?php echo e(__('Brands')); ?></a>
+                                        <li class="<?php echo e(request()->routeIs('front.brands')  ? 'active' : ''); ?> allbrands_menulist">
+                                            <a href="<?php echo e(route('front.brands')); ?>" class="allbrands-menu-item" data-dropdown-custommenu="brands-menu"><?php echo e(__('Brands')); ?></a>
                                             
                                             
                                             
@@ -315,7 +315,7 @@ body_theme4
                                                         <div class="cgBtns__List">
                                                             <div class="filter-buttons">
                                                                 <!-- Add buttons for each letter of the alphabet -->
-                                                                <a class="letter-all" href="<?php echo e(route('front.brand')); ?>">Todas las Marcas</a>
+                                                                <a class="letter-all" href="<?php echo e(route('front.brands')); ?>">Todas las Marcas</a>
                                                                 <?php
                                                                     foreach ($filteredLetters as $letter) {
                                                                         // $disabled = $letter === '#' ? '' : (in_array($letter, range('0', '9')) ? 'disabled' : '');

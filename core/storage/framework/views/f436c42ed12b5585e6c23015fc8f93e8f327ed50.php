@@ -152,7 +152,7 @@
                 <div class="flex-grow-1">
                   <div class="scGroupElems-sectionList">
                     <div class="c-zTitleSectionFloating">
-                      <span class="c-zTitleSectionFloating__txt">Lista de especificaciones</span>
+                      <span class="c-zTitleSectionFloating__txt">Lista de <strong>Especificaciones Agregadas</strong></span>
                     </div>
                     <div class="scGroupElems-sectionList__c" id="specifications-sectionList__c">
                       <div class="scGroupElems-sectionList__c__deftxt" id="defTxt57vnj-espc__anyval">
