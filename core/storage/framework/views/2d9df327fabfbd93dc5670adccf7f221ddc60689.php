@@ -12,12 +12,11 @@
   <link rel="stylesheet" href="<?php echo e(asset('node_modules/owl-carousel/owl-carousel/owl.theme.css')); ?>">
   <script type="text/javascript" src="<?php echo e(asset('node_modules/owl-carousel/owl-carousel/owl.carousel.min.js')); ?>"></script>
   <script type="text/javascript" src="<?php echo e(asset('assets/front/js/extraindex.js')); ?>"></script>
-
-  
-  <script src="<?php echo e(asset('node_modules/@fancyapps/ui/dist/fancybox/fancybox.umd.js')); ?>"></script>
   
   
-  <link rel="stylesheet" href="<?php echo e(asset('node_modules/@fancyapps/ui/dist/fancybox/fancybox.css')); ?>"/>
+  <script src="<?php echo e(asset('assets/front/js/plugins/magiczoom/magiczoomplus.js')); ?>"></script>
+  <link rel="stylesheet" href="<?php echo e(asset('assets/front/js/plugins/magiczoom/magiczoomplus.css')); ?>"/>
+  
 <div class="page-title">
   <div class="container">
     <div class="row">
@@ -65,111 +64,44 @@
         <?php if($item->previous_price && $item->previous_price !=0): ?>
         <div class="product-badge bg-goldenrod  ppp-t"> -<?php echo e(PriceHelper::DiscountPercentage($item)); ?></div>
         <?php endif; ?>
+        
         <div class="product-thumbnails insize">
-          <div class="product-details-slider owl-carousel">
+          <div class="app-demo">
             <?php
               //Combiar arrays de Foto principal y fotos de galería
               $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
-              $urlBaseDomain = $actual_link . "/grupocorein/";
-              // echo $urlBaseDomain;
-              // $pathProductDetailsPhoto = $urlBaseDomain.'assets/images/'.$item->photo;
-              // $pathProductDetailsPhotoDefault = $urlBaseDomain.'assets/images/Utilities/default_product.png';
-              // $pathProductDetailsPhoto = 'assets/images/'.$item->photo;
-              // $pathProductDetailsPhotoDefault = 'assets/images/Utilities/default_product.png';
-              // $pathProductDetailsPhoto = asset('assets/images/'.$item->photo);
-              // $pathProductDetailsPhotoDefault = asset('assets/images/Utilities/default_product.png');
-              // $imgPathFileFinal = "";
-              // $imgPathFileFinal = $pathProductDetailsPhoto;
-              // if(file_exists($pathProductDetailsPhoto)){
-              //   $imgPathFileFinal = $pathProductDetailsPhoto;
-              //   echo "Existe la imagen";
-              // }else{
-              //   $imgPathFileFinal = $pathProductDetailsPhotoDefault;
-              //   echo "NO Existe la imagen";
-              // }
-              // $imgUrlPhoto = asset($imgPathFileFinal);
-              // $imgUrlPhoto = $imgPathFileFinal;
-              // $imgPhoto = getimagesize($imgUrlPhoto);
-              // echo $imgUrlPhoto;
-              // $imgPhoto = getimagesize(asset($imgPathFileFinal));
-              // Leer información de la imagen usando exif_read_data...
-              // $imgUrlPhoto = exif_read_data($imgPathFileFinal);
-              // // Extraer la información relevante...
-              // $widthPhoto = $imgUrlPhoto['COMPUTED']['Width'];
-              // $heightPhoto = $imgUrlPhoto['COMPUTED']['Height'];
-              // $mime = $imgUrlPhoto['MimeType'];
-              // Revisar si el tipo de imagen es soportada...
-              // $allowedTypes = [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_GIF];
-              // $imageType = exif_imagetype($imgPathFileFinal);
-              // if (in_array($imageType, $allowedTypes)) {
-              //   // Get image dimensions without using getimagesize
-              //   $widthPhoto = imagesx(imagecreatefromstring(file_get_contents($imgPathFileFinal)));
-              //   $heightPhoto = imagesy(imagecreatefromstring(file_get_contents($imgPathFileFinal)));
-              // } else {
-              //   echo "Unsupported image type. Only JPEG, PNG, and GIF are allowed.";
-              // }
-              // $anchoPhoto = $imgPhoto[0];
-              // $altoPhoto = $imgPhoto[1];
-              // $anchoPhoto = $widthPhoto;
-              // $altoPhoto = $heightPhoto;
-              $arrCollectionGalleries = json_decode($galleries, TRUE);
-              array_unshift($arrCollectionGalleries, ['photo' => $item->photo]);
-              // $arrGalleryProduct = json_encode($arrCollectionGalleries, TRUE);
-              
-              $indexedArray = array();
-              foreach ($arrCollectionGalleries as $key => $value) {
-                $indexedArray[] = $value;
-              }
-              // echo "<pre>";
-              // print_r($indexedArray);
-              // echo "</pre>";
-
-              // $arrGalleryProduct = json_encode($indexedArray, TRUE);
-              // foreach($indexedArray as $key => $gallery){
-              //   echo $key."-".$gallery['photo'];
-              // }
-              // Display the result
-              // echo "<pre>";
-              // print_r($arrGalleryProduct);
-              // echo "</pre>";
-              // exit();
-
+              $urlBaseDomain = $actual_link . "/grupocorein/"; // LOCAL
+              // $urlBaseDomain = $actual_link . "/"; // SERVIDOR
+              $urlFirstPhoto = $urlBaseDomain.'assets/images/'.$item->photo;
+              $urlFirstPhotoDefault = $urlBaseDomain.'assets/images/Utilities/default_product.png';
             ?>
-            
-            <?php $__currentLoopData = $indexedArray; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $gallery): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-            <?php
-              // $pathProductDetailsGallery = $urlBaseDomain.'assets/images/'.$gallery['photo'];
-              // $pathProductDetailsGalleryDefault = $urlBaseDomain.'assets/images/Utilities/default_product.png';
-              $pathProductDetailsGallery = $urlBaseDomain.'assets/images/'.$gallery['photo'];
-              $pathProductDetailsGalleryDefault = $urlBaseDomain.'assets/images/Utilities/default_product.png';
-              $imgPathGalleryFileFinal = "";
-              // if(file_exists( $pathProductDetailsGallery )){
-              //   $imgPathGalleryFileFinal = $pathProductDetailsGallery;
-              // }else{
-                $imgPathGalleryFileFinal = $pathProductDetailsGallery;
-              // }
-              $imgGallery = $imgPathGalleryFileFinal;
-              // $imgUrlGallery = asset($imgPathGalleryFileFinal);
-              // $imgGallery = getimagesize($imgUrlGallery);
-              // Leer información de la imagen usando exif_read_data...
-              // $imgUrlGallery = exif_read_data($imgPathGalleryFileFinal);
-              // // Extraer la información relevante...
-              // $widthGalleryPhoto = $imgUrlGallery['COMPUTED']['Width'];
-              // $heightGalleryPhoto = $imgUrlGallery['COMPUTED']['Height'];
-              // $mime = $imgUrlGallery['MimeType'];
-              // // $anchoGallery = $imgGallery[0];
-              // // $altoGallery = $imgGallery[1];
-              // $anchoGallery = $widthGalleryPhoto;
-              // $altoGallery = $heightGalleryPhoto;
-            ?>
-            <div class="item cntAds--i__itm--cInfo">
-              <figure class="ads_dashboard" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
-                <a href="<?php echo e($imgGallery); ?>" width="100" height="100" data-index="0" data-fancybox="gallery">
-                  <img src="<?php echo e($imgGallery); ?>" alt="zoom"/>
-                </a>
-              </figure>
+            <a href="<?php echo e($urlFirstPhoto); ?>" class="MagicZoom" id="photo-product" data-options="cssClass: mz-show-arrows;">
+              <img src="<?php echo e($urlFirstPhoto); ?>">
+            </a>
+            <div class="cGalleryScroll">
+              <div class="cGalleryScroll__c">
+                <?php
+                  $arrCollectionGalleries = json_decode($galleries, TRUE);
+                  array_unshift($arrCollectionGalleries, ['photo' => $item->photo]);                  
+                  $indexedArray = array();
+                  foreach ($arrCollectionGalleries as $key => $value) {
+                    $indexedArray[] = $value;
+                  }
+                ?>
+                <?php $__currentLoopData = $indexedArray; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $gallery): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                  <?php
+                    $pathProductDetailsGallery = $urlBaseDomain.'assets/images/'.$gallery['photo'];
+                    $pathProductDetailsGalleryDefault = $urlBaseDomain.'assets/images/Utilities/default_product.png';
+                    $imgGallery = $pathProductDetailsGallery;
+                  ?>
+                  <a data-zoom-id="photo-product" class="item" href="<?php echo e($imgGallery); ?>" data-image="<?php echo e($imgGallery); ?>">
+                    <img src="<?php echo e($imgGallery); ?>">
+                  </a>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+              </div>
+              <button class="scroll-btn prev"></button>
+              <button class="scroll-btn next"></button>
             </div>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
           </div>
         </div>
       </div>

@@ -12,14 +12,14 @@
   <link rel="stylesheet" href="{{ asset('node_modules/owl-carousel/owl-carousel/owl.theme.css')}}">
   <script type="text/javascript" src="{{ asset('node_modules/owl-carousel/owl-carousel/owl.carousel.min.js')}}"></script>
   <script type="text/javascript" src="{{ asset('assets/front/js/extraindex.js') }}"></script>
-
-  
-  <script src="{{ asset('node_modules/@fancyapps/ui/dist/fancybox/fancybox.umd.js') }}"></script>
-  
   {{--
-  <!-- <script src="{{ asset('assets/front/js/plugins/fancybox/jquery.fancybox-1.3.4.js') }}"></script> -->
+  <!-- <script src="{{ asset('node_modules/@fancyapps/ui/dist/fancybox/fancybox.umd.js') }}"></script>   -->
+  <!-- <link rel="stylesheet" href="{{ asset('node_modules/@fancyapps/ui/dist/fancybox/fancybox.css') }}"/> -->
   --}}
-  <link rel="stylesheet" href="{{ asset('node_modules/@fancyapps/ui/dist/fancybox/fancybox.css') }}"/>
+  
+  <script src="{{ asset('assets/front/js/plugins/magiczoom/magiczoomplus.js') }}"></script>
+  <link rel="stylesheet" href="{{ asset('assets/front/js/plugins/magiczoom/magiczoomplus.css') }}"/>
+  
 <div class="page-title">
   <div class="container">
     <div class="row">
@@ -67,21 +67,15 @@
         @if($item->previous_price && $item->previous_price !=0)
         <div class="product-badge bg-goldenrod  ppp-t"> -{{PriceHelper::DiscountPercentage($item)}}</div>
         @endif
+        {{--
+        <!--
         <div class="product-thumbnails insize">
           <div class="product-details-slider owl-carousel">
             <?php
               //Combiar arrays de Foto principal y fotos de galería
               $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
               $urlBaseDomain = $actual_link . "/grupocorein/"; // LOCAL
-              $urlBaseDomain = $actual_link . "/grupocorein/"; // SERVIDOR
-              // echo $urlBaseDomain;
-              // $pathProductDetailsPhoto = $urlBaseDomain.'assets/images/'.$item->photo;
-              // $pathProductDetailsPhotoDefault = $urlBaseDomain.'assets/images/Utilities/default_product.png';
-              // $pathProductDetailsPhoto = 'assets/images/'.$item->photo;
-              // $pathProductDetailsPhotoDefault = 'assets/images/Utilities/default_product.png';
-              // $pathProductDetailsPhoto = asset('assets/images/'.$item->photo);
-              // $pathProductDetailsPhotoDefault = asset('assets/images/Utilities/default_product.png');
-              // $imgPathFileFinal = "";
+              $urlBaseDomain = $actual_link . "/"; // SERVIDOR
               // $imgPathFileFinal = $pathProductDetailsPhoto;
               // if(file_exists($pathProductDetailsPhoto)){
               //   $imgPathFileFinal = $pathProductDetailsPhoto;
@@ -90,31 +84,6 @@
               //   $imgPathFileFinal = $pathProductDetailsPhotoDefault;
               //   echo "NO Existe la imagen";
               // }
-              // $imgUrlPhoto = asset($imgPathFileFinal);
-              // $imgUrlPhoto = $imgPathFileFinal;
-              // $imgPhoto = getimagesize($imgUrlPhoto);
-              // echo $imgUrlPhoto;
-              // $imgPhoto = getimagesize(asset($imgPathFileFinal));
-              // Leer información de la imagen usando exif_read_data...
-              // $imgUrlPhoto = exif_read_data($imgPathFileFinal);
-              // // Extraer la información relevante...
-              // $widthPhoto = $imgUrlPhoto['COMPUTED']['Width'];
-              // $heightPhoto = $imgUrlPhoto['COMPUTED']['Height'];
-              // $mime = $imgUrlPhoto['MimeType'];
-              // Revisar si el tipo de imagen es soportada...
-              // $allowedTypes = [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_GIF];
-              // $imageType = exif_imagetype($imgPathFileFinal);
-              // if (in_array($imageType, $allowedTypes)) {
-              //   // Get image dimensions without using getimagesize
-              //   $widthPhoto = imagesx(imagecreatefromstring(file_get_contents($imgPathFileFinal)));
-              //   $heightPhoto = imagesy(imagecreatefromstring(file_get_contents($imgPathFileFinal)));
-              // } else {
-              //   echo "Unsupported image type. Only JPEG, PNG, and GIF are allowed.";
-              // }
-              // $anchoPhoto = $imgPhoto[0];
-              // $altoPhoto = $imgPhoto[1];
-              // $anchoPhoto = $widthPhoto;
-              // $altoPhoto = $heightPhoto;
               $arrCollectionGalleries = json_decode($galleries, TRUE);
               array_unshift($arrCollectionGalleries, ['photo' => $item->photo]);
               // $arrGalleryProduct = json_encode($arrCollectionGalleries, TRUE);
@@ -123,30 +92,16 @@
               foreach ($arrCollectionGalleries as $key => $value) {
                 $indexedArray[] = $value;
               }
-              // echo "<pre>";
-              // print_r($indexedArray);
-              // echo "</pre>";
-
-              // $arrGalleryProduct = json_encode($indexedArray, TRUE);
-              // foreach($indexedArray as $key => $gallery){
-              //   echo $key."-".$gallery['photo'];
-              // }
-              // Display the result
-              // echo "<pre>";
-              // print_r($arrGalleryProduct);
-              // echo "</pre>";
-              // exit();
-
             ?>
-            {{--
-            <!-- <div class="item cntAds--i__itm--cInfo">
+            
+             <div class="item cntAds--i__itm--cInfo">
               <figure class="ads_dashboard" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
                 <a href="{{ $imgPathFileFinal }}" width="100" height="100" data-index="0" data-fancybox="gallery">
                   <img src="{{ $imgPathFileFinal }}" alt="zoom"/>
                 </a>
               </figure>
-            </div> -->
-            --}}
+            </div> 
+            
             @foreach ($indexedArray as $key => $gallery)
             <?php
               // $pathProductDetailsGallery = $urlBaseDomain.'assets/images/'.$gallery['photo'];
@@ -181,6 +136,47 @@
               </figure>
             </div>
             @endforeach
+          </div>
+        </div>
+        -->
+        --}}
+        <div class="product-thumbnails insize">
+          <div class="app-demo">
+            <?php
+              //Combiar arrays de Foto principal y fotos de galería
+              $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
+              $urlBaseDomain = $actual_link . "/grupocorein/"; // LOCAL
+              // $urlBaseDomain = $actual_link . "/"; // SERVIDOR
+              $urlFirstPhoto = $urlBaseDomain.'assets/images/'.$item->photo;
+              $urlFirstPhotoDefault = $urlBaseDomain.'assets/images/Utilities/default_product.png';
+            ?>
+            <a href="{{ $urlFirstPhoto }}" class="MagicZoom" id="photo-product" data-options="cssClass: mz-show-arrows;">
+              <img src="{{ $urlFirstPhoto }}">
+            </a>
+            <div class="cGalleryScroll">
+              <div class="cGalleryScroll__c">
+                <?php
+                  $arrCollectionGalleries = json_decode($galleries, TRUE);
+                  array_unshift($arrCollectionGalleries, ['photo' => $item->photo]);                  
+                  $indexedArray = array();
+                  foreach ($arrCollectionGalleries as $key => $value) {
+                    $indexedArray[] = $value;
+                  }
+                ?>
+                @foreach ($indexedArray as $key => $gallery)
+                  <?php
+                    $pathProductDetailsGallery = $urlBaseDomain.'assets/images/'.$gallery['photo'];
+                    $pathProductDetailsGalleryDefault = $urlBaseDomain.'assets/images/Utilities/default_product.png';
+                    $imgGallery = $pathProductDetailsGallery;
+                  ?>
+                  <a data-zoom-id="photo-product" class="item" href="{{ $imgGallery }}" data-image="{{ $imgGallery }}">
+                    <img src="{{ $imgGallery }}">
+                  </a>
+                @endforeach
+              </div>
+              <button class="scroll-btn prev"></button>
+              <button class="scroll-btn next"></button>
+            </div>
           </div>
         </div>
       </div>

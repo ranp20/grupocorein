@@ -11765,3 +11765,184 @@ body{
 .owl-carousel .owl-stage, .owl-stage-outer {
     overflow: hidden !important;
 }
+// ESTILOS PARA LA GALERÍA DE IMÁGENES EN EL DETALLE DEL PRODUCTO...
+.sample-box {
+    margin: 15px 0/* 30px*/;
+    border: 1px solid #f2f2f2;
+    border-radius: 4px;
+}
+.sample-box .app-demo {
+    position: relative;
+    padding: 30px 15px 15px;
+    text-align: center;
+}
+.cGalleryScroll{
+    overflow-y: hidden;
+    overflow-x: hidden;
+    margin-top: 5px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-flow: row nowrap;
+    position: relative;
+}
+.cGalleryScroll__c{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-y: hidden;
+    overflow-x: auto;
+    flex: 0 0 100%;
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    transition: transform 0.2s ease-in-out;
+}
+*[data-image]{
+    max-width: 71px;
+    flex: auto;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+*[data-image] img{
+    max-width: 71px;
+}
+#crMz663379361554{
+    display: none;
+    visibility: hidden;
+    opacity: 0;
+    user-select: none;
+}
+figure.mz-figure > span[id],
+figure.mz-figure > div[id]{
+    display: none;
+    visibility: hidden;
+    opacity: 0;
+    user-select: none;
+}
+.mz-expand.mz-show-arrows > span[id],
+.mz-expand.mz-show-arrows > div[id]{
+    display: none;
+    visibility: hidden;
+    opacity: 0;
+    user-select: none;
+}
+.mz-zoom-window.mz-show-arrows.mz-inner > span[id],
+.mz-zoom-window.mz-show-arrows.mz-inner > div[id]{
+    display: none;
+    visibility: hidden;
+    opacity: 0;
+    user-select: none;
+}
+.scroll-btn {
+    font-size: 0;
+    cursor: pointer;
+    z-index: 2100000000 !important;
+    background-color: transparent !important;
+    border: 0 solid transparent !important;
+    border-radius: 100% !important;
+    box-shadow: none !important;
+    position: absolute !important;
+    text-transform: none !important;
+    text-align: center;
+    speak: none;
+    width: 60px !important;
+    height: 60px !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-width: none !important;
+    max-height: none !important;
+    -webkit-transition: color .25s, background-color .25s !important;
+    transition: color .25s, background-color .25s !important;
+    position: absolute;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    padding: 8px 12px;
+    background-color: #f0f0f0;
+    border: none;
+    cursor: pointer;
+    z-index: 1;
+    top: 0 !important;
+    bottom: 0 !important;
+    overflow: hidden !important;
+    width: 32px !important;
+    height: 56px !important;
+    margin: auto 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    /* color: rgba(180, 180, 180, .6) !important; */
+    color: rgb(180 180 180) !important;
+}
+button.scroll-btn:before {
+    display: block;
+    position: static;
+    height: 100%;
+    transform: scale(.9);
+    -webkit-transition: -webkit-transform .25s !important;
+    transition: transform .25s !important;
+}
+.prev {
+    left: 5px;
+}
+
+.next {
+    right: 5px;
+}
+button.scroll-btn.prev{
+    left: 0 !important;
+    /* transform: rotateZ(180deg) !important; */
+    top: 15% !important;
+    bottom: -9px !important;
+    transform: rotateZ(180deg) translateY(50%) !important;
+}
+button.scroll-btn.next{
+    right: 0 !important;
+    /* top: 50% !important; */
+    top: -15% !important;
+    bottom: 20px !important;
+    /* height: 100% !important; */
+    transform: translateY(50%) !important;
+}
+@supports ( ((-webkit-mask-image:url()) or (mask-image:url())) and ((-webkit-mask-repeat:no-repeat) or (mask-repeat:no-repeat)) and ((-webkit-mask-position:center) or (mask-position:center)) and ((-webkit-mask-size:cover) or (mask-size:cover)) ){
+    button.scroll-btn:before {
+        content: "" !important;
+        background-color: currentColor;
+        background-image: none;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        -webkit-mask-size: cover;
+        mask-size: cover;
+    }
+}
+@supports ( ((-webkit-mask-image:url()) or (mask-image:url())) and ((-webkit-mask-repeat:no-repeat) or (mask-repeat:no-repeat)) and ((-webkit-mask-position:center) or (mask-position:center)) and ((-webkit-mask-size:cover) or (mask-size:cover)) ){
+    button.scroll-btn.prev:before, button.scroll-btn.next:before {
+        -webkit-mask-image: url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNDggNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xOC43NTkzIDkuMzQ5MjFDMTguMzk5OCA4LjkyOTg4IDE3Ljc2ODUgOC44ODEzMiAxNy4zNDkyIDkuMjQwNzRDMTYuOTI5OSA5LjYwMDE3IDE2Ljg4MTMgMTAuMjMxNSAxNy4yNDA3IDEwLjY1MDhMMTguNzU5MyA5LjM0OTIxWk0zMCAyNEwzMC43NTkzIDI0LjY1MDhDMzEuMDgwMiAyNC4yNzYzIDMxLjA4MDIgMjMuNzIzNyAzMC43NTkzIDIzLjM0OTJMMzAgMjRaTTE3LjI0MDcgMzcuMzQ5MkMxNi44ODEzIDM3Ljc2ODUgMTYuOTI5OSAzOC4zOTk4IDE3LjM0OTIgMzguNzU5M0MxNy43Njg1IDM5LjExODcgMTguMzk5OCAzOS4wNzAxIDE4Ljc1OTMgMzguNjUwOEwxNy4yNDA3IDM3LjM0OTJaTTE3LjI0MDcgMTAuNjUwOEwyOS4yNDA3IDI0LjY1MDhMMzAuNzU5MyAyMy4zNDkyTDE4Ljc1OTMgOS4zNDkyMUwxNy4yNDA3IDEwLjY1MDhaTTI5LjI0MDcgMjMuMzQ5MkwxNy4yNDA3IDM3LjM0OTJMMTguNzU5MyAzOC42NTA4TDMwLjc1OTMgMjQuNjUwOEwyOS4yNDA3IDIzLjM0OTJaIiBmaWxsPSIjOTk5OTk5Ii8+Cjwvc3ZnPgo=);
+        mask-image: url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNDggNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xOC43NTkzIDkuMzQ5MjFDMTguMzk5OCA4LjkyOTg4IDE3Ljc2ODUgOC44ODEzMiAxNy4zNDkyIDkuMjQwNzRDMTYuOTI5OSA5LjYwMDE3IDE2Ljg4MTMgMTAuMjMxNSAxNy4yNDA3IDEwLjY1MDhMMTguNzU5MyA5LjM0OTIxWk0zMCAyNEwzMC43NTkzIDI0LjY1MDhDMzEuMDgwMiAyNC4yNzYzIDMxLjA4MDIgMjMuNzIzNyAzMC43NTkzIDIzLjM0OTJMMzAgMjRaTTE3LjI0MDcgMzcuMzQ5MkMxNi44ODEzIDM3Ljc2ODUgMTYuOTI5OSAzOC4zOTk4IDE3LjM0OTIgMzguNzU5M0MxNy43Njg1IDM5LjExODcgMTguMzk5OCAzOS4wNzAxIDE4Ljc1OTMgMzguNjUwOEwxNy4yNDA3IDM3LjM0OTJaTTE3LjI0MDcgMTAuNjUwOEwyOS4yNDA3IDI0LjY1MDhMMzAuNzU5MyAyMy4zNDkyTDE4Ljc1OTMgOS4zNDkyMUwxNy4yNDA3IDEwLjY1MDhaTTI5LjI0MDcgMjMuMzQ5MkwxNy4yNDA3IDM3LjM0OTJMMTguNzU5MyAzOC42NTA4TDMwLjc1OTMgMjQuNjUwOEwyOS4yNDA3IDIzLjM0OTJaIiBmaWxsPSIjOTk5OTk5Ii8+Cjwvc3ZnPgo=);
+    }
+}
+button.scroll-btn{
+    display: none;
+    width: 32px !important;
+    height: 56px !important;
+    margin: auto 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    transition: all ease-in-out .4s;
+    background-color: #fff !important;
+    width: 28px !important;
+    height: 28px !important;
+    box-shadow: 1px 2px 8px 1px rgba(0,0,0,.12) !important;
+}
+@media (min-width: 768px){
+    .cGalleryScroll:hover button.scroll-btn{
+        display: block;
+        transition: all ease-in-out .4s;
+    }
+}
+.cGalleryScroll__c::-webkit-scrollbar{width: 0 !important;height: 0 !important;}
+.cGalleryScroll__c:-webkit-scrollbar-thumb{background-color: transparent !important;}
+.cGalleryScroll__c::-webkit-scrollbar-thumb{background-color: transparent !important;}
+.cGalleryScroll__c::-webkit-scrollbar-track{background-color: transparent !important;}
+.cGalleryScroll__c:-webkit-scrollbar-track{background-color: transparent !important;}
