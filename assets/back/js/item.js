@@ -279,6 +279,7 @@ $(() => {
   // --------------- MOSTRAR/OCULTAR LAS ESPECIFICACIONES
   $(document).on("click","input[name='is_specification']",function(){
     if($(this).is(":checked")){
+      $(this).val(1);
       $("#cTentr-af1728903__p-adm").html(`
       <div id="specifications-section">
         <div class="d-flex">
@@ -312,6 +313,7 @@ $(() => {
         </div>
       </div>`);
     }else{
+      $(this).val(0);
       $("#cTentr-af1728903__p-adm").html(``);
     }
   });

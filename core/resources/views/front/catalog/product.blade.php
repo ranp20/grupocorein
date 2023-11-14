@@ -7,7 +7,7 @@
 <meta name="description" content="{{$item->meta_description}}">
 @endsection
 @section('content')
-  <script type="text/javascript" src="{{ asset('assets/front/js/plugins/jquery-3.7.0.min.js') }}"></script>
+  {{--<!-- <script type="text/javascript" src="{{ asset('assets/front/js/plugins/jquery-3.7.0.min.js') }}"></script> --> --}}
   <link rel="stylesheet" href="{{ asset('node_modules/owl-carousel/owl-carousel/owl.carousel.css')}}">
   <link rel="stylesheet" href="{{ asset('node_modules/owl-carousel/owl-carousel/owl.theme.css')}}">
   <script type="text/javascript" src="{{ asset('node_modules/owl-carousel/owl-carousel/owl.carousel.min.js')}}"></script>
@@ -15,9 +15,11 @@
 
   
   <script src="{{ asset('node_modules/@fancyapps/ui/dist/fancybox/fancybox.umd.js') }}"></script>
+  
+  {{--
+  <!-- <script src="{{ asset('assets/front/js/plugins/fancybox/jquery.fancybox-1.3.4.js') }}"></script> -->
+  --}}
   <link rel="stylesheet" href="{{ asset('node_modules/@fancyapps/ui/dist/fancybox/fancybox.css') }}"/>
- 
-
 <div class="page-title">
   <div class="container">
     <div class="row">
@@ -68,51 +70,113 @@
         <div class="product-thumbnails insize">
           <div class="product-details-slider owl-carousel">
             <?php
-              
-              $pathProductDetailsPhoto = 'assets/images/'.$item->photo;
-              $pathProductDetailsPhotoDefault = 'assets/images/Utilities/default_product.png';
+              //Combiar arrays de Foto principal y fotos de galería
+              $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
+              $urlBaseDomain = $actual_link . "/grupocorein/"; // LOCAL
+              $urlBaseDomain = $actual_link . "/grupocorein/"; // SERVIDOR
+              // echo $urlBaseDomain;
+              // $pathProductDetailsPhoto = $urlBaseDomain.'assets/images/'.$item->photo;
+              // $pathProductDetailsPhotoDefault = $urlBaseDomain.'assets/images/Utilities/default_product.png';
+              // $pathProductDetailsPhoto = 'assets/images/'.$item->photo;
+              // $pathProductDetailsPhotoDefault = 'assets/images/Utilities/default_product.png';
               // $pathProductDetailsPhoto = asset('assets/images/'.$item->photo);
               // $pathProductDetailsPhotoDefault = asset('assets/images/Utilities/default_product.png');
-              $imgPathFileFinal = "";
-              if(file_exists( $pathProductDetailsPhoto )){
-                $imgPathFileFinal = $pathProductDetailsPhoto;
-              }else{
-                $imgPathFileFinal = $pathProductDetailsPhotoDefault;
-              }
-
-              $imgUrlPhoto = asset($imgPathFileFinal);
+              // $imgPathFileFinal = "";
+              // $imgPathFileFinal = $pathProductDetailsPhoto;
+              // if(file_exists($pathProductDetailsPhoto)){
+              //   $imgPathFileFinal = $pathProductDetailsPhoto;
+              //   echo "Existe la imagen";
+              // }else{
+              //   $imgPathFileFinal = $pathProductDetailsPhotoDefault;
+              //   echo "NO Existe la imagen";
+              // }
+              // $imgUrlPhoto = asset($imgPathFileFinal);
               // $imgUrlPhoto = $imgPathFileFinal;
-              $imgPhoto = getimagesize($imgUrlPhoto);
-              $anchoPhoto = $imgPhoto[0];
-              $altoPhoto = $imgPhoto[1];
+              // $imgPhoto = getimagesize($imgUrlPhoto);
+              // echo $imgUrlPhoto;
+              // $imgPhoto = getimagesize(asset($imgPathFileFinal));
+              // Leer información de la imagen usando exif_read_data...
+              // $imgUrlPhoto = exif_read_data($imgPathFileFinal);
+              // // Extraer la información relevante...
+              // $widthPhoto = $imgUrlPhoto['COMPUTED']['Width'];
+              // $heightPhoto = $imgUrlPhoto['COMPUTED']['Height'];
+              // $mime = $imgUrlPhoto['MimeType'];
+              // Revisar si el tipo de imagen es soportada...
+              // $allowedTypes = [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_GIF];
+              // $imageType = exif_imagetype($imgPathFileFinal);
+              // if (in_array($imageType, $allowedTypes)) {
+              //   // Get image dimensions without using getimagesize
+              //   $widthPhoto = imagesx(imagecreatefromstring(file_get_contents($imgPathFileFinal)));
+              //   $heightPhoto = imagesy(imagecreatefromstring(file_get_contents($imgPathFileFinal)));
+              // } else {
+              //   echo "Unsupported image type. Only JPEG, PNG, and GIF are allowed.";
+              // }
+              // $anchoPhoto = $imgPhoto[0];
+              // $altoPhoto = $imgPhoto[1];
+              // $anchoPhoto = $widthPhoto;
+              // $altoPhoto = $heightPhoto;
+              $arrCollectionGalleries = json_decode($galleries, TRUE);
+              array_unshift($arrCollectionGalleries, ['photo' => $item->photo]);
+              // $arrGalleryProduct = json_encode($arrCollectionGalleries, TRUE);
+              
+              $indexedArray = array();
+              foreach ($arrCollectionGalleries as $key => $value) {
+                $indexedArray[] = $value;
+              }
+              // echo "<pre>";
+              // print_r($indexedArray);
+              // echo "</pre>";
+
+              // $arrGalleryProduct = json_encode($indexedArray, TRUE);
+              // foreach($indexedArray as $key => $gallery){
+              //   echo $key."-".$gallery['photo'];
+              // }
+              // Display the result
+              // echo "<pre>";
+              // print_r($arrGalleryProduct);
+              // echo "</pre>";
+              // exit();
+
             ?>
-            <div class="item cntAds--i__itm--cInfo">
+            {{--
+            <!-- <div class="item cntAds--i__itm--cInfo">
               <figure class="ads_dashboard" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
-                <a href="{{ $imgPathFileFinal }}" data-size="{{ $anchoPhoto }}x{{ $altoPhoto }}" data-index="0" data-fancybox="gallery">
+                <a href="{{ $imgPathFileFinal }}" width="100" height="100" data-index="0" data-fancybox="gallery">
                   <img src="{{ $imgPathFileFinal }}" alt="zoom"/>
                 </a>
               </figure>
-            </div>
-            @foreach ($galleries as $key => $gallery)
+            </div> -->
+            --}}
+            @foreach ($indexedArray as $key => $gallery)
             <?php
-              $pathProductDetailsGallery = 'assets/images/'.$gallery->photo;
-              $pathProductDetailsGalleryDefault = 'assets/images/Utilities/default_product.png';
+              // $pathProductDetailsGallery = $urlBaseDomain.'assets/images/'.$gallery['photo'];
+              // $pathProductDetailsGalleryDefault = $urlBaseDomain.'assets/images/Utilities/default_product.png';
+              $pathProductDetailsGallery = $urlBaseDomain.'assets/images/'.$gallery['photo'];
+              $pathProductDetailsGalleryDefault = $urlBaseDomain.'assets/images/Utilities/default_product.png';
               $imgPathGalleryFileFinal = "";
-              if(file_exists( $pathProductDetailsGallery )){
+              // if(file_exists( $pathProductDetailsGallery )){
+              //   $imgPathGalleryFileFinal = $pathProductDetailsGallery;
+              // }else{
                 $imgPathGalleryFileFinal = $pathProductDetailsGallery;
-              }else{
-                $imgPathGalleryFileFinal = $pathProductDetailsGalleryDefault;
-              }
-
-              $imgUrlGallery = asset($imgPathGalleryFileFinal);
-              $imgGallery = getimagesize($imgUrlGallery);
-              $anchoGallery = $imgGallery[0];
-              $altoGallery = $imgGallery[1];
+              // }
+              $imgGallery = $imgPathGalleryFileFinal;
+              // $imgUrlGallery = asset($imgPathGalleryFileFinal);
+              // $imgGallery = getimagesize($imgUrlGallery);
+              // Leer información de la imagen usando exif_read_data...
+              // $imgUrlGallery = exif_read_data($imgPathGalleryFileFinal);
+              // // Extraer la información relevante...
+              // $widthGalleryPhoto = $imgUrlGallery['COMPUTED']['Width'];
+              // $heightGalleryPhoto = $imgUrlGallery['COMPUTED']['Height'];
+              // $mime = $imgUrlGallery['MimeType'];
+              // // $anchoGallery = $imgGallery[0];
+              // // $altoGallery = $imgGallery[1];
+              // $anchoGallery = $widthGalleryPhoto;
+              // $altoGallery = $heightGalleryPhoto;
             ?>
             <div class="item cntAds--i__itm--cInfo">
               <figure class="ads_dashboard" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
-                <a href="{{ asset($imgPathGalleryFileFinal) }}" data-size="{{ $anchoGallery }}x{{ $altoGallery }}" data-index="0" data-fancybox="gallery">
-                  <img src="{{ asset($imgPathGalleryFileFinal) }}" alt="zoom"/>
+                <a href="{{ $imgGallery }}" width="100" height="100" data-index="0" data-fancybox="gallery">
+                  <img src="{{ $imgGallery }}" alt="zoom"/>
                 </a>
               </figure>
             </div>

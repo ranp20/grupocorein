@@ -47,24 +47,24 @@
                 ?>
                 <?php $__currentLoopData = $sliders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $slider): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 
-                <div class="item" style="background: url('<?php echo e(asset('assets/images/' . $slider->photo)); ?>')">
+                <div class="item cSldcPrd1__m__itm" style="background: url('<?php echo e(asset('assets/images/' . $slider->photo)); ?>')">
                     <div class="container">
-                    <div class="row">
-                        <div class="col-xl-5 col-lg-6 d-flex align-self-center">
-                            <div class="left-content color-white">
-                                <div class="content"></div>
-                            </div>
-                        </div>
-                        <?php if(isset($slider->logo) && $slider->logo != ""): ?>
-                        <div class="col-xl-7 col-lg-6 order-first order-lg-last">
-                            <div class="layer-4">
-                                <div class="right-img">
-                                <img class="img-fluid full-img" src="<?php echo e(asset('assets/images/' . $slider->logo)); ?>" alt="<?php echo e($slider->logo); ?>" width="100" height="100" decoding="sync">
+                        <div class="row">
+                            <div class="col-xl-5 col-lg-6 d-flex align-self-center">
+                                <div class="left-content color-white">
+                                    <div class="content"></div>
                                 </div>
                             </div>
+                            <?php if(isset($slider->logo) && $slider->logo != ""): ?>
+                            <div class="col-xl-7 col-lg-6 order-first order-lg-last">
+                                <div class="layer-4">
+                                    <div class="right-img">
+                                    <img class="img-fluid full-img" src="<?php echo e(asset('assets/images/' . $slider->logo)); ?>" alt="<?php echo e($slider->logo); ?>" width="100" height="100" decoding="sync">
+                                    </div>
+                                </div>
+                            </div>
+                            <?php endif; ?>
                         </div>
-                        <?php endif; ?>
-                    </div>
                     </div>
                 </div>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

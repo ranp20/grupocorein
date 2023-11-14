@@ -48,24 +48,24 @@
                 ?>
                 @foreach ($sliders as $slider)
                 
-                <div class="item" style="background: url('{{ asset('assets/images/' . $slider->photo) }}')">
+                <div class="item cSldcPrd1__m__itm" style="background: url('{{ asset('assets/images/' . $slider->photo) }}')">
                     <div class="container">
-                    <div class="row">
-                        <div class="col-xl-5 col-lg-6 d-flex align-self-center">
-                            <div class="left-content color-white">
-                                <div class="content"></div>
-                            </div>
-                        </div>
-                        @if (isset($slider->logo) && $slider->logo != "")
-                        <div class="col-xl-7 col-lg-6 order-first order-lg-last">
-                            <div class="layer-4">
-                                <div class="right-img">
-                                <img class="img-fluid full-img" src="{{ asset('assets/images/' . $slider->logo) }}" alt="{{$slider->logo}}" width="100" height="100" decoding="sync">
+                        <div class="row">
+                            <div class="col-xl-5 col-lg-6 d-flex align-self-center">
+                                <div class="left-content color-white">
+                                    <div class="content"></div>
                                 </div>
                             </div>
+                            @if (isset($slider->logo) && $slider->logo != "")
+                            <div class="col-xl-7 col-lg-6 order-first order-lg-last">
+                                <div class="layer-4">
+                                    <div class="right-img">
+                                    <img class="img-fluid full-img" src="{{ asset('assets/images/' . $slider->logo) }}" alt="{{$slider->logo}}" width="100" height="100" decoding="sync">
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                         </div>
-                        @endif
-                    </div>
                     </div>
                 </div>
                 @endforeach

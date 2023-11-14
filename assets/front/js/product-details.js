@@ -256,10 +256,32 @@ $(() => {
     },
   });
 
-  $(".cntAds--i__itm--cInfo figure").on( "mouseenter", function(){
-    $(this).parent().parent().addClass("hoverInFigure");
-  }).on( "mouseleave", function(){
-    $(this).parent().parent().removeClass("hoverInFigure");
-  });
+  // var index = 0;
+  // var $thumbs  = $('.thumbs').children();
+  // var $primary = $('*[data-fancybox="gallery"]');
+
+  // $primary.on('click', function() {
+  //   // Clone thumbs object
+  //   var $what = $.extend({}, $thumbs);
+  //   // Replace corresponding link inside thumbs with primary  
+  //   $what[ index ] = this;
+  //   // Open fancyBox manually
+  //   $.fancybox.open( $what, {}, index );
+  //   return false;
+  // });
+
+  // $thumbs.mouseover(function() {
+  //   // Find index
+  //   index = $thumbs.index( this );
+  //   // Update primary link
+  //   $primary.attr('href', $(this).attr('href'));
+  //   $primary.find('img').attr('src', $(this).find('img').attr('src') );
+  // });
+
+  // $(".cntAds--i__itm--cInfo figure").on( "mouseenter", function(){
+  //   $(this).parent().parent().addClass("hoverInFigure");
+  // }).on( "mouseleave", function(){
+  //   $(this).parent().parent().removeClass("hoverInFigure");
+  // });
   
 });

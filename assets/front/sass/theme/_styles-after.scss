@@ -10824,11 +10824,14 @@ body{
 
 .site-header .site-branding .site-logo{
     display: block;
-    max-width: 160px;
+    max-width: 100px;
     width: auto;
     color: #232323 !important;
     text-decoration: none;
     padding: 5px;
+    @media(min-width: 768px){
+        max-width: 160px;
+    }
 }
 
 .site-header .site-branding .site-logo>img{
@@ -10892,7 +10895,7 @@ body{
     display: none;
 }
 .site-header .site-menu>ul>li>a:first-child{
-    font-size: 14px;
+    font-size: 13px;
     padding-left: 10px;
     padding-right: 10px;
     @media(max-width: 1024px){
@@ -11642,12 +11645,13 @@ body{
         z-index: 99;
     }
     .floating-wpp-popup{
-        max-width: 260px;
+        max-width: 260px !important;
+        width: 260px !important;
         width: auto;
         z-index: 99;
         @media (min-width: 1024px){
-            max-width: 280px;
-            width: 280px;
+            max-width: 280px !important;
+            width: 280px !important;
         }
         .floating-wpp-head{
             strong{
@@ -11742,4 +11746,22 @@ body{
             }
         }
     }
+}
+
+*{
+    // border: thin solid red !important;
+}
+.row{
+    // border: thin solid red !important;
+}
+.row>*{
+    // border: thin solid red !important;
+    // width: 100%;
+}
+.cSldcPrd1__m__itm .row > *{
+    // border: thin solid red !important;
+    width: auto !important;
+}
+.owl-carousel .owl-stage, .owl-stage-outer {
+    overflow: hidden !important;
 }

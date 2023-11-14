@@ -215,7 +215,13 @@ class ItemRepository{
     if($request->has('tags')){
       $input['tags'] = str_replace(["value", "{", "}", "[","]",":","\""], '', $request->tags);
     }
+    /*
+    echo "<pre>";
+    print_r($input);
+    echo "<pre>";
+    exit();
     if($request->has('is_specification')){
+      if($request->has('specification_name')){}
       $input['specification_name'] = json_encode($input['specification_name']);
       $input['specification_description'] = json_encode($input['specification_description']);
     }else{
@@ -223,25 +229,32 @@ class ItemRepository{
       $input['specification_name'] = null;
       $input['specification_description'] = null;
     }
-
+    */
     $specification_collection = [];
     $nameFinal = "";
-    $specificationdescription = (isset($request->specification_description)) ? $request->specification_description : "";
-    if($request->has('specification_name')){
-      foreach($request->specification_name as $key => $name){
-        $nameFinal = ($name != "" && $name != null) ? $name : $specificationdescription[$key];
-        // echo $name."<br>";
-        // if($name != null && $name != ""){
-          $specification_collection['specification_collection']['product'][$key]['name'] = $nameFinal;
-        // }
+    if($request->has('is_specification')){
+      $specificationdescription = (isset($request->specification_description)) ? $request->specification_description : "";
+      if($request->has('specification_name')){
+        foreach($request->specification_name as $key => $name){
+          $nameFinal = ($name != "" && $name != null) ? $name : $specificationdescription[$key];
+          // echo $name."<br>";
+          // if($name != null && $name != ""){
+            $specification_collection['specification_collection']['product'][$key]['name'] = $nameFinal;
+          // }
+        }
       }
-    }
-    if($request->has('specification_description')){
-      foreach($request->specification_description as $key => $description){
-        $specification_collection['specification_collection']['product'][$key]['description'] = $description;
+      if($request->has('specification_description')){
+        foreach($request->specification_description as $key => $description){
+          $specification_collection['specification_collection']['product'][$key]['description'] = $description;
+        }
       }
+      $input['specification_collection'] = json_encode($specification_collection, true);
+    }else{
+      $input['is_specification'] = 0;
+      $input['specification_name'] = null;
+      $input['specification_description'] = null;
     }
-    $input['specification_collection'] = json_encode($specification_collection, true);
+    
 
     if($request->has('license_name') && $request->has('license_key')){
       $input['license_name'] = json_encode($input['license_name']);
