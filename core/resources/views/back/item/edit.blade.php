@@ -52,10 +52,10 @@
               </select>
             </div>
             <?php
-              $attrRoot_name = DB::table('tbl_atributoraiz')->where('id',$item->atributo_raiz)->get()->toArray()[0];
+              $attrRoot_name = DB::table('tbl_atributoraiz')->where('id',$item->atributo_raiz)->get()->toArray();
             ?>
-            @if($item->atributo_raiz != 0)
-              @if($attrRoot_name->name == "COLOR" || $attrRoot_name->name == "color" || $attrRoot_name->name == "COLORES" || $attrRoot_name->name == "colores")
+            @if($item->atributo_raiz != 0 || count($attrRoot_name) != 0)
+              @if($attrRoot_name[0]->name == "COLOR" || $attrRoot_name[0]->name == "color" || $attrRoot_name[0]->name == "COLORES" || $attrRoot_name[0]->name == "colores")
                 @if($item->atributoraiz_collection != "" && $item->atributoraiz_collection != "[]")
                 <div id="cTentr-af172698__p-adm">
                   <div id="attrcolors-section">
