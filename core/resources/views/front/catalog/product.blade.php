@@ -19,7 +19,101 @@
   
   <script src="{{ asset('assets/front/js/plugins/magiczoom/magiczoomplus.js') }}"></script>
   <link rel="stylesheet" href="{{ asset('assets/front/js/plugins/magiczoom/magiczoomplus.css') }}"/>
-  
+
+
+
+<?php
+  $user_id = 0;
+  $millisecondsExpirationDate = 0;
+  $remainingTime = 0;
+  $userCouponDetail = "";
+  $couponapply_totalprice = 0;
+  if(Auth::check()){
+    $user = Auth::user();
+    $user_id = Auth::user()->id;
+  }
+
+  if(count($applycoupon) > 0){
+    $arrCouponApply = json_decode($applycoupon, TRUE);
+    $idcouponapply_user = $arrCouponApply[0]['id_user'];
+    $idcouponapply_prod = $arrCouponApply[0]['id_prod'];
+    $idcouponapply_coupon = $arrCouponApply[0]['id_coupon'];
+    
+    if(count($coupons) > 0){
+      $arrcoupon2 = json_decode($coupons, TRUE);
+      $htmlcoupon = "";
+      // VALIDAR SI ESTE CUPÓN PERTENECE Y SI ESTÁ ACTIVADO EN ESTE PRODUCTO...
+      if($idcouponapply_user == $user_id && $idcouponapply_prod == $item->id && $idcouponapply_coupon == $item->coupon_id){
+        // PROCEDER A DETENER EL CONTADOR Y OCULTAR EL MODAL DE CUPÓN...
+        $remainingTime = 0;
+        $couponapply_totalprice = $arrCouponApply[0]['totalprice'];
+      }else{
+        // PROCEDER A MOSTRAR EL CONTEDOR EN EL MODAL DE CUPÓN...
+        $expiresAtTimer = $arrcoupon2[0]['time_end'];
+        $idcoupon = $arrcoupon2[0]['id'];
+        // Crear un objeto DateTime a partir de la fecha final...
+        $currentDate = new DateTime();
+        $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+        $imgCoupon = ($arrcoupon2[0]['photo'] != "") ? $arrcoupon2[0]['photo'] : ""; // IMAGEN DEL CUPÓN...
+        // Asegurarse que la fecha es válida...
+        if (!$expirationDate) {
+          die('Invalid date format for countdown.');
+        }
+        // Obtener las fechas en milisegundos...
+        $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+        $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+        // Calcular el tiempo restante...
+        $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+        if ($remainingTime <= 0) {
+          $htmlcoupon = "EL CUPÓN HA EXPIRADO...!";
+        } else {
+          $hours = floor($remainingTime / 3600000);
+          $minutes = floor(($remainingTime % 3600000) / 60000);
+          $seconds = floor(($remainingTime % 60000) / 1000);
+          $htmlcoupon = "TIEMPO RESTANTE: {$hours}h {$minutes}m {$seconds}s";
+        }
+      }
+    }else{
+      $remainingTime = 0;
+    }
+  }else{
+    if(count($coupons) > 0){
+      $arrcoupon2 = json_decode($coupons, TRUE);
+      $htmlcoupon = "";
+      // echo "ESTE PRODUCTO AÚN NO TIENE CUPÓN ACTIVADO";
+      // PROCEDER A MOSTRAR EL CONTEDOR EN EL MODAL DE CUPÓN...
+      $expiresAtTimer = $arrcoupon2[0]['time_end'];
+      $idcoupon = $arrcoupon2[0]['id'];
+      // Crear un objeto DateTime a partir de la fecha final...
+      $currentDate = new DateTime();
+      $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+      $imgCoupon = ($arrcoupon2[0]['photo'] != "") ? $arrcoupon2[0]['photo'] : ""; // IMAGEN DEL CUPÓN...
+      // Asegurarse que la fecha es válida...
+      if (!$expirationDate) {
+        die('Invalid date format for countdown.');
+      }
+      // Obtener las fechas en milisegundos...
+      $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+      $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+      // Calcular el tiempo restante...
+      $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+      if ($remainingTime <= 0) {
+        $htmlcoupon = "EL CUPÓN HA EXPIRADO...!";
+      } else {
+        $hours = floor($remainingTime / 3600000);
+        $minutes = floor(($remainingTime % 3600000) / 60000);
+        $seconds = floor(($remainingTime % 60000) / 1000);
+        $htmlcoupon = "TIEMPO RESTANTE: {$hours}h {$minutes}m {$seconds}s";
+      }
+    }else{
+      $remainingTime = 0;
+    }
+  }
+
+?>
+
+
+
 <div class="page-title">
   <div class="container">
     <div class="row">
@@ -199,11 +293,69 @@
       return $html;
     }
     @endphp
+    @php
+      $TaxesAll = DB::table('taxes')->get();
+      $sumFinalPrice1 = 0;
+      $sumFinalPrice2 = 0;
+      $incIGV = $TaxesAll[0]->value;
+      $sinIGV = $TaxesAll[1]->value;
+      $incIGV_format = $incIGV / 100;
+      $sinIGV_format = $sinIGV;
+    @endphp
     <div class="col-xxl-7 col-lg-6 col-md-6">
       <div class="details-page-top-right-content d-flex align-items-center">
         <div class="div w-100">
           <input type="hidden" id="item_id" value="{{$item->id}}">
-          <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($item->discount_price)}}">
+
+
+
+
+
+
+          @if(isset($item->sections_id) && $item->sections_id != 0)
+            @if($item->sections_id == 1)
+              @if($item->on_sale_price != 0 && $item->on_sale_price != "")
+                @if(isset($item->tax_id) && $item->tax_id == 1)
+                  @php
+                    $sumFinalPrice1 = $item->on_sale_price * $incIGV_format;
+                    $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
+                  @endphp
+                  @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+                    <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($couponapply_totalprice)}}">
+                  @else
+                    <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($sumFinalPrice2)}}">
+                  @endif
+                @else
+                  @php
+                    $sumFinalPrice1 = $item->special_offer_price;
+                    $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                  @endphp
+                  @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+                    <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($couponapply_totalprice)}}">
+                  @else
+                    <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($sumFinalPrice2)}}">
+                  @endif
+                @endif
+              @else
+                @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+                  <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($couponapply_totalprice)}}">
+                @else
+                  <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($item->discount_price)}}">
+                @endif
+              @endif
+            @endif
+          @else
+            @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+              <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($couponapply_totalprice)}}">
+            @else
+              <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($item->discount_price)}}">
+            @endif
+          @endif
+
+
+
+
+          
           <input type="hidden" value="{{PriceHelper::setCurrencySign()}}" id="set_currency">
           <input type="hidden" value="{{PriceHelper::setCurrencyValue()}}" id="set_currency_val">
           <input type="hidden" value="{{$setting->currency_direction}}" id="currency_direction">
@@ -298,15 +450,7 @@
           @if ($item->previous_price != 0)
             <small class="d-inline-block"><del>{{PriceHelper::setPreviousPrice($item->previous_price)}}</del></small>
           @endif
-          @php
-            $TaxesAll = DB::table('taxes')->get();
-            $sumFinalPrice1 = 0;
-            $sumFinalPrice2 = 0;
-            $incIGV = $TaxesAll[0]->value;
-            $sinIGV = $TaxesAll[1]->value;
-            $incIGV_format = $incIGV / 100;
-            $sinIGV_format = $sinIGV;
-          @endphp
+          
             @if(isset($item->sections_id) && $item->sections_id != 0)
               @if($item->sections_id == 1)
                 @if($item->on_sale_price != 0 && $item->on_sale_price != "")
@@ -315,16 +459,28 @@
                       $sumFinalPrice1 = $item->on_sale_price * $incIGV_format;
                       $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
                     @endphp
-                    <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                    @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
+                    @else
+                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                    @endif
                   @else
                     @php
                       $sumFinalPrice1 = $item->on_sale_price;
                       $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
                     @endphp
-                    <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                    @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
+                    @else
+                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                    @endif
                   @endif
                 @else
-                <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
+                  @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+                    <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
+                  @else
+                    <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
+                  @endif
                 @endif
               @else
                 @if($item->special_offer_price != 0 && $item->special_offer_price != "")
@@ -333,20 +489,36 @@
                       $sumFinalPrice1 = $item->special_offer_price * $incIGV_format;
                       $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
                     @endphp
-                    <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                    @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
+                    @else
+                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                    @endif
                   @else
                     @php
                       $sumFinalPrice1 = $item->special_offer_price;
                       $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
                     @endphp
-                    <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                    @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
+                    @else
+                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                    @endif
                   @endif
                 @else
-                  <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
+                  @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+                    <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
+                  @else
+                    <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
+                  @endif
                 @endif
               @endif
             @else
-              <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
+              @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+                <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
+              @else
+                <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
+              @endif
             @endif
             @if(isset($item->tax_id) && $item->tax_id == 1)
             <span style="font-size: 13px;margin-left: 5px;">Inc. IGV</span>
@@ -843,5 +1015,411 @@
   </div>
 </div>
 @endif
+
+
+
+@if(count($applycoupon) > 0)
+  @if(count($coupons) > 0)
+    @php
+      $arrcoupon2 = json_decode($coupons, TRUE);
+    @endphp
+    @if($remainingTime <= 0)
+      @if($idcouponapply_user == $user_id && $idcouponapply_prod == $item->id && $idcouponapply_coupon == $item->coupon_id)
+      @else
+      <div class="modal fade" id="coupons-desc" tabindex="-1" role="dialog" aria-labelledby="coupons-descModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            
+            <div class="mdl-CouponCustom">
+              <div class="mdl-CouponCustom__c">
+                <div class="mdl-CouponCustom__c__btnClose" id="mdl-CouponBtnClose">
+                  <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <div class="mdl-CouponCustom__c__mC">
+                  <div class="mdl-CouponCustom__c__mC__cc">
+                    <div class="mdl-CouponCustom__c__mC__cc__countdown">
+                      <div class="mdl-CouponCustom__c__mC__cc__countdown__c" id="countdown-coupon"></div>
+                    </div>
+                    <div class="mdl-CouponCustom__c__mC__cc__countdown__frmSend">
+                      <form action="" class="d-inline btn-ok" method="POST">
+                        @csrf
+                        <p>COUPON EXPIRED!!!</p>
+                      </form>
+                    </div>
+                    <label for="accepcouponvalid" class="ipt_hidcouponvalid__cbtn">
+                      <input type="hidden" class="ipt_hidcouponvalid" id="accepcouponvalid">
+                      <div class="ipt_hidcouponvalid__cbtn__c">
+                        <span></span>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      @endif
+    @else
+      @if($idcouponapply_user == $user_id && $idcouponapply_prod == $item->id && $idcouponapply_coupon == $item->coupon_id)
+      @else
+      <div class="modal fade" id="coupons-desc" tabindex="-1" role="dialog" aria-labelledby="coupons-descModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            
+            <div class="mdl-CouponCustom">
+              <div class="mdl-CouponCustom__c">
+                <div class="mdl-CouponCustom__c__btnClose" id="mdl-CouponBtnClose">
+                  <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <div class="mdl-CouponCustom__c__mC">
+                  <div class="mdl-CouponCustom__c__mC__cc">
+                    <div class="mdl-CouponCustom__c__mC__cc__countdown">
+                      <div class="mdl-CouponCustom__c__mC__cc__countdown__c" id="countdown-coupon"></div>
+                    </div>
+                    <div class="mdl-CouponCustom__c__mC__cc__frmSend">
+                      <form action="{{ route('front.applycoupon') }}" class="btn-ok" method="POST">
+                        @csrf
+                        <img src="{{asset('assets/images/coupons/')}}/{{ $imgCoupon }}" alt="" id="cImg-coupon_valid">
+                        <!-- <label for="accepcouponvalid" class="ipt_hidcouponvalid__cbtn">
+                          <input type="hidden" class="ipt_hidcouponvalid" id="accepcouponvalid">
+                          <div class="ipt_hidcouponvalid__cbtn__c">
+                            <span>APLICAR</span>
+                          </div>
+                        </label> -->
+                        <input tabindex="-1" placeholder="phdr-whidipts" type="hidden" width="0" height="0" autocomplete="off" spellcheck="false" f-hidden="aria-hidden" class="non-visvalipt h-alternative-shwnon s-fkeynone-step hdd-control d-non" name="prod_id" id="prod_id" value="{{ $item->id }}">
+                        <input tabindex="-1" placeholder="phdr-whidipts" type="hidden" width="0" height="0" autocomplete="off" spellcheck="false" f-hidden="aria-hidden" class="non-visvalipt h-alternative-shwnon s-fkeynone-step hdd-control d-non" name="coupon_id" id="coupon_id" value="{{ $idcoupon }}">
+                        <button type="submit" class="ipt_hidcouponvalid__cbtn">
+                          <span>APLICAR</span>
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      @endif
+    @endif
+  @endif
+@else
+  @if(count($coupons) > 0)
+    @php
+      $arrcoupon2 = json_decode($coupons, TRUE);
+    @endphp
+    @if($remainingTime <= 0)
+      <div class="modal fade" id="coupons-desc" tabindex="-1" role="dialog" aria-labelledby="coupons-descModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">            
+            <div class="mdl-CouponCustom">
+              <div class="mdl-CouponCustom__c">
+                <div class="mdl-CouponCustom__c__btnClose" id="mdl-CouponBtnClose">
+                  <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <div class="mdl-CouponCustom__c__mC">
+                  <div class="mdl-CouponCustom__c__mC__cc">
+                    <div class="mdl-CouponCustom__c__mC__cc__countdown">
+                      <div class="mdl-CouponCustom__c__mC__cc__countdown__c" id="countdown-coupon"></div>
+                    </div>
+                    <div class="mdl-CouponCustom__c__mC__cc__countdown__frmSend">
+                      <form action="" class="d-inline btn-ok" method="POST">
+                        @csrf
+                        <p>COUPON EXPIRED!!!</p>
+                      </form>
+                    </div>
+                    <label for="accepcouponvalid" class="ipt_hidcouponvalid__cbtn">
+                      <input type="hidden" class="ipt_hidcouponvalid" id="accepcouponvalid">
+                      <div class="ipt_hidcouponvalid__cbtn__c">
+                        <span></span>
+                      </div>
+                    </label>
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    @else
+      <div class="modal fade" id="coupons-desc" tabindex="-1" role="dialog" aria-labelledby="coupons-descModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            
+            <div class="mdl-CouponCustom">
+              <div class="mdl-CouponCustom__c">
+                <div class="mdl-CouponCustom__c__btnClose" id="mdl-CouponBtnClose">
+                  <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <div class="mdl-CouponCustom__c__mC">
+                  <div class="mdl-CouponCustom__c__mC__cc">
+                    <div class="mdl-CouponCustom__c__mC__cc__countdown">
+                      <div class="mdl-CouponCustom__c__mC__cc__countdown__c" id="countdown-coupon"></div>
+                    </div>
+                    <div class="mdl-CouponCustom__c__mC__cc__frmSend">
+                      <form action="{{ route('front.applycoupon') }}" class="btn-ok" method="POST">
+                        @csrf
+                        <img src="{{asset('assets/images/coupons/')}}/{{ $imgCoupon }}" alt="" id="cImg-coupon_valid">
+                        <!-- <label for="accepcouponvalid" class="ipt_hidcouponvalid__cbtn">
+                          <input type="hidden" class="ipt_hidcouponvalid" id="accepcouponvalid">
+                          <div class="ipt_hidcouponvalid__cbtn__c">
+                            <span>APLICAR</span>
+                          </div>
+                        </label> -->
+                        <input tabindex="-1" placeholder="phdr-whidipts" type="hidden" width="0" height="0" autocomplete="off" spellcheck="false" f-hidden="aria-hidden" class="non-visvalipt h-alternative-shwnon s-fkeynone-step hdd-control d-non" name="prod_id" id="prod_id" value="{{ $item->id }}">
+                        <input tabindex="-1" placeholder="phdr-whidipts" type="hidden" width="0" height="0" autocomplete="off" spellcheck="false" f-hidden="aria-hidden" class="non-visvalipt h-alternative-shwnon s-fkeynone-step hdd-control d-non" name="coupon_id" id="coupon_id" value="{{ $idcoupon }}">
+                        <button type="submit" class="ipt_hidcouponvalid__cbtn">
+                          <span>APLICAR</span>
+                        </button>
+                      </form>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    @endif
+  @endif
+@endif
+
+
+
 <script type="text/javascript" src="{{ asset('assets/front/js/product-details.js') }}"></script>
+@if(count($applycoupon) > 0)
+  @if(count($coupons) > 0)
+    @php
+      $arrcoupon2 = json_decode($coupons, TRUE);
+    @endphp
+    @if($remainingTime <= 0)
+      @if($idcouponapply_user == $user_id && $idcouponapply_prod == $item->id && $idcouponapply_coupon == $item->coupon_id)
+      @else
+      <script type="text/javascript">
+        // -------------- CUENTA REGRESIVA PARA CUPÓN DE DESCUENTO...
+        var expirationTimestamp = {{ $millisecondsExpirationDate }};
+        var imgCouponValid = "{{ asset('assets/images/coupons/') }}/{{ $imgCoupon }}";
+        var expirationTimestamp2 = parseInt(expirationTimestamp);
+        const targetDateTimestamp = expirationTimestamp2;
+        const updateInterval = setInterval(updateElements, 1000);
+
+        function updateElements() {
+          const currentDate = new Date().getTime();
+          const timeRemaining = targetDateTimestamp - currentDate;
+
+          if (timeRemaining <= 0) {
+            // Si el tiempo estimado termina, mostrar un mensaje...
+            document.getElementById('countdown-coupon').innerHTML = 'EL CUPÓN HA EXPIRADO...!';
+            clearInterval(updateInterval);
+            $("#coupons-desc").modal("show");
+          } else {
+            // Calcular días, horas, minutos, y segundos...
+            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            $("#coupons-desc").modal("show");
+            // MOSTRAR MENSAJE EN EL MODAL...
+            document.querySelector("#cImg-coupon_valid").setAttribute("src", imgCouponValid);
+            document.getElementById('countdown-coupon').innerHTML = `
+              <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cTitle">Este cupón vence en:</span>
+              <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown">
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${days}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Ds</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${hours}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Hr</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${minutes}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Min</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${seconds}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Sec</span>
+                </span>
+              </span>`;
+          }
+        }
+        
+      </script>
+      @endif
+    @else
+      <script type="text/javascript">
+        // -------------- CUENTA REGRESIVA PARA CUPÓN DE DESCUENTO...
+        var expirationTimestamp = {{ $millisecondsExpirationDate }};
+        var imgCouponValid = "{{ asset('assets/images/coupons/') }}/{{ $imgCoupon }}";
+        var expirationTimestamp2 = parseInt(expirationTimestamp);
+        const targetDateTimestamp = expirationTimestamp2;
+        const updateInterval = setInterval(updateElements, 1000);
+
+        function updateElements() {
+          const currentDate = new Date().getTime();
+          const timeRemaining = targetDateTimestamp - currentDate;
+
+          if (timeRemaining <= 0) {
+            // Si el tiempo estimado termina, mostrar un mensaje...
+            document.getElementById('countdown-coupon').innerHTML = 'EL CUPÓN HA EXPIRADO...!';
+            clearInterval(updateInterval);
+            $("#coupons-desc").modal("show");
+          } else {
+            // Calcular días, horas, minutos, y segundos...
+            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            $("#coupons-desc").modal("show");
+            // MOSTRAR MENSAJE EN EL MODAL...
+            document.querySelector("#cImg-coupon_valid").setAttribute("src", imgCouponValid);
+            document.getElementById('countdown-coupon').innerHTML = `
+              <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cTitle">Este cupón vence en:</span>
+              <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown">
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${days}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Ds</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${hours}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Hr</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${minutes}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Min</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${seconds}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Sec</span>
+                </span>
+              </span>`;
+          }
+        }
+        
+      </script>
+    @endif
+  @endif
+@else
+  @if(count($coupons) > 0)
+    @php
+      $arrcoupon2 = json_decode($coupons, TRUE);
+    @endphp
+    @if($remainingTime <= 0)
+      <script type="text/javascript">
+        // -------------- CUENTA REGRESIVA PARA CUPÓN DE DESCUENTO...
+        var expirationTimestamp = {{ $millisecondsExpirationDate }};
+        var imgCouponValid = "{{ asset('assets/images/coupons/') }}/{{ $imgCoupon }}";
+        var expirationTimestamp2 = parseInt(expirationTimestamp);
+        const targetDateTimestamp = expirationTimestamp2;
+        const updateInterval = setInterval(updateElements, 1000);
+
+        function updateElements() {
+          const currentDate = new Date().getTime();
+          const timeRemaining = targetDateTimestamp - currentDate;
+
+          if (timeRemaining <= 0) {
+            // Si el tiempo estimado termina, mostrar un mensaje...
+            document.getElementById('countdown-coupon').innerHTML = 'EL CUPÓN HA EXPIRADO...!';
+            clearInterval(updateInterval);
+            $("#coupons-desc").modal("show");
+          } else {
+            // Calcular días, horas, minutos, y segundos...
+            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            $("#coupons-desc").modal("show");
+            // MOSTRAR MENSAJE EN EL MODAL...
+            document.querySelector("#cImg-coupon_valid").setAttribute("src", imgCouponValid);
+            document.getElementById('countdown-coupon').innerHTML = `
+              <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cTitle">Este cupón vence en:</span>
+              <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown">
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${days}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Ds</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${hours}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Hr</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${minutes}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Min</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${seconds}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Sec</span>
+                </span>
+              </span>`;
+          }
+        }
+        
+      </script>
+    @else
+      <script type="text/javascript">
+        // -------------- CUENTA REGRESIVA PARA CUPÓN DE DESCUENTO...
+        var expirationTimestamp = {{ $millisecondsExpirationDate }};
+        var imgCouponValid = "{{ asset('assets/images/coupons/') }}/{{ $imgCoupon }}";
+        var expirationTimestamp2 = parseInt(expirationTimestamp);
+        const targetDateTimestamp = expirationTimestamp2;
+        const updateInterval = setInterval(updateElements, 1000);
+
+        function updateElements() {
+          const currentDate = new Date().getTime();
+          const timeRemaining = targetDateTimestamp - currentDate;
+
+          if (timeRemaining <= 0) {
+            // Si el tiempo estimado termina, mostrar un mensaje...
+            document.getElementById('countdown-coupon').innerHTML = 'EL CUPÓN HA EXPIRADO...!';
+            clearInterval(updateInterval);
+            $("#coupons-desc").modal("show");
+          } else {
+            // Calcular días, horas, minutos, y segundos...
+            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            $("#coupons-desc").modal("show");
+            // MOSTRAR MENSAJE EN EL MODAL...
+            document.querySelector("#cImg-coupon_valid").setAttribute("src", imgCouponValid);
+            document.getElementById('countdown-coupon').innerHTML = `
+              <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cTitle">Este cupón vence en:</span>
+              <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown">
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${days}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Ds</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${hours}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Hr</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${minutes}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Min</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${seconds}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Sec</span>
+                </span>
+              </span>`;
+          }
+        }
+        
+      </script>
+    @endif
+  @endif
+@endif
+
 @endsection

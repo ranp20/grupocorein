@@ -13,7 +13,8 @@ use App\{
   Http\Controllers\Controller,
   Http\Requests\ReviewRequest,
   Http\Requests\SubscribeRequest,
-  Repositories\Front\FrontRepository
+  Repositories\Front\FrontRepository,
+  Repositories\Front\ApplyCouponRepository
 };
 use App\Helpers\SmsHelper;
 use App\Models\Brand;
@@ -38,23 +39,43 @@ use App\Helpers\PriceHelper;
 use App\Models\Attribute;
 use App\Models\AttributeOption;
 use App\Models\Catalog;
+use App\Models\Coupons;
+use App\Models\Tax;
 use App\Models\TempCart;
+use App\Models\User;
+use App\Models\ApplyCoupon;
 use Illuminate\Support\Facades\Auth;
 use Redirect;
 use Carbon\Carbon;
 
 use function GuzzleHttp\json_decode;
+use PHPMailer\PHPMailer\{
+  PHPMailer,
+  SMTP,
+  Exception
+};
+
+// require 'vendor/autoload.php';
+
+
+// use PHPMailer\PHPMailer\PHPMailer;
+// use PHPMailer\PHPMailer\SMTP;
+// use PHPMailer\PHPMailer\Exception;
+
+// require '../vendor/phpmailer/phpmailer/src/Exception.php';
+// require '../vendor/phpmailer/phpmailer/src/PHPMailer.php';
+// require '../vendor/phpmailer/phpmailer/src/SMTP.php';
 
 class FrontendController extends Controller{
-  public function __construct(FrontRepository $repository){
+  public function __construct(FrontRepository $repository, ApplyCouponRepository $applycoupon){
     $this->repository = $repository;
     $setting = Setting::first();
     if($setting->recaptcha == 1){
       Config::set('captcha.sitekey', $setting->google_recaptcha_site_key);
       Config::set('captcha.secret', $setting->google_recaptcha_secret_key);
     }
-
     $this->middleware('localize');
+    $this->applycoupon = $applycoupon;
   }
 
   // ------------------ HOME ------------------
@@ -268,6 +289,7 @@ class FrontendController extends Controller{
   }
   public function product($slug){
     $item = Item::with('category')->whereStatus(1)->whereSlug($slug)->get();
+    // $coupon = Item::with('coupons')->where('coupon_id','=',$item[0]->coupon_id)->get();
     $video = "";
     if($item[0]->video != "" && $item[0]->video != "null" && $item[0]->video != null){
       $video = explode('=',$item[0]->video);
@@ -281,7 +303,9 @@ class FrontendController extends Controller{
       'sec_name'      => isset($item[0]->specification_name) ? json_decode($item[0]->specification_name,true) : [],
       'sec_details'   => isset($item[0]->specification_description) ? json_decode($item[0]->specification_description,true) : [],
       'attributes'    => $item[0]->attributes,
-      'related_items' => $item[0]->category->items()->whereStatus(1)->where('id','!=',$item[0]->id)->take(8)->get()
+      'related_items' => $item[0]->category->items()->whereStatus(1)->where('id','!=',$item[0]->id)->take(8)->get(),
+      'coupons'       => Coupons::where('id','=',$item[0]->coupon_id)->take(1)->get(),
+      'applycoupon'   => ApplyCoupon::where('id_coupon','=',$item[0]->coupon_id)->take(1)->get()
     ]);
   }
   public function brands(){
@@ -370,6 +394,7 @@ class FrontendController extends Controller{
     }
 		return view('front.contact');
 	}
+  // ------------------ ENVIAR CORREO DESDE LA PÁGINA DE CONTACTO EN EL LADO DEL USUARIO...
   public function contactEmail(Request $request){
     $request->validate([
       'first_name' => 'required|max:50',
@@ -379,23 +404,156 @@ class FrontendController extends Controller{
       'message' => 'required|max:250',
     ]);
     $input = $request->all();
-
     $setting = Setting::first();
     $name  = $input['first_name'].' '.$input['last_name'];
-    $subject = "Email From ".$name;
+    $subject = $name;
     $to = $setting->contact_email;
     $phone = $request->phone;
     $from = $request->email;
     $msg = "Nombre: ".$name."<br/>Email: ".$from."<br/>Teléfono: ".$phone."<br/>Mensaje: ".$request->message;
-
     $emailData = [
       'to' => $to,
       'subject' => $subject,
       'body' => $msg,
     ];
+    $mail = new PHPMailer(true);    
+    try {
+      $mail->CharSet = 'UTF-8';
+      //Server settings
+      $mail->SMTPDebug = 0;
+      $mail->isSMTP();
+      $mail->Host       = $setting->email_host;
+      $mail->SMTPAuth   = true;
+      $mail->Username   = $setting->email_user;
+      $mail->Password   = $setting->email_pass;
+      $mail->SMTPSecure = $setting->email_encryption;
+      $mail->Port       = $setting->email_port; //587;
+      
+      //Recipients
+      $mail->setFrom($setting->email_from, $setting->email_from_name);
+      //foreach($correo as $val){
+      $mail->addAddress($from); // COLOCAR EL EMAIL DE LA EMPRESA, YA QUE, ESTE MENSAJE ES DEDICADO Y/O DIRIGIDO HACIA ELLA...
+      //}
+      // Content
+      $mail->isHTML(true);
+      $mail->Subject = "Hola, " . $emailData['subject'];
+      
+      $mail->Body    =  '<!DOCTYPE html>
+      <html lang="es">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style type="text/css">
+          body{
+            display:flex;align-items:center;justify-content:center;background: rgba(0,0,0,.05);padding: 2.2rem 0 2.2rem 0;
+          }
+          tr,td{
+            border: none !important;
+          }
+          .cMCont{
+            width: 85%;margin: auto;border-radius: 20px;background-position: center;background-repeat: no-repeat;background-size: contain;
+          }
+          .cMCont__c{
+            width: 100%;background: rgba(255,255,255,.7);border-radius: 20px;border: #eee;box-shadow: 0 18px 24px 1px rgba(0,0,0,.1);
+          }
+          .cMCont__c__cTbl{
+            width: 100%;background: rgba(255,255,255,.75);border-radius: 20px;margin: auto;
+          }
+          .cMCont__c__cTbl__cLogo{
+            background-color: #003399;
+            display:block;align-items:center;justify-content:center;text-align:center;padding: 1rem 2.8rem 0 2.8rem;
+          }
+          .cMCont__c__cTbl__cLogo img{
+            max-width: 260px;min-width: 150px;width: 95%;
+          }
+          .cMCont__c__cTbl__cTitle{
+            color:#3c4858;text-align:center;font-size: 1rem;
+          }
+          .cMCont__c__cTbl__cBodyMssg{
+            color: #000;
+          }
+          .cMCont__c__cTbl__cC{
+            display:block;align-items:center;justify-content:center;text-align:center;padding: .5rem 2.8rem 2.8rem 2.8rem;font-size: .97rem;font-weight: lighter;
+          }
+          .cMCont__c__cTbl__cC__c{
+            margin-bottom:40px;text-align: center;color:#3c4858;
+          }
+          .cMCont__c__cTbl__cC__c__cTitle-1{
+            text-align:left;
+          }
+          .cMCont__c__cTbl__cC__c__cTitle-h3{
+            color:#3c4858;font-weight:bold;
+          }
+          .cMCont__c__cTbl__cC__c__paragraph{
+            text-align:left;
+          }
+          .cMCont__c__cTbl__cC__c__link{
+            text-decoration: none !important;color: #fff !important;background-color: #FD4259;border-radius: 1.5rem;padding: 1rem 2rem;display: inline-block;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="cMCont">
+          <div class="cMCont__c">
+            <table class="cMCont__c__cTbl" rules="all">
+                <thead>
+                  <td>
+                    <tr>
+                      <div class="cMCont__c__cTbl__cLogo">
+                        <img src="https://grupocorein/assets/images/1669085546GRUPO-COREIN-LOGOTIPO.png" alt="logo_planverde">
+                      </div>
+                    </tr>
+                    <tr>
+                      <div class="cMCont__c__cTbl__cTitle">
+                        <span>Nuevo mensaje</span>
+                      </div>
+                    </tr>
+                    <tr>
+                      <div class="cMCont__c__cTbl__cBodyMssg">
+                        <span><strong>Nombre: </strong>"'.$name.'"</span><br/>
+                        <span><strong>Email: </strong>"'.$from.'"</span><br/>
+                        <span><strong>Teléfono: </strong>"'.$phone.'"</span><br/>
+                        <span><strong>Mensaje: </strong>"'.$request->message.'"</span><br/>
+                      </div>
+                    </tr>
+                    <div class="cMCont__c__cTbl__cC">
+                      <div class="cMCont__c__cTbl__cC__c">
+                        <p class="cMCont__c__cTbl__cC__c__paragraph">Hola, .<strong>"'.$name.'"</strong></p>
+                        <p class="cMCont__c__cTbl__cC__c__paragraph">Gracias por contactar con nosotros, nos pondremos en contacto con usted en breve.</p>
+                        <a class="cMCont__c__cTbl__cC__c__link" href="https://grupocorein.com/" title="Ir a grupocorein.com">
+                          <span>Ir a Inicio</span>
+                        </a>
+                        <p class="cMCont__c__cTbl__cC__c__paragraph">No responda a este correo electrónico.</p>
+                      </div>
+                      <h3 class="cMCont__c__cTbl__cC__c__cTitle-h3">El equipo de grupocorein.com</h3>
+                      <small class="cMCont__c__cTbl__cC__smallFooter">Mensaje enviado desde CONTACTO, en https://grupocorein.com</small>
+                    </div>
+                  </td>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </body>
+      </html>';
+      
+      $mail->send();
+      $r = array(
+        'r' => 'true'
+      );
+    }catch(Exception $e){
+      echo "Ocurrio un error al enviar el correo. Error: {$mail->ErrorInfo}";
+      $r = array(
+        'r' => 'false'
+      );
+    }
 
-    $email = new EmailHelper();
-    $email->sendCustomMail($emailData);
+
+    // $email = new EmailHelper();
+    // $email->sendCustomMail($emailData);
+    // exit();
     Session::flash('success',__('Gracias por contactar con nosotros, nos pondremos en contacto con usted en breve.'));
     return redirect()->back();
   }
@@ -946,5 +1104,116 @@ class FrontendController extends Controller{
     }
     return response()->json(['res' => "true"]);
 
+  }
+  // FUNCIÓN PARA NO REDONDEAR LOS DECIMALES...
+  function restrictDecimals($number, $decimals){
+    $numberStr = strval($number);
+    $decimalPos = strpos($numberStr, '.');
+    if ($decimalPos !== false && strlen($numberStr) - $decimalPos - 1 > $decimals){
+      $numberStr = substr($numberStr, 0, $decimalPos + $decimals + 1);
+    }
+    return $numberStr;
+  }
+
+  public function applycoupon(Request $request){
+   
+    // INFORMACIÓN A UTILIZAR EN EL CÁLCULO...
+    $TaxesAll = Tax::get();
+    $sumFinalPrice1 = 0;
+    $sumFinalPrice2 = 0;
+    $incIGV = $TaxesAll[0]->value;
+    $sinIGV = $TaxesAll[1]->value;
+    $incIGV_format = $incIGV / 100;
+    $sinIGV_format = $sinIGV;
+    if(Auth::check()){
+      if(!empty(auth()->user()) || auth()->user() != ""){
+        $user = Auth::user();
+        $iduser = $user->id;
+        $idprod = $request->prod_id;
+        $idcoupon = $request->coupon_id;
+        $coupon = Coupons::select('name','discount_percentage')->where('id','=',$idcoupon)->take(1)->get()->toArray();
+        $item = Item::where('id','=',$idprod)->take(1)->get()->toArray();
+        // CALCULO PARA EL DESCUENTO DEL PRECIO DEL PRODUCTO SEGÚN EL CUPÓN...
+        $discount_percentage = $coupon[0]['discount_percentage'] / 100;
+
+        if(isset($item[0]['sections_id']) && $item[0]['sections_id'] != 0){
+          if($item[0]['sections_id'] == 1){
+            if($item[0]['on_sale_price'] != 0 && $item[0]['on_sale_price'] != ""){
+              if(isset($item[0]['tax_id']) && $item[0]['tax_id'] == 1){                
+                  $sumFinalPrice1 = $item[0]['on_sale_price'] * $incIGV_format;
+                  $sumFinalPrice2 = $item[0]['on_sale_price'] + $sumFinalPrice1;
+                  $coupon_1 = $sumFinalPrice2 * $discount_percentage;
+                  $coupon_2 = $sumFinalPrice2 - $coupon_1;
+                  // echo number_format($coupon_2, 2)."<br>"; // REDONDEANDO LOS DECIMALES...
+                  $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
+                  // echo $finalprice."<br>";
+              }else{                
+                $sumFinalPrice1 = $item[0]['on_sale_price'];
+                $sumFinalPrice2 = $item[0]['on_sale_price'] + $sumFinalPrice1;
+                $coupon_1 = $sumFinalPrice2 * $discount_percentage;
+                $coupon_2 = $sumFinalPrice2 - $coupon_1;
+                $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
+                // echo $finalprice."<br>";
+              }
+            }else{
+              $discount_price = $item[0]['discount_price'];
+              $coupon_1 = $discount_price * $discount_percentage;
+              $coupon_2 = $discount_price - $coupon_1;
+              $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
+              // echo $finalprice."<br>";
+            }
+          }else{
+            if($item[0]['special_offer_price'] != 0 && $item[0]['special_offer_price'] != ""){
+              if(isset($item[0]['tax_id']) && $item[0]['tax_id'] == 1){
+                $sumFinalPrice1 = $item[0]['special_offer_price'] * $incIGV_format;
+                $sumFinalPrice2 = $item[0]['special_offer_price'] + $sumFinalPrice1;
+                $coupon_1 = $sumFinalPrice2 * $discount_percentage;
+                $coupon_2 = $sumFinalPrice2 - $coupon_1;
+                $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
+                // echo $finalprice."<br>";
+              }else{                
+                $sumFinalPrice1 = $item[0]['special_offer_price'];
+                $sumFinalPrice2 = $item[0]['special_offer_price'] + $sumFinalPrice1;
+                $coupon_1 = $sumFinalPrice2 * $discount_percentage;
+                $coupon_2 = $sumFinalPrice2 - $coupon_1;
+                $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
+                // echo $finalprice."<br>";
+              }
+            }else{
+              $discount_price = $item[0]['discount_price'];
+              $coupon_1 = $discount_price * $discount_percentage;
+              $coupon_2 = $discount_price - $coupon_1;
+              $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
+              // echo $finalprice."<br>";
+            }
+          }
+        }else{
+          $discount_price = $item[0]['discount_price'];
+          $coupon_1 = $discount_price * $discount_percentage;
+          $coupon_2 = $discount_price - $coupon_1;
+          $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
+          // echo $finalprice."<br>";
+        }
+
+        // $user = User::findOrFail($user->id);
+        $arrcoupon = array(
+          'id_user' => $iduser,
+          'id_prod' => $idprod,
+          'id_coupon' => $idcoupon,
+          'totalprice' => $finalprice,
+          'status' => 1
+        );
+        // AGREGAR A LA TABLA "tbl_applycoupons"...
+        $this->applycoupon->addToUser($arrcoupon);
+        return redirect()->back()->withSuccess(__('New coupon activated successfully.'));
+        // exit();        
+      }else{
+        // REDIRIGIR A INICIAR SESIÓN...
+        return redirect(route('user.login'));
+      }
+    }else{
+      // REDIRIGIR A INICIAR SESIÓN...
+      return redirect(route('user.login'));
+    }
   }
 }

@@ -30,6 +30,24 @@ class ImageHelper{
       return [$photo,$thum];
     }
   }
+  // ------------- GUARDAR IMAGEN DE CUPÓN...
+  public static function ItemhandleUploadedCoupon($file,$path,$delete=null){
+    if($file){
+      if($delete){
+        if(file_exists(base_path('../').$path.'/'.$delete)){
+          unlink(base_path('../').$path.'/'.$delete);
+        }
+      }
+      // $codeRandom = Str::random(8);
+      $thum = Str::random(8).'.'.$file->getClientOriginalExtension();
+      $image = \Image::make($file)->resize(230,230);
+      // $image = \Image::make($file);
+      $image->save(base_path('../').$path.'/'.$thum);
+      $photo = time().$file->getClientOriginalName();
+      $file->move($path,$photo);
+      return [$photo,$thum];
+    }
+  }
   public static function handleUpdatedUploadedImage($file,$path,$data,$delete_path,$field){
     $name = time().$file->getClientOriginalName();
     $file->move(base_path('..').$path,$name);

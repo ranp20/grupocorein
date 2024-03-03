@@ -22,38 +22,50 @@ class SettingRepository{
       ];
       $input['social_link'] = json_encode($links,true);
     }
+
+    // echo "<pre>";
+    // print_r($request->all());
+    // echo "</pre>";
+    // exit();
+
     $whatsAppCollection = [];
     if(isset($request->wtspnumbersgeneral_title)){
       foreach($request->wtspnumbersgeneral_title as $k => $v){
         $whatsAppCollection['whatsapp_numbers']['general'][$k]['title'] = $v;
       }
+      $input['whatsapp_numbers'] = json_encode($whatsAppCollection);
     }
     if(isset($request->wtspnumbersgeneral_text)){
       foreach($request->wtspnumbersgeneral_text as $k => $v){
         $whatsAppCollection['whatsapp_numbers']['general'][$k]['text'] = $v;
       }
+      $input['whatsapp_numbers'] = json_encode($whatsAppCollection);
     }
     if(isset($request->wtspnumbersgeneral_number)){
       foreach($request->wtspnumbersgeneral_number as $k => $v){
         $whatsAppCollection['whatsapp_numbers']['general'][$k]['number'] = str_replace(" ","",$v);
       }
+      $input['whatsapp_numbers'] = json_encode($whatsAppCollection);
     }
     if(isset($request->wtspnumbers_title)){
       foreach($request->wtspnumbers_title as $k => $v){
         $whatsAppCollection['whatsapp_numbers']['in_product'][$k]['title'] = $v;
       }
+      $input['whatsapp_numbers'] = json_encode($whatsAppCollection);
     }
     if(isset($request->wtspnumbers_text)){
       foreach($request->wtspnumbers_text as $k => $v){
         $whatsAppCollection['whatsapp_numbers']['in_product'][$k]['text'] = $v;
       }
+      $input['whatsapp_numbers'] = json_encode($whatsAppCollection);
     }
     if(isset($request->wtspnumbers_number)){
       foreach($request->wtspnumbers_number as $k => $v){
         $whatsAppCollection['whatsapp_numbers']['in_product'][$k]['number'] = str_replace(" ","",$v);
       }
+      $input['whatsapp_numbers'] = json_encode($whatsAppCollection);
     }
-    $input['whatsapp_numbers'] = json_encode($whatsAppCollection);
+    // $input['whatsapp_numbers'] = json_encode($whatsAppCollection);
     // message text json encode
     if(isset($input['twilio_section'])){
       $input['twilio_section'] = json_encode($input['twilio_section'],true);

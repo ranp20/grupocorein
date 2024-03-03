@@ -33,6 +33,9 @@
       <div class="col-lg-8">
         <div class="card">
           <div class="card-body">
+            <!-- <div class="px-2">
+              <h2><strong>Atributos</strong></h2>
+            </div> -->
             <div class="form-group">
               <label for="unidadraiz">{{ __('Select Root Unit') }} *</label>
               <select name="unidadraiz" id="unidadraiz" class="form-control">
@@ -187,6 +190,21 @@
             <button type="submit" class="btn btn-info save__edit">{{ __('Save & Edit') }}</button>
           </div>
         </div>
+
+        <div class="card">
+          <div class="card-body">
+            <div class="form-group">
+              <label for="coupon_id">{{ __('Select Coupon') }} </label>
+              <select name="coupon_id" id="coupon_id" class="form-control" >
+                <option value="" selected>{{__('Select Coupon')}}</option>
+                @foreach(DB::table('tbl_coupons')->whereStatus(1)->get() as $coupon)
+                <option value="{{ $coupon->id }}">{{ $coupon->name }}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+        </div>
+
         <div class="card">
           <div class="card-body">
             <div class="form-group">

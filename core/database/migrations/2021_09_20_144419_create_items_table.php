@@ -21,6 +21,7 @@ class CreateItemsTable extends Migration
             $table->integer('childcategory_id')->default(0)->nullable();
             $table->integer('tax_id')->nullable();
             $table->integer('sections_id')->nullable();
+            $table->integer('coupon_id')->default(0)->nullable();
             $table->integer('brand_id')->default(0)->nullable();
             $table->integer('unidad_raiz')->default(0)->nullable();
             $table->integer('atributo_raiz')->default(0)->nullable();

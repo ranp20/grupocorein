@@ -126,6 +126,28 @@
       </ul>
     </div>
   </li>
+
+  
+  
+  <li class="nav-item">
+    <a data-toggle="collapse" href="#coupons">
+      <i class="fas fa-tags"></i>
+      <p>{{ __('Manage Coupons') }}</p>
+      <span class="caret"></span>
+    </a>
+    <div class="collapse" id="coupons">
+      <ul class="nav nav-collapse">
+        <li>
+          <a class="sub-link" href="{{ route('back.coupons.index') }}">
+            <span class="sub-item">{{ __('Cupones') }}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </li>
+  
+
+
   <li class="nav-item">
     <a data-toggle="collapse" href="#store">
       <i class="fas fa-store"></i>
@@ -335,7 +357,7 @@
           </a>
         </li>
         <li>
-          <a class="sub-link" href="{{ route('admin.sitemap.index') }}">
+          <a class="sub-link" href="{{ route('back.sitemap.index') }}">
             <span class="sub-item">{{ __('Sitemap') }}</span>
           </a>
         </li>

@@ -78,6 +78,17 @@
               </div>
             </div>
             <!-- NUEVO CONTENIDO (INICIO) -->
+            <div class="col-lg-3 col-md-4 col-sm-6" >
+              <div class="form-group px-0">
+                <select class="form-control" name="coupon_id">
+                  <option disabled>{{__('Select coupon')}}</option>
+                  <option value="">{{__('All Coupons')}}</option>
+                  @foreach(DB::table('tbl_coupons')->whereStatus(1)->get() as $coupon)
+                  <option value="{{ $coupon->id }}" {{request()->input('coupon_id') == $coupon->id ? 'selected' : ''}}>{{ $coupon->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
             <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group px-0">
                 <input type="text" class="form-control" name="sku" id="sku" maxlength="200" placeholder="Código de producto">

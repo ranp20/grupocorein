@@ -75,6 +75,13 @@ class UserRepository{
     }else{
       Subscriber::where('email',$user->email)->delete();
     }
+
+    // echo "asdasdasd";
+    // echo "<pre>";
+    // print_r($request->all());
+    // echo "</pre>";
+    // exit();
+
     $user->fill($input)->save();
   }
 }

@@ -12,6 +12,7 @@ class Item extends Model
         'category_id',
         'subcategory_id',
         'childcategory_id',
+        'coupon_id',
         'brand_id',
         'unidad_raiz',
         'atributo_raiz',

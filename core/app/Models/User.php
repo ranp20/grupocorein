@@ -40,7 +40,8 @@ class User extends Authenticatable
         'bill_city',
         'bill_country',
         'bill_company',
-        'state_id'
+        'state_id',
+        'coupon_to_products'
     ];
 
 

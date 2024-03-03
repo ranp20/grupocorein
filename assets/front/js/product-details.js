@@ -1,4 +1,10 @@
 $(() => {
+  $('#coupons-desc').modal({backdrop: 'static', keyboard: false})  
+  // Cerrar modal...
+  $(document).on("click","#mdl-CouponBtnClose",function(){
+    clearInterval(updateInterval);
+    $("#coupons-desc").modal("hide");
+  });
   var csrfTokenFrm = $("#csl-fGv8n09c__sGaYs45").find("input[name='_token']").val();
   // Product details main slider
   $('.product-details-slider').owlCarousel({
@@ -358,4 +364,15 @@ $(() => {
 
       return false;
   });
+
+
+  // APLICAR CUPÓN DE DESCUENTO DE ACUERDO AL PRODUCTO...
+  // $(document).on("click","#accepcouponvalid",function(){
+  //   if($(this).is("checked")){
+  //     alert("Aplicar el cupón");
+  //   }else{
+  //     console.log("NADA");
+  //   }
+  // });
+
 });

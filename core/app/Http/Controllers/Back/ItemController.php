@@ -10,6 +10,7 @@ use App\{
 };
 use App\Models\Category;
 use App\Models\ChieldCategory;
+use App\Models\Coupons;
 use App\Models\Currency;
 use App\Models\Subcategory;
 use App\Models\Tax;
@@ -30,6 +31,7 @@ class ItemController extends Controller{
         $item_type = $request->has('item_type') ? ($request->item_type ? $request->item_type : '') : '';
         $is_type = $request->has('is_type') ? ($request->is_type ? $request->is_type : '') : '';
         $category_id = $request->has('category_id') ? ($request->category_id ? $request->category_id : '') : '';
+        $coupon_id = $request->has('coupon_id') ? ($request->coupon_id ? $request->coupon_id : '') : '';
         $orderby = $request->has('orderby') ? ($request->orderby ? $request->orderby : 'desc') : 'desc';
 
         /* -- NUEVO CONTENIDO (INICIO) --*/
@@ -53,7 +55,9 @@ class ItemController extends Controller{
             return $query->where('category_id', $category_id);
         })
         /* -- NUEVO CONTENIDO (INICIO) --*/
-        
+        ->when($coupon_id, function ($query, $coupon_id) {
+            return $query->where('coupon_id', $coupon_id);
+        })
         ->when($sku, function ($query, $sku) {
             return $query->where('sku', 'like', '%'.$sku.'%');
         })

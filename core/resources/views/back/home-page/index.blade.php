@@ -7,7 +7,7 @@
   <div class="card mb-4">
     <div class="card-body">
       <div class="d-sm-flex align-items-center justify-content-between">
-        <h3 class="mb-0 bc-title"><b>{{ __('Language') }}</b></h3>
+        <h3 class="mb-0 bc-title"><b>{{ __('Banners and sections') }}</b></h3>
       </div>
     </div>
   </div>
@@ -632,7 +632,7 @@
                   <br>
                     <img class="admin-img" src="{{  asset('assets/images/'.$third_banner['img1']) }}" alt="No Image Found">
                   <br>
-                  <span class="mt-1">{{ __('Image Size Should Be 496 x 204.') }}</span>
+                  <span class="mt-1">{{ __('Image Size Should Be 1190 x 370.') }}</span>
                 </div>
                 <div class="form-group position-relative">
                   <label class="file">
@@ -658,7 +658,7 @@
                   <br>
                     <img class="admin-img" src="{{  asset('assets/images/'.$third_banner['img2']) }}" alt="No Image Found">
                   <br>
-                  <span class="mt-1">{{ __('Image Size Should Be 496 x 204.') }}</span>
+                  <span class="mt-1">{{ __('Image Size Should Be 1190 x 370.') }}</span>
                 </div>
                 <div class="form-group position-relative">
                   <label class="file">

@@ -491,7 +491,9 @@ body_theme4
           @endphp
             <div class="footer-social-links">
                 @foreach ($links as $link_key => $link)
-                <a href="{{$link}}"><span><i class="{{$icons[$link_key]}}"></i></span></a>
+                <a href="{{$link}}" target="_blank">
+                    <span><i class="{{$icons[$link_key]}}"></i></span>
+                </a>
                 @endforeach
             </div>
           </section>
@@ -595,23 +597,29 @@ body_theme4
 <script type="text/javascript" src="{{ asset('assets/front/js/plugins/floating-whatsapp/floating-wpp.min.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('assets/front/js/plugins/floating-whatsapp/floating-wpp.min.css') }}">
 
-<script type="text/javascript">
-  $(function() {
-    let imgWAButton = "{{ asset('assets/front/js/plugins/floating-whatsapp/whatsapp.svg') }}";
-    $('#WAButton').floatingWhatsApp({
-      phone: '+51<?php echo $wps_generalButton['number']; ?>', //WhatsApp Business phone number International format-
-      //Get it with Toky at https://toky.co/en/features/whatsapp.
-      headerTitle: '¡Chatea con nosotros en WhatsApp!', //Popup Title
-      popupMessage: 'Hola, ¿Cómo podemos ayudarte?', //Popup Message
-      showPopup: true, //Enables popup display
-      buttonImage: `<img src="${imgWAButton}" />`, //Button Image
-      //headerColor: 'crimson', //Custom header color
-      //backgroundColor: 'crimson', //Custom background button color
-      position: "right"    
-    });
-  });
-</script>
-
+@if(isset($wstpCollection['whatsapp_numbers']))
+    @php
+        $ArrwpsNumbersButton = $wstpCollection['whatsapp_numbers'];
+    @endphp
+    @if(isset($ArrwpsNumbersButton['general']))
+        <script type="text/javascript">
+        $(function() {
+            let imgWAButton = "{{ asset('assets/front/js/plugins/floating-whatsapp/whatsapp.svg') }}";
+            $('#WAButton').floatingWhatsApp({
+            phone: '+51<?php echo $wps_generalButton['number']; ?>', //WhatsApp Business phone number International format-
+            //Get it with Toky at https://toky.co/en/features/whatsapp.
+            headerTitle: '¡Chatea con nosotros en WhatsApp!', //Popup Title
+            popupMessage: 'Hola, ¿Cómo podemos ayudarte?', //Popup Message
+            showPopup: true, //Enables popup display
+            buttonImage: `<img src="${imgWAButton}" />`, //Button Image
+            //headerColor: 'crimson', //Custom header color
+            //backgroundColor: 'crimson', //Custom background button color
+            position: "right"    
+            });
+        });
+        </script>
+    @endif
+@endif
 
 @yield('script')
 @if($setting->is_facebook_messenger	== '1')

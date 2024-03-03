@@ -100,6 +100,15 @@ Route::group(['middleware' => 'adminlocalize'], function (){
       Route::get('childcategory/status/{id}/{status}', 'Back\ChieldCategoryController@status')->name('back.childcategory.status');
       Route::resource('childcategory', 'Back\ChieldCategoryController', ['as' => 'back', 'except' => 'show']);
     });
+
+
+    Route::group(['middleware' => 'permissions:Manage Coupons'], function (){
+      //------------ CATEGORY ------------
+      Route::get('coupons/status/{id}/{status}', 'Back\CouponsController@status')->name('back.coupons.status');
+      Route::resource('coupons', 'Back\CouponsController', ['as' => 'back', 'except' => 'show']);
+    });
+
+
     Route::group(['middleware' => 'permissions:Customer List'], function (){
       //------------ USER ------------
       Route::resource('user', 'Back\UserController', ['as' => 'back', 'except' => ['create', 'store', 'edit']]);
@@ -205,19 +214,24 @@ Route::group(['middleware' => 'adminlocalize'], function (){
       Route::get('/setting/configuration/sms', 'Back\SmsSettingController@sms')->name('back.setting.sms');
       Route::post('/setting/sms/update', 'Back\SmsSettingController@smsUpdate')->name('back.sms.update');
       // ----------- SMS SETTING ---------------//
-      //------------ LANGUAGE SETTING ------------
+      // ------------ LANGUAGE SETTING ------------
       Route::resource('language', 'Back\LanguageController', ['as' => 'back']);
       Route::get('language/status/{id}/{status}', 'Back\LanguageController@status')->name('back.language.status');
-      //------------ SLIDER ------------
+      // ------------ SLIDER ------------
       Route::resource('slider', 'Back\SliderController', ['as' => 'back', 'except' => 'show']);
-      //------------ SERVICE ------------
+      // ------------ SERVICE ------------
       Route::resource('service', 'Back\ServiceController', ['as' => 'back', 'except' => 'show']);
-      // --------- Genarate Sitemap _______
-      Route::get('/sitemap', 'Back\SitemapController@index')->name('admin.sitemap.index');
-      Route::get('/sitemap/add', 'Back\SitemapController@add')->name('admin.sitemap.add');
-      Route::post('/sitemap/store', 'Back\SitemapController@store')->name('admin.sitemap.store');
-      Route::delete('/sitemap/delete/{id}/', 'Back\SitemapController@delete')->name('admin.sitemap.delete');
-      Route::post('/sitemap/download', 'Back\SitemapController@download')->name('admin.sitemap.download');
+      // ------------ Genarate Sitemap ------------
+      // Route::get('sitemap/status/{id}/{status}', 'Back\SitemapController@status')->name('back.sitemap.status');
+      // Route::resource('sitemap', 'Back\SitemapController', ['as' => 'back', 'except' => 'show']);
+      Route::get('/sitemap', 'Back\SitemapController@index')->name('back.sitemap.index');
+      Route::get('/sitemap/add', 'Back\SitemapController@add')->name('back.sitemap.add');
+      Route::post('/sitemap/store', 'Back\SitemapController@store')->name('back.sitemap.store');
+      Route::get('/sitemap/edit/{id}', 'Back\SitemapController@edit')->name('back.sitemap.edit');
+      Route::put('/sitemap/update/{id}', 'Back\SitemapController@update')->name('back.sitemap.update');
+      Route::get('sitemap/status/{id}/{status}', 'Back\SitemapController@status')->name('back.sitemap.status');
+      Route::delete('/sitemap/delete/{id}/', 'Back\SitemapController@delete')->name('back.sitemap.delete');
+      Route::post('/sitemap/download', 'Back\SitemapController@download')->name('back.sitemap.download');
     });
     // --- NUEVO CONTENIDO (INICIO) --- //
     Route::group(['middleware' => 'permissions:Manage Locations'], function (){ 
@@ -336,6 +350,7 @@ Route::group(['middleware' => 'maintainance'], function (){
     Route::get('/removevarscolors/{idprod}', 'Front\FrontendController@removeVarsColorsByIdProd')->name('front.removevarscolors');
     Route::get('/updatevarscolors/{idprod}', 'Front\FrontendController@updateVarsColorByIdProd')->name('front.updatevarscolors');
     Route::post('/getallbrands', 'Front\FrontendController@getAllBrands')->name('getallbrands');
+    Route::post('/applycoupon', 'Front\FrontendController@applycoupon')->name('front.applycoupon');
     // ----------- NUEVO CONTENIDO (FIN)
     Route::get('/campaign/products', 'Front\FrontendController@compaignProduct')->name('front.campaign');
     Route::get('/onsaleproducts/products', 'Front\FrontendController@onsaleproducts')->name('front.onsaleproducts');

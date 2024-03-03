@@ -119,47 +119,48 @@ $(() => {
     });
     */
 
-    $(document).on("click",".add-whatsapp-number",function(){
-      let cMainMenu = $("#wpsnumbsgadd_1Gdhj5-2lks .cCt_wtpsNmbrs__c__m");
-      if(cMainMenu.length > 0){
-        $(`<div class="d-flex cCt_wtpsNmbrs__c__m">
-        <div class="flex-grow-1 cCt_wtpsNmbrs__c__m__i">
-          <div class="form-group">
-            <input type="text" class="form-control" name="wtspnumbers_title[]" placeholder="" value="" required>
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" name="wtspnumbers_text[]" placeholder="" value="" required>
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" name="wtspnumbers_number[]" placeholder="" data-valformat="withspacesforthreenumbers" maxlength="9" value="" required>
-          </div>
+  $(document).on("click",".add-whatsapp-number",function(){
+    let cMainMenu = $("#wpsnumbsgadd_cC1Gdhj5-2lks .cCt_wtpsNmbrs__c__m");
+    console.log(cMainMenu.length);
+    if(cMainMenu.length > 0){
+      $(`<div class="d-flex cCt_wtpsNmbrs__c__m">
+      <div class="flex-grow-1 cCt_wtpsNmbrs__c__m__i">
+        <div class="form-group">
+          <input type="text" class="form-control" name="wtspnumbers_title[]" placeholder="Ingrese el título" value="" required>
         </div>
-        <div class="flex-btn">
-          <button type="button" class="btn btn-danger remove-social">
-            <i class="fa fa-minus"></i>
-          </button>
+        <div class="form-group">
+          <input type="text" class="form-control" name="wtspnumbers_text[]" placeholder="Ingrese el texto" value="" required>
         </div>
-      </div>`).insertAfter(cMainMenu.last());
-      }else{
-        $('#wpsnumbsgadd_1Gdhj5-2lks').html(`<div class="d-flex cCt_wtpsNmbrs__c__m">
-        <div class="flex-grow-1 cCt_wtpsNmbrs__c__m__i">
-          <div class="form-group">
-            <input type="text" class="form-control" name="wtspnumbers_title[]" placeholder="" value="" required>
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" name="wtspnumbers_text[]" placeholder="" value="" required>
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" name="wtspnumbers_number[]" placeholder="" data-valformat="withspacesforthreenumbers" maxlength="9" value="" required>
-          </div>
+        <div class="form-group">
+          <input type="text" class="form-control" name="wtspnumbers_number[]" placeholder="Ingrese el número" data-valformat="withspacesforthreenumbers" maxlength="9" value="" required>
         </div>
-        <div class="flex-btn">
-          <button type="button" class="btn btn-danger remove-social">
-            <i class="fa fa-minus"></i>
-          </button>
+      </div>
+      <div class="flex-btn">
+        <button type="button" class="btn btn-danger remove-social">
+          <i class="fa fa-minus"></i>
+        </button>
+      </div>
+    </div>`).insertAfter(cMainMenu.last());
+    }else{
+      $('#wpsnumbsgadd_cC1Gdhj5-2lks').html(`<div class="d-flex cCt_wtpsNmbrs__c__m">
+      <div class="flex-grow-1 cCt_wtpsNmbrs__c__m__i">
+        <div class="form-group">
+          <input type="text" class="form-control" name="wtspnumbers_title[]" placeholder="Ingrese el título" value="" required>
         </div>
-      </div>`);
-      }
-      
-    });
+        <div class="form-group">
+          <input type="text" class="form-control" name="wtspnumbers_text[]" placeholder="Ingrese el texto" value="" required>
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" name="wtspnumbers_number[]" placeholder="Ingrese el número" data-valformat="withspacesforthreenumbers" maxlength="9" value="" required>
+        </div>
+      </div>
+      <div class="flex-btn">
+        <button type="button" class="btn btn-danger remove-social">
+          <i class="fa fa-minus"></i>
+        </button>
+      </div>
+    </div>`);
+    }
+    
+  });
 });
