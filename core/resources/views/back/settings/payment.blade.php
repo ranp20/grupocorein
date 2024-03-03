@@ -35,7 +35,7 @@
               </div>
             </div>
 						<div class="col-lg-9">
-							<div class="p-5">
+							<div class="p-2">
 								<div class="admin-form">
 									@include('alerts.alerts')
                   <div class="container pl-0 pr-0 ml-0 mr-0 w-100 mw-100">
@@ -43,9 +43,9 @@
                       <div class="tab-content">
                         {{--  
                         <!--
-                        <div id="cod" class="container tab-pane active"><br>
+                        <div id="cod" class="container tab-pane active">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -88,9 +88,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="stripe" class="container tab-pane"><br>
+                        <div id="stripe" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -139,9 +139,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="paypal" class="container tab-pane"><br>
+                        <div id="paypal" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -199,9 +199,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="molly" class="container tab-pane"><br>
+                        <div id="molly" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -250,9 +250,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="paytm" class="container tab-pane"><br>
+                        <div id="paytm" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -310,9 +310,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="razorpay" class="container tab-pane"><br>
+                        <div id="razorpay" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -370,9 +370,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="sslcommerz" class="container tab-pane"><br>
+                        <div id="sslcommerz" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -430,9 +430,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="mercadopago" class="container tab-pane"><br>
+                        <div id="mercadopago" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -490,9 +490,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="authorize" class="container tab-pane"><br>
+                        <div id="authorize" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -550,9 +550,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="paystack" class="container tab-pane"><br>
+                        <div id="paystack" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -610,9 +610,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="flutterwave" class="container tab-pane"><br>
+                        <div id="flutterwave" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-10">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -672,9 +672,9 @@
                         </div>
                         -->
                         --}}
-                        <div id="bank" class="container tab-pane active"><br>
+                        <div id="bank" class="container tab-pane active">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-12">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -717,9 +717,9 @@
                             </div>
                           </div>
                         </div>
-                        <div id="izipay" class="container tab-pane"><br>
+                        <div id="izipay" class="container tab-pane">
                           <div class="row justify-content-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-12">
                               <form action="{{ route('back.setting.payment.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
@@ -747,61 +747,72 @@
                                     <label for="name">{{ __('Enter Name') }} *</label>
                                     <input type="text" class="form-control" name="name" id="name" value="{{$izipay->name}}">
                                   </div>
-                                  {{--
-                                  <!--
-                                  @php
-                                    $chck_mode = $izipayData['check_mode'];
-                                  @endphp
-                                  @if($chck_mode == 1)
-                                    <div class="form-group">
-                                      <div class="mid swtchStyl--Rock">
-                                        <label for="asdasdsdad" class="rocker rocker-small swtchStyl--Rock__label">
-                                          <input type="checkbox" class="swtchStyl--Rock__label__ipt" id="asdasdsdad">
-                                          <span class="switch-left swtchStyl--Rock__label__spanL">Sí</span>
-                                          <span class="switch-right swtchStyl--Rock__label__spanR">No</span>
-                                        </label>
-                                        <span class="swtchStyl--Rock__spanTxt">Modo producción</span>
-                                      </div>
-                                    </div>
-                                    @foreach($izipayData->credentials as $pdata)
-                                    
-                                    {{$pdata}}
-                                    @endforeach
-                                  @endif
-                                  
-                                  @foreach($izipayData as $pkey => $pdata)
-                                    {{$pdata}}
-                                    @if($pkey == 'check_sandbox')
-                                    <div class="form-group  col-xl-4 col-md-6">
-                                      <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" name="pkey[{{ __($pkey) }}]" class="custom-control-input" {{ $pdata == 1  ? 'checked' : '' }} id="{{ $pkey.'-'.$izipay->name }}">
-                                        <label class="custom-control-label" for="{{ $pkey.'-'.$izipay->name }}">{{ __( $izipay->name.' '.ucwords(str_replace('_',' ',$pkey)) ) }}</label>
-                                      </div>
-                                    </div>
-                                    @elseif($pkey == 'check_mode')                                    
-                                    <div class="form-group">
-                                      <div class="mid swtchStyl--Rock">
-                                        <label for="asdasdsdad" class="rocker rocker-small swtchStyl--Rock__label">
-                                          <input type="checkbox" class="swtchStyl--Rock__label__ipt" id="asdasdsdad">
-                                          <span class="switch-left swtchStyl--Rock__label__spanL">Sí</span>
-                                          <span class="switch-right swtchStyl--Rock__label__spanR">No</span>
-                                        </label>
-                                        <span class="swtchStyl--Rock__spanTxt">Modo producción</span>
-                                      </div>
-                                    </div>
-                                    @else
-                                    <div class="form-group">
-                                      <label for="inp-{{ __($pkey) }}">{{ __( $izipay->name.' '.ucwords(str_replace('_',' ',$pkey)) ) }}</label>
-                                      <input type="text" class="form-control" id="inp-{{ __($pkey) }}" name="pkey[{{ __($pkey) }}]"  placeholder="{{ __( $izipay->name.' '.ucwords(str_replace('_',' ',$pkey)) ) }}" value="{{ $pdata }}" >
-                                    </div>
-                                    @endif
-                                  @endforeach
-                                  -->
-                                  --}}
                                   <div class="form-group">
                                     <label for="text">{{ __('Enter Text') }} *</label>
                                     <textarea name="text" id="text" class="form-control " rows="5" placeholder="{{ __('Enter Text') }}">{{ $izipay->text }}</textarea>
                                   </div>
+                                  {{--
+                                  <!--
+                                  @php
+                                    $izipayInfoIndex = array("info" => $izipayData);  
+                                    $chck_mode = $izipayInfoIndex['info']['check_mode'];
+                                    $chck_credentials = $izipayInfoIndex['info']['credentials'];
+                                  @endphp                                  
+                                  @if($chck_mode == 1)
+                                    <div class="form-group">
+                                      <div class="mid swtchStyl--Rock">
+                                      <span class="swtchStyl--Rock__spanTxt pr-2" mod-integration='production' id="txt-sl_chkModAccessMethodPay">Modo producción</span>
+                                        <label for="sl_chkModAccessMethodPay" class="rocker rocker-small swtchStyl--Rock__label">
+                                          <input type="checkbox" class="swtchStyl--Rock__label__ipt" name="check_mode" checked value="{{ $chck_mode }}" id="sl_chkModAccessMethodPay">
+                                          <span class="switch-left swtchStyl--Rock__label__spanL">Sí</span>
+                                          <span class="switch-right swtchStyl--Rock__label__spanR">No</span>
+                                        </label>
+                                        <!-- <span class="swtchStyl--Rock__spanTxt pl-2" mod-integration='production' id="txt-sl_chkModAccessMethodPay">Modo producción</span> -->
+                                      </div>
+                                    </div>
+                                  @else
+                                  <div class="form-group">
+                                    <div class="mid swtchStyl--Rock">
+                                      <span class="swtchStyl--Rock__spanTxt pr-2" mod-integration='test' id="txt-sl_chkModAccessMethodPay">Modo producción</span>
+                                      <label for="sl_chkModAccessMethodPay" class="rocker rocker-small swtchStyl--Rock__label">
+                                        <input type="checkbox" class="swtchStyl--Rock__label__ipt" name="check_mode" value="0" id="sl_chkModAccessMethodPay">
+                                        <span class="switch-left swtchStyl--Rock__label__spanL">Sí</span>
+                                        <span class="switch-right swtchStyl--Rock__label__spanR">No</span>
+                                      </label>
+                                      <!-- <span class="swtchStyl--Rock__spanTxt pl-2" mod-integration='test' id="txt-sl_chkModAccessMethodPay">Modo producción</span> -->
+                                    </div>
+                                  </div>
+                                  @endif
+                                  @foreach($izipayInfoIndex['info']['credentials'] as $pkey => $pdata)
+                                    <div class="c-accessMethodPay__rFa6GBin8 {{ ($chck_mode == 1 && $pkey == 'test') ? 'dc_show' : '' }}" id="{{$pkey}}">
+                                      <div class="form-group">
+                                        <label for="Server_API-REST">{{ __('Server_API-REST') }} - {{ ucfirst($pkey) }} *</label>
+                                        <input type="text" class="form-control" name="Server_API-REST[]" id="Server_API-REST" value="{{$pdata['Server_API-REST']}}" required>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="username">{{ __('Username') }} - {{ ucfirst($pkey) }} *</label>
+                                        <input type="text" class="form-control" name="username[]" id="username" value="{{$pdata['username']}}" required>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="public_key">{{ __('Pulic Key') }} - {{ ucfirst($pkey) }} *</label>
+                                        <input type="text" class="form-control" name="public_key[]" id="public_key" value="{{$pdata['public_key']}}" required>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="token">{{ __('Token') }} - {{ ucfirst($pkey) }} *</label>
+                                        <input type="text" class="form-control" name="token[]" id="token" value="{{$pdata['token']}}" required>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="SHA-256">{{ __('SHA-256') }} - {{ ucfirst($pkey) }} *</label>
+                                        <input type="text" class="form-control" name="SHA-256[]" id="SHA-256" value="{{$pdata['SHA-256']}}" required>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="password">{{ __('Password') }} - {{ ucfirst($pkey) }} *</label>
+                                        <input type="text" class="form-control" name="password[]" id="password" value="{{$pdata['password']}}" required>
+                                      </div>
+                                    </div>
+                                  @endforeach
+                                  -->
+                                  --}}
                                   <input type="hidden" name="unique_keyword" value="izipay">
                                 </div>
                                 <div>
@@ -825,4 +836,5 @@
 	  </div>
   </div>
 </div>
+<script type="text/javascript" src="{{ asset('assets/back/js/payment.js') }}"></script>
 @endsection

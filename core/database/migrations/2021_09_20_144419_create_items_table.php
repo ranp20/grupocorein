@@ -21,7 +21,11 @@ class CreateItemsTable extends Migration
             $table->integer('childcategory_id')->default(0)->nullable();
             $table->integer('tax_id')->nullable();
             $table->integer('sections_id')->nullable();
+            $table->integer('coupon_id')->default(0)->nullable();
             $table->integer('brand_id')->default(0)->nullable();
+            $table->integer('unidad_raiz')->default(0)->nullable();
+            $table->integer('atributo_raiz')->default(0)->nullable();
+            $table->text('atributoraiz_collection')->nullable();
             $table->text('name')->nullable();
             $table->text('slug')->nullable();
             $table->string('sku')->nullable();
@@ -31,10 +35,14 @@ class CreateItemsTable extends Migration
             $table->text('specification_name')->nullable();
             $table->text('specification_description')->nullable();
             $table->tinyInteger('is_specification')->default(0)->nullable();
+            $table->text('specification_collection')->nullable();
             $table->text('details')->nullable();
             $table->string('photo')->nullable();
             $table->double('discount_price')->default(0)->nullable();
             $table->double('previous_price')->default(0)->nullable();
+            $table->string('on_sale_price')->nullable();
+            $table->string('special_offer_price')->nullable();
+            $table->string('store_availables')->nullable();
             $table->integer('stock')->default(0)->nullable();
             $table->text('meta_keywords')->nullable();
             $table->text('meta_description')->nullable();

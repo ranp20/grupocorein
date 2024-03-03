@@ -17,10 +17,46 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 trait IzipayCheckout{
+  public function getUltimateIdGenCode($idgencodelast){
+    if($idgencodelast){
+      $idgencode = str_replace(' ','',$idgencodelast->id_gencode);
+      if($idgencode != "" && $idgencode != null){
+        $lastCodeArr = explode('-', $idgencode);
+        $firstGroup = intval($lastCodeArr[0]);
+        $secondGroup = intval($lastCodeArr[1]);
+        if($secondGroup == 9999999){
+          $firstGroup++;
+          $secondGroup = 1;
+        }else{
+          $secondGroup++;
+        }
+      }else{
+        $firstGroup = 1;
+        $secondGroup = 1;
+      }
+    }else{
+      $firstGroup = 1;
+      $secondGroup = 1;
+    }
+    
+    $firstGroupPadded = str_pad($firstGroup, 3, '0', STR_PAD_LEFT);
+    $secondGroupPadded = str_pad($secondGroup, 7, '0', STR_PAD_LEFT);
+    $code = $firstGroupPadded . '-' . $secondGroupPadded;
+    return $code;
+  }
   public function IzipaySubmit($data){
     $r = "";
+    $ultimateIdGenCode = Order::select('id_gencode')->orderBy('id', 'desc')->take(1)->first();
+    $nextIdGenCode = $this->getUltimateIdGenCode($ultimateIdGenCode);
     if(isset($data['kr-answer']) && $data['kr-answer'] != ""){
       $izzipay_r = json_decode($data['kr-answer'], TRUE);
+      /*
+      echo "<pre>";
+      print_r($izzipay_r);
+      echo "</pre>";
+      exit();
+      */
+      
       $_token = uniqid('fk-srWong'); // TRANSACTION DATE
       $transactionDate = $izzipay_r['serverDate']; // TRANSACTION DATE
       $datetransacString = strtotime($transactionDate);
@@ -59,7 +95,7 @@ trait IzipayCheckout{
       $total = 0;
       $option_price = 0;
       foreach($cart as $key => $item){
-        $total += $item['main_price'] * $item['qty'];
+        $total += $item['price'] * $item['qty'];
         if($item['attribute_price'] != "" && count($item['attribute_price']) > 0){
           $option_price += $item['attribute_price'];
         }
@@ -99,6 +135,7 @@ trait IzipayCheckout{
       $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
       $grand_total += $statePrice;
       $total_amount = PriceHelper::setConvertPrice($grand_total);
+      $orderData['id_gencode'] = $nextIdGenCode;
       $orderData['state'] =  $state_id ? json_encode(State::findOrFail($state_id),true) : null;
       $orderData['cart'] = json_encode($cart,true);
       $orderData['discount'] = json_encode($discount,true);
@@ -114,6 +151,14 @@ trait IzipayCheckout{
       $orderData['currency_value'] = PriceHelper::setCurrencyValue();
       $orderData['payment_status'] = 'Unpaid';
       $orderData['order_status'] = 'Pending';
+
+      /*
+      echo "<pre>";
+      print_r($orderData);
+      echo "</pre>";
+      exit();
+      */
+
       $order = Order::create($orderData);
       TrackOrder::create([
         'title' => 'Pending',

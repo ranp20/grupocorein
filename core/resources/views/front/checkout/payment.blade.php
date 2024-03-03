@@ -74,6 +74,13 @@ $orderIdGenFirst = genCodeRandom();
       </div>
       <div class="card">
         <div class="card-body">
+          <?php
+            /*
+            echo "<pre>";
+            print_r(Session::get('cart'));
+            echo "<pre>";
+            */
+          ?>
           <div class="row cCrd__cTitle">
             <div class="col-9 cCrd__cTitle__cL">
               <h6 class="pb-0 mb-0">{{__('Review Your Order')}} :</h6>
@@ -171,7 +178,7 @@ $orderIdGenFirst = genCodeRandom();
               <div class="col-sm-12">
                 <div class="form-group">
                   <!-- <label for="reg-slOpts__voucher">Tipo de comprobante</label> -->
-                  <select class="form-control" name="reg_slOpts__voucher" id="reg-slOpts__voucher" required>
+                  <select class="form-control" name="reg_slOpts__voucher" id="reg-slOpts__voucher" data-href="{{ route('front.checkout.setdatavoucher') }}" required>
                     <option selected value="">Elige una opción</option>
                     @foreach($selOptsTable as $k => $v)
                     <option value="{{ (isset($selOptVoucher['selOptSelectedId']) && $selOptVoucher['selOptSelectedId'] != '' && $v['id'] == $selOptVoucher['selOptSelectedId']) ? $selOptVoucher['selOptSelectedId'] : $v['id'] }}" {{ (isset($selOptVoucher['selOptSelected']) && $selOptVoucher['selOptSelected'] != '' && $v['id'] == $selOptVoucher['selOptSelectedId']) ? 'selected' : '' }}>{{ (isset($selOptVoucher['selOptSelected']) && $selOptVoucher['selOptSelected'] != '' && $v['name'] == $selOptVoucher['selOptSelected']) ? ucfirst($selOptVoucher['selOptSelected']) : ucfirst($v['name']) }}</option>
@@ -359,7 +366,7 @@ $orderIdGenFirst = genCodeRandom();
                     @if (PriceHelper::CheckDigitalPaymentGateway())
                     @if ($gateway->unique_keyword != 'cod')
                     <div class="single-payment-method">
-                      <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
+                      <a class="text-decoration-none sLinkModal-shw__cPay" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
                         <img class="" src="{{asset('assets/back/images/payment/'.$gateway->photo)}}" alt="{{$gateway->name}}" title="{{$gateway->name}}">
                         <p>{{$gateway->name}}</p>
                       </a>
@@ -367,7 +374,7 @@ $orderIdGenFirst = genCodeRandom();
                     @endif
                     @else
                     <div class="single-payment-method">
-                      <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
+                      <a class="text-decoration-none sLinkModal-shw__cPay" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
                         <img class="" src="{{asset('assets/back/images/payment/'.$gateway->photo)}}" alt="{{$gateway->name}}" title="{{$gateway->name}}">
                         <p>{{$gateway->name}}</p>
                       </a>

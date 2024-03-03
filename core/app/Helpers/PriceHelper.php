@@ -3,6 +3,7 @@ namespace App\Helpers;
 use App\Models\AttributeOption;
 use App\Models\Currency;
 use App\Models\Item;
+use App\Models\Tax;
 use App\Models\PaymentSetting;
 use App\Models\Setting;
 use App\Models\State;
@@ -129,6 +130,11 @@ class PriceHelper{
   }
   public static function grandPrice($item){
     $option_price = 0;
+    $taxes = Tax::where('id',$item->tax_id)->select('id','name','value','status')->first();
+    $taxes = $taxes->value;
+    $taxesformat = $taxes / 100;
+    $price1 = 0;
+    $price2 = 0;
     if(count($item->attributes) > 0){
       foreach($item->attributes as $attr){
         if(isset($attr->options[0])){
@@ -141,8 +147,37 @@ class PriceHelper{
     }else{
       $curr = Currency::where('is_default',1)->first();
     }
-    $price = ($item->discount_price + $option_price);
-    return $price;;
+
+    $sum1 = 0;
+    $sum2 = 0;
+    $sum3 = 0;
+    if($item->sections_id != 0){
+      if($item->sections_id != 0 && $item->sections_id == 1){
+        $sum1 = $item->on_sale_price;
+        $sum2 = $sum1 * $taxesformat;
+        $sum3 = $sum1 + $sum2;
+      }else{
+        $sum1 = $item->special_offer_price;
+        $sum2 = $sum1 * $taxesformat;
+        $sum3 = $sum1 + $sum2;
+      }
+    }else{
+      $sum1 = $item->discount_price + $option_price;
+      $sum2 = $sum1;
+      $sum3 = $sum2;
+    }
+
+    $price = $sum3;
+    /*
+    echo "<pre>";
+    echo $item->sections_id."<br>";
+    echo $item->on_sale_price."<br>";
+    echo $item->special_offer_price."<br>";
+    echo $price;
+    echo "</pre>";
+    exit();
+    */
+    return $price;
   }
   public static function Discount($discount){
     if($discount){
@@ -159,9 +194,9 @@ class PriceHelper{
     $total = 0;
     foreach($cart as $key => $item){
       if($item['attribute_price'] != "" && count($item['attribute_price']) > 0){
-        $total += ($item['main_price'] + $item['attribute_price']) * $item['qty'];
+        $total += ($item['price'] + $item['attribute_price']) * $item['qty'];
       }else{
-        $total += ($item['main_price'] * $item['qty']);
+        $total += ($item['price'] * $item['qty']);
       }
       $cart_total = $total;
       if(Item::where('id',$key)->exists()){
@@ -181,7 +216,20 @@ class PriceHelper{
     if(json_decode($order->discount)){
       $discount = json_decode($order->discount,true);
     }
-    $grand_total = ($cart_total + ($shipping?$shipping['price']:0)) + $total_tax;
+
+    // $grand_total = ($cart_total + ($shipping?$shipping['price']:0)) + $total_tax;
+    $grand_total = ($cart_total + ($shipping?$shipping['price']:0));
+    /*
+    echo $total_tax;
+    echo "<br>";
+    echo $cart_total;
+    print_r($shipping);
+    echo "<pre>";
+    echo "TOTAL: ";
+    print_r($grand_total);
+    echo "<pre>";
+    exit();
+    */
     $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
     $grand_total = $grand_total + $order->state_price;
     $total_amount = round($grand_total * $order->currency_value,2);
@@ -197,7 +245,7 @@ class PriceHelper{
     $total = 0;
     $option_price = 0;
     foreach($cart as $key => $item){
-      $total += $item['main_price'] * $item['qty'];
+      $total += $item['price'] * $item['qty'];
       if($item['attribute_price'] != "" && count($item['attribute_price']) > 0){
         $option_price += $item['attribute_price'];
       }
@@ -230,7 +278,7 @@ class PriceHelper{
     $attribute_price = 0;
     foreach ($cartt as $key => $cart){
       $attribute_price = (isset($cart['attribute_price']) && !empty($cart['attribute_price'])) ? $cart['attribute_price'] : 0;
-      $total =($cart['main_price'] + $total + $attribute_price) * $cart['qty'];
+      $total =($cart['price'] + $total + $attribute_price) * $cart['qty'];
     }
     if(Session::has('currency')){
       $curr = Currency::findOrFail(Session::get('currency'));

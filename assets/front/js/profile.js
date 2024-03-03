@@ -72,4 +72,8 @@ $(() => {
     });
   }
   */
+ // ------------ FORMATO - SÓLO DÍGITOS PARA LOS ELEMENTOS CREADOS DESPUÉS DE CARGADO EL DOM
+  $(document).on("input keyup keypress","input[data-valformat=onlydigits]", function(){
+    $(this).val($(this).val().replace(/[^0-9]/g, ''));
+  });
 });

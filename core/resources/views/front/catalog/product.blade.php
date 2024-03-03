@@ -7,6 +7,113 @@
 <meta name="description" content="{{$item->meta_description}}">
 @endsection
 @section('content')
+  {{--<!-- <script type="text/javascript" src="{{ asset('assets/front/js/plugins/jquery-3.7.0.min.js') }}"></script> --> --}}
+  <link rel="stylesheet" href="{{ asset('node_modules/owl-carousel/owl-carousel/owl.carousel.css')}}">
+  <link rel="stylesheet" href="{{ asset('node_modules/owl-carousel/owl-carousel/owl.theme.css')}}">
+  <script type="text/javascript" src="{{ asset('node_modules/owl-carousel/owl-carousel/owl.carousel.min.js')}}"></script>
+  <script type="text/javascript" src="{{ asset('assets/front/js/extraindex.js') }}"></script>
+  {{--
+  <!-- <script src="{{ asset('node_modules/@fancyapps/ui/dist/fancybox/fancybox.umd.js') }}"></script>   -->
+  <!-- <link rel="stylesheet" href="{{ asset('node_modules/@fancyapps/ui/dist/fancybox/fancybox.css') }}"/> -->
+  --}}
+  
+  <script src="{{ asset('assets/front/js/plugins/magiczoom/magiczoomplus.js') }}"></script>
+  <link rel="stylesheet" href="{{ asset('assets/front/js/plugins/magiczoom/magiczoomplus.css') }}"/>
+
+
+
+<?php
+  $user_id = 0;
+  $millisecondsExpirationDate = 0;
+  $remainingTime = 0;
+  $userCouponDetail = "";
+  $couponapply_totalprice = 0;
+  if(Auth::check()){
+    $user = Auth::user();
+    $user_id = Auth::user()->id;
+  }
+
+  if(count($applycoupon) > 0){
+    $arrCouponApply = json_decode($applycoupon, TRUE);
+    $idcouponapply_user = $arrCouponApply[0]['id_user'];
+    $idcouponapply_prod = $arrCouponApply[0]['id_prod'];
+    $idcouponapply_coupon = $arrCouponApply[0]['id_coupon'];
+    
+    if(count($coupons) > 0){
+      $arrcoupon2 = json_decode($coupons, TRUE);
+      $htmlcoupon = "";
+      // VALIDAR SI ESTE CUPÓN PERTENECE Y SI ESTÁ ACTIVADO EN ESTE PRODUCTO...
+      if($idcouponapply_user == $user_id && $idcouponapply_prod == $item->id && $idcouponapply_coupon == $item->coupon_id){
+        // PROCEDER A DETENER EL CONTADOR Y OCULTAR EL MODAL DE CUPÓN...
+        $remainingTime = 0;
+        $couponapply_totalprice = $arrCouponApply[0]['totalprice'];
+      }else{
+        // PROCEDER A MOSTRAR EL CONTEDOR EN EL MODAL DE CUPÓN...
+        $expiresAtTimer = $arrcoupon2[0]['time_end'];
+        $idcoupon = $arrcoupon2[0]['id'];
+        // Crear un objeto DateTime a partir de la fecha final...
+        $currentDate = new DateTime();
+        $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+        $imgCoupon = ($arrcoupon2[0]['photo'] != "") ? $arrcoupon2[0]['photo'] : ""; // IMAGEN DEL CUPÓN...
+        // Asegurarse que la fecha es válida...
+        if (!$expirationDate) {
+          die('Invalid date format for countdown.');
+        }
+        // Obtener las fechas en milisegundos...
+        $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+        $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+        // Calcular el tiempo restante...
+        $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+        if ($remainingTime <= 0) {
+          $htmlcoupon = "EL CUPÓN HA EXPIRADO...!";
+        } else {
+          $hours = floor($remainingTime / 3600000);
+          $minutes = floor(($remainingTime % 3600000) / 60000);
+          $seconds = floor(($remainingTime % 60000) / 1000);
+          $htmlcoupon = "TIEMPO RESTANTE: {$hours}h {$minutes}m {$seconds}s";
+        }
+      }
+    }else{
+      $remainingTime = 0;
+    }
+  }else{
+    if(count($coupons) > 0){
+      $arrcoupon2 = json_decode($coupons, TRUE);
+      $htmlcoupon = "";
+      // echo "ESTE PRODUCTO AÚN NO TIENE CUPÓN ACTIVADO";
+      // PROCEDER A MOSTRAR EL CONTEDOR EN EL MODAL DE CUPÓN...
+      $expiresAtTimer = $arrcoupon2[0]['time_end'];
+      $idcoupon = $arrcoupon2[0]['id'];
+      // Crear un objeto DateTime a partir de la fecha final...
+      $currentDate = new DateTime();
+      $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+      $imgCoupon = ($arrcoupon2[0]['photo'] != "") ? $arrcoupon2[0]['photo'] : ""; // IMAGEN DEL CUPÓN...
+      // Asegurarse que la fecha es válida...
+      if (!$expirationDate) {
+        die('Invalid date format for countdown.');
+      }
+      // Obtener las fechas en milisegundos...
+      $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+      $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+      // Calcular el tiempo restante...
+      $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+      if ($remainingTime <= 0) {
+        $htmlcoupon = "EL CUPÓN HA EXPIRADO...!";
+      } else {
+        $hours = floor($remainingTime / 3600000);
+        $minutes = floor(($remainingTime % 3600000) / 60000);
+        $seconds = floor(($remainingTime % 60000) / 1000);
+        $htmlcoupon = "TIEMPO RESTANTE: {$hours}h {$minutes}m {$seconds}s";
+      }
+    }else{
+      $remainingTime = 0;
+    }
+  }
+
+?>
+
+
+
 <div class="page-title">
   <div class="container">
     <div class="row">
@@ -54,12 +161,116 @@
         @if($item->previous_price && $item->previous_price !=0)
         <div class="product-badge bg-goldenrod  ppp-t"> -{{PriceHelper::DiscountPercentage($item)}}</div>
         @endif
+        {{--
+        <!--
         <div class="product-thumbnails insize">
-          <div class="product-details-slider owl-carousel" >
-            <div class="item"><img src="{{asset('assets/images/'.$item->photo)}}" alt="zoom"  /></div>
-            @foreach ($galleries as $key => $gallery)
-            <div class="item"><img src="{{asset('assets/images/'.$gallery->photo)}}" alt="zoom"  /></div>
+          <div class="product-details-slider owl-carousel">
+            <?php
+              //Combiar arrays de Foto principal y fotos de galería
+              $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
+              $urlBaseDomain = $actual_link . "/grupocorein/"; // LOCAL
+              $urlBaseDomain = $actual_link . "/"; // SERVIDOR
+              // $imgPathFileFinal = $pathProductDetailsPhoto;
+              // if(file_exists($pathProductDetailsPhoto)){
+              //   $imgPathFileFinal = $pathProductDetailsPhoto;
+              //   echo "Existe la imagen";
+              // }else{
+              //   $imgPathFileFinal = $pathProductDetailsPhotoDefault;
+              //   echo "NO Existe la imagen";
+              // }
+              $arrCollectionGalleries = json_decode($galleries, TRUE);
+              array_unshift($arrCollectionGalleries, ['photo' => $item->photo]);
+              // $arrGalleryProduct = json_encode($arrCollectionGalleries, TRUE);
+              
+              $indexedArray = array();
+              foreach ($arrCollectionGalleries as $key => $value) {
+                $indexedArray[] = $value;
+              }
+            ?>
+            
+             <div class="item cntAds--i__itm--cInfo">
+              <figure class="ads_dashboard" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+                <a href="{{ $imgPathFileFinal }}" width="100" height="100" data-index="0" data-fancybox="gallery">
+                  <img src="{{ $imgPathFileFinal }}" alt="zoom"/>
+                </a>
+              </figure>
+            </div> 
+            
+            @foreach ($indexedArray as $key => $gallery)
+            <?php
+              // $pathProductDetailsGallery = $urlBaseDomain.'assets/images/'.$gallery['photo'];
+              // $pathProductDetailsGalleryDefault = $urlBaseDomain.'assets/images/Utilities/default_product.png';
+              $pathProductDetailsGallery = $urlBaseDomain.'assets/images/'.$gallery['photo'];
+              $pathProductDetailsGalleryDefault = $urlBaseDomain.'assets/images/Utilities/default_product.png';
+              $imgPathGalleryFileFinal = "";
+              // if(file_exists( $pathProductDetailsGallery )){
+              //   $imgPathGalleryFileFinal = $pathProductDetailsGallery;
+              // }else{
+                $imgPathGalleryFileFinal = $pathProductDetailsGallery;
+              // }
+              $imgGallery = $imgPathGalleryFileFinal;
+              // $imgUrlGallery = asset($imgPathGalleryFileFinal);
+              // $imgGallery = getimagesize($imgUrlGallery);
+              // Leer información de la imagen usando exif_read_data...
+              // $imgUrlGallery = exif_read_data($imgPathGalleryFileFinal);
+              // // Extraer la información relevante...
+              // $widthGalleryPhoto = $imgUrlGallery['COMPUTED']['Width'];
+              // $heightGalleryPhoto = $imgUrlGallery['COMPUTED']['Height'];
+              // $mime = $imgUrlGallery['MimeType'];
+              // // $anchoGallery = $imgGallery[0];
+              // // $altoGallery = $imgGallery[1];
+              // $anchoGallery = $widthGalleryPhoto;
+              // $altoGallery = $heightGalleryPhoto;
+            ?>
+            <div class="item cntAds--i__itm--cInfo">
+              <figure class="ads_dashboard" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+                <a href="{{ $imgGallery }}" width="100" height="100" data-index="0" data-fancybox="gallery">
+                  <img src="{{ $imgGallery }}" alt="zoom"/>
+                </a>
+              </figure>
+            </div>
             @endforeach
+          </div>
+        </div>
+        -->
+        --}}
+        <div class="product-thumbnails insize">
+          <div class="app-demo">
+            <?php
+              //Combiar arrays de Foto principal y fotos de galería
+              $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
+              $urlBaseDomain = $actual_link . "/grupocorein/"; // LOCAL
+              // $urlBaseDomain = $actual_link . "/"; // SERVIDOR
+              $urlFirstPhoto = $urlBaseDomain.'assets/images/'.$item->photo;
+              $urlFirstPhotoDefault = $urlBaseDomain.'assets/images/Utilities/default_product.png';
+            ?>
+            <a href="{{ $urlFirstPhoto }}" class="MagicZoom" id="photo-product" data-options="cssClass: mz-show-arrows;">
+              <img src="{{ $urlFirstPhoto }}">
+            </a>
+            <div class="cGalleryScroll">
+              <div class="cGalleryScroll__c">
+                <?php
+                  $arrCollectionGalleries = json_decode($galleries, TRUE);
+                  array_unshift($arrCollectionGalleries, ['photo' => $item->photo]);                  
+                  $indexedArray = array();
+                  foreach ($arrCollectionGalleries as $key => $value) {
+                    $indexedArray[] = $value;
+                  }
+                ?>
+                @foreach ($indexedArray as $key => $gallery)
+                  <?php
+                    $pathProductDetailsGallery = $urlBaseDomain.'assets/images/'.$gallery['photo'];
+                    $pathProductDetailsGalleryDefault = $urlBaseDomain.'assets/images/Utilities/default_product.png';
+                    $imgGallery = $pathProductDetailsGallery;
+                  ?>
+                  <a data-zoom-id="photo-product" class="item" href="{{ $imgGallery }}" data-image="{{ $imgGallery }}">
+                    <img src="{{ $imgGallery }}">
+                  </a>
+                @endforeach
+              </div>
+              <button class="scroll-btn prev"></button>
+              <button class="scroll-btn next"></button>
+            </div>
           </div>
         </div>
       </div>
@@ -82,19 +293,147 @@
       return $html;
     }
     @endphp
+    @php
+      $TaxesAll = DB::table('taxes')->get();
+      $sumFinalPrice1 = 0;
+      $sumFinalPrice2 = 0;
+      $incIGV = $TaxesAll[0]->value;
+      $sinIGV = $TaxesAll[1]->value;
+      $incIGV_format = $incIGV / 100;
+      $sinIGV_format = $sinIGV;
+    @endphp
     <div class="col-xxl-7 col-lg-6 col-md-6">
       <div class="details-page-top-right-content d-flex align-items-center">
         <div class="div w-100">
           <input type="hidden" id="item_id" value="{{$item->id}}">
-          <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($item->discount_price)}}">
+
+
+
+
+
+
+          @if(isset($item->sections_id) && $item->sections_id != 0)
+            @if($item->sections_id == 1)
+              @if($item->on_sale_price != 0 && $item->on_sale_price != "")
+                @if(isset($item->tax_id) && $item->tax_id == 1)
+                  @php
+                    $sumFinalPrice1 = $item->on_sale_price * $incIGV_format;
+                    $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
+                  @endphp
+                  @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+                    <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($couponapply_totalprice)}}">
+                  @else
+                    <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($sumFinalPrice2)}}">
+                  @endif
+                @else
+                  @php
+                    $sumFinalPrice1 = $item->special_offer_price;
+                    $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                  @endphp
+                  @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+                    <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($couponapply_totalprice)}}">
+                  @else
+                    <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($sumFinalPrice2)}}">
+                  @endif
+                @endif
+              @else
+                @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+                  <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($couponapply_totalprice)}}">
+                @else
+                  <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($item->discount_price)}}">
+                @endif
+              @endif
+            @endif
+          @else
+            @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+              <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($couponapply_totalprice)}}">
+            @else
+              <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($item->discount_price)}}">
+            @endif
+          @endif
+
+
+
+
+          
           <input type="hidden" value="{{PriceHelper::setCurrencySign()}}" id="set_currency">
           <input type="hidden" value="{{PriceHelper::setCurrencyValue()}}" id="set_currency_val">
           <input type="hidden" value="{{$setting->currency_direction}}" id="currency_direction">
+          
+          <input type="hidden" value="{{ $item->sku }}" id="prod-crr_sku">
+          <input type="hidden" class="d-non hdd-control non-visvalipt h-alternative-shwnon s-fkeynone-step" f-hidden="aria-hidden" value="" name="set_colr-code" id="set_colr-code">
+          <input type="hidden" class="d-non hdd-control non-visvalipt h-alternative-shwnon s-fkeynone-step" f-hidden="aria-hidden" value="" name="set_colr-name" id="set_colr-name">
+          <?php
+          // -------------- RECORRER LOS COLORES ASOCIADOS AL PRODUCTO
+          $arrColorAdd = [];
+          $ColorAll = [];
+          $ColorAll2 = [];
+          if(isset($item->atributoraiz_collection) && $item->atributoraiz_collection != ""){
+            $colorsAvailables = json_decode($item->atributoraiz_collection, TRUE);
+            if(count($colorsAvailables) > 0){
+              $colorsAvailables_list = $colorsAvailables['atributoraiz_collection']['color'];
+            
+              foreach($colorsAvailables_list as $key => $val){
+                $arrColorAdd[$key]['code'] = $val['code'];
+                $arrColorAdd[$key]['name'] = $val['name'];
+              }
+            }
+          }
+          $countColors = 0;
+          $arrDataProd = [];
+          if(Session::has('cart') && count(Session::get('cart')) > 0){
+            $cart = Session::get('cart');
+            foreach($cart as $k => $v){
+              $idItem = str_replace('-','',$k);
+              if($item->id == $idItem){
+                $arrDataProd = $v;
+              }
+            }
+          }
+          $arrColorSelProd = [];
+          if(count($arrDataProd) > 0){
+            if(isset($arrDataProd['attribute_collection'])){
+              $arrCountDataProd = json_decode($arrDataProd['attribute_collection'], TRUE);
+              if(isset($arrCountDataProd['atributoraiz_collection'])){
+                if(isset($arrCountDataProd['atributoraiz_collection']['color'])){
+                  $arrColorSelProd['color_code'] = $arrCountDataProd['atributoraiz_collection']['color']['code'];
+                  $arrColorSelProd['color_name'] = $arrCountDataProd['atributoraiz_collection']['color']['name'];
+                }
+              }
+            }
+          }
+
+          // echo "<pre>";
+          // print_r($arrDataProd);
+          // echo "</pre>";
+          /*
+          echo "<pre>";
+          print_r(Session::get('cart'));
+          echo "</pre>";
+          */
+          ?>
+          @if($item->atributoraiz_collection != "")
+            @if(count($arrColorSelProd) > 0)
+              @foreach($arrColorAdd as $k => $v)
+                @if($v['code'] != null && $v['code'] != "")
+                  @if($arrColorSelProd['color_name'] == $v['name'])
+                  <p class="mb-1">
+                    <span><strong>Código: </strong></span>
+                    <span id="aHJ8K4__98Gas">{{ $arrColorSelProd['color_code'] }}</span>
+                  </p>
+                  @endif
+                @endif
+              @endforeach
+            @else
+            <p class="mb-1">
+              <span><strong>Código: </strong></span>
+              <span id="aHJ8K4__98Gas">{{$item->sku}}</span>
+            </p>
+            @endif
+          @endif
+          
           <h4 class="mb-2 p-title-main">{{$item->name}}</h4>
           <div class="mb-3">
-            <div class="rating-stars d-inline-block gmr-3">
-            {!!renderStarRating($item->reviews->avg('rating'))!!}
-            </div>
             @if ($item->is_stock())
               <span class="text-success  d-inline-block">{{__('In Stock')}}</span>
             @else
@@ -109,11 +448,122 @@
           @endif
           <span class="h3 d-block price-area">
           @if ($item->previous_price != 0)
-            <small class="d-inline-block"><del>{{PriceHelper::setPreviousPrice($item->previous_price)}}</del></small><span style="font-size: 13px;margin-left: 5px;">Inc. IGV</span>
+            <small class="d-inline-block"><del>{{PriceHelper::setPreviousPrice($item->previous_price)}}</del></small>
           @endif
-          <span id="main_price" class="main-price">{{PriceHelper::grandCurrencyPrice($item)}}</span><span style="font-size: 13px;margin-left: 5px;">Inc. IGV</span>
+          
+            @if(isset($item->sections_id) && $item->sections_id != 0)
+              @if($item->sections_id == 1)
+                @if($item->on_sale_price != 0 && $item->on_sale_price != "")
+                  @if(isset($item->tax_id) && $item->tax_id == 1)
+                    @php
+                      $sumFinalPrice1 = $item->on_sale_price * $incIGV_format;
+                      $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
+                    @endphp
+                    @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
+                    @else
+                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                    @endif
+                  @else
+                    @php
+                      $sumFinalPrice1 = $item->on_sale_price;
+                      $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
+                    @endphp
+                    @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
+                    @else
+                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                    @endif
+                  @endif
+                @else
+                  @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+                    <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
+                  @else
+                    <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
+                  @endif
+                @endif
+              @else
+                @if($item->special_offer_price != 0 && $item->special_offer_price != "")
+                  @if(isset($item->tax_id) && $item->tax_id == 1)
+                    @php
+                      $sumFinalPrice1 = $item->special_offer_price * $incIGV_format;
+                      $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                    @endphp
+                    @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
+                    @else
+                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                    @endif
+                  @else
+                    @php
+                      $sumFinalPrice1 = $item->special_offer_price;
+                      $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                    @endphp
+                    @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
+                    @else
+                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                    @endif
+                  @endif
+                @else
+                  @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+                    <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
+                  @else
+                    <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
+                  @endif
+                @endif
+              @endif
+            @else
+              @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
+                <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
+              @else
+                <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
+              @endif
+            @endif
+            @if(isset($item->tax_id) && $item->tax_id == 1)
+            <span style="font-size: 13px;margin-left: 5px;">Inc. IGV</span>
+            @else
+            <span style="font-size: 13px;margin-left: 5px;">Sin IGV</span>
+            @endif
           </span>
-          <p class="text-muted">{{$item->sort_details}} <a href="#details" class="scroll-to">{{__('Read more')}}</a></p>
+          <p class="text-muted">{{$item->sort_details}} <a href="#details" class="txtd-underline scroll-to">{{__('Read more')}}</a></p>
+          @if($item->atributoraiz_collection != "")
+            @php
+              $colorsAvailables2 = json_decode($item->atributoraiz_collection, TRUE);
+            @endphp
+            @if(count($colorsAvailables2) > 0)
+            <div>
+              <p><strong>Número</strong></p>
+              <div>
+                <ul class="variable-items-wrapper color-variable-wrapper" data-attribute_name="attribute_pa_numero">                
+                  @foreach($arrColorAdd as $k => $v)
+                    @if($v['code'] != null && $v['code'] != "")
+                    <li data-toggle="tooltip" data-placement="bottom" title="{{ $countColors }}" data-original-title="{{ $countColors }}" data-codeprod="{{ $v['code'] }}" data-nameprod="{{ $v['name'] }}" class="variable-item red-tooltip {{ (count($arrColorSelProd) > 0 && $arrColorSelProd['color_name'] == $v['name']) ? 'tggle-select' : '' }}" data-value="{{ $countColors }}" role="button" tabindex="{{ $countColors }}" data-href="{{ route('front.updatevarscolors',$item->id) }}" data-getsend="{{ $item->id }}">
+                      <span class="variable-item-span variable-item-span-color" style="background-color:{{ $v['name'] }};"></span>
+                    </li>
+                    @endif
+                    <?php
+                    $countColors++;
+                    ?>
+                  @endforeach
+                </ul>
+                @if(count($arrColorSelProd) > 0)
+                <div id="rst_varscolors">
+                  <a class="rst_varscolors__link" href="javascript:void(0);" data-href="{{ route('front.removevarscolors',$item->id) }}" data-getsend="{{ $item->id }}">Limpiar</a>
+                </div>
+                @else
+                <div id="rst_varscolors"></div>
+                @endif
+                <?php
+                // $cartsdasd = Session::get('cart');
+                // // echo "<pre>";
+                // // print_r($cartsdasd);
+                // // echo "</pre>";
+                ?>
+              </div>
+            </div>
+            @endif
+          @endif
           <div class="row margin-top-1x">
             @foreach($attributes as $attribute)
             @if($attribute->options->count() != 0)
@@ -134,13 +584,13 @@
             <div class="col-sm-12 cCtActions__Prd">
               @if ($item->item_type == 'normal')
               <div class="qtySelector product-quantity">
-                <span class="decreaseQty subclick"><i class="fas fa-minus "></i></span>
+                <span class="decreaseQty subclick"><i class="fas fa-minus"></i></span>
                 <input type="text" class="qtyValue cart-amount" value="1">
                 <span class="increaseQty addclick"><i class="fas fa-plus"></i></span>
                 <input type="hidden" value="3333" id="current_stock">
               </div>
               @endif
-              <div class="p-action-button">
+              <div class="p-action-button" style="display: flex;align-items:center;justify-content:flex-start;flex-flow:wrap;">
                 @if ($item->item_type != 'affiliate')
                   @if ($item->is_stock())
                   <button class="btn btn-primary m-0 a-t-c-mr" id="add_to_cart"><i class="icon-bag"></i><span>{{ __('Add to Cart') }}</span></button>  
@@ -149,420 +599,186 @@
                   @endif
                 @else
                 @endif
-                  <a href="https://api.whatsapp.com/send?phone=51{{$setting->footer_phone}}&text=Solicito información sobre: {{route('front.product',$item->slug)}}" target="_blank" ><img src="../assets/images/boton-pedir-por-whatsapp.png" class="boton-as"></a>
+                <div class="cWtspBtnCtc">
+                  <a title="Solicitar información" href="javascript:void(0);" target="_blank" class="cWtspBtnCtc__pLink">
+                    <img src="../assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" width="100" height="100" decoding="sync">
+                  </a>
+                  <div class="cWtspBtnCtc__pSubM">
+                    
+                  @if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers))
+                  <?php
+                      $whatsappCollection = json_decode($setting->whatsapp_numbers, TRUE);
+                      $ArrwpsNumbers = "";
+                      $wps_inproducts = [];
+                      if(isset($whatsappCollection['whatsapp_numbers'])){
+                        $ArrwpsNumbers = $whatsappCollection['whatsapp_numbers'];
+                        if(isset($ArrwpsNumbers['in_product'])){
+                          $wps_inproducts = $ArrwpsNumbers['in_product'];
+                        }
+                      }
+                    ?>
+                    <ul class="cWtspBtnCtc__pSubM__m">
+                      @foreach ($wps_inproducts as $k => $v)
+                      <li class="cWtspBtnCtc__pSubM__m__i">
+                        <a title="{{ $v['title'] }}" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51{{ $v['number'] }}&text={{ $v['text'] }}" target="_blank">
+                          <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
+                          <span>{{ $v['title'] }}</span>
+                        </a>
+                      </li>
+                      @endforeach
+                    </ul>
+                    @else
+                    <p>No hay información</p>
+                    @endif
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div class="div">
-            <div id="closed"></div>
-            <p style="border: 1px solid #003399 !important;border-radius: 5px;padding: 13px;"><img src="{{route('front.index')}}/assets/images/1669243396carro.png"> Disponible despacho a domicilio <a href="#popup1" class="popup1-link">Calcular despacho</a></p>
-            <div class="popup1-wrapper" id="popup1">
-              <div class="popup1-container">
-                <center>
-                  <div class="store-content">
-                    <fieldset class="fieldset address hide">
-                      <div class="pro_title-modal">
-                        <span>Calcular despacho</span>
-                      </div>
-                      <legend class="legend"><span>Selecciona tu localidad  donde desees que se envie tu producto</span></legend><br>
-                      <input type="hidden" id="create-address" name="create_address" value="1">
-                      <div class="field country required hide" style="position: absolute;visibility: hidden;">
-                        <label for="country" class="label">
-                          <span>Pais</span>
-                        </label>
-                        <div class="control">
-                          <select name="country_id" id="country" class="required-entry" title="País" data-validate="{'validate-select':true}">
-                            <option value=""></option>
-                            <option value="AF">Afganistán</option>
-                            <option value="AL">Albania</option>
-                            <option value="DE">Alemania</option>
-                            <option value="AD">Andorra</option>
-                            <option value="AO">Angola</option>
-                            <option value="AI">Anguila</option>
-                            <option value="AQ">Antártida</option>
-                            <option value="AG">Antigua y Barbuda</option>
-                            <option value="SA">Arabia Saudí</option>
-                            <option value="DZ">Argelia</option>
-                            <option value="AR">Argentina</option>
-                            <option value="AM">Armenia</option>
-                            <option value="AW">Aruba</option>
-                            <option value="AU">Australia</option>
-                            <option value="AT">Austria</option>
-                            <option value="AZ">Azerbaiyán</option>
-                            <option value="BS">Bahamas</option>
-                            <option value="BD">Bangladés</option>
-                            <option value="BB">Barbados</option>
-                            <option value="BH">Baréin</option>
-                            <option value="BE">Bélgica</option>
-                            <option value="BZ">Belice</option>
-                            <option value="BJ">Benín</option>
-                            <option value="BM">Bermudas</option>
-                            <option value="BY">Bielorrusia</option>
-                            <option value="BO">Bolivia</option>
-                            <option value="BA">Bosnia y Herzegovina</option>
-                            <option value="BW">Botsuana</option>
-                            <option value="BR">Brasil</option>
-                            <option value="BN">Brunéi</option>
-                            <option value="BG">Bulgaria</option>
-                            <option value="BF">Burkina Faso</option>
-                            <option value="BI">Burundi</option>
-                            <option value="BT">Bután</option>
-                            <option value="CV">Cabo Verde</option>
-                            <option value="KH">Camboya</option>
-                            <option value="CM">Camerún</option>
-                            <option value="CA">Canadá</option>
-                            <option value="BQ">Caribe neerlandés</option>
-                            <option value="QA">Catar</option>
-                            <option value="TD">Chad</option>
-                            <option value="CZ">Chequia</option>
-                            <option value="CL">Chile</option>
-                            <option value="CN">China</option>
-                            <option value="CY">Chipre</option>
-                            <option value="VA">Ciudad del Vaticano</option>
-                            <option value="CO">Colombia</option>
-                            <option value="KM">Comoras</option>
-                            <option value="CG">Congo</option>
-                            <option value="KP">Corea del Norte</option>
-                            <option value="KR">Corea del Sur</option>
-                            <option value="CR">Costa Rica</option>
-                            <option value="CI">Côte d’Ivoire</option>
-                            <option value="HR">Croacia</option>
-                            <option value="CU">Cuba</option>
-                            <option value="CW">Curazao</option>
-                            <option value="DK">Dinamarca</option>
-                            <option value="DM">Dominica</option>
-                            <option value="EC">Ecuador</option>
-                            <option value="EG">Egipto</option>
-                            <option value="SV">El Salvador</option>
-                            <option value="AE">Emiratos Árabes Unidos</option>
-                            <option value="ER">Eritrea</option>
-                            <option value="SK">Eslovaquia</option>
-                            <option value="SI">Eslovenia</option>
-                            <option value="ES">España</option>
-                            <option value="US">Estados Unidos</option>
-                            <option value="EE">Estonia</option>
-                            <option value="SZ">Esuatini</option>
-                            <option value="ET">Etiopía</option>
-                            <option value="PH">Filipinas</option>
-                            <option value="FI">Finlandia</option>
-                            <option value="FJ">Fiyi</option>
-                            <option value="FR">Francia</option>
-                            <option value="GA">Gabón</option>
-                            <option value="GM">Gambia</option>
-                            <option value="GE">Georgia</option>
-                            <option value="GH">Ghana</option>
-                            <option value="GI">Gibraltar</option>
-                            <option value="GD">Granada</option>
-                            <option value="GR">Grecia</option>
-                            <option value="GL">Groenlandia</option>
-                            <option value="GP">Guadalupe</option>
-                            <option value="GU">Guam</option>
-                            <option value="GT">Guatemala</option>
-                            <option value="GF">Guayana Francesa</option>
-                            <option value="GG">Guernesey</option>
-                            <option value="GN">Guinea</option>
-                            <option value="GW">Guinea-Bisáu</option>
-                            <option value="GQ">Guinea Ecuatorial</option>
-                            <option value="GY">Guyana</option>
-                            <option value="HT">Haití</option>
-                            <option value="HN">Honduras</option>
-                            <option value="HU">Hungría</option>
-                            <option value="IN">India</option>
-                            <option value="ID">Indonesia</option>
-                            <option value="IQ">Irak</option>
-                            <option value="IR">Irán</option>
-                            <option value="IE">Irlanda</option>
-                            <option value="BV">Isla Bouvet</option>
-                            <option value="IM">Isla de Man</option>
-                            <option value="CX">Isla de Navidad</option>
-                            <option value="IS">Islandia</option>
-                            <option value="NF">Isla Norfolk</option>
-                            <option value="AX">Islas Aland</option>
-                            <option value="KY">Islas Caimán</option>
-                            <option value="CC">Islas Cocos</option>
-                            <option value="CK">Islas Cook</option>
-                            <option value="FO">Islas Feroe</option>
-                            <option value="GS">Islas Georgia del Sur y Sandwich del Sur</option>
-                            <option value="HM">Islas Heard y McDonald</option>
-                            <option value="FK">Islas Malvinas</option>
-                            <option value="MP">Islas Marianas del Norte</option>
-                            <option value="MH">Islas Marshall</option>
-                            <option value="UM">Islas menores alejadas de EE. UU.</option>
-                            <option value="PN">Islas Pitcairn</option>
-                            <option value="SB">Islas Salomón</option>
-                            <option value="TC">Islas Turcas y Caicos</option>
-                            <option value="VG">Islas Vírgenes Británicas</option>
-                            <option value="VI">Islas Vírgenes de EE. UU.</option>
-                            <option value="IL">Israel</option>
-                            <option value="IT">Italia</option>
-                            <option value="JM">Jamaica</option>
-                            <option value="JP">Japón</option>
-                            <option value="JE">Jersey</option>
-                            <option value="JO">Jordania</option>
-                            <option value="KZ">Kazajistán</option>
-                            <option value="KE">Kenia</option>
-                            <option value="KG">Kirguistán</option>
-                            <option value="KI">Kiribati</option>
-                            <option value="XK">Kosovo</option>
-                            <option value="KW">Kuwait</option>
-                            <option value="LA">Laos</option>
-                            <option value="LS">Lesoto</option>
-                            <option value="LV">Letonia</option>
-                            <option value="LB">Líbano</option>
-                            <option value="LR">Liberia</option>
-                            <option value="LY">Libia</option>
-                            <option value="LI">Liechtenstein</option>
-                            <option value="LT">Lituania</option>
-                            <option value="LU">Luxemburgo</option>
-                            <option value="MK">Macedonia del Norte</option>
-                            <option value="MG">Madagascar</option>
-                            <option value="MY">Malasia</option>
-                            <option value="MW">Malaui</option>
-                            <option value="MV">Maldivas</option>
-                            <option value="ML">Mali</option>
-                            <option value="MT">Malta</option>
-                            <option value="MA">Marruecos</option>
-                            <option value="MQ">Martinica</option>
-                            <option value="MU">Mauricio</option>
-                            <option value="MR">Mauritania</option>
-                            <option value="YT">Mayotte</option>
-                            <option value="MX">México</option>
-                            <option value="FM">Micronesia</option>
-                            <option value="MD">Moldavia</option>
-                            <option value="MC">Mónaco</option>
-                            <option value="MN">Mongolia</option>
-                            <option value="ME">Montenegro</option>
-                            <option value="MS">Montserrat</option>
-                            <option value="MZ">Mozambique</option>
-                            <option value="MM">Myanmar (Birmania)</option>
-                            <option value="NA">Namibia</option>
-                            <option value="NR">Nauru</option>
-                            <option value="NP">Nepal</option>
-                            <option value="NI">Nicaragua</option>
-                            <option value="NE">Níger</option>
-                            <option value="NG">Nigeria</option>
-                            <option value="NU">Niue</option>
-                            <option value="NO">Noruega</option>
-                            <option value="NC">Nueva Caledonia</option>
-                            <option value="NZ">Nueva Zelanda</option>
-                            <option value="OM">Omán</option>
-                            <option value="NL">Países Bajos</option>
-                            <option value="PK">Pakistán</option>
-                            <option value="PW">Palaos</option>
-                            <option value="PA">Panamá</option>
-                            <option value="PG">Papúa Nueva Guinea</option>
-                            <option value="PY">Paraguay</option>
-                            <option value="PE" selected="selected">Perú</option>
-                            <option value="PF">Polinesia Francesa</option>
-                            <option value="PL">Polonia</option>
-                            <option value="PT">Portugal</option>
-                            <option value="HK">RAE de Hong Kong (China)</option>
-                            <option value="MO">RAE de Macao (China)</option>
-                            <option value="GB">Reino Unido</option>
-                            <option value="CF">República Centroafricana</option>
-                            <option value="CD">República Democrática del Congo</option>
-                            <option value="DO">República Dominicana</option>
-                            <option value="RE">Reunión</option>
-                            <option value="RW">Ruanda</option>
-                            <option value="RO">Rumanía</option>
-                            <option value="RU">Rusia</option>
-                            <option value="EH">Sáhara Occidental</option>
-                            <option value="WS">Samoa</option>
-                            <option value="AS">Samoa Americana</option>
-                            <option value="BL">San Bartolomé</option>
-                            <option value="KN">San Cristóbal y Nieves</option>
-                            <option value="SM">San Marino</option>
-                            <option value="MF">San Martín</option>
-                            <option value="PM">San Pedro y Miquelón</option>
-                            <option value="SH">Santa Elena</option>
-                            <option value="LC">Santa Lucía</option>
-                            <option value="ST">Santo Tomé y Príncipe</option>
-                            <option value="VC">San Vicente y las Granadinas</option>
-                            <option value="SN">Senegal</option>
-                            <option value="RS">Serbia</option>
-                            <option value="SC">Seychelles</option>
-                            <option value="SL">Sierra Leona</option>
-                            <option value="SG">Singapur</option>
-                            <option value="SX">Sint Maarten</option>
-                            <option value="SY">Siria</option>
-                            <option value="SO">Somalia</option>
-                            <option value="LK">Sri Lanka</option>
-                            <option value="ZA">Sudáfrica</option>
-                            <option value="SD">Sudán</option>
-                            <option value="SE">Suecia</option>
-                            <option value="CH">Suiza</option>
-                            <option value="SR">Surinam</option>
-                            <option value="SJ">Svalbard y Jan Mayen</option>
-                            <option value="TH">Tailandia</option>
-                            <option value="TW">Taiwán</option>
-                            <option value="TZ">Tanzania</option>
-                            <option value="TJ">Tayikistán</option>
-                            <option value="IO">Territorio Británico del Océano Índico</option>
-                            <option value="TF">Territorios Australes Franceses</option>
-                            <option value="PS">Territorios Palestinos</option>
-                            <option value="TL">Timor-Leste</option>
-                            <option value="TG">Togo</option>
-                            <option value="TK">Tokelau</option>
-                            <option value="TO">Tonga</option>
-                            <option value="TT">Trinidad y Tobago</option>
-                            <option value="TN">Túnez</option>
-                            <option value="TM">Turkmenistán</option>
-                            <option value="TR">Turquía</option>
-                            <option value="TV">Tuvalu</option>
-                            <option value="UA">Ucrania</option>
-                            <option value="UG">Uganda</option>
-                            <option value="UY">Uruguay</option>
-                            <option value="UZ">Uzbekistán</option>
-                            <option value="VU">Vanuatu</option>
-                            <option value="VE">Venezuela</option>
-                            <option value="VN">Vietnam</option>
-                            <option value="WF">Wallis y Futuna</option>
-                            <option value="YE">Yemen</option>
-                            <option value="DJ">Yibuti</option>
-                            <option value="ZM">Zambia</option>
-                            <option value="ZW">Zimbabue</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="field region">
-                        <label for="region_id" class="label">
-                          <span>Departamento</span>
-                        </label>
-                        <div class="control">
-                          <select id="region_id" name="region_id" title="" class="region_id" defaultvalue="">
-                            <option value="">Selecciona una opción</option>
-                            <option value="1">Amazonas</option>
-                            <option value="2">Ancash</option>
-                            <option value="3">Apurímac</option>
-                            <option value="4">Arequipa</option>
-                            <option value="5">Ayacucho</option>
-                            <option value="6">Cajamarca</option>
-                            <option value="7">Callao</option>
-                            <option value="8">Cusco</option>
-                            <option value="9">Huancavelica</option>
-                            <option value="10">Huánuco</option>
-                            <option value="11">Ica</option>
-                            <option value="12">Junín</option>
-                            <option value="13">La Libertad</option>
-                            <option value="14">Lambayeque</option>
-                            <option value="15">Lima</option>
-                            <option value="16">Loreto</option>
-                            <option value="17">Madre de Dios</option>
-                            <option value="18">Moquegua</option>
-                            <option value="19">Pasco</option>
-                            <option value="20">Piura</option>
-                            <option value="21">Puno</option>
-                            <option value="22">San Martín</option>
-                            <option value="23">Tacna</option>
-                            <option value="24">Tumbes</option>
-                            <option value="25">Ucayali</option>                          
-                          </select>
-                        </div>
-                      </div>
-                      <div class="field comuna required">
-                        <label for="comuna_id" class="label">
-                          <span>Provincia</span>
-                        </label>
-                        <div class="control">
-                          <select id="comuna_id" name="comuna_id" title="" class="validate-select comuna required-entry" defaultvalue="0">
-                            <option value="">Selecciona una opción</option>
-                            <option value="1501">Lima </option>
-                            <option value="1502">Barranca </option>
-                            <option value="1503">Cajatambo </option>
-                            <option value="1504">Canta </option>
-                            <option value="1505">Cañete </option>
-                            <option value="1506">Huaral </option>
-                            <option value="1507">Huarochirí </option>
-                            <option value="1508">Huaura </option>
-                            <option value="1509">Oyón </option>
-                            <option value="1510">Yauyos </option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="field locality required">
-                        <label for="locality_id" class="label">
-                          <span>Distrito</span>
-                        </label>
-                        <div class="control">
-                          <select id="locality_id" name="locality_id" title="" class="validate-select locality required-entry" defaultvalue="">
-                            <option value="">Selecciona una opción</option>
-                            <option value="150101">Lima</option>
-                            <option value="150102">Ancón</option>
-                            <option value="150103">Ate</option>
-                            <option value="150104">Barranco</option>
-                            <option value="150105">Breña</option>
-                            <option value="150106">Carabayllo</option>
-                            <option value="150107">Chaclacayo</option>
-                            <option value="150108">Chorrillos</option>
-                            <option value="150109">Cieneguilla</option>
-                            <option value="150110">Comas</option>
-                            <option value="150111">El Agustino</option>
-                            <option value="150112">Independencia</option>
-                            <option value="150113">Jesús María</option>
-                            <option value="150114">La Molina</option>
-                            <option value="150115">La Victoria</option>
-                            <option value="150116">Lince</option>
-                            <option value="150117">Los Olivos</option>
-                            <option value="150118">Lurigancho</option>
-                            <option value="150119">Lurin</option>
-                            <option value="150120">Magdalena del Mar</option>
-                            <option value="150121">Pueblo Libre</option>
-                            <option value="150122">Miraflores</option>
-                            <option value="150123">Pachacamac</option>
-                            <option value="150124">Pucusana</option>
-                            <option value="150125">Puente Piedra</option>
-                            <option value="150126">Punta Hermosa</option>
-                            <option value="150127">Punta Negra</option>
-                            <option value="150128">Rímac</option>
-                            <option value="150129">San Bartolo</option>
-                            <option value="150130">San Borja</option>
-                            <option value="150131">San Isidro</option>
-                            <option value="150132">San Juan de Lurigancho</option>
-                            <option value="150133">San Juan de Miraflores</option>
-                            <option value="150134">San Luis</option>
-                            <option value="150135">San Martín de Porres</option>
-                            <option value="150136">San Miguel</option>
-                            <option value="150137">Santa Anita</option>
-                            <option value="150138">Santa María del Mar</option>
-                            <option value="150139">Santa Rosa</option>
-                            <option value="150140">Santiago de Surco</option>
-                            <option value="150141">Surquillo</option>
-                            <option value="150142">Villa El Salvador</option>
-                            <option value="150143">Villa María del Triunfo</option>
-                          </select>
-                        </div>
-                      </div>
-                      <style>1</style>
-                    </fieldset>
+          <div class="cPrd__cGrpModls">
+            <ul class="cPrd__cGrpModls__m">
+              <li class="cPrd__cGrpModls__m__i">
+                <img src="{{route('front.index')}}/assets/images/1669243396carro.png">
+                <span class="fw-bold"> Disponible despacho a domicilio </span>
+                <a href="javascript:void(0);" class="txtd-underline" data-bs-toggle="modal" data-bs-target="#calcDespacho">Calcular despacho</a>
+              </li>
+              <li class="cPrd__cGrpModls__m__i">
+                <img src="{{route('front.index')}}/assets/images/1669243349tienda.png">
+                <span class="fw-bold"> Disponibilidad de retiro en tienda </span>
+                <a href="javascript:void(0);" class="txtd-underline" data-bs-toggle="modal" data-bs-target="#viewLocationStore">Ver ubicación de la tienda</a>
+              </li>
+            </ul>
+            <div class="modal fade" id="calcDespacho" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  @php
+                    $paisAll = DB::table('countries')->get();
+                    $departamentoAll = DB::table('tbl_departamentos')->get();
+                    $provinciaAll = DB::table('tbl_provincias')->get();
+                    $distritoAll = DB::table('tbl_distritos')->get();
+                  @endphp
+                  <div class="modal-header">
+                    <span class="text-uppercase ms-auto me-auto"><strong>Calcular despacho</strong></span>
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                   </div>
-                </center>
-                <a class="popup1-close" href="#closed">X</a>
+                  <div class="modal-body">
+                    <div class="cTitleMdBy__c">
+                      <div class="cTitleMdBy__c__cTitle">
+                        <h3>Selecciona tu localidad  donde desees que se envie tu producto</h3>
+                      </div>
+                    </div>
+                    <hr>
+                    <form action="" method="POST">
+                      @csrf
+                      <div class="pt-3">
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label for="consult_country" class="label">País</label>
+                              <select name="consult_country_id" id="consult_country" title="País" class="form-control">
+                                <option selected value="">Elige País</option>
+                                @foreach($paisAll as $countryData)
+                                <option value="{{ $countryData->id }}" selected>{{ $countryData->name }}</option>
+                                @endforeach
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label for="consult_departamento" class="label">Departamento</label>
+                              <select name="consult_departamento_id" id="consult_departamento" title="Departamento" class="form-control" data-href="{{route('front.provincia')}}">
+                                <option value="">Elige una opción</option>
+                                @foreach($departamentoAll as $departData)
+                                <option value="{{ $departData->id }}" data-code="{{ $departData->departamento_code }}">{{ $departData->departamento_name }}</option>
+                                @endforeach
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label for="consult_provincia" class="label">Provincia</label>
+                              <select name="consult_provincia_id" id="consult_provincia" title="Provincia" class="form-control" data-href="{{route('front.distrito')}}">
+                                <option value="">Elige Departamento</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label for="consult_distrito" class="label">Distrito</label>
+                              <select name="consult_distrito_id" id="consult_distrito" title="Distrito" class="form-control" data-href="{{ route('front.getammountdispath') }}">
+                                <option value="">Elige Provincia</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                    <hr>
+                    <div>
+                      <div id="svalgscirn45__3FgH3" style="display: none;"></div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div id="closed"></div>
-            <p style="border: 1px solid #003399 !important;border-radius: 5px;padding: 13px;"><img src="{{route('front.index')}}/assets/images/1669243349tienda.png"> Disponibilidad de retiro en tienda <a href="#popup" class="popup-link">ver ubicación de la tienda</a></p>
-            <div class="popup-wrapper" id="popup">
-              <div class="popup-container">
-                <center>
-                  <div class="store-content">
-                    <div class="pro_title-modal">
-                      <span class="popa" style="font-size: 24px;font-weight: 600;">Consultar retiro</span>
-                    </div>
-                    <div class="content-zona">
-                      <div class="row">
-                        <div class="pro_content-logo">    
-                          <div class="block-col">            
-                            <a href="https://goo.gl/maps/HyMcEDXcWLqmz8vF7" style="font-size: 13px;padding-top: 20px;padding-bottom: 20px;float: left;" target="_blank" class="ubi"><img src="{{route('front.index')}}/assets/images/1669243349tienda.png" target="_blank"> AV. Guillermo Dansey n° 454 C. Comercial Nicolini Psj 5 Stand BB-9A - Lima</a>
-                          </div>
-                          <div class="block-col">
-                            <a href="https://goo.gl/maps/5K3fbgwyNf6sJPLA8" style="font-size: 13px;padding-top: 20px;padding-bottom: 20px;float: left;" target="_blank" class="ubi"><img src="{{route('front.index')}}/assets/images/1669243349tienda.png" target="_blank">  Av. Guillermo  Dansey N°401 C.Plaza ferretero  2do  psj C  Piso Tda 2026 - Lima</a>
-                          </div>
+            <div class="modal fade" id="viewLocationStore" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <span class="text-uppercase ms-auto me-auto"><strong>Consultar retiro</strong></span>
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="pt-1 cBodyMdBy__c">
+                      <div class="d-block cBodyMdBy__c__cList">
+                        <?php
+                          $StoresAll = "";
+                          $arrStoresAdd = [];
+                          if(isset($item->store_availables) && $item->store_availables != ""){
+                            $storesAvailables = json_decode($item->store_availables, TRUE);
+                            $storesAvailables_list = $storesAvailables['store'];
+                            foreach($storesAvailables_list as $key => $val){
+                              $arrStoresAdd[$key]['id'] = $val['id'];
+                            }
+                          }
+                          $StoresAll = [];
+                          if(count($arrStoresAdd) > 0){
+                            foreach($arrStoresAdd as $k => $v){
+                              $StoresAll[$k]['store'] = DB::table('tbl_stores')->where('id',$v['id'])->get()->toArray()[0];
+                            }
+                          }
+                        ?>                        
+                        @if(!empty($StoresAll) && count($StoresAll) > 0)
+                        <ul class="cBodyMdBy__c__cList__m">
+                          @foreach($StoresAll as $key => $stores)                          
+                          <li href="javascript:void(0);" class="cBodyMdBy__c__cList__m__i">
+                            <div style="display: block;width:100%;">
+                              <div class="cBodyMdBy__c__cList__m__i__cTop">
+                                <div class="cBodyMdBy__c__cList__m__i__cTop__cIcon">
+                                  <img src="{{route('front.index')}}/assets/images/1669243349tienda.png" target="_blank">
+                                </div>
+                                <div class="cBodyMdBy__c__cList__m__i__cTop__cNameStr">{{ $stores['store']->name }}</div>
+                              </div>
+                            </div>
+                            <div class="cBodyMdBy__c__cList__m__i__cBott">
+                              <ul class="cBodyMdBy__c__cList__m__i__cBott__m">
+                                <li><span><strong>Dirección: </strong>{{ $stores['store']->address }}</span></li>
+                                <li><span><strong>Teléfono: </strong>{{ $stores['store']->telephone }}</span></li>
+                              </ul>
+                            </div>
+                          </li>                          
+                        @endforeach
+                        @else
+                        <div class="text-center">
+                          <h5>Sin tiendas disponibles.</h5>
                         </div>
+                        @endif
+                        
+                        </ul>
                       </div>
                     </div>
                   </div>
-                </center>
-              <a class="popup-close" href="#closed">X</a>
+                </div>
               </div>
             </div>
             <div class="t-c-b-area">
@@ -600,7 +816,19 @@
               <div class="pt-1 mb-1"><span class="text-medium">CÓDIGO SAP:</span> {{$item->sap_code}}</div>
               @endif
               @if ($item->item_type == 'normal')
-              <div class="pt-1 mb-4"><span class="text-medium">{{__('SKU')}}:</span>{{$item->sku}}</div>
+              <div class="pt-1 mb-1"><span class="text-medium">{{__('SKU')}}:</span> {{$item->sku}}</div>
+              @endif
+              @if ($item->unidad_raiz)
+              <?php
+                $unidad_raiz_byItem = DB::table('tbl_unidadraiz')->where('id',$item->unidad_raiz)->get()->toArray()[0];
+              ?>
+              <div class="pt-1 mb-1"><span class="text-medium">{{__('Unidad de medida')}}:</span> <strong>{{ $unidad_raiz_byItem->name }}</strong></div>
+              @endif
+              @if ($item->atributo_raiz)
+              <?php
+                $atributo_raiz_byItem = DB::table('tbl_atributoraiz')->where('id',$item->atributo_raiz)->get()->toArray()[0];
+              ?>
+              <div class="pt-1 mb-1"><span class="text-medium">{{__('Root Attribute')}}:</span> <strong>{{ $atributo_raiz_byItem->name }}</strong></div>
               @endif
               <!-- NUEVO CONTENIDO (INICIO) -->
               @if($item->adj_doc != "" && $item->adj_doc != null)
@@ -622,7 +850,7 @@
                 <span class="wishlist2 d-none">{{__('Added To Wishlist')}}</span>
                 @endif
                 </a>
-                <button class="btn btn-primary btn-sm  product_compare" data-target="{{route('fornt.compare.product',$item->id)}}" ><span><i class="icon-repeat"></i>{{__('Compare')}}</span></button>
+                <button class="btn btn-primary btn-sm  product_compare" data-target="{{route('fornt.compare.product',$item->id)}}"><span><i class="icon-repeat"></i>{{__('Compare')}}</span></button>
               </div>
               <div class="d-flex align-items-center">
                 <span class="text-muted mr-1">Compartir: </span>
@@ -703,9 +931,9 @@
   </div>
   <div class="row">
     <div class="col-lg-12">
-      <div class="relatedproductslider owl-carousel" >
+      <div class="relatedproductslider owl-carousel">
         @foreach ($related_items as $related)
-          <div class="slider-item">
+          <div class="slider-item" style="margin-right: 15px;">
             <div class="product-card">
               @if ($related->is_stock())
                 @if($related->is_type == 'new')
@@ -753,7 +981,31 @@
                 <del>{{PriceHelper::setPreviousPrice($related->previous_price)}}</del>
                 @endif
                 {{PriceHelper::grandCurrencyPrice($related)}} </h4>
-                <a href="https://api.whatsapp.com/send?phone=51{{$setting->footer_phone}}&text=Solicito información sobre: {{route('front.product',$related->slug)}}" target="_blank" ><img src="../assets/images/boton-pedir-por-whatsapp.png" class="boton-as"></a>
+                <div class="cWtspBtnCtc">
+                  <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51{{$setting->footer_phone}}&text=Solicito información sobre: {{route('front.product',$related->slug)}}" target="_blank" class="cWtspBtnCtc__pLink">
+                    <img src="../assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" width="100" height="100" decoding="sync">
+                  </a>
+                  <div class="cWtspBtnCtc__pSubM">
+                    <ul class="cWtspBtnCtc__pSubM__m">
+                      <li class="cWtspBtnCtc__pSubM__m__i">
+                        <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
+                          <!-- <img src="{{ asset('assets/back/images/WhatsApp') }}/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
+                          <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
+                          <!-- <span>912 831 232</span> -->
+                          <span>Tienda #1</span>
+                        </a>
+                      </li>
+                      <li class="cWtspBtnCtc__pSubM__m__i">
+                        <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
+                          <!-- <img src="{{ asset('assets/back/images/WhatsApp') }}/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
+                          <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
+                          <!-- <span>974 124 991</span> -->
+                          <span>Tienda #2</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -763,5 +1015,411 @@
   </div>
 </div>
 @endif
+
+
+
+@if(count($applycoupon) > 0)
+  @if(count($coupons) > 0)
+    @php
+      $arrcoupon2 = json_decode($coupons, TRUE);
+    @endphp
+    @if($remainingTime <= 0)
+      @if($idcouponapply_user == $user_id && $idcouponapply_prod == $item->id && $idcouponapply_coupon == $item->coupon_id)
+      @else
+      <div class="modal fade" id="coupons-desc" tabindex="-1" role="dialog" aria-labelledby="coupons-descModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            
+            <div class="mdl-CouponCustom">
+              <div class="mdl-CouponCustom__c">
+                <div class="mdl-CouponCustom__c__btnClose" id="mdl-CouponBtnClose">
+                  <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <div class="mdl-CouponCustom__c__mC">
+                  <div class="mdl-CouponCustom__c__mC__cc">
+                    <div class="mdl-CouponCustom__c__mC__cc__countdown">
+                      <div class="mdl-CouponCustom__c__mC__cc__countdown__c" id="countdown-coupon"></div>
+                    </div>
+                    <div class="mdl-CouponCustom__c__mC__cc__countdown__frmSend">
+                      <form action="" class="d-inline btn-ok" method="POST">
+                        @csrf
+                        <p>COUPON EXPIRED!!!</p>
+                      </form>
+                    </div>
+                    <label for="accepcouponvalid" class="ipt_hidcouponvalid__cbtn">
+                      <input type="hidden" class="ipt_hidcouponvalid" id="accepcouponvalid">
+                      <div class="ipt_hidcouponvalid__cbtn__c">
+                        <span></span>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      @endif
+    @else
+      @if($idcouponapply_user == $user_id && $idcouponapply_prod == $item->id && $idcouponapply_coupon == $item->coupon_id)
+      @else
+      <div class="modal fade" id="coupons-desc" tabindex="-1" role="dialog" aria-labelledby="coupons-descModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            
+            <div class="mdl-CouponCustom">
+              <div class="mdl-CouponCustom__c">
+                <div class="mdl-CouponCustom__c__btnClose" id="mdl-CouponBtnClose">
+                  <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <div class="mdl-CouponCustom__c__mC">
+                  <div class="mdl-CouponCustom__c__mC__cc">
+                    <div class="mdl-CouponCustom__c__mC__cc__countdown">
+                      <div class="mdl-CouponCustom__c__mC__cc__countdown__c" id="countdown-coupon"></div>
+                    </div>
+                    <div class="mdl-CouponCustom__c__mC__cc__frmSend">
+                      <form action="{{ route('front.applycoupon') }}" class="btn-ok" method="POST">
+                        @csrf
+                        <img src="{{asset('assets/images/coupons/')}}/{{ $imgCoupon }}" alt="" id="cImg-coupon_valid">
+                        <!-- <label for="accepcouponvalid" class="ipt_hidcouponvalid__cbtn">
+                          <input type="hidden" class="ipt_hidcouponvalid" id="accepcouponvalid">
+                          <div class="ipt_hidcouponvalid__cbtn__c">
+                            <span>APLICAR</span>
+                          </div>
+                        </label> -->
+                        <input tabindex="-1" placeholder="phdr-whidipts" type="hidden" width="0" height="0" autocomplete="off" spellcheck="false" f-hidden="aria-hidden" class="non-visvalipt h-alternative-shwnon s-fkeynone-step hdd-control d-non" name="prod_id" id="prod_id" value="{{ $item->id }}">
+                        <input tabindex="-1" placeholder="phdr-whidipts" type="hidden" width="0" height="0" autocomplete="off" spellcheck="false" f-hidden="aria-hidden" class="non-visvalipt h-alternative-shwnon s-fkeynone-step hdd-control d-non" name="coupon_id" id="coupon_id" value="{{ $idcoupon }}">
+                        <button type="submit" class="ipt_hidcouponvalid__cbtn">
+                          <span>APLICAR</span>
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      @endif
+    @endif
+  @endif
+@else
+  @if(count($coupons) > 0)
+    @php
+      $arrcoupon2 = json_decode($coupons, TRUE);
+    @endphp
+    @if($remainingTime <= 0)
+      <div class="modal fade" id="coupons-desc" tabindex="-1" role="dialog" aria-labelledby="coupons-descModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">            
+            <div class="mdl-CouponCustom">
+              <div class="mdl-CouponCustom__c">
+                <div class="mdl-CouponCustom__c__btnClose" id="mdl-CouponBtnClose">
+                  <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <div class="mdl-CouponCustom__c__mC">
+                  <div class="mdl-CouponCustom__c__mC__cc">
+                    <div class="mdl-CouponCustom__c__mC__cc__countdown">
+                      <div class="mdl-CouponCustom__c__mC__cc__countdown__c" id="countdown-coupon"></div>
+                    </div>
+                    <div class="mdl-CouponCustom__c__mC__cc__countdown__frmSend">
+                      <form action="" class="d-inline btn-ok" method="POST">
+                        @csrf
+                        <p>COUPON EXPIRED!!!</p>
+                      </form>
+                    </div>
+                    <label for="accepcouponvalid" class="ipt_hidcouponvalid__cbtn">
+                      <input type="hidden" class="ipt_hidcouponvalid" id="accepcouponvalid">
+                      <div class="ipt_hidcouponvalid__cbtn__c">
+                        <span></span>
+                      </div>
+                    </label>
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    @else
+      <div class="modal fade" id="coupons-desc" tabindex="-1" role="dialog" aria-labelledby="coupons-descModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            
+            <div class="mdl-CouponCustom">
+              <div class="mdl-CouponCustom__c">
+                <div class="mdl-CouponCustom__c__btnClose" id="mdl-CouponBtnClose">
+                  <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <div class="mdl-CouponCustom__c__mC">
+                  <div class="mdl-CouponCustom__c__mC__cc">
+                    <div class="mdl-CouponCustom__c__mC__cc__countdown">
+                      <div class="mdl-CouponCustom__c__mC__cc__countdown__c" id="countdown-coupon"></div>
+                    </div>
+                    <div class="mdl-CouponCustom__c__mC__cc__frmSend">
+                      <form action="{{ route('front.applycoupon') }}" class="btn-ok" method="POST">
+                        @csrf
+                        <img src="{{asset('assets/images/coupons/')}}/{{ $imgCoupon }}" alt="" id="cImg-coupon_valid">
+                        <!-- <label for="accepcouponvalid" class="ipt_hidcouponvalid__cbtn">
+                          <input type="hidden" class="ipt_hidcouponvalid" id="accepcouponvalid">
+                          <div class="ipt_hidcouponvalid__cbtn__c">
+                            <span>APLICAR</span>
+                          </div>
+                        </label> -->
+                        <input tabindex="-1" placeholder="phdr-whidipts" type="hidden" width="0" height="0" autocomplete="off" spellcheck="false" f-hidden="aria-hidden" class="non-visvalipt h-alternative-shwnon s-fkeynone-step hdd-control d-non" name="prod_id" id="prod_id" value="{{ $item->id }}">
+                        <input tabindex="-1" placeholder="phdr-whidipts" type="hidden" width="0" height="0" autocomplete="off" spellcheck="false" f-hidden="aria-hidden" class="non-visvalipt h-alternative-shwnon s-fkeynone-step hdd-control d-non" name="coupon_id" id="coupon_id" value="{{ $idcoupon }}">
+                        <button type="submit" class="ipt_hidcouponvalid__cbtn">
+                          <span>APLICAR</span>
+                        </button>
+                      </form>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    @endif
+  @endif
+@endif
+
+
+
 <script type="text/javascript" src="{{ asset('assets/front/js/product-details.js') }}"></script>
+@if(count($applycoupon) > 0)
+  @if(count($coupons) > 0)
+    @php
+      $arrcoupon2 = json_decode($coupons, TRUE);
+    @endphp
+    @if($remainingTime <= 0)
+      @if($idcouponapply_user == $user_id && $idcouponapply_prod == $item->id && $idcouponapply_coupon == $item->coupon_id)
+      @else
+      <script type="text/javascript">
+        // -------------- CUENTA REGRESIVA PARA CUPÓN DE DESCUENTO...
+        var expirationTimestamp = {{ $millisecondsExpirationDate }};
+        var imgCouponValid = "{{ asset('assets/images/coupons/') }}/{{ $imgCoupon }}";
+        var expirationTimestamp2 = parseInt(expirationTimestamp);
+        const targetDateTimestamp = expirationTimestamp2;
+        const updateInterval = setInterval(updateElements, 1000);
+
+        function updateElements() {
+          const currentDate = new Date().getTime();
+          const timeRemaining = targetDateTimestamp - currentDate;
+
+          if (timeRemaining <= 0) {
+            // Si el tiempo estimado termina, mostrar un mensaje...
+            document.getElementById('countdown-coupon').innerHTML = 'EL CUPÓN HA EXPIRADO...!';
+            clearInterval(updateInterval);
+            $("#coupons-desc").modal("show");
+          } else {
+            // Calcular días, horas, minutos, y segundos...
+            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            $("#coupons-desc").modal("show");
+            // MOSTRAR MENSAJE EN EL MODAL...
+            document.querySelector("#cImg-coupon_valid").setAttribute("src", imgCouponValid);
+            document.getElementById('countdown-coupon').innerHTML = `
+              <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cTitle">Este cupón vence en:</span>
+              <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown">
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${days}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Ds</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${hours}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Hr</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${minutes}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Min</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${seconds}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Sec</span>
+                </span>
+              </span>`;
+          }
+        }
+        
+      </script>
+      @endif
+    @else
+      <script type="text/javascript">
+        // -------------- CUENTA REGRESIVA PARA CUPÓN DE DESCUENTO...
+        var expirationTimestamp = {{ $millisecondsExpirationDate }};
+        var imgCouponValid = "{{ asset('assets/images/coupons/') }}/{{ $imgCoupon }}";
+        var expirationTimestamp2 = parseInt(expirationTimestamp);
+        const targetDateTimestamp = expirationTimestamp2;
+        const updateInterval = setInterval(updateElements, 1000);
+
+        function updateElements() {
+          const currentDate = new Date().getTime();
+          const timeRemaining = targetDateTimestamp - currentDate;
+
+          if (timeRemaining <= 0) {
+            // Si el tiempo estimado termina, mostrar un mensaje...
+            document.getElementById('countdown-coupon').innerHTML = 'EL CUPÓN HA EXPIRADO...!';
+            clearInterval(updateInterval);
+            $("#coupons-desc").modal("show");
+          } else {
+            // Calcular días, horas, minutos, y segundos...
+            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            $("#coupons-desc").modal("show");
+            // MOSTRAR MENSAJE EN EL MODAL...
+            document.querySelector("#cImg-coupon_valid").setAttribute("src", imgCouponValid);
+            document.getElementById('countdown-coupon').innerHTML = `
+              <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cTitle">Este cupón vence en:</span>
+              <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown">
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${days}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Ds</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${hours}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Hr</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${minutes}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Min</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${seconds}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Sec</span>
+                </span>
+              </span>`;
+          }
+        }
+        
+      </script>
+    @endif
+  @endif
+@else
+  @if(count($coupons) > 0)
+    @php
+      $arrcoupon2 = json_decode($coupons, TRUE);
+    @endphp
+    @if($remainingTime <= 0)
+      <script type="text/javascript">
+        // -------------- CUENTA REGRESIVA PARA CUPÓN DE DESCUENTO...
+        var expirationTimestamp = {{ $millisecondsExpirationDate }};
+        var imgCouponValid = "{{ asset('assets/images/coupons/') }}/{{ $imgCoupon }}";
+        var expirationTimestamp2 = parseInt(expirationTimestamp);
+        const targetDateTimestamp = expirationTimestamp2;
+        const updateInterval = setInterval(updateElements, 1000);
+
+        function updateElements() {
+          const currentDate = new Date().getTime();
+          const timeRemaining = targetDateTimestamp - currentDate;
+
+          if (timeRemaining <= 0) {
+            // Si el tiempo estimado termina, mostrar un mensaje...
+            document.getElementById('countdown-coupon').innerHTML = 'EL CUPÓN HA EXPIRADO...!';
+            clearInterval(updateInterval);
+            $("#coupons-desc").modal("show");
+          } else {
+            // Calcular días, horas, minutos, y segundos...
+            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            $("#coupons-desc").modal("show");
+            // MOSTRAR MENSAJE EN EL MODAL...
+            document.querySelector("#cImg-coupon_valid").setAttribute("src", imgCouponValid);
+            document.getElementById('countdown-coupon').innerHTML = `
+              <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cTitle">Este cupón vence en:</span>
+              <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown">
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${days}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Ds</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${hours}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Hr</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${minutes}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Min</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${seconds}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Sec</span>
+                </span>
+              </span>`;
+          }
+        }
+        
+      </script>
+    @else
+      <script type="text/javascript">
+        // -------------- CUENTA REGRESIVA PARA CUPÓN DE DESCUENTO...
+        var expirationTimestamp = {{ $millisecondsExpirationDate }};
+        var imgCouponValid = "{{ asset('assets/images/coupons/') }}/{{ $imgCoupon }}";
+        var expirationTimestamp2 = parseInt(expirationTimestamp);
+        const targetDateTimestamp = expirationTimestamp2;
+        const updateInterval = setInterval(updateElements, 1000);
+
+        function updateElements() {
+          const currentDate = new Date().getTime();
+          const timeRemaining = targetDateTimestamp - currentDate;
+
+          if (timeRemaining <= 0) {
+            // Si el tiempo estimado termina, mostrar un mensaje...
+            document.getElementById('countdown-coupon').innerHTML = 'EL CUPÓN HA EXPIRADO...!';
+            clearInterval(updateInterval);
+            $("#coupons-desc").modal("show");
+          } else {
+            // Calcular días, horas, minutos, y segundos...
+            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            $("#coupons-desc").modal("show");
+            // MOSTRAR MENSAJE EN EL MODAL...
+            document.querySelector("#cImg-coupon_valid").setAttribute("src", imgCouponValid);
+            document.getElementById('countdown-coupon').innerHTML = `
+              <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cTitle">Este cupón vence en:</span>
+              <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown">
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${days}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Ds</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${hours}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Hr</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${minutes}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Min</span>
+                </span>
+                <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${seconds}</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Sec</span>
+                </span>
+              </span>`;
+          }
+        }
+        
+      </script>
+    @endif
+  @endif
+@endif
+
 @endsection

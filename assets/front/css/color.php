@@ -44,6 +44,9 @@
 {
     background : <?php echo $color?>  !important;
 }
+.letter-all{
+    background : <?php echo $color?>  !important;
+}
 
 .site-header .toolbar .toolbar-item > a > div > .compare-icon > .count-label, .site-header .toolbar .toolbar-item > a > div > .cart-icon > .count-label,
 .btn-primary,

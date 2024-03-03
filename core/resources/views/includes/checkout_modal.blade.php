@@ -464,7 +464,7 @@
   @endphp
   @section('script')
   <!--
-  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <script type="text/javascript" src="https://js.paystack.co/v1/inline.js"></script>
   -->
   <script type="text/javascript">
     /*
@@ -528,22 +528,69 @@
 </div>
 <!-- Izipay -->
 <div class="modal fade" id="izipay" tabindex="-1"  aria-hidden="true">
-  <div class="modal-dialog" >
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <div class="cLogo__modal-header">
           <p>Proceder a pagar</p>
+          <?php
+            $del_charge = 0;
+            $shipSessionInfo = "";
+            $amountGrandTotal = 0;
+            $postamount = 0;
+            if(Session::has('shipping_address') && Session::get('shipping_address') != ""){
+              $shipSessionInfo = Session::get('shipping_address');
+              $del_charge = $shipSessionInfo['ship_amountaddress'];
+              $amountGrandTotal = $shipSessionInfo['grand_total'];
+              if($del_charge != 0 && $del_charge != ""){
+                $postamount = $amountGrandTotal;
+              }else{
+                $postamount = $grand_total;
+              }
+            }
+          ?>
         </div>
         <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body">
         <?php
+          $arrCredentials = "";
+          $arrCredentials2 = [];
+          $paymentIzipayAll = DB::table('payment_settings')->where('name','Izipay')->select('information')->first();
+          $arrCredentials = json_decode($paymentIzipayAll->information, TRUE);
+          $chck_mode = $arrCredentials['check_mode'];
+          $chck_credentials = array("access" => $arrCredentials['credentials']);
+                    
+          if($chck_mode == 1){
+            foreach($chck_credentials as $k => $v){
+              $arrCredentials2['Server_API-REST'] = $v['production']['Server_API-REST'];
+              $arrCredentials2['username'] = $v['production']['username'];
+              $arrCredentials2['public_key'] = $v['production']['public_key'];
+              $arrCredentials2['token'] = $v['production']['token'];
+              $arrCredentials2['SHA-256'] = $v['production']['SHA-256'];
+              $arrCredentials2['password'] = $v['production']['password'];
+            }
+          }else{
+            foreach($chck_credentials as $k => $v){
+              $arrCredentials2['Server_API-REST'] = $v['test']['Server_API-REST'];
+              $arrCredentials2['username'] = $v['test']['username'];
+              $arrCredentials2['public_key'] = $v['test']['public_key'];
+              $arrCredentials2['token'] = $v['test']['token'];
+              $arrCredentials2['SHA-256'] = $v['test']['SHA-256'];
+              $arrCredentials2['password'] = $v['test']['password'];
+            }
+          }
+          
           $client = new Lyra\Client();
 
-          $postamount = $grand_total;
-          $del_charge = 0;
+          $client->setDefaultUsername($arrCredentials2['username']);
+          $client->setDefaultPassword($arrCredentials2['password']);
+          $client->setDefaultEndpoint($arrCredentials2['Server_API-REST']);
+          $client->setDefaultPublicKey($arrCredentials2['public_key']);
+          $client->setDefaultSHA256Key($arrCredentials2['SHA-256']);
+
           $u_amount = 0;
-          $u_sum_or_not = $postamount + $del_charge;
+          $u_sum_or_not = $postamount;
           $u_amount =  floatval($u_sum_or_not) * 100;
           $orderIdGen = $orderIdGenFirst;
           $billing = Session::get('billing_address');
@@ -597,7 +644,7 @@
         </script>
       
         <link rel="stylesheet" href="<?php echo $client->getClientEndpoint();?>/static/js/krypton-client/V4.0/ext/classic-reset.css">
-        <script src="<?php echo $client->getClientEndpoint();?>/static/js/krypton-client/V4.0/ext/classic.js"></script>
+        <script type="text/javascript" src="<?php echo $client->getClientEndpoint();?>/static/js/krypton-client/V4.0/ext/classic.js"></script>
       
         <div class="row">
           <div class="m-auto">

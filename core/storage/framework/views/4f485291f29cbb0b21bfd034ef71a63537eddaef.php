@@ -5,8 +5,8 @@
 	<title><?php echo e($setting->title); ?></title>
 	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport'/>
   <link rel="icon"  type="image/x-icon" href="<?php echo e(asset('assets/images/'.$setting->favicon)); ?>"/>
-	<script src="<?php echo e(asset('assets/back/js/plugin/webfont/webfont.min.js')); ?>"></script>
-	<script id="setFont" data-src="<?php echo e(asset("assets/back/css/fonts.css")); ?>" src="<?php echo e(asset('assets/back/js/plugin/webfont/setfont.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/plugin/webfont/webfont.min.js')); ?>"></script>
+	<script id="setFont" data-src="<?php echo e(asset('assets/back/css/fonts.css')); ?>" src="<?php echo e(asset('assets/back/js/plugin/webfont/setfont.js')); ?>"></script>
 	<link rel="preload" href="<?php echo e(asset('assets/back/css/styles.min.css')); ?>" as="style">
 	<link id="mainStyles" rel="stylesheet" media="screen" href="<?php echo e(asset('assets/back/css/styles.min.css')); ?>">
 	<script rel="preload" href="<?php echo e(asset('assets/back/js/plugin/jquery-3.6.4.min.js')); ?>" as="script"></script>
@@ -40,13 +40,13 @@
 					<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
 						<li class="nav-item mr-4">
 							<a class="btn btn-sm btn-primary py-1 text-white" title="website" href="<?php echo e(route('front.index')); ?>" target="_blank">
-							<b> <?php echo e(__('View Website')); ?></b>
+								<b> <?php echo e(__('View Website')); ?></b>
 							</a>
 						</li>
 						<li class="nav-item dropdown no-arrow mx-1">
-							<a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<i class="fas fa-bell fa-fw"></i>
-							<span  class="badge badge-danger badge-counter"><?php echo e(App\Models\Notification::countRegistration() + App\Models\Notification::countOrder()); ?></span>
+							<a class="nav-link dropdown-toggle" href="javascript:void(0);" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<i class="fas fa-bell fa-fw"></i>
+								<span  class="badge badge-danger badge-counter"><?php echo e(App\Models\Notification::countRegistration() + App\Models\Notification::countOrder()); ?></span>
 							</a>
 							<div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown" id="display-notf" data-href=<?php echo e(route('back.notifications')); ?>>
 								<?php echo $__env->make('back.notification.index', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
@@ -55,13 +55,15 @@
 						<li class="nav-item dropdown hidden-caret">
 							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="<?php echo e(route('back.dashboard')); ?>" aria-expanded="false">
 								<div class="avatar-sm avatar avatar-sm">
-									<img src="<?php echo e(Auth::guard('admin')->user()->photo ? asset('assets/images/'.Auth::guard('admin')->user()->photo) : asset('assets/images/noimage.png')); ?>" alt="..." class="avatar-img rounded-circle">
+									<img src="<?php echo e(Auth::guard('admin')->user()->photo ? asset('assets/images/'.Auth::guard('admin')->user()->photo) : asset('assets/images/noimage.png')); ?>" alt="..." class="avatar-img rounded-circle" width="100" height="100" decoding="sync">
 								</div>
 							</a>
 							<ul class="dropdown-menu dropdown-user animated fadeIn">
 								<li>
 									<div class="user-box">
-										<div class="avatar-lg"><img src="<?php echo e(Auth::guard('admin')->user()->photo ? asset('assets/images/'.Auth::guard('admin')->user()->photo) : asset('assets/images/noimage.png')); ?>" alt="image profile" class="avatar-img rounded"></div>
+										<div class="avatar-lg">
+											<img src="<?php echo e(Auth::guard('admin')->user()->photo ? asset('assets/images/'.Auth::guard('admin')->user()->photo) : asset('assets/images/noimage.png')); ?>" alt="image profile" class="avatar-img rounded" width="100" height="100" decoding="sync">
+										</div>
 										<div class="u-text">
 											<h4><?php echo e(Auth::guard('admin')->user()->name); ?></h4>
 											<p class="text-muted"><?php echo e(Auth::guard('admin')->user()->email); ?></p><a href="<?php echo e(route('back.profile')); ?>" class="btn  btn-secondary btn-sm"><?php echo e(__('Update Profile')); ?></a>
@@ -88,7 +90,7 @@
 				<div class="sidebar-content">
 					<div class="user">
 						<div class="avatar-sm float-left mr-2">
-							<img src="<?php echo e(Auth::guard('admin')->user()->photo ? asset('assets/images/'.Auth::guard('admin')->user()->photo) : asset('assets/images/noimage.png')); ?>" alt="..." class="avatar-img rounded-circle">
+							<img src="<?php echo e(Auth::guard('admin')->user()->photo ? asset('assets/images/'.Auth::guard('admin')->user()->photo) : asset('assets/images/noimage.png')); ?>" alt="..." class="avatar-img rounded-circle" width="100" height="100" decoding="sync">
 						</div>
 						<div class="info">
 							<a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
@@ -126,31 +128,30 @@
 		$mainbs['overlay'] = $setting->overlay;
 		$mainbs = json_encode($mainbs);
 	?>
-	<script>
+	<script type="text/javascript">
 		var mainbs = <?php echo $mainbs; ?>;
 	</script>
-	<script src="<?php echo e(asset('assets/back/js/core/jquery.3.6.0.min.js')); ?>"></script>
-	<script src="<?php echo e(asset('assets/back/js/core/popper.min.js')); ?>"></script>
-	<script src="<?php echo e(asset('assets/back/js/core/bootstrap.min.js')); ?>"></script>
-	<script src="<?php echo e(asset('assets/back/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js')); ?>"></script>
-	<script src="<?php echo e(asset('assets/back/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js')); ?>"></script>
-	<script src="<?php echo e(asset('assets/back/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js')); ?>"></script>
-	<script src="<?php echo e(asset('assets/back/js/plugin/moment/moment.min.js')); ?>"></script>
-	<script src="<?php echo e(asset('assets/back/js/plugin/datatables/datatables.min.js')); ?>"></script>
-	<script src="<?php echo e(asset('assets/back/js/plugin/datatables/dataTables.bootstrap4.min.js')); ?>"></script>
-	<script src="<?php echo e(asset('assets/back/js/plugin/bootstrap-notify/bootstrap-notify.min.js')); ?>"></script>
-	<script src="<?php echo e(asset('assets/back/js/plugin/bootstrap-notify/bootstrap-notify.min.js')); ?>"></script>
-	<script src="<?php echo e(asset('assets/back/js/plugin/chart.min.js')); ?>"></script>
-	<script src="<?php echo e(asset('assets/back/js/plugin/editor.js')); ?>"></script>
-	<script src="<?php echo e(asset('assets/back/js/plugin/datepicker/bootstrap-datetimepicker.min.js')); ?>"></script>
-	<script src="<?php echo e(asset('assets/back/js/tagify.js')); ?>"></script>
-	<script src="<?php echo e(asset('assets/back/js/jscolor.js')); ?>"></script>
-	<script src="<?php echo e(asset('assets/back/js/jquery.magnific-popup.min.js')); ?>"></script>
-	<script src="<?php echo e(asset('assets/back/js/sortable.js')); ?>"></script>
-	<script src="<?php echo e(asset('assets/back/js/bootstrap-iconpicker.bundle.min.js')); ?>"></script>
-	<script src="<?php echo e(asset('assets/back/js/ready.min.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/core/jquery.3.6.0.min.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/core/popper.min.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/core/bootstrap.min.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/plugin/moment/moment.min.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/plugin/datatables/datatables.min.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/plugin/datatables/dataTables.bootstrap4.min.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/plugin/bootstrap-notify/bootstrap-notify.min.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/plugin/bootstrap-notify/bootstrap-notify.min.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/plugin/chart.min.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/plugin/editor.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/plugin/datepicker/bootstrap-datetimepicker.min.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/tagify.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/jscolor.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/jquery.magnific-popup.min.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/sortable.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/ready.min.js')); ?>"></script>
   <?php echo $__env->yieldContent('scripts'); ?>
-	<script src="<?php echo e(asset('assets/back/js/custom.js')); ?>"></script>
+	<script type="text/javascript" src="<?php echo e(asset('assets/back/js/custom.js')); ?>"></script>
 </body>
 </html>
 <?php /**PATH C:\xampp\htdocs\grupocorein\core\resources\views/master/back.blade.php ENDPATH**/ ?>

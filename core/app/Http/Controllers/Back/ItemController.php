@@ -10,12 +10,13 @@ use App\{
 };
 use App\Models\Category;
 use App\Models\ChieldCategory;
+use App\Models\Coupons;
 use App\Models\Currency;
 use App\Models\Subcategory;
+use App\Models\Tax;
 use Illuminate\Http\Request;
 
-class ItemController extends Controller
-{
+class ItemController extends Controller{
     public function __construct(ItemRepository $repository){
         $this->middleware('auth:admin');
         $this->middleware('adminlocalize');
@@ -30,6 +31,7 @@ class ItemController extends Controller
         $item_type = $request->has('item_type') ? ($request->item_type ? $request->item_type : '') : '';
         $is_type = $request->has('is_type') ? ($request->is_type ? $request->is_type : '') : '';
         $category_id = $request->has('category_id') ? ($request->category_id ? $request->category_id : '') : '';
+        $coupon_id = $request->has('coupon_id') ? ($request->coupon_id ? $request->coupon_id : '') : '';
         $orderby = $request->has('orderby') ? ($request->orderby ? $request->orderby : 'desc') : 'desc';
 
         /* -- NUEVO CONTENIDO (INICIO) --*/
@@ -53,7 +55,9 @@ class ItemController extends Controller
             return $query->where('category_id', $category_id);
         })
         /* -- NUEVO CONTENIDO (INICIO) --*/
-        
+        ->when($coupon_id, function ($query, $coupon_id) {
+            return $query->where('coupon_id', $coupon_id);
+        })
         ->when($sku, function ($query, $sku) {
             return $query->where('sku', 'like', '%'.$sku.'%');
         })
@@ -115,6 +119,14 @@ class ItemController extends Controller
         $request->request->add(['on_sale_price' => $rComeFunction_on_sale_price]);
         $request->request->add(['special_offer_price' => $rComeFunction_special_offer_price]);
 
+        $namProduct = e($request->post('name'));
+        $names = Item::where('name', 'like', '%'.$namProduct.'%')->select('name')->get()->toArray();
+        foreach($names as $name){
+            if($name['name'] == $namProduct){
+                return redirect()->route('back.item.create')->withErrors(__('El nombre del producto es idéntico a otro ya ingresado. Por favor, ingrese un nuevo nombre*.'));
+            }
+        }
+
         $item_id = $this->repository->store($request);
 
         if($request->is_button ==0){
@@ -132,6 +144,7 @@ class ItemController extends Controller
             'social_links' => json_decode($item->social_links,true),
             'specification_name' => json_decode($item->specification_name,true),
             'specification_description' => json_decode($item->specification_description,true),
+            'selectedIds' => ($item->store_availables && $item->store_availables != "") ? json_decode($item->store_availables, TRUE)['store'] : ''
         ]);
     }
 
@@ -142,6 +155,16 @@ class ItemController extends Controller
         
         $request->request->add(['on_sale_price' => $rComeFunction_on_sale_price]);
         $request->request->add(['special_offer_price' => $rComeFunction_special_offer_price]);
+
+        $item_id = $item->id;
+
+        $namProduct = e($request->post('name'));
+        $names = Item::where('name', 'like', '%'.$namProduct.'%')->where('id','!=',$item_id)->select('name')->get()->toArray();
+        foreach($names as $name){
+            if($name['name'] == $namProduct){
+                return redirect()->route('back.item.edit', $item_id)->withErrors(__('El nombre del producto es idéntico a otro ya ingresado. Por favor, ingrese un nuevo nombre*.'));
+            }
+        }
 
         $this->repository->update($item, $request);
 
@@ -243,5 +266,32 @@ class ItemController extends Controller
     public function stockOut(){
         $datas = Item::where('item_type','normal')->where('stock',0)->get();
         return view('back.item.stockout',compact('datas'));
+    }
+
+    public function getAllTaxes(){
+        $taxes = Tax::get()->toArray();
+        $data = $taxes;
+        return response()->json(['data'=>$data]);
+    }
+
+    public function getProductName(Request $request){
+        // print_r(urldecode($request->productname));
+        // print_r(urldecode($request->input['productname']));
+        // exit();
+        // $namProduct = addslashes($request->productname);
+        $namProduct = e($request->productname);
+        // $namProduct = $request->productname;
+        $data = "";
+        $names = Item::where('name', 'like', '%'.$request->productname.'%')->select('name')->get()->toArray();
+        foreach($names as $n){
+            if($n['name'] == $namProduct){
+                $data = "equals";
+            }else{
+                $data = "not-equals";
+            }
+        }
+
+        return response()->json(['data' => $data]);
+
     }
 }

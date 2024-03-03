@@ -90,7 +90,7 @@ function formatPhone($phone){
             <div class="col-md-6">
               <div class="form-group">
                 <label for="contact-tel">{{__('Phone')}}</label>
-                <input class="form-control form-control-rounded" type="text" name="phone" id="contact-tel" placeholder="{{__('Phone')}}" >
+                <input class="form-control form-control-rounded" type="text" name="phone" id="contact-tel" placeholder="{{__('Phone')}}" data-valformat="withspacesforthreenumbers" maxlength="11">
                 @error('phone')
                 <p class="text-danger">{{$message}}</p>
                 @enderror
@@ -145,10 +145,14 @@ function formatPhone($phone){
                     </button>
                   </div>
                   <div id="coding" class="tabcontent">
-                    <p><iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15607.907343172143!2d-77.0450926!3d-12.0451147!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x6295b8295e8e7a78!2zQ09SRUlOSk0gUy4g0JAuINChLg!5e0!3m2!1ses-419!2spe!4v1669766173402!5m2!1ses-419!2spe" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></p>
+                    <p>
+                      <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15607.907343172143!2d-77.0450926!3d-12.0451147!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x6295b8295e8e7a78!2zQ09SRUlOSk0gUy4g0JAuINChLg!5e0!3m2!1ses-419!2spe!4v1669766173402!5m2!1ses-419!2spe" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </p>
                   </div>
                   <div id="wordPress" class="tabcontent">
-                    <p><iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15607.902710465167!2d-77.0444584!3d-12.0451944!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x4064839cd20cd011!2sCOREIN%20GROUP%20SAC!5e0!3m2!1ses-419!2spe!4v1669765979814!5m2!1ses-419!2spe" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></p>
+                    <p>
+                      <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15607.902710465167!2d-77.0444584!3d-12.0451944!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x4064839cd20cd011!2sCOREIN%20GROUP%20SAC!5e0!3m2!1ses-419!2spe!4v1669765979814!5m2!1ses-419!2spe" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -158,6 +162,7 @@ function formatPhone($phone){
       </div>
     </div> 
   </div>
+<script type="text/javascript" src="{{asset('assets/front/js/contact.min.js')}}"></script>
 <script>
 function openTab(evt, Services, arrows) {
   var i, tabcontent, tablinks, tabArrow;

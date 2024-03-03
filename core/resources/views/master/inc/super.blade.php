@@ -6,32 +6,6 @@
     </a>
   </li>
   <li class="nav-item">
-    <a data-toggle="collapse" href="#category">
-      <i class="fas fa-list-alt"></i>
-      <p>{{ __('Manage Categories') }}</p>
-      <span class="caret"></span>
-    </a>
-    <div class="collapse" id="category">
-      <ul class="nav nav-collapse">
-        <li>
-          <a class="sub-link" href="{{ route('back.category.index') }}">
-            <span class="sub-item">{{ __('Categories') }}</span>
-          </a>
-        </li>
-        <li>
-          <a class="sub-link" href="{{ route('back.subcategory.index') }}">
-            <span class="sub-item">{{ __('Sub categories') }}</span>
-          </a>
-        </li>
-        <li>
-          <a class="sub-link" href="{{ route('back.childcategory.index') }}">
-            <span class="sub-item">{{ __('Child categories') }}</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </li>
-  <li class="nav-item">
     <a data-toggle="collapse" href="#items">
       <i class="fab fa-product-hunt"></i>
       <p>{{ __('Manage Products') }}</p>
@@ -39,11 +13,6 @@
     </a>
     <div class="collapse" id="items">
       <ul class="nav nav-collapse">
-        <li>
-          <a class="sub-link" href="{{ route('back.brand.index') }}">
-            <span class="sub-item">{{ __('Brands') }}</span>
-          </a>
-        </li>
         <li>
           <a class="sub-link" href="{{ route('back.item.add') }}">
             <span class="sub-item">{{ __('Add Product') }}</span>
@@ -60,6 +29,23 @@
           </a>
         </li>
         <li>
+          <a class="sub-link" href="{{ route('back.brand.index') }}">
+            <span class="sub-item">{{ __('Brands') }}</span>
+          </a>
+        </li>
+        <li>
+          <a class="sub-link" href="{{ route('back.unitroot.index') }}">
+            <span class="sub-item">{{ __('Unidad Raíz') }}</span>
+          </a>
+        </li>
+        <li>
+          <a class="sub-link" href="{{ route('back.attributeroot.index') }}">
+            <span class="sub-item">{{ __('Atributo Raíz') }}</span>
+          </a>
+        </li>
+        {{--
+        <!--
+        <li>
           <a class="sub-link" href="{{ route('back.campaign.index') }}">
             <span class="sub-item">{{ __('Campaign Offer') }}</span>
           </a>
@@ -73,26 +59,11 @@
           <a class="sub-link" href="{{ route('back.review.index') }}">
           <span class="sub-item">{{ __('Product Reviews') }}</span></a>
         </li>
+        -->
+        --}}
       </ul>
     </div>
   </li>
-  <li class="nav-item">
-    <a data-toggle="collapse" href="#quotation">
-      <i class="fas fa-percent"></i>
-      <p>{{ __('Manage Quotation') }} </p>
-      <span class="caret"></span>
-    </a>
-    <div class="collapse" id="quotation">
-      <ul class="nav nav-collapse">
-        <li>
-          <a class="sub-link" href="{{ route('back.quotation.index') }}">
-            <span class="sub-item">{{ __('All Quotation') }}</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </li>
-  <!-- NUEVO CONTENIDO(INICIO) -->
   <li class="nav-item {{ request()->is('orders/*') ? 'submenu' : '' }}">
     <a data-toggle="collapse" href="#order">
       <i class="fab fa-first-order"></i>
@@ -129,16 +100,112 @@
       </ul>
     </div>
   </li>
-  <!-- NUEVO CONTENIDO(FIN) -->
+  <li class="nav-item">
+    <a data-toggle="collapse" href="#category">
+      <i class="fas fa-list-alt"></i>
+      <p>{{ __('Manage Categories') }}</p>
+      <span class="caret"></span>
+    </a>
+    <div class="collapse" id="category">
+      <ul class="nav nav-collapse">
+        <li>
+          <a class="sub-link" href="{{ route('back.category.index') }}">
+            <span class="sub-item">{{ __('Categories') }}</span>
+          </a>
+        </li>
+        <li>
+          <a class="sub-link" href="{{ route('back.subcategory.index') }}">
+            <span class="sub-item">{{ __('Sub categories') }}</span>
+          </a>
+        </li>
+        <li>
+          <a class="sub-link" href="{{ route('back.childcategory.index') }}">
+            <span class="sub-item">{{ __('Child categories') }}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </li>
+
+  
+  
+  <li class="nav-item">
+    <a data-toggle="collapse" href="#coupons">
+      <i class="fas fa-tags"></i>
+      <p>{{ __('Manage Coupons') }}</p>
+      <span class="caret"></span>
+    </a>
+    <div class="collapse" id="coupons">
+      <ul class="nav nav-collapse">
+        <li>
+          <a class="sub-link" href="{{ route('back.coupons.index') }}">
+            <span class="sub-item">{{ __('Cupones') }}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </li>
+  
+
+
+  <li class="nav-item">
+    <a data-toggle="collapse" href="#store">
+      <i class="fas fa-store"></i>
+      <p>{{ __('Manage Stores') }}</p>
+      <span class="caret"></span>
+    </a>
+    <div class="collapse" id="store">
+      <ul class="nav nav-collapse">
+        <li>
+          <a class="sub-link" href="{{ route('back.store.index') }}">
+            <span class="sub-item">{{ __('Stores') }}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </li>
+  <li class="nav-item">
+    <a data-toggle="collapse" href="#quotation">
+      <i class="fas fa-percent"></i>
+      <p>{{ __('Manage Quotation') }} </p>
+      <span class="caret"></span>
+    </a>
+    <div class="collapse" id="quotation">
+      <ul class="nav nav-collapse">
+        <li>
+          <a class="sub-link" href="{{ route('back.quotation.index') }}">
+            <span class="sub-item">{{ __('All Quotation') }}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </li>
+  
+  
+  <li class="nav-item">
+    <a data-toggle="collapse" href="#catalog">
+      <i class="fas fa-book"></i>
+      <p>{{ __('Manage Catalogs') }} </p>
+      <span class="caret"></span>
+    </a>
+    <div class="collapse" id="catalog">
+      <ul class="nav nav-collapse">
+        <li>
+          <a class="sub-link" href="{{ route('back.catalog.index') }}">
+            <span class="sub-item">{{ __('All Catalogs') }}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </li>
+  
+
   <li class="nav-item">
     <a href="{{ route('back.transaction.index') }}">
       <i class="fas fa-random"></i>
       <p>{{ __('Transactions') }}</p>
     </a>
   </li>    
-  <!-- NUEVO CONTENIDO (INICIO) -->
-  
-    
   <li class="nav-item">
     <a data-toggle="collapse" href="#locaciones">
       <i class="fas fa-list-alt"></i>
@@ -165,9 +232,6 @@
       </ul>
     </div>
   </li>
- 
-  
-  <!-- NUEVO CONTENIDO (FIN) -->
   <li class="nav-item">
     <a data-toggle="collapse" href="#ecommerce">
       <i class="fas fa-newspaper"></i>
@@ -293,7 +357,7 @@
           </a>
         </li>
         <li>
-          <a class="sub-link" href="{{ route('admin.sitemap.index') }}">
+          <a class="sub-link" href="{{ route('back.sitemap.index') }}">
             <span class="sub-item">{{ __('Sitemap') }}</span>
           </a>
         </li>

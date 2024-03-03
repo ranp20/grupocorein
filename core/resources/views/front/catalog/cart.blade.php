@@ -32,13 +32,6 @@
       </div>
     </div>
   </div>
-  {{--
-  @php
-    echo "<pre>";
-    print_r(Session::get('cart'));
-    echo "</pre>";
-  @endphp
-  --}}
   <div id="view_cart_load">
     @include('includes.cart')
   </div>

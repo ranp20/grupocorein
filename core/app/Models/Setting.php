@@ -8,6 +8,7 @@ class Setting extends Model
 {
     protected $fillable = [
         'title',
+        'ruc',
         'home_page_title',
         'logo',
         'favicon',
@@ -122,6 +123,7 @@ class Setting extends Model
         'decimal_separator',
         'thousand_separator',
         'is_decimal',
+        'whatsapp_numbers',
     ];
 
     public $timestamps = false;

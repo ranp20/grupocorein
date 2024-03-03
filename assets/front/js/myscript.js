@@ -394,10 +394,12 @@ $(function($){
     document.addEventListener('keydown', handleKeyPress);
     $(document).on("click",".cWtspBtnCtc__pLink",function(e){
       e.preventDefault();
+      /*
       // console.log($(this).parent().parent().find('.product-title').find('a').text());
       let prod_name = $(this).parent().parent().find('.product-title').find('a').text().trim();
       let prod_price = $(this).parent().parent().find('.product-price').find('span').text().trim();
       alert("Producto: "+prod_name+"\n"+"Precio: "+prod_price);
+      */
     });
     // ----------------------- NUEVO CONTENIDO(FIN)
     $(document).on('click', '#view_all_search_', function(){
@@ -586,7 +588,7 @@ $(function($){
       getData();
     });
     function cartSubmit(item_key,item_id,cartQty){
-      // console.log(item_key,cartQty);
+      console.log(item_key,cartQty);
       getData(1, item_key,item_id, cartQty);
     };
     function getData(status = 0, check = 0, item_key = 0, qty = 0, add_type = 0){
@@ -633,8 +635,16 @@ $(function($){
       } else{
         $('#main_price').html(setCurrency + mainPrice);
       }
+
+      let colorCode = ($("#set_colr-code") && $("#set_colr-code").length > 0) ? $("#set_colr-code").val() : "0";
+      let colorName = ($("#set_colr-name") && $("#set_colr-name").length > 0) ? encodeURIComponent($("#set_colr-name").val()) : "0";
+      let colorAttrCollection = {
+        "color_code" : (colorCode != "") ? colorCode : "0",
+        "color_name" : (colorName != "") ? colorName : "0"
+      };
+
       if(status == 1){
-        let addToCartUrl = `${mainurl}/product/add/cart?item_id=${itemId}&options_ids=${options_ids}&attribute_ids=${attribute_ids}&quantity=${quantity}&type=${type}&item_key=${item_key}&add_type=${add_type}`;
+        let addToCartUrl = `${mainurl}/product/add/cart?item_id=${itemId}&options_ids=${options_ids}&attribute_ids=${attribute_ids}&quantity=${quantity}&type=${type}&item_key=${item_key}&add_type=${add_type}&attr_color_code=${colorAttrCollection['color_code']}&attr_color_name=${colorAttrCollection['color_name']}`;
         $.ajax({
           type: "GET",
           url: addToCartUrl,
@@ -745,4 +755,49 @@ $(window).on('load', function(event){
       }, mainbs.announcement_delay * 1000);
     }
   }
+
+
+  // ----------- HACER HOVER EN UN ELEMENTO CON DROPDOWN
+var namehoverAll = document.querySelectorAll("*[data-dropdown-custommenu]");
+var backdropHome = document.querySelector("#backdrop");
+namehoverAll.forEach(function(i,e){
+  var namehover = i;
+  namehover.addEventListener("mouseenter",function(){
+    var attrnamehov = this.getAttribute("data-dropdown-custommenu");
+    if(attrnamehov.value === ''){
+      console.log('No es un menu hover');
+    }else{
+      $("#backdrop").removeClass('hide');
+      $(this).addClass('active');
+      $(this).next().addClass('active');
+    }
+  });
+});
+// ----------- REMOVER ELEMENTO DROPDOWN AL HACER HOVER EN EL BACKDROP
+backdropHome.addEventListener("mouseenter", function(){
+  namehoverAll.forEach(function(i,e){
+    var namehover = i;
+    if(namehover.classList.contains("active")){
+      backdropHome.classList.add("hide");
+      namehover.classList.remove('active');
+      namehover.nextElementSibling.classList.remove('active');
+    }
+  });
+});
+// Add click event listeners to filter buttons
+const filterButtons = document.querySelectorAll('.filter-button');
+filterButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const letter = button.textContent;
+    const groups = document.querySelectorAll('.brand-group');
+    
+    groups.forEach(group => {
+      if (group.id === letter) {
+        group.style.display = 'block';
+      } else {
+        group.style.display = 'none';
+      }
+    });
+  });
+});
 });

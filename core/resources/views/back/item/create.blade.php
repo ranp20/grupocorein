@@ -9,6 +9,18 @@
       </div>
     </div>
   </div>
+  <div id="iptc-A3gs4FS_token">
+    @csrf
+  </div>
+  <?php
+    $getAllTaxes = DB::table('taxes')->get()->toArray();
+    $arrTaxesValue = [];
+    foreach($getAllTaxes as $k => $v){
+      $arrTaxesValue[$k]['value'] = $v->value;
+    }
+  ?>
+  <input class="hidden" placeholder="" value="<?= $arrTaxesValue[0]['value'];?>" style="visibility:hidden;display:none;" id="e_hY-596kjkJN79">
+  <input class="hidden" placeholder="" value="<?= $arrTaxesValue[1]['value'];?>" style="visibility:hidden;display:none;" id="e_hD-123kjkJN79">
   <div class="row">
     <div class="col-lg-12">
       @include('alerts.alerts')
@@ -21,9 +33,36 @@
       <div class="col-lg-8">
         <div class="card">
           <div class="card-body">
+            <!-- <div class="px-2">
+              <h2><strong>Atributos</strong></h2>
+            </div> -->
+            <div class="form-group">
+              <label for="unidadraiz">{{ __('Select Root Unit') }} *</label>
+              <select name="unidadraiz" id="unidadraiz" class="form-control">
+                <option value="" selected>{{__('Select One')}}</option>
+                @foreach(DB::table('tbl_unidadraiz')->get() as $uraiz)
+                <option value="{{ $uraiz->id }}">{{ $uraiz->name }}</option>
+                @endforeach
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="atributoraiz">{{ __('Select Root Attribute') }} </label>
+              <select name="atributoraiz" id="atributoraiz" class="form-control">
+                <option value="" selected>{{__('Select One')}}</option>
+                @foreach(DB::table('tbl_atributoraiz')->get() as $attraiz)
+                <option value="{{ $attraiz->id }}">{{ $attraiz->name }}</option>
+                @endforeach
+              </select>
+            </div>
+            <div id="cTentr-af172698__p-adm"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
             <div class="form-group">
               <label for="name">{{ __('Name') }} *</label>
               <input type="text" name="name" class="form-control item-name" id="name" placeholder="{{ __('Enter Name') }}" value="{{ old('name') }}" required>
+              <span id="spn__iptequalsmssg"></span>
             </div>
             <div class="form-group">
               <label for="slug">{{ __('Slug') }} *</label>
@@ -74,7 +113,7 @@
           <div class="card-body">
             <div class="form-group">
               <label for="sort_details">{{ __('Short Description') }} *</label>
-              <textarea name="sort_details" id="sort_details" class="form-control" placeholder="{{ __('Short Description') }}">{{ old('sort_details') }}</textarea>
+              <textarea name="sort_details" id="sort_details" class="form-control" placeholder="{{ __('Short Description') }}" required>{{ old('sort_details') }}</textarea>
             </div>
             <div class="form-group">
               <label for="details">{{ __('Description') }} *</label>
@@ -95,23 +134,39 @@
                 <span class="switch-text">{{ __('Specifications') }}</span>
               </label>
             </div>
-            <div id="specifications-section">
-              <div class="d-flex">
-                <div class="flex-grow-1">
-                  <div class="form-group">
-                    <input type="text" class="form-control" name="specification_name[]" placeholder="{{ __('Specification Name') }}" value="">
+            <div id="cTentr-af1728903__p-adm">
+              <div id="specifications-section">
+                <div class="d-flex">
+                  <div class="flex-grow-1">
+                    <div class="form-group">
+                      <input type="text" class="form-control aia843d__spcfname" name="specification_name[]" placeholder="{{ __('Specification Name') }}" value="">
+                    </div>
                   </div>
-                </div>
-                <div class="flex-grow-1">
-                  <div class="form-group">
-                    <input type="text" class="form-control" name="specification_description[]" placeholder="{{ __('Specification description') }}" value="">
+                  <div class="flex-grow-1">
+                    <div class="form-group">
+                      <input type="text" class="form-control aia843d__spcfdsc" name="specification_description[]" placeholder="{{ __('Specification description') }}" value="">
+                    </div>
                   </div>
-                </div>
-                <div class="flex-btn">
-                  <button type="button" class="btn btn-success add-specification" data-text="{{ __('Specification Name') }}" data-text1="{{ __('Specification Description') }}"> <i class="fa fa-plus"></i> </button>
+                  <div class="flex-btn">
+                    <button type="button" class="btn btn-success add-specification" data-text="{{ __('Specification Name') }}" data-text1="{{ __('Specification Description') }}"> <i class="fa fa-plus"></i> </button>
+                  </div>
                 </div>
               </div>
-            </div>
+              <div class="d-flex c-sctGroupList">
+                <div class="flex-grow-1">
+                  <div class="scGroupElems-sectionList">
+                    <div class="c-zTitleSectionFloating">
+                      <span class="c-zTitleSectionFloating__txt">Lista de <strong>Especificaciones Agregadas</strong></span>
+                    </div>
+                    <div class="scGroupElems-sectionList__c" id="specifications-sectionList__c">
+                      <div class="scGroupElems-sectionList__c__deftxt" id="defTxt57vnj-espc__anyval">
+                        <p>Sin Especificaciones</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>            
           </div>
         </div>
         <div class="card">
@@ -135,6 +190,21 @@
             <button type="submit" class="btn btn-info save__edit">{{ __('Save & Edit') }}</button>
           </div>
         </div>
+
+        <div class="card">
+          <div class="card-body">
+            <div class="form-group">
+              <label for="coupon_id">{{ __('Select Coupon') }} </label>
+              <select name="coupon_id" id="coupon_id" class="form-control" >
+                <option value="" selected>{{__('Select Coupon')}}</option>
+                @foreach(DB::table('tbl_coupons')->whereStatus(1)->get() as $coupon)
+                <option value="{{ $coupon->id }}">{{ $coupon->name }}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+        </div>
+
         <div class="card">
           <div class="card-body">
             <div class="form-group">
@@ -143,7 +213,7 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text">{{ PriceHelper::adminCurrency() }}</span>
                 </div>
-                <input type="text" id="discount_price" name="discount_price" class="form-control" placeholder="{{ __('Enter Current Price') }}" min="1" step="0.1" value="{{ old('discount_price') }}" >
+                <input type="text" id="discount_price" name="discount_price" class="form-control" placeholder="{{ __('Enter Current Price') }}" min="1" step="0.1" value="{{ old('discount_price') }}" required>
               </div>
             </div>
             <div class="form-group">
@@ -161,7 +231,7 @@
           <div class="card-body">
             <div class="form-group">
               <label for="category_id">{{ __('Select Category') }} *</label>
-              <select name="category_id" id="category_id" data-href="{{route('back.get.subcategory')}}" class="form-control" >
+              <select name="category_id" id="category_id" data-href="{{route('back.get.subcategory')}}" class="form-control" required>
                 <option value="" selected>{{__('Select One')}}</option>
                 @foreach(DB::table('categories')->whereStatus(1)->get() as $cat)
                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
@@ -196,7 +266,7 @@
             <div class="form-group">
               <label for="stock">{{ __('Total in stock') }} *</label>
               <div class="input-group mb-3">
-                <input type="number" id="stock" name="stock" class="form-control" placeholder="{{ __('Total in stock') }}" value="{{ old('stock') }}" >
+                <input type="number" id="stock" name="stock" class="form-control" placeholder="{{ __('Total in stock') }}" value="{{ old('stock') }}" required>
               </div>
             </div>
             <div class="form-group">
@@ -209,7 +279,39 @@
               </select>
             </div>
             <div class="form-group">
-              <label for="sections_id">{{ __('Seleccionar sección') }} *</label>
+              <label for="">{{ __('Seleccionar sección') }} *</label>
+              <div class="border-list-switchs">
+                <div class="form-check pb-0">
+                  <section class="c-sRadioBtn__c--cDesign-1">
+                    <div class="c-sRadioBtn__c--cDesign-1__c">
+                    <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="0" id="0"/>
+                      <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
+                    </div>
+                    <label for="0" style="cursor:pointer;">Ninguna</label>
+                  </section>
+                  @foreach(DB::table('tbl_sections')->get() as $section)
+                    @php
+                    $onSection = "";
+                    if($section->name == "on_sale"){
+                      $onSection = "En promoción";
+                    }else if($section->name == "special_offer"){
+                      $onSection = "Oferta Especial";
+                    }else{
+                      $onSection = $section->name;
+                    }
+                    @endphp
+                    <section class="c-sRadioBtn__c--cDesign-1">
+                      <div class="c-sRadioBtn__c--cDesign-1__c">
+                      <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="{{ $section->id }}" id="{{ $onSection }}"/>
+                        <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
+                      </div>
+                      <label for="{{ $onSection }}" style="cursor:pointer;">{{ $onSection }}</label>
+                    </section>
+                  @endforeach
+                </div>
+              </div>
+              {{--
+              <!--
               <select name="sections_id" id="sections_id" class="form-control" required>
                 <option value="">{{__('Select One')}}</option>
                 @foreach(DB::table('tbl_sections')->get() as $section)
@@ -226,8 +328,26 @@
                   <option value="{{ $section->id }}">{{ $onSection }}</option>
                 @endforeach
               </select>
+              -->
+              --}}
             </div>
             <div id="cTentr-af1698__p-adm"></div>
+            <div class="form-group">
+              <label for="">{{ __('Seleccionar Tiendas') }} *</label>
+              <div class="border-list-switchs">
+                @foreach(DB::table('tbl_stores')->get() as $section)
+                <div class="form-check pb-0">
+                  <section class="c-sWitch__c--cDesign-1">
+                    <div class="c-sWitch__c--cDesign-1__c">
+                      <input type="checkbox" class="c-sWitch__c--cDesign-1__c__input" name="store_availables[]" value="{{ $section->id }}" id="{{ $section->name }}"/>
+                      <label class="c-sWitch__c--cDesign-1__c__label"></label>
+                    </div>
+                    <label for="{{ $section->name }}" style="cursor:pointer;">{{ $section->name }}</label>
+                  </section>
+                </div>
+                @endforeach
+              </div>
+            </div>
             <div class="form-group">
               <label for="sku">{{ __('SKU') }} *</label>
               <input type="text" name="sku" class="form-control" id="sku" placeholder="{{ __('Enter SKU') }}" value="{{Str::random(10)}}" >

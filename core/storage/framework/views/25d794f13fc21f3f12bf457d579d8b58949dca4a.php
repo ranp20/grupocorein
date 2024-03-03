@@ -3,7 +3,7 @@
     <meta name="description" content="<?php echo e($setting->meta_description); ?>">
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
-    <script type="text/javascript" src="<?php echo e(asset('assets/front/js/plugins/jquery-3.7.0.min.js')); ?>"></script>
+
     <link rel="stylesheet" href="<?php echo e(asset('node_modules/owl-carousel/owl-carousel/owl.carousel.css')); ?>">
     <link rel="stylesheet" href="<?php echo e(asset('node_modules/owl-carousel/owl-carousel/owl.theme.css')); ?>">
     <script type="text/javascript" src="<?php echo e(asset('node_modules/owl-carousel/owl-carousel/owl.carousel.min.js')); ?>"></script>
@@ -24,30 +24,47 @@
             $html = $html;
             return $html;
         }
+
+        $TaxesAll = DB::table('taxes')->get();
+        $sumFinalPrice1 = 0;
+        $sumFinalPrice2 = 0;
+        $incIGV = $TaxesAll[0]->value;
+        $sinIGV = $TaxesAll[1]->value;
+        $incIGV_format = $incIGV / 100;
+        $sinIGV_format = $sinIGV;
+
     ?>
     <?php if($extra_settings->is_t3_slider == 1): ?>
         <div  class="hero-area3" >
             <div class="background"></div>
             <div class="heroarea-slider owl-carousel">
+                <?php
+                /*
+                echo "<pre>";
+                print_r($sliders);
+                echo "</pre>";
+                */
+                ?>
                 <?php $__currentLoopData = $sliders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $slider): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <div class="item" style="background: url('<?php echo e(asset('assets/images/' . $slider->photo)); ?>')">
+                
+                <div class="item cSldcPrd1__m__itm" style="background: url('<?php echo e(asset('assets/images/' . $slider->photo)); ?>')">
                     <div class="container">
-                    <div class="row">
-                        <div class="col-xl-5 col-lg-6 d-flex align-self-center">
-                            <div class="left-content color-white">
-                                <div class="content"></div>
-                            </div>
-                        </div>
-                        <?php if(isset($slider->logo) && $slider->logo != ""): ?>
-                        <div class="col-xl-7 col-lg-6 order-first order-lg-last">
-                            <div class="layer-4">
-                                <div class="right-img">
-                                <img class="img-fluid full-img" src="<?php echo e(asset('assets/images/' . $slider->logo)); ?>" alt="<?php echo e($slider->logo); ?>" width="100" height="100" decoding="sync">
+                        <div class="row">
+                            <div class="col-xl-5 col-lg-6 d-flex align-self-center">
+                                <div class="left-content color-white">
+                                    <div class="content"></div>
                                 </div>
                             </div>
+                            <?php if(isset($slider->logo) && $slider->logo != ""): ?>
+                            <div class="col-xl-7 col-lg-6 order-first order-lg-last">
+                                <div class="layer-4">
+                                    <div class="right-img">
+                                    <img class="img-fluid full-img" src="<?php echo e(asset('assets/images/' . $slider->logo)); ?>" alt="<?php echo e($slider->logo); ?>" width="100" height="100" decoding="sync">
+                                    </div>
+                                </div>
+                            </div>
+                            <?php endif; ?>
                         </div>
-                        <?php endif; ?>
-                    </div>
                     </div>
                 </div>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -60,6 +77,20 @@
                 <div class="col-lg-12">
                     <div class="section-title">
                         <h2 class="h3">Categorías destacadas</h2>
+                        <div class="c-LinksViewsAll__c">
+                            <a href="<?php echo e(route('front.allcategories')); ?>" class="c-LinksViewsAll__c--cMob-link c-linkAc8S5__s57ds">
+                                <span><?php echo e(__('View all')); ?> </span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 100 125" x="0px" y="0px"><path d="M20.81,86.25a11.25,11.25,0,0,0,19.2,8L75.9,58.32a11.23,11.23,0,0,0,3.29-8c0-.13,0-.25,0-.37a11.2,11.2,0,0,0-3.28-8.32L40,5.79A11.25,11.25,0,0,0,24.1,21.7L52.4,50,24.1,78.3A11.23,11.23,0,0,0,20.81,86.25Z"/></svg>
+                                </span>
+                            </a>
+                            <a href="<?php echo e(route('front.allcategories')); ?>" class="c-LinksViewsAll__c--cDesk-link c-linkAc8S5__s57ds">
+                                <span><?php echo e(__('All Categories')); ?> </span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 100 125" x="0px" y="0px"><path d="M20.81,86.25a11.25,11.25,0,0,0,19.2,8L75.9,58.32a11.23,11.23,0,0,0,3.29-8c0-.13,0-.25,0-.37a11.2,11.2,0,0,0-3.28-8.32L40,5.79A11.25,11.25,0,0,0,24.1,21.7L52.4,50,24.1,78.3A11.23,11.23,0,0,0,20.81,86.25Z"/></svg>
+                                </span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -189,39 +220,84 @@
                                         <h3 class="product-title">
                                             <a href="<?php echo e(route('front.product',$popular_category_item->slug)); ?>"><?php echo e(strlen(strip_tags($popular_category_item->name)) > 35 ? substr(strip_tags($popular_category_item->name), 0, 35) : strip_tags($popular_category_item->name)); ?></a>
                                         </h3>
-                                        <div class="rating-stars">
-                                        <i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i>
-                                        </div>
                                         <h4 class="product-price">
                                         <?php if($popular_category_item->previous_price != 0): ?>
                                         <del><?php echo e(PriceHelper::setPreviousPrice($popular_category_item->previous_price)); ?></del>
                                         <?php endif; ?>
-                                        <?php echo e(PriceHelper::grandCurrencyPrice($popular_category_item)); ?>
-
+                                            <?php if(isset($popular_category_item->sections_id) && $popular_category_item->sections_id != 0): ?>
+                                                <?php if($popular_category_item->sections_id == 1): ?>
+                                                    <?php if($popular_category_item->on_sale_price != 0 && $popular_category_item->on_sale_price != ""): ?>
+                                                        <?php if(isset($popular_category_item->tax_id) && $popular_category_item->tax_id == 1): ?>
+                                                            <?php
+                                                            $sumFinalPrice1 = $popular_category_item->on_sale_price * $incIGV_format;
+                                                            $sumFinalPrice2 = $popular_category_item->on_sale_price + $sumFinalPrice1;
+                                                            ?>
+                                                            <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                                                        <?php else: ?>
+                                                            <?php
+                                                            $sumFinalPrice1 = $popular_category_item->on_sale_price;
+                                                            $sumFinalPrice2 = $popular_category_item->on_sale_price + $sumFinalPrice1;
+                                                            ?>
+                                                            <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                                                        <?php endif; ?>
+                                                    <?php else: ?>
+                                                        <span><?php echo e(PriceHelper::setCurrencyPrice($popular_category_item->discount_price)); ?></span>
+                                                    <?php endif; ?>
+                                                <?php else: ?>
+                                                    <?php if($popular_category_item->special_offer_price != 0 && $popular_category_item->special_offer_price != ""): ?>
+                                                        <?php if(isset($popular_category_item->tax_id) && $popular_category_item->tax_id == 1): ?>
+                                                            <?php
+                                                            $sumFinalPrice1 = $popular_category_item->special_offer_price * $incIGV_format;
+                                                            $sumFinalPrice2 = $popular_category_item->special_offer_price + $sumFinalPrice1;
+                                                            ?>
+                                                            <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                                                        <?php else: ?>
+                                                            <?php
+                                                            $sumFinalPrice1 = $popular_category_item->special_offer_price;
+                                                            $sumFinalPrice2 = $popular_category_item->special_offer_price + $sumFinalPrice1;
+                                                            ?>
+                                                            <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                                                        <?php endif; ?>
+                                                    <?php else: ?>
+                                                    <span><?php echo e(PriceHelper::setCurrencyPrice($popular_category_item->discount_price)); ?></span>
+                                                    <?php endif; ?>
+                                                <?php endif; ?>
+                                            <?php else: ?>
+                                                <span><?php echo e(PriceHelper::setCurrencyPrice($popular_category_item->discount_price)); ?></span>
+                                            <?php endif; ?>
                                         </h4>
                                         <div class="cWtspBtnCtc">
-                                            <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51<?php echo e($setting->footer_phone); ?>&text=Solicito información sobre: <?php echo e(route('front.product',$popular_category_item->slug)); ?>" target="_blank" class="cWtspBtnCtc__pLink">
-                                                <img src="<?php echo e(route('front.index')); ?>/assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" width="100" height="100" decoding="sync">
+                                            <a title="Solicitar información" href="javascript:void(0);" target="_blank" class="cWtspBtnCtc__pLink">
+                                                <img src="<?php echo e(route('front.index')); ?>/assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" alt="whatsapp_icon" width="100" height="100" decoding="sync">
                                             </a>
                                             <div class="cWtspBtnCtc__pSubM">
+                                                <?php if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers)): ?>
+                                                <?php
+                                                    $whatsappCollection = json_decode($setting->whatsapp_numbers, TRUE);
+                                                    $ArrwpsNumbers = "";
+                                                    $wps_inproducts = [];
+                                                    if(isset($whatsappCollection['whatsapp_numbers'])){
+                                                        $ArrwpsNumbers = $whatsappCollection['whatsapp_numbers'];
+                                                        if(isset($ArrwpsNumbers['in_product'])){
+                                                            $wps_inproducts = $ArrwpsNumbers['in_product'];
+                                                        }
+                                                    }
+                                                ?>
                                                 <ul class="cWtspBtnCtc__pSubM__m">
-                                                <li class="cWtspBtnCtc__pSubM__m__i">
-                                                    <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
-                                                    <!-- <img src="<?php echo e(asset('assets/back/images/WhatsApp')); ?>/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
-                                                    <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                                                    <!-- <span>912 831 232</span> -->
-                                                    <span>Tienda #1</span>
-                                                    </a>
-                                                </li>
-                                                <li class="cWtspBtnCtc__pSubM__m__i">
-                                                    <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
-                                                    <!-- <img src="<?php echo e(asset('assets/back/images/WhatsApp')); ?>/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
-                                                    <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                                                    <!-- <span>974 124 991</span> -->
-                                                    <span>Tienda #2</span>
-                                                    </a>
-                                                </li>
+                                                    <?php $__currentLoopData = $wps_inproducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <li class="cWtspBtnCtc__pSubM__m__i">
+                                                        <a title="<?php echo e($v['title']); ?>" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51<?php echo e($v['number']); ?>&text=<?php echo e($v['text']); ?>" target="_blank">
+                                                            <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">                                                            
+                                                            <span><?php echo e($v['title']); ?></span>
+                                                        </a>
+                                                    </li>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </ul>
+                                                <?php else: ?>
+                                                <p>No hay información</p>
+                                                <?php endif; ?>
+                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -295,39 +371,82 @@
 
                                             </a>
                                         </h3>
-                                        <div class="rating-stars">
-                                        <i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i>
-                                        </div>
                                         <h4 class="product-price">
                                         <?php if($feature_category_item->previous_price != 0): ?>
                                         <del><?php echo e(PriceHelper::setPreviousPrice($feature_category_item->previous_price)); ?></del>
                                         <?php endif; ?>
-                                        <?php echo e(PriceHelper::grandCurrencyPrice($feature_category_item)); ?>
-
+                                        <?php if(isset($feature_category_item->sections_id) && $feature_category_item->sections_id != 0): ?>
+                                            <?php if($feature_category_item->sections_id == 1): ?>
+                                                <?php if($feature_category_item->on_sale_price != 0 && $feature_category_item->on_sale_price != ""): ?>
+                                                    <?php if(isset($feature_category_item->tax_id) && $feature_category_item->tax_id == 1): ?>
+                                                        <?php
+                                                        $sumFinalPrice1 = $feature_category_item->on_sale_price * $incIGV_format;
+                                                        $sumFinalPrice2 = $feature_category_item->on_sale_price + $sumFinalPrice1;
+                                                        ?>
+                                                        <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                                                    <?php else: ?>
+                                                        <?php
+                                                        $sumFinalPrice1 = $feature_category_item->on_sale_price;
+                                                        $sumFinalPrice2 = $feature_category_item->on_sale_price + $sumFinalPrice1;
+                                                        ?>
+                                                        <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                                                    <?php endif; ?>
+                                                <?php else: ?>
+                                                    <span><?php echo e(PriceHelper::setCurrencyPrice($feature_category_item->discount_price)); ?></span>
+                                                <?php endif; ?>
+                                            <?php else: ?>
+                                                <?php if($feature_category_item->special_offer_price != 0 && $feature_category_item->special_offer_price != ""): ?>
+                                                    <?php if(isset($feature_category_item->tax_id) && $feature_category_item->tax_id == 1): ?>
+                                                        <?php
+                                                        $sumFinalPrice1 = $feature_category_item->special_offer_price * $incIGV_format;
+                                                        $sumFinalPrice2 = $feature_category_item->special_offer_price + $sumFinalPrice1;
+                                                        ?>
+                                                        <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                                                    <?php else: ?>
+                                                        <?php
+                                                        $sumFinalPrice1 = $feature_category_item->special_offer_price;
+                                                        $sumFinalPrice2 = $feature_category_item->special_offer_price + $sumFinalPrice1;
+                                                        ?>
+                                                        <span><?php echo e(PriceHelper::setCurrencyPrice($sumFinalPrice2)); ?></span>
+                                                    <?php endif; ?>
+                                                <?php else: ?>
+                                                    <span><?php echo e(PriceHelper::setCurrencyPrice($feature_category_item->discount_price)); ?></span>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                        <?php else: ?>
+                                            <span><?php echo e(PriceHelper::setCurrencyPrice($feature_category_item->discount_price)); ?></span>
+                                        <?php endif; ?>
                                         </h4>
                                         <div class="cWtspBtnCtc">
-                                            <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51<?php echo e($setting->footer_phone); ?>&text=Solicito información sobre: <?php echo e(route('front.product',$feature_category_item->slug)); ?>" target="_blank" class="cWtspBtnCtc__pLink">
-                                                <img src="<?php echo e(route('front.index')); ?>/assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" width="100" height="100" decoding="sync">
+                                            <a title="Solicitar información" href="javascript:void(0);" target="_blank" class="cWtspBtnCtc__pLink">
+                                                <img src="<?php echo e(route('front.index')); ?>/assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" alt="whatsapp_icon" width="100" height="100" decoding="sync">
                                             </a>
                                             <div class="cWtspBtnCtc__pSubM">
+                                                <?php if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers)): ?>
+                                                <?php
+                                                    $whatsappCollection = json_decode($setting->whatsapp_numbers, TRUE);
+                                                    $ArrwpsNumbers = "";
+                                                    $wps_inproducts = [];
+                                                    if(isset($whatsappCollection['whatsapp_numbers'])){
+                                                        $ArrwpsNumbers = $whatsappCollection['whatsapp_numbers'];
+                                                        if(isset($ArrwpsNumbers['in_product'])){
+                                                            $wps_inproducts = $ArrwpsNumbers['in_product'];
+                                                        }
+                                                    }
+                                                ?>
                                                 <ul class="cWtspBtnCtc__pSubM__m">
-                                                <li class="cWtspBtnCtc__pSubM__m__i">
-                                                    <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
-                                                    <!-- <img src="<?php echo e(asset('assets/back/images/WhatsApp')); ?>/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
-                                                    <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                                                    <!-- <span>912 831 232</span> -->
-                                                    <span>Tienda #1</span>
-                                                    </a>
-                                                </li>
-                                                <li class="cWtspBtnCtc__pSubM__m__i">
-                                                    <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
-                                                    <!-- <img src="<?php echo e(asset('assets/back/images/WhatsApp')); ?>/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
-                                                    <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                                                    <!-- <span>974 124 991</span> -->
-                                                    <span>Tienda #2</span>
-                                                    </a>
-                                                </li>
+                                                    <?php $__currentLoopData = $wps_inproducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <li class="cWtspBtnCtc__pSubM__m__i">
+                                                        <a title="<?php echo e($v['title']); ?>" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51<?php echo e($v['number']); ?>&text=<?php echo e($v['text']); ?>" target="_blank">
+                                                            <img src="<?php echo e(asset('assets/images/Utilities')); ?>/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
+                                                            <span><?php echo e($v['title']); ?></span>
+                                                        </a>
+                                                    </li>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </ul>
+                                                <?php else: ?>
+                                                <p>No hay información</p>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </div>

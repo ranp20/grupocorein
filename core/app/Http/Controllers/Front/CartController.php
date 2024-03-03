@@ -3,7 +3,8 @@ namespace App\Http\Controllers\Front;
 use App\{
     Models\Item,
     Http\Controllers\Controller,
-    Repositories\Front\CartRepository
+    Repositories\Front\CartRepository,
+    Models\TempCart
 };
 use Auth;
 use App\Helpers\PriceHelper;
@@ -117,6 +118,21 @@ class CartController extends Controller{
     }
 
     public function cartClear(){
+        $dataSessUser = Auth::user();
+        $id_SessUser = 0;
+        $allTmpCart = "";
+        if(isset($dataSessUser) && !empty($dataSessUser)){
+            if(isset($dataSessUser->first_name) && isset($dataSessUser->last_name)){
+                $id_SessUser = $dataSessUser->id;
+                TempCart::where("user_id", $id_SessUser)->delete();
+            }
+        }
+        /*
+        echo "<pre>";
+        print_r($allTmpCart);
+        echo "</pre>";
+        exit();
+        */
         Session::forget('cart');
         Session::flash('success',__('Carro vaciar con éxito'));
         return back();

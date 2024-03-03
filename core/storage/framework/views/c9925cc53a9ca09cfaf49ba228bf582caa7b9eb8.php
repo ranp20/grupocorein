@@ -548,22 +548,24 @@
                 </thead>
                 <tbody>
                   <?php $__currentLoopData = $recentOrders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                  <tr>
-                    <td>
-                      <a href="<?php echo e(route('back.user.show',$data->user_id)); ?>"><?php echo e($data->user->displayName()); ?></a>
-                    </td>
-                    <td>
-                      <a href="<?php echo e(route('back.order.invoice',$data->id)); ?>"><?php echo e($data->transaction_number); ?></a>
-                    </td>
-                    <td>
-                      <?php echo e($data->payment_method); ?>
+                    <?php if($data->user_id): ?>
+                    <tr>
+                      <td>
+                        <a href="<?php echo e(route('back.user.show',$data->user_id)); ?>"><?php echo e($data->user->displayName()); ?></a>
+                      </td>
+                      <td>
+                        <a href="<?php echo e(route('back.order.invoice',$data->id)); ?>"><?php echo e($data->transaction_number); ?></a>
+                      </td>
+                      <td>
+                        <?php echo e($data->payment_method); ?>
 
-                    </td>
-                    <td>
-                      <?php echo e($data->currency_sign); ?><?php echo e(PriceHelper::OrderTotal($data)); ?>
+                      </td>
+                      <td>
+                        <?php echo e($data->currency_sign); ?><?php echo e(PriceHelper::OrderTotal($data)); ?>
 
-                    </td>
-                  </tr>
+                      </td>
+                    </tr>
+                    <?php endif; ?>
                   <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tbody>
               </table>

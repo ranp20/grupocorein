@@ -1,4 +1,4 @@
-<?php
+  <?php
 // ************************************ ADMIN PANEL **********************************************
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +27,7 @@ Route::group(['middleware' => 'adminlocalize'], function (){
       Route::get('/order/print/{id}', 'Back\OrderController@printOrder')->name('back.order.print');
       Route::get('/order/invoice/{id}', 'Back\OrderController@invoice')->name('back.order.invoice');
       Route::get('/order/status/{id}/{field}/{value}', 'Back\OrderController@status')->name('back.order.status');
+      Route::get('/order/pdforderpreview/{id}', 'Back\OrderController@getGeneratePDFOrderPreview')->name('back.order.pdforderpreview');
     });
     //------------ NOTIFICATIONS ------------
     Route::get('/notifications', 'Back\NotificationController@notifications')->name('back.notifications');
@@ -39,6 +40,8 @@ Route::group(['middleware' => 'adminlocalize'], function (){
       Route::get('item/status/{item}/{status}', 'Back\ItemController@status')->name('back.item.status');
       Route::get('get/subcategory', 'Back\ItemController@getsubCategory')->name('back.get.subcategory');
       Route::get('get/childcategory', 'Back\ItemController@getChildCategory')->name('back.get.childcategory');
+      Route::post('item/taxes', 'Back\ItemController@getAllTaxes')->name('back.item.taxes');
+      Route::get('item/getproductname/{productname}', 'Back\ItemController@getProductName')->name('back.item.getproductname');
       Route::get('stock/out/product', 'Back\ItemController@stockOut')->name('back.item.stock.out');
       Route::resource('item', 'Back\ItemController', ['as' => 'back', 'except' => 'show', 'getsubCategory']);
       Route::get('item/highlight/{item}', 'Back\ItemController@highlight')->name('back.item.highlight');
@@ -75,6 +78,12 @@ Route::group(['middleware' => 'adminlocalize'], function (){
       //------------ BRAND ------------
       Route::get('brand/status/{id}/{status}/{type}', 'Back\BrandController@status')->name('back.brand.status');
       Route::resource('brand', 'Back\BrandController', ['as' => 'back', 'except' => 'show']);
+      //------------ UNIDAD RAIZ ------------
+      Route::get('unitroot/status/{id}/{status}/{type}', 'Back\RootUnitController@status')->name('back.unitroot.status');
+      Route::resource('unitroot', 'Back\RootUnitController', ['as' => 'back', 'except' => 'show']);
+      //------------ ATRIBUTO RAIZ ------------
+      Route::get('attributeroot/status/{id}/{status}/{type}', 'Back\RootAttributeController@status')->name('back.attributeroot.status');
+      Route::resource('attributeroot', 'Back\RootAttributeController', ['as' => 'back', 'except' => 'show']);
       //------------ REVIEW ----------------//
       Route::get('review/status/{id}/{status}', 'Back\ReviewController@status')->name('back.review.status');
       Route::resource('review', 'Back\ReviewController', ['as' => 'back', 'except' => ['create', 'store', 'edit', 'update']]);
@@ -91,6 +100,15 @@ Route::group(['middleware' => 'adminlocalize'], function (){
       Route::get('childcategory/status/{id}/{status}', 'Back\ChieldCategoryController@status')->name('back.childcategory.status');
       Route::resource('childcategory', 'Back\ChieldCategoryController', ['as' => 'back', 'except' => 'show']);
     });
+
+
+    Route::group(['middleware' => 'permissions:Manage Coupons'], function (){
+      //------------ CATEGORY ------------
+      Route::get('coupons/status/{id}/{status}', 'Back\CouponsController@status')->name('back.coupons.status');
+      Route::resource('coupons', 'Back\CouponsController', ['as' => 'back', 'except' => 'show']);
+    });
+
+
     Route::group(['middleware' => 'permissions:Customer List'], function (){
       //------------ USER ------------
       Route::resource('user', 'Back\UserController', ['as' => 'back', 'except' => ['create', 'store', 'edit']]);
@@ -196,19 +214,24 @@ Route::group(['middleware' => 'adminlocalize'], function (){
       Route::get('/setting/configuration/sms', 'Back\SmsSettingController@sms')->name('back.setting.sms');
       Route::post('/setting/sms/update', 'Back\SmsSettingController@smsUpdate')->name('back.sms.update');
       // ----------- SMS SETTING ---------------//
-      //------------ LANGUAGE SETTING ------------
+      // ------------ LANGUAGE SETTING ------------
       Route::resource('language', 'Back\LanguageController', ['as' => 'back']);
       Route::get('language/status/{id}/{status}', 'Back\LanguageController@status')->name('back.language.status');
-      //------------ SLIDER ------------
+      // ------------ SLIDER ------------
       Route::resource('slider', 'Back\SliderController', ['as' => 'back', 'except' => 'show']);
-      //------------ SERVICE ------------
+      // ------------ SERVICE ------------
       Route::resource('service', 'Back\ServiceController', ['as' => 'back', 'except' => 'show']);
-      // --------- Genarate Sitemap _______
-      Route::get('/sitemap', 'Back\SitemapController@index')->name('admin.sitemap.index');
-      Route::get('/sitemap/add', 'Back\SitemapController@add')->name('admin.sitemap.add');
-      Route::post('/sitemap/store', 'Back\SitemapController@store')->name('admin.sitemap.store');
-      Route::delete('/sitemap/delete/{id}/', 'Back\SitemapController@delete')->name('admin.sitemap.delete');
-      Route::post('/sitemap/download', 'Back\SitemapController@download')->name('admin.sitemap.download');
+      // ------------ Genarate Sitemap ------------
+      // Route::get('sitemap/status/{id}/{status}', 'Back\SitemapController@status')->name('back.sitemap.status');
+      // Route::resource('sitemap', 'Back\SitemapController', ['as' => 'back', 'except' => 'show']);
+      Route::get('/sitemap', 'Back\SitemapController@index')->name('back.sitemap.index');
+      Route::get('/sitemap/add', 'Back\SitemapController@add')->name('back.sitemap.add');
+      Route::post('/sitemap/store', 'Back\SitemapController@store')->name('back.sitemap.store');
+      Route::get('/sitemap/edit/{id}', 'Back\SitemapController@edit')->name('back.sitemap.edit');
+      Route::put('/sitemap/update/{id}', 'Back\SitemapController@update')->name('back.sitemap.update');
+      Route::get('sitemap/status/{id}/{status}', 'Back\SitemapController@status')->name('back.sitemap.status');
+      Route::delete('/sitemap/delete/{id}/', 'Back\SitemapController@delete')->name('back.sitemap.delete');
+      Route::post('/sitemap/download', 'Back\SitemapController@download')->name('back.sitemap.download');
     });
     // --- NUEVO CONTENIDO (INICIO) --- //
     Route::group(['middleware' => 'permissions:Manage Locations'], function (){ 
@@ -225,11 +248,17 @@ Route::group(['middleware' => 'adminlocalize'], function (){
       //------------ CIUDAD ------------
       // Route::resource('ciudad', 'Back\CiudadController', ['as' => 'back', 'except' => 'show']);
     });
-    Route::group(['middleware' => 'permissions:Manage Quotations'], function (){            
+    Route::group(['middleware' => 'permissions:Manage Quotations'], function (){
       //------------ QUOTATION ------------
       // Route::get('quotation/add', 'Back\QuotationSpreadsheetsController@add')->name('back.quotation.add');
       Route::resource('quotation', 'Back\QuotationSpreadsheetsController', ['as' => 'back', 'except' => 'show']);
       Route::post('/quotation/store', 'Back\QuotationSpreadsheetsValuesControlller@store')->name('back.quotationspreadsheetvalues.store');
+    });
+    Route::group(['middleware' => 'permissions:Manage Catalogs'], function (){
+      //------------ QUOTATION ------------
+      Route::get('catalog/status/{id}/{status}', 'Back\CatalogController@status')->name('back.catalog.status');
+      Route::resource('catalog', 'Back\CatalogController', ['as' => 'back', 'except' => 'show']);
+      Route::post('/catalog/store', 'Back\CatalogController@store')->name('back.catalog.store');
     });
     // --- NUEVO CONTENIDO (FIN) --- //
   });
@@ -240,6 +269,14 @@ Route::group(['middleware' => 'adminlocalize'], function (){
     Route::get('/subscribers/send-mail', 'Back\SubscriberController@sendMail')->name('back.subscribers.mail');
     Route::post('/subscribers/send-mail/submit', 'Back\SubscriberController@sendMailSubmit')->name('back.subscribers.mail.submit');
   });
+  
+  Route::group(['middleware' => 'permissions:Manage Stores'], function (){
+    //------------ CATEGORY ------------
+    // Route::get('stores/status/{id}/{status}', 'Back\StoresController@status')->name('back.stores.status');
+    // Route::get('stores/feature/{id}/{status}', 'Back\StoresController@feature')->name('back.stores.feature');
+    Route::resource('store', 'Back\StoreController', ['as' => 'back', 'except' => 'show']);
+  });
+  
 });
 // ************************************ ADMIN PANEL ENDS**********************************************
 // ************************************ GLOBAL LOCALIZATION **********************************************
@@ -289,6 +326,7 @@ Route::group(['middleware' => 'maintainance'], function (){
       Route::get('/orders', 'User\OrderController@index')->name('user.order.index');
       Route::get('/order/print/{id}', 'User\OrderController@printOrder')->name('user.order.print');
       Route::get('/order/invoice/{id}', 'User\OrderController@details')->name('user.order.invoice');
+      Route::get('/order/pdforderpreview/{id}', 'User\OrderController@getGeneratePDFOrderPreview')->name('user.order.pdforderpreview');
       //------------ WISHLIST ------------
       Route::get('/wishlists', 'User\WishlistController@index')->name('user.wishlist.index');
       Route::get('/wishlist/store/{id}', 'User\WishlistController@store')->name('user.wishlist.store');
@@ -303,15 +341,26 @@ Route::group(['middleware' => 'maintainance'], function (){
     Route::get('/', 'Front\FrontendController@index')->name('front.index');
     Route::get('/extra-index', 'Front\FrontendController@extraIndex')->name('front.extraindex');
     Route::get('/product/{slug}', 'Front\FrontendController@product')->name('front.product');
+    Route::post('/product/{slug}', 'Front\FrontendController@product')->name('front.product');
+    // ----------- NUEVO CONTENIDO (INICIO)
+    Route::post('/departamento', 'Front\FrontendController@getAllDepartamentos')->name('front.departamento');
+    Route::get('/provincia', 'Front\FrontendController@getProvinciaByIdDepartamento')->name('front.provincia');
+    Route::get('/distrito', 'Front\FrontendController@getDistritoByIdProvincia')->name('front.distrito');
+    Route::get('/getammountdispath', 'Front\FrontendController@getAmmountDispathByDistrito')->name('front.getammountdispath');
+    Route::get('/removevarscolors/{idprod}', 'Front\FrontendController@removeVarsColorsByIdProd')->name('front.removevarscolors');
+    Route::get('/updatevarscolors/{idprod}', 'Front\FrontendController@updateVarsColorByIdProd')->name('front.updatevarscolors');
+    Route::post('/getallbrands', 'Front\FrontendController@getAllBrands')->name('getallbrands');
+    Route::post('/applycoupon', 'Front\FrontendController@applycoupon')->name('front.applycoupon');
+    // ----------- NUEVO CONTENIDO (FIN)
     Route::get('/campaign/products', 'Front\FrontendController@compaignProduct')->name('front.campaign');
     Route::get('/onsaleproducts/products', 'Front\FrontendController@onsaleproducts')->name('front.onsaleproducts');
     Route::get('/specialoffer/products', 'Front\FrontendController@specialofferProduct')->name('front.specialoffer');
     Route::get('/getproductsbycategory/products', 'Front\FrontendController@getProductByCategoryName')->name('front.getproductsbycategory');
     Route::get('/onsaleproducts/getFilterOnSaleProducts', 'Front\FrontendController@getFilterOnSaleProducts')->name('front.getFilterOnSaleProducts');
     Route::get('/specialofferproducts/getFilterSpecialOfferProducts', 'Front\FrontendController@getFilterSpecialOfferProducts')->name('front.getFilterSpecialOfferProducts');
-    Route::get('/faq/getCatalogsByAnio', 'Front\FrontendController@getCatalogsByAnio')->name('front.getCatalogsByAnio');
     Route::get('/blog', 'Front\FrontendController@blog')->name('front.blog');
-    Route::get('/brands', 'Front\FrontendController@brands')->name('front.brand');
+    // Route::get('/brands', 'Front\FrontendController@brands')->name('front.brand');
+    Route::get('/allcategories', 'Front\FrontendController@allCategories')->name('front.allcategories');
     Route::get('/blog/{slug}', 'Front\FrontendController@blogDetails')->name('front.blog.details');
     Route::get('/faq', 'Front\FrontendController@faq')->name('front.faq');
     Route::get('/faq/{slug}', 'Front\FrontendController@show')->name('front.faq.details');
@@ -348,6 +397,12 @@ Route::group(['middleware' => 'maintainance'], function (){
     Route::get('/catalog', 'Front\CatalogController@index')->name('front.catalog');
     Route::get('/search/suggest', 'Front\CatalogController@suggestSearch')->name('front.search.suggest');
     Route::get('/catalog/view/{type}', 'Front\CatalogController@viewType')->name('front.catalog.view');
+    //------------ CATALOGS ENTERPRISE ------------
+    Route::get('/journals', 'Front\JournalController@index')->name('front.journals');
+    Route::get('/journals/getCatalogsByAnio', 'Front\FrontendController@getCatalogsByAnio')->name('front.getCatalogsByAnio');
+    //------------ BRANDS ------------
+    Route::get('/brands', 'Front\BrandController@index')->name('front.brands');
+    Route::get('/brands/getBrandsByLetter', 'Front\FrontendController@getBrandsByLetter')->name('front.getBrandsByLetter');
     //------------ CHECKOUT ------------
     Route::get('/checkout/billing/address', 'Front\CheckoutController@ship_address')->name('front.checkout.billing');
     Route::post('/checkout/billing/store', 'Front\CheckoutController@billingStore')->name('front.checkout.store');
@@ -367,6 +422,7 @@ Route::group(['middleware' => 'maintainance'], function (){
     Route::get('/checkout/shpping/address/distrito', 'Front\CheckoutController@getDistritoByIdProvincia')->name('front.checkout.distrito');
     Route::get('/checkout/shpping/address/updateamountcart', 'Front\CheckoutController@updateAmountCart')->name('front.checkout.updateamountcart');
     Route::post('/checkout/pdforderpreview', 'Front\CheckoutController@getGeneratePDFOrderPreview')->name('front.checkout.pdforderpreview');
+    Route::post('/checkout/setdatavoucher', 'Front\CheckoutController@selTypeOfVoucher')->name('front.checkout.setdatavoucher');
     Route::post('/checkout/datavoucher', 'Front\CheckoutController@sendDataVoucher')->name('front.checkout.submitdatavoucher');
     //------------ NUEVO CONTENIDO(FIN)
     

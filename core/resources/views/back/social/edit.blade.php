@@ -10,7 +10,7 @@
         <h3 class="mb-0 bc-title"><b>{{ __('Update Social Link') }}</b> <a class="btn btn-primary btn-sm" href="{{route('back.social.index')}}"><i class="fas fa-chevron-left"></i> {{ __('Back') }}</a></h3>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('back.dashboard') }}">{{ __('Dashboard') }}</a></li>
-            <li class="breadcrumb-item"><a href="#">{{ __('Social Links') }}</a></li>
+            <li class="breadcrumb-item"><a href="javascript:void(0);">{{ __('Social Links') }}</a></li>
         </ol>
         </div>
     </div>

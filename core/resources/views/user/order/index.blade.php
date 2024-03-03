@@ -37,7 +37,7 @@
               <tbody>
               @foreach ($orders as $order)
               <tr>
-                <td><a class="navi-link" href="#" data-toggle="modal" data-target="#orderDetails">{{$order->transaction_number}}</a></td>
+                <td><a class="navi-link" href="javascript:void(0);" data-toggle="modal" data-target="#orderDetails">{{$order->transaction_number}}</a></td>
                 <td>
                   @if ($setting->currency_direction == 1)
                   {{$order->currency_sign}}{{PriceHelper::OrderTotal($order)}}

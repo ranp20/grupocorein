@@ -3,6 +3,14 @@
   $qty = 0;
   $option_price = 0;
 ?>
+<?php
+/*
+echo "<pre>";
+print_r(Session::get('cart'));
+echo "</pre>";
+exit();
+*/
+?>
 <?php if(Session::has('cart')): ?>
 <?php $__currentLoopData = Session::get('cart'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $cart): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 <?php
@@ -11,16 +19,26 @@
 ?>
 <div class="entry">
   <div class="entry-thumb">
+    <?php
+      $pathProductCartPhoto = 'assets/images/'.$cart['photo'];
+      $pathProductCartPhotoDefault = 'assets/images/Utilities/default_product.png';
+    ?>
+    <?php if(file_exists( $pathProductCartPhoto )): ?>
     <a href="<?php echo e(route('front.product',$cart['slug'])); ?>">
-      <img src="<?php echo e(asset('assets/images/'.$cart['photo'])); ?>" alt="Product">
+      <img src="<?php echo e(asset($pathProductCartPhoto)); ?>" alt="Product">
     </a>
+    <?php else: ?>
+    <div class="product-thumb">
+      <img src="<?php echo e(asset($pathProductCartPhotoDefault)); ?>" alt="ProductDefault">
+    </div>
+    <?php endif; ?>
   </div>
   <div class="entry-content">
     <h4 class="entry-title"><a href="<?php echo e(route('front.product',$cart['slug'])); ?>">
       <?php echo e(strlen(strip_tags($cart['name'])) > 15 ? substr(strip_tags($cart['name']), 0, 15) . '...' : strip_tags($cart['name'])); ?>
 
     </a></h4>
-    <span class="entry-meta"><?php echo e($cart['qty']); ?> x <?php echo e(PriceHelper::setCurrencyPrice($cart['main_price'])); ?></span>
+    <span class="entry-meta"><?php echo e($cart['qty']); ?> x <?php echo e(PriceHelper::setCurrencyPrice($cart['price'])); ?></span>
     <?php if(isset($cart['attribute']['option_name']) && !empty($cart['attribute']['option_name'])): ?>
     <?php $__currentLoopData = $cart['attribute']['option_name']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $optionkey => $option_name): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
     <span class="att"><em><?php echo e($cart['attribute']['names'][$optionkey]); ?>:</em> <?php echo e($option_name); ?> (<?php echo e(PriceHelper::setCurrencyPrice($cart['attribute']['option_price'][$optionkey])); ?>)</span>

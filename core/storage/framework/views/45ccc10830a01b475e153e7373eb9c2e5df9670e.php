@@ -18,7 +18,7 @@
 <link rel="apple-touch-icon" sizes="167x167" href="<?php echo e(asset('assets/images/'.$setting->favicon)); ?>">
 <?php echo $__env->yieldContent('styleplugins'); ?>
 <link href="<?php echo e(asset('assets/front/css/color.php?primary_color=').str_replace('#','',$setting->primary_color)); ?>" rel="stylesheet">
-<script src="<?php echo e(asset('assets/front/js/modernizr.min.js')); ?>"></script>
+<script type="text/javascript" src="<?php echo e(asset('assets/front/js/modernizr.min.js')); ?>"></script>
 <?php if(DB::table('languages')->where('is_default',1)->first()->rtl == 1): ?>
     <!-- <link rel="stylesheet" href="<?php echo e(asset('assets/front/css/rtl.css')); ?>"> -->
 <?php endif; ?>
@@ -65,9 +65,12 @@ body_theme4
 </div>
 <?php endif; ?>
 <link rel="preload" href="<?php echo e(asset('assets/front/css/styles.min.css')); ?>" as="style">
-<script rel="preload" href="<?php echo e(asset('assets/front/js/plugins/jquery-3.6.4.min.js')); ?>" as="script"></script>
+<script rel="preload" href="<?php echo e(asset('assets/front/js/plugins/jquery-3.4.1.min.js')); ?>" as="script"></script>
 <link id="mainStyles" rel="stylesheet" media="screen" href="<?php echo e(asset('assets/front/css/styles.min.css')); ?>">
-<script type="text/javascript" src="<?php echo e(asset('assets/front/js/plugins/jquery-3.6.4.min.js')); ?>" as="script"></script>
+<script type="text/javascript" src="<?php echo e(asset('assets/front/js/plugins/jquery-3.4.1.min.js')); ?>" as="script"></script>
+
+
+
 <?php echo $__env->make('includes.apiwhatsappbutton', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 <header class="site-header navbar-sticky">
     <div class="menu-top-area">
@@ -109,12 +112,10 @@ body_theme4
                                 <form class="input-group" id="header_search_form" action="<?php echo e(route('front.catalog')); ?>" method="get">
                                     <input type="hidden" name="category" value="" id="search__category">
                                     <span class="input-group-btn">
-                                        <button type="submit"><i class="icon-search"></i></button>
+                                        <button type="submit" title="Buscar..."><i class="icon-search"></i></button>
                                     </span>
-                                    <input class="form-control" type="text" data-target="<?php echo e(route('front.search.suggest')); ?>" autocomplete="off" spellcheck="false" id="__product__search" name="search" placeholder="<?php echo e(__('Search by product name')); ?>" value="<?php echo e($getSessProdSearch); ?>">
-                                    <div class="serch-result d-none px-0 pb-0">
-                                       
-                                    </div>
+                                    <input class="form-control" type="text" data-target="<?php echo e(route('front.search.suggest')); ?>" autocomplete="off" spellcheck="false" id="__product__search" name="search" placeholder="<?php echo e(__('Search')); ?>" value="<?php echo e($getSessProdSearch); ?>">
+                                    <div class="serch-result d-none px-0 pb-0"></div>
                                 </form>
                             </div>
                         </div>
@@ -122,14 +123,14 @@ body_theme4
                         </div>
                         <div class="toolbar d-flex">
                         <div class="toolbar-item close-m-serch visible-on-mobile">
-                            <a href="#">
+                            <a href="javascript:void(0);">
                                 <div>
                                     <i class="icon-search"></i>
                                 </div>
                             </a>
                         </div>
                         <div class="toolbar-item visible-on-mobile mobile-menu-toggle">
-                            <a href="#">
+                            <a href="javascript:void(0);">
                                 <div>
                                     <i class="icon-menu"></i>
                                     <span class="text-label"><?php echo e(__('Menu')); ?></span>
@@ -185,7 +186,7 @@ body_theme4
                             <div class="mm-heading-area">
                                 <h4><?php echo e(__('Navigation')); ?></h4>
                                 <div class="toolbar-item visible-on-mobile mobile-menu-toggle mm-t-two">
-                                    <a href="#">
+                                    <a href="javascript:void(0);">
                                         <div><i class="icon-x"></i></div>
                                     </a>
                                 </div>
@@ -210,13 +211,16 @@ body_theme4
                                             <li class="<?php echo e(request()->routeIs('front.onsaleproducts')  ? 'active' : ''); ?>"><a href="<?php echo e(route('front.onsaleproducts')); ?>"><i class="icon-chevron-right"></i><?php echo e(__('Promotions')); ?></a></li>
                                             <li class="<?php echo e(request()->routeIs('front.specialoffer')  ? 'active' : ''); ?>"><a href="<?php echo e(route('front.specialoffer')); ?>"><i class="icon-chevron-right"></i><?php echo e(__('Special offers')); ?></a></li>
                                             <?php if($setting->is_brands == 1): ?>
-                                            <li class="<?php echo e(request()->routeIs('front.brand')  ? 'active' : ''); ?>"><a href="<?php echo e(route('front.brand')); ?>"><i class="icon-chevron-right"></i><?php echo e(__('Brand')); ?></a></li>
+                                            <li class="<?php echo e(request()->routeIs('front.brands')  ? 'active' : ''); ?>"><a href="<?php echo e(route('front.brands')); ?>"><i class="icon-chevron-right"></i><?php echo e(__('Brand')); ?></a></li>
                                             <?php endif; ?>
                                             <?php if($setting->is_blog == 1): ?>
                                             <!-- <li class="<?php echo e(request()->routeIs('front.blog*') ? 'active' : ''); ?>"><a href="<?php echo e(route('front.blog')); ?>"><i class="icon-chevron-right"></i><?php echo e(__('Blog')); ?></a></li> -->
                                             <?php endif; ?>
-                                            <?php if($setting->is_faq == 1): ?>
-                                            <li><a class="<?php echo e(request()->routeIs('front.faq*') ? 'active' : ''); ?>" href="<?php echo e(route('front.faq')); ?>"><i class="icon-chevron-right pr-2"></i>Catálogo</a></li>
+
+                                            <?php if($setting->is_catalogs == 1): ?>
+                                            <li class="<?php echo e((request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : ''); ?>">
+                                                <a class="<?php echo e((request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : ''); ?>" href="<?php echo e(route('front.journals')); ?>"></i>Catálogos</a>
+                                            </li>
                                             <?php endif; ?>
                                         </ul>
                                     </nav>
@@ -233,6 +237,7 @@ body_theme4
             </div>
         </div>
     </div>
+    <div id="csl-fGv8n09c__sGaYs45"><?php echo csrf_field(); ?></div>
     <div class="navbar theme-total">
         <div class="container">
             <div class="row g-3 w-100">
@@ -249,18 +254,119 @@ body_theme4
                                         <?php if($setting->is_shop == 1): ?>
                                         <li class="<?php echo e(request()->routeIs('front.catalog*')  ? 'active' : ''); ?>"><a href="<?php echo e(route('front.catalog')); ?>"><?php echo e(__('Shop')); ?></a></li>
                                         <?php endif; ?>
-                                        
+                                        <?php if($setting->is_brands == 1): ?>
+                                        <li class="<?php echo e(request()->routeIs('front.brands')  ? 'active' : ''); ?> allbrands_menulist">
+                                            <a href="<?php echo e(route('front.brands')); ?>" class="allbrands-menu-item" data-dropdown-custommenu="brands-menu"><?php echo e(__('Brands')); ?></a>
+                                            
+                                            
+                                            
+                                            <div class="allbrands-list-popup" data-allbrands-js="brands-popup">
+                                                <div class="allbrands-list-container">
+                                                    <?php
+                                                        $Allbrands = DB::table('brands')->select('name','slug')->get()->toArray();
+                                                        // $Allbrands2 = json_decode($Allbrands, TRUE);
+
+                                                        $brandGroups = [];
+                                                        
+                                                        // Check if a letter is a number and replace it with #
+                                                        function sanitizeLetter($letter) {
+                                                            return is_numeric($letter) ? '#' : $letter;
+                                                        }
+
+                                                        foreach ($Allbrands as $brand) {
+                                                            // $firstLetter = strtoupper(substr($brand["name"], 0, 1));
+                                                            $firstLetter = strtoupper(substr($brand->name, 0, 1));
+                                                            $groupName = is_numeric($firstLetter) ? '#' : $firstLetter;
+                                                              if (!isset($brandGroups[$groupName])) {
+                                                                $brandGroups[$groupName] = [];
+                                                              }
+                                                            
+                                                              $brandGroups[$groupName][] = $brand;
+                                                            
+                                                        }
+
+                                                        // Move # group to the front if present
+                                                        if (isset($brandGroups['#'])) {
+                                                            $hashGroup = $brandGroups['#'];
+                                                            unset($brandGroups['#']);
+                                                            $brandGroups = array_merge(['#' => $hashGroup], $brandGroups);
+                                                        }
+
+                                                        $availableLetters = array_keys($brandGroups);
+                                                        // Create an array with all letters of the alphabet
+                                                        $alphabetLetters = range('A', 'Z');
+                                                        // Combine the available letters from the groups with the alphabet letters
+                                                        $allLetters = array_unique(array_merge($availableLetters, $alphabetLetters));
+
+                                                        $filteredLetters = array_map('sanitizeLetter', $allLetters);
+                                                        // $filteredLetters = array_map('sanitizeLetter', $availableLetters);
+
+                                                        // Sort the letters
+                                                        sort($filteredLetters);
+
+                                                        // Move # to the front if present
+                                                        if (($key = array_search('#', $filteredLetters)) !== false) {
+                                                            unset($filteredLetters[$key]);
+                                                            // array_unshift($filteredLetters, '#'); // COLOCAR AL INICIO
+                                                            array_push($filteredLetters, '#'); // COLOCAR AL FINAL
+                                                        }
+                                                    ?>
+                                                    <div class="cgBtns">
+                                                        <div class="cgBtns__List">
+                                                            <div class="filter-buttons">
+                                                                <!-- Add buttons for each letter of the alphabet -->
+                                                                <a class="letter-all" href="<?php echo e(route('front.brands')); ?>">Todas las Marcas</a>
+                                                                <?php
+                                                                    foreach ($filteredLetters as $letter) {
+                                                                        // $disabled = $letter === '#' ? '' : (in_array($letter, range('0', '9')) ? 'disabled' : '');
+                                                                        $disabled = $letter === '#' ? '' : (!in_array($letter, $availableLetters) ? 'disabled' : '');
+                                                                        echo "<button class='filter-button' data-letter='$letter' $disabled>$letter</button>";
+                                                                        // echo "<button class='filter-button' data-letter='$letter'>$letter</button>";
+                                                                    }
+                                                                ?>
+                                                            </div>
+                                                            <div class="brand-list">
+                                                                <?php
+                                                                    // Move # to the front if present
+                                                                    if (isset($filteredLetters['#'])) {
+                                                                        $hashGroup = $brandGroups['#'];
+                                                                        unset($brandGroups['#']);
+                                                                        $brandGroups = array_merge(['#' => $hashGroup], $brandGroups);
+                                                                    }
+
+                                                                    foreach ($brandGroups as $letter => $group) {
+                                                                        echo "<div class='brand-group' id='$letter'>";
+                                                                        echo "<h2 class='brand-group-title'><strong>$letter</strong></h2>";
+                                                                        
+                                                                        foreach ($group as $brand){
+                                                                            $urlBrand = route('front.catalog') . '?brand=' . $brand->slug;
+                                                                            // echo "<a href='#{$brand['slug']}' class='brand-group-item' title='{$brand['name']}'>{$brand['name']}</a>";
+                                                                            echo "<a href='{$urlBrand}' class='brand-group-item' title='{$brand->name}'><span>{$brand->name}</span></a>";
+                                                                        }
+                                                                        
+                                                                        echo "</div>";
+                                                                    }
+                                                                ?>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <?php endif; ?>
                                         <li class="<?php echo e(request()->routeIs('front.onsaleproducts')  ? 'active' : ''); ?>"><a href="<?php echo e(route('front.onsaleproducts')); ?>"><?php echo e(__('Promotions')); ?></a></li>
                                         <li class="<?php echo e(request()->routeIs('front.specialoffer')  ? 'active' : ''); ?>"><a href="<?php echo e(route('front.specialoffer')); ?>"><?php echo e(__('Special offers')); ?></a></li>
-                                        <?php if($setting->is_brands == 1): ?>
-                                        <li class="<?php echo e(request()->routeIs('front.brand')  ? 'active' : ''); ?>"><a href="<?php echo e(route('front.brand')); ?>"><?php echo e(__('Brands')); ?></a></li>
-                                        <?php endif; ?>
+                                        
                                         <?php if($setting->is_blog == 1): ?>
                                         <!-- <li class="<?php echo e(request()->routeIs('front.blog*') ? 'active' : ''); ?>"><a href="<?php echo e(route('front.blog')); ?>"><?php echo e(__('Blog')); ?></a></li> -->
-                                        <?php endif; ?>                                        
-                                        <?php if($setting->is_faq == 1): ?>
-                                        <li><a class="<?php echo e(request()->routeIs('front.faq*') ? 'active' : ''); ?>" href="<?php echo e(route('front.faq')); ?>">Catálogo</a></li>
                                         <?php endif; ?>
+
+                                        <?php if($setting->is_catalogs == 1): ?>
+                                        <li class="<?php echo e((request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : ''); ?>">
+                                            <a class="<?php echo e((request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : ''); ?>" href="<?php echo e(route('front.journals')); ?>"></i>Catálogos</a>
+                                        </li>
+                                        <?php endif; ?>
+
                                     </ul>
                                 </nav>
                             </div>
@@ -283,6 +389,8 @@ body_theme4
         </div>
     </div>
 </header>
+<?php
+?>
 <?php echo $__env->yieldContent('content'); ?>
 <a class="announcement-banner" href="#announcement-modal"></a>
 <div id="announcement-modal" class="mfp-hide white-popup">
@@ -381,7 +489,9 @@ body_theme4
           ?>
             <div class="footer-social-links">
                 <?php $__currentLoopData = $links; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $link_key => $link): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <a href="<?php echo e($link); ?>"><span><i class="<?php echo e($icons[$link_key]); ?>"></i></span></a>
+                <a href="<?php echo e($link); ?>" target="_blank">
+                    <span><i class="<?php echo e($icons[$link_key]); ?>"></i></span>
+                </a>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
           </section>
@@ -390,45 +500,52 @@ body_theme4
           <div class="widget widget-links widget-light-skin">
             <h3 class="widget-title"><?php echo e(__('Usefull Links')); ?></h3>
             <ul>
-               <?php if($setting->is_contact == 1): ?>
-                <li class="<?php echo e(request()->routeIs('front.contact') ? 'active' : ''); ?>"><a href="<?php echo e(route('front.contact')); ?>"><?php echo e(__('Contact')); ?></a></li>
+                <?php if($setting->is_contact == 1): ?>
+                <li class="<?php echo e(request()->routeIs('front.contact') ? 'active' : ''); ?>">
+                    <a href="<?php echo e(route('front.contact')); ?>"><?php echo e(__('Contact')); ?></a>
+                </li>
                 <?php endif; ?>
                 <?php $__currentLoopData = DB::table('pages')->wherePos(2)->orwhere('pos',1)->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <li><a href="<?php echo e(route('front.page',$page->slug)); ?>"><?php echo e($page->title); ?></a></li>
+                <li>
+                    <a href="<?php echo e(route('front.page',$page->slug)); ?>"><?php echo e($page->title); ?></a>
+                </li>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </ul>
           </div>
         </div>
         <div class="col-lg-4">
             <section class="widget">
-              <h3 class="widget-title"><?php echo e(__('Newsletter')); ?></h3>
-              <form class="row subscriber-form" action="<?php echo e(route('front.subscriber.submit')); ?>" method="post">
-                <?php echo csrf_field(); ?>
-                <div class="col-sm-12">
-                  <div class="input-group">
-                    <input class="form-control" type="email" name="email" placeholder="Su correo">
-                    <span class="input-group-addon"><i class="icon-mail"></i></span> </div>
-                  <div aria-hidden="true">
-                    <input type="hidden" name="b_c7103e2c981361a6639545bd5_1194bb7544" tabindex="-1">
-                  </div>
+                <h3 class="widget-title"><?php echo e(__('Newsletter')); ?></h3>
+                <form class="row subscriber-form" action="<?php echo e(route('front.subscriber.submit')); ?>" method="post">
+                    <?php echo csrf_field(); ?>
+                    <div class="col-sm-12">
+                    <div class="input-group">
+                        <input class="form-control" type="email" name="email" placeholder="Su correo">
+                        <span class="input-group-addon"><i class="icon-mail"></i></span> </div>
+                    <div aria-hidden="true">
+                        <input type="hidden" name="b_c7103e2c981361a6639545bd5_1194bb7544" tabindex="-1">
+                    </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <button class="btn btn-primary btn-block mt-2" type="submit">
+                            <span><?php echo e(__('Subscribe')); ?></span>
+                        </button>
+                    </div>
+                    <div class="col-lg-12">
+                        <p class="text-sm opacity-80 pt-2"><?php echo e(__('Subscribe to our Newsletter to receive early discount offers, latest news, sales and promo information.')); ?></p>
+                    </div>
+                </form>
+                <div class="pt-3">
+                    <img class="d-block gateway_image" src="<?php echo e($setting->footer_gateway_img ? asset('assets/images/'.$setting->footer_gateway_img) : asset('system/resources/assets/images/placeholder.png')); ?>" alt="credit-card_list" width="100" height="100" decoding="sync">
                 </div>
-                <div class="col-sm-12">
-                    <button class="btn btn-primary btn-block mt-2" type="submit">
-                        <span><?php echo e(__('Subscribe')); ?></span>
-                    </button>
-                </div>
-                <div class="col-lg-12">
-                    <p class="text-sm opacity-80 pt-2"><?php echo e(__('Subscribe to our Newsletter to receive early discount offers, latest news, sales and promo information.')); ?></p>
-                </div>
-              </form>
-              <div class="pt-3"><img class="d-block gateway_image" src="<?php echo e($setting->footer_gateway_img ? asset('assets/images/'.$setting->footer_gateway_img) : asset('system/resources/assets/images/placeholder.png')); ?>"></div>
             </section>
           </div>
       </div>
       <p class="footer-copyright"> <?php echo e($setting->copy_right); ?></p>
     </div>
 </footer>
-<a class="scroll-to-top-btn" href="#">
+<div class="dark-backdrop hide" id="backdrop"></div>
+<a class="scroll-to-top-btn" href="javascript:void(0);">
     <i class="icon-chevron-up"></i>
 </a>
 <div class="site-backdrop"></div>
@@ -461,6 +578,47 @@ body_theme4
 <script type="text/javascript" src="<?php echo e(asset('assets/front/js/lazy.min.js')); ?>"></script>
 <script type="text/javascript" src="<?php echo e(asset('assets/front/js/lazy.plugin.js')); ?>"></script>
 <script type="text/javascript" src="<?php echo e(asset('assets/front/js/myscript.js')); ?>"></script>
+
+<?php
+  $wstpCollection = json_decode($setting->whatsapp_numbers, TRUE);
+  $ArrwpsNumbersButton = "";
+  $wps_generalButton = [];
+  if(isset($wstpCollection['whatsapp_numbers'])){
+    $ArrwpsNumbersButton = $wstpCollection['whatsapp_numbers'];
+    if(isset($ArrwpsNumbersButton['general'])){
+      $wps_generalButton = $ArrwpsNumbersButton['general'][0];
+    }
+  }
+?>
+<div id="WAButton"></div>
+
+<script type="text/javascript" src="<?php echo e(asset('assets/front/js/plugins/floating-whatsapp/floating-wpp.min.js')); ?>"></script>
+<link rel="stylesheet" href="<?php echo e(asset('assets/front/js/plugins/floating-whatsapp/floating-wpp.min.css')); ?>">
+
+<?php if(isset($wstpCollection['whatsapp_numbers'])): ?>
+    <?php
+        $ArrwpsNumbersButton = $wstpCollection['whatsapp_numbers'];
+    ?>
+    <?php if(isset($ArrwpsNumbersButton['general'])): ?>
+        <script type="text/javascript">
+        $(function() {
+            let imgWAButton = "<?php echo e(asset('assets/front/js/plugins/floating-whatsapp/whatsapp.svg')); ?>";
+            $('#WAButton').floatingWhatsApp({
+            phone: '+51<?php echo $wps_generalButton['number']; ?>', //WhatsApp Business phone number International format-
+            //Get it with Toky at https://toky.co/en/features/whatsapp.
+            headerTitle: '¡Chatea con nosotros en WhatsApp!', //Popup Title
+            popupMessage: 'Hola, ¿Cómo podemos ayudarte?', //Popup Message
+            showPopup: true, //Enables popup display
+            buttonImage: `<img src="${imgWAButton}" />`, //Button Image
+            //headerColor: 'crimson', //Custom header color
+            //backgroundColor: 'crimson', //Custom background button color
+            position: "right"    
+            });
+        });
+        </script>
+    <?php endif; ?>
+<?php endif; ?>
+
 <?php echo $__env->yieldContent('script'); ?>
 <?php if($setting->is_facebook_messenger	== '1'): ?>
  <?php echo $setting->facebook_messenger; ?>
@@ -546,14 +704,14 @@ body_theme4
     <?php if(Session::has('error')): ?>
     <script>
       $(document).ready(function(){
-        DangerNotification('<?php echo e(Session::get('error')); ?>')
+        DangerNotification("<?php echo e(Session::get('error')); ?>");
       });
     </script>
     <?php endif; ?>
     <?php if(Session::has('success')): ?>
     <script>
       $(document).ready(function(){
-        SuccessNotification('<?php echo e(Session::get('success')); ?>');
+        SuccessNotification("<?php echo e(Session::get('success')); ?>");
       });
     </script>
     <?php endif; ?>

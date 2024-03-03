@@ -1,9 +1,22 @@
 @if($sitem->item_type != 'affiliate')
   @if($sitem->is_stock())
   <?php
+    /*
+    echo "<pre>";
+    print_r(Session::get('cart'));
+    echo "</pre>";
+    exit();
+    */
+    // session()->forget('cart');
     $qtyProdSess = 0;
     if(Session::has('cart')){
       $cartInfoSess = Session::get('cart');
+      /*
+      echo "<pre>";
+      print_r($cartInfoSess);
+      echo "</pre>";
+      exit();
+      */
       if($cartInfoSess && isset($cartInfoSess[$sitem->id.'-'])){
         $qtyProdSess = $cartInfoSess[$sitem->id.'-']['qty'];
       }

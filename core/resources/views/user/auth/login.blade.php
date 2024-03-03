@@ -191,15 +191,13 @@
               <div class="col-sm-6">
                 <div class="form-group">
                   <label for="reg-departamento">Departamento</label>
-                  <select class="form-control" name="reg_departamento" id="reg-departamento" data-href="${locationsGET + '/provincia'}" required>
-                    ${tmpListDepartamentos}
-                  </select>
+                  <select class="form-control" name="reg_departamento" id="reg-departamento" data-href="" required></select>
                 </div>
               </div>
               <div class="col-sm-6">
                 <div class="form-group">
                   <label for="reg-provincia">Provincia</label>
-                  <select class="form-control" name="reg_provincia" id="reg-provincia" data-href="${locationsGET + '/distrito'}" required></select>
+                  <select class="form-control" name="reg_provincia" id="reg-provincia" data-href="" required></select>
                 </div>
               </div>
               <div class="col-sm-6">

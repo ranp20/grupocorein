@@ -16,6 +16,7 @@ class CreateSettingsTable extends Migration
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
             $table->string('title')->nullable();
+            $table->string('ruc')->nullable();
             $table->string('logo')->nullable();
             $table->string('favicon')->nullable();
             $table->string('loader')->nullable();
@@ -89,6 +90,8 @@ class CreateSettingsTable extends Migration
             $table->text('maintainance_text')->nullable();
             $table->tinyInteger('is_twilio')->default(0)->nullable();
             $table->text('twilio_section')->nullable();
+            $table->text('whatsapp_numbers')->nullable();
+            $table->tinyInteger('is_catalogs')->default(1)->nullable();
             $table->timestamps();
         });
     }

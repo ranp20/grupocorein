@@ -4,7 +4,7 @@
     <meta name="description" content="{{ $setting->meta_description }}">
 @endsection
 @section('content')
-    <script type="text/javascript" src="{{ asset('assets/front/js/plugins/jquery-3.7.0.min.js') }}"></script>
+
     <link rel="stylesheet" href="{{ asset('node_modules/owl-carousel/owl-carousel/owl.carousel.css')}}">
     <link rel="stylesheet" href="{{ asset('node_modules/owl-carousel/owl-carousel/owl.theme.css')}}">
     <script type="text/javascript" src="{{ asset('node_modules/owl-carousel/owl-carousel/owl.carousel.min.js')}}"></script>
@@ -25,30 +25,47 @@
             $html = $html;
             return $html;
         }
+
+        $TaxesAll = DB::table('taxes')->get();
+        $sumFinalPrice1 = 0;
+        $sumFinalPrice2 = 0;
+        $incIGV = $TaxesAll[0]->value;
+        $sinIGV = $TaxesAll[1]->value;
+        $incIGV_format = $incIGV / 100;
+        $sinIGV_format = $sinIGV;
+
     @endphp
     @if ($extra_settings->is_t3_slider == 1)
         <div  class="hero-area3" >
             <div class="background"></div>
             <div class="heroarea-slider owl-carousel">
+                <?php
+                /*
+                echo "<pre>";
+                print_r($sliders);
+                echo "</pre>";
+                */
+                ?>
                 @foreach ($sliders as $slider)
-                <div class="item" style="background: url('{{ asset('assets/images/' . $slider->photo) }}')">
+                
+                <div class="item cSldcPrd1__m__itm" style="background: url('{{ asset('assets/images/' . $slider->photo) }}')">
                     <div class="container">
-                    <div class="row">
-                        <div class="col-xl-5 col-lg-6 d-flex align-self-center">
-                            <div class="left-content color-white">
-                                <div class="content"></div>
-                            </div>
-                        </div>
-                        @if (isset($slider->logo) && $slider->logo != "")
-                        <div class="col-xl-7 col-lg-6 order-first order-lg-last">
-                            <div class="layer-4">
-                                <div class="right-img">
-                                <img class="img-fluid full-img" src="{{ asset('assets/images/' . $slider->logo) }}" alt="{{$slider->logo}}" width="100" height="100" decoding="sync">
+                        <div class="row">
+                            <div class="col-xl-5 col-lg-6 d-flex align-self-center">
+                                <div class="left-content color-white">
+                                    <div class="content"></div>
                                 </div>
                             </div>
+                            @if (isset($slider->logo) && $slider->logo != "")
+                            <div class="col-xl-7 col-lg-6 order-first order-lg-last">
+                                <div class="layer-4">
+                                    <div class="right-img">
+                                    <img class="img-fluid full-img" src="{{ asset('assets/images/' . $slider->logo) }}" alt="{{$slider->logo}}" width="100" height="100" decoding="sync">
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                         </div>
-                        @endif
-                    </div>
                     </div>
                 </div>
                 @endforeach
@@ -61,6 +78,20 @@
                 <div class="col-lg-12">
                     <div class="section-title">
                         <h2 class="h3">Categorías destacadas</h2>
+                        <div class="c-LinksViewsAll__c">
+                            <a href="{{ route('front.allcategories') }}" class="c-LinksViewsAll__c--cMob-link c-linkAc8S5__s57ds">
+                                <span>{{__('View all')}} </span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 100 125" x="0px" y="0px"><path d="M20.81,86.25a11.25,11.25,0,0,0,19.2,8L75.9,58.32a11.23,11.23,0,0,0,3.29-8c0-.13,0-.25,0-.37a11.2,11.2,0,0,0-3.28-8.32L40,5.79A11.25,11.25,0,0,0,24.1,21.7L52.4,50,24.1,78.3A11.23,11.23,0,0,0,20.81,86.25Z"/></svg>
+                                </span>
+                            </a>
+                            <a href="{{ route('front.allcategories') }}" class="c-LinksViewsAll__c--cDesk-link c-linkAc8S5__s57ds">
+                                <span>{{__('All Categories')}} </span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 100 125" x="0px" y="0px"><path d="M20.81,86.25a11.25,11.25,0,0,0,19.2,8L75.9,58.32a11.23,11.23,0,0,0,3.29-8c0-.13,0-.25,0-.37a11.2,11.2,0,0,0-3.28-8.32L40,5.79A11.25,11.25,0,0,0,24.1,21.7L52.4,50,24.1,78.3A11.23,11.23,0,0,0,20.81,86.25Z"/></svg>
+                                </span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -190,38 +221,84 @@
                                         <h3 class="product-title">
                                             <a href="{{route('front.product',$popular_category_item->slug)}}">{{ strlen(strip_tags($popular_category_item->name)) > 35 ? substr(strip_tags($popular_category_item->name), 0, 35) : strip_tags($popular_category_item->name) }}</a>
                                         </h3>
-                                        <div class="rating-stars">
-                                        <i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i>
-                                        </div>
                                         <h4 class="product-price">
                                         @if ($popular_category_item->previous_price != 0)
                                         <del>{{PriceHelper::setPreviousPrice($popular_category_item->previous_price)}}</del>
                                         @endif
-                                        {{PriceHelper::grandCurrencyPrice($popular_category_item)}}
+                                            @if(isset($popular_category_item->sections_id) && $popular_category_item->sections_id != 0)
+                                                @if($popular_category_item->sections_id == 1)
+                                                    @if($popular_category_item->on_sale_price != 0 && $popular_category_item->on_sale_price != "")
+                                                        @if(isset($popular_category_item->tax_id) && $popular_category_item->tax_id == 1)
+                                                            @php
+                                                            $sumFinalPrice1 = $popular_category_item->on_sale_price * $incIGV_format;
+                                                            $sumFinalPrice2 = $popular_category_item->on_sale_price + $sumFinalPrice1;
+                                                            @endphp
+                                                            <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                                                        @else
+                                                            @php
+                                                            $sumFinalPrice1 = $popular_category_item->on_sale_price;
+                                                            $sumFinalPrice2 = $popular_category_item->on_sale_price + $sumFinalPrice1;
+                                                            @endphp
+                                                            <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                                                        @endif
+                                                    @else
+                                                        <span>{{PriceHelper::setCurrencyPrice($popular_category_item->discount_price)}}</span>
+                                                    @endif
+                                                @else
+                                                    @if($popular_category_item->special_offer_price != 0 && $popular_category_item->special_offer_price != "")
+                                                        @if(isset($popular_category_item->tax_id) && $popular_category_item->tax_id == 1)
+                                                            @php
+                                                            $sumFinalPrice1 = $popular_category_item->special_offer_price * $incIGV_format;
+                                                            $sumFinalPrice2 = $popular_category_item->special_offer_price + $sumFinalPrice1;
+                                                            @endphp
+                                                            <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                                                        @else
+                                                            @php
+                                                            $sumFinalPrice1 = $popular_category_item->special_offer_price;
+                                                            $sumFinalPrice2 = $popular_category_item->special_offer_price + $sumFinalPrice1;
+                                                            @endphp
+                                                            <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                                                        @endif
+                                                    @else
+                                                    <span>{{PriceHelper::setCurrencyPrice($popular_category_item->discount_price)}}</span>
+                                                    @endif
+                                                @endif
+                                            @else
+                                                <span>{{PriceHelper::setCurrencyPrice($popular_category_item->discount_price)}}</span>
+                                            @endif
                                         </h4>
                                         <div class="cWtspBtnCtc">
-                                            <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51{{$setting->footer_phone}}&text=Solicito información sobre: {{route('front.product',$popular_category_item->slug)}}" target="_blank" class="cWtspBtnCtc__pLink">
-                                                <img src="{{route('front.index')}}/assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" width="100" height="100" decoding="sync">
+                                            <a title="Solicitar información" href="javascript:void(0);" target="_blank" class="cWtspBtnCtc__pLink">
+                                                <img src="{{route('front.index')}}/assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" alt="whatsapp_icon" width="100" height="100" decoding="sync">
                                             </a>
                                             <div class="cWtspBtnCtc__pSubM">
+                                                @if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers))
+                                                <?php
+                                                    $whatsappCollection = json_decode($setting->whatsapp_numbers, TRUE);
+                                                    $ArrwpsNumbers = "";
+                                                    $wps_inproducts = [];
+                                                    if(isset($whatsappCollection['whatsapp_numbers'])){
+                                                        $ArrwpsNumbers = $whatsappCollection['whatsapp_numbers'];
+                                                        if(isset($ArrwpsNumbers['in_product'])){
+                                                            $wps_inproducts = $ArrwpsNumbers['in_product'];
+                                                        }
+                                                    }
+                                                ?>
                                                 <ul class="cWtspBtnCtc__pSubM__m">
-                                                <li class="cWtspBtnCtc__pSubM__m__i">
-                                                    <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
-                                                    <!-- <img src="{{ asset('assets/back/images/WhatsApp') }}/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
-                                                    <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                                                    <!-- <span>912 831 232</span> -->
-                                                    <span>Tienda #1</span>
-                                                    </a>
-                                                </li>
-                                                <li class="cWtspBtnCtc__pSubM__m__i">
-                                                    <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
-                                                    <!-- <img src="{{ asset('assets/back/images/WhatsApp') }}/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
-                                                    <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                                                    <!-- <span>974 124 991</span> -->
-                                                    <span>Tienda #2</span>
-                                                    </a>
-                                                </li>
+                                                    @foreach ($wps_inproducts as $k => $v)
+                                                    <li class="cWtspBtnCtc__pSubM__m__i">
+                                                        <a title="{{ $v['title'] }}" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51{{ $v['number'] }}&text={{ $v['text'] }}" target="_blank">
+                                                            <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">                                                            
+                                                            <span>{{ $v['title'] }}</span>
+                                                        </a>
+                                                    </li>
+                                                    @endforeach
                                                 </ul>
+                                                @else
+                                                <p>No hay información</p>
+                                                @endif
+                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -294,38 +371,82 @@
                                             {{ strlen(strip_tags($feature_category_item->name)) > 35 ? substr(strip_tags($feature_category_item->name), 0, 35) : strip_tags($feature_category_item->name) }}
                                             </a>
                                         </h3>
-                                        <div class="rating-stars">
-                                        <i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i><i class="far fa-star filled"></i>
-                                        </div>
                                         <h4 class="product-price">
                                         @if ($feature_category_item->previous_price != 0)
                                         <del>{{PriceHelper::setPreviousPrice($feature_category_item->previous_price)}}</del>
                                         @endif
-                                        {{PriceHelper::grandCurrencyPrice($feature_category_item)}}
+                                        @if(isset($feature_category_item->sections_id) && $feature_category_item->sections_id != 0)
+                                            @if($feature_category_item->sections_id == 1)
+                                                @if($feature_category_item->on_sale_price != 0 && $feature_category_item->on_sale_price != "")
+                                                    @if(isset($feature_category_item->tax_id) && $feature_category_item->tax_id == 1)
+                                                        @php
+                                                        $sumFinalPrice1 = $feature_category_item->on_sale_price * $incIGV_format;
+                                                        $sumFinalPrice2 = $feature_category_item->on_sale_price + $sumFinalPrice1;
+                                                        @endphp
+                                                        <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                                                    @else
+                                                        @php
+                                                        $sumFinalPrice1 = $feature_category_item->on_sale_price;
+                                                        $sumFinalPrice2 = $feature_category_item->on_sale_price + $sumFinalPrice1;
+                                                        @endphp
+                                                        <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                                                    @endif
+                                                @else
+                                                    <span>{{PriceHelper::setCurrencyPrice($feature_category_item->discount_price)}}</span>
+                                                @endif
+                                            @else
+                                                @if($feature_category_item->special_offer_price != 0 && $feature_category_item->special_offer_price != "")
+                                                    @if(isset($feature_category_item->tax_id) && $feature_category_item->tax_id == 1)
+                                                        @php
+                                                        $sumFinalPrice1 = $feature_category_item->special_offer_price * $incIGV_format;
+                                                        $sumFinalPrice2 = $feature_category_item->special_offer_price + $sumFinalPrice1;
+                                                        @endphp
+                                                        <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                                                    @else
+                                                        @php
+                                                        $sumFinalPrice1 = $feature_category_item->special_offer_price;
+                                                        $sumFinalPrice2 = $feature_category_item->special_offer_price + $sumFinalPrice1;
+                                                        @endphp
+                                                        <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
+                                                    @endif
+                                                @else
+                                                    <span>{{PriceHelper::setCurrencyPrice($feature_category_item->discount_price)}}</span>
+                                                @endif
+                                            @endif
+                                        @else
+                                            <span>{{PriceHelper::setCurrencyPrice($feature_category_item->discount_price)}}</span>
+                                        @endif
                                         </h4>
                                         <div class="cWtspBtnCtc">
-                                            <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51{{$setting->footer_phone}}&text=Solicito información sobre: {{route('front.product',$feature_category_item->slug)}}" target="_blank" class="cWtspBtnCtc__pLink">
-                                                <img src="{{route('front.index')}}/assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" width="100" height="100" decoding="sync">
+                                            <a title="Solicitar información" href="javascript:void(0);" target="_blank" class="cWtspBtnCtc__pLink">
+                                                <img src="{{route('front.index')}}/assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" alt="whatsapp_icon" width="100" height="100" decoding="sync">
                                             </a>
                                             <div class="cWtspBtnCtc__pSubM">
+                                                @if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers))
+                                                <?php
+                                                    $whatsappCollection = json_decode($setting->whatsapp_numbers, TRUE);
+                                                    $ArrwpsNumbers = "";
+                                                    $wps_inproducts = [];
+                                                    if(isset($whatsappCollection['whatsapp_numbers'])){
+                                                        $ArrwpsNumbers = $whatsappCollection['whatsapp_numbers'];
+                                                        if(isset($ArrwpsNumbers['in_product'])){
+                                                            $wps_inproducts = $ArrwpsNumbers['in_product'];
+                                                        }
+                                                    }
+                                                ?>
                                                 <ul class="cWtspBtnCtc__pSubM__m">
-                                                <li class="cWtspBtnCtc__pSubM__m__i">
-                                                    <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
-                                                    <!-- <img src="{{ asset('assets/back/images/WhatsApp') }}/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
-                                                    <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                                                    <!-- <span>912 831 232</span> -->
-                                                    <span>Tienda #1</span>
-                                                    </a>
-                                                </li>
-                                                <li class="cWtspBtnCtc__pSubM__m__i">
-                                                    <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
-                                                    <!-- <img src="{{ asset('assets/back/images/WhatsApp') }}/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
-                                                    <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                                                    <!-- <span>974 124 991</span> -->
-                                                    <span>Tienda #2</span>
-                                                    </a>
-                                                </li>
+                                                    @foreach ($wps_inproducts as $k => $v)
+                                                    <li class="cWtspBtnCtc__pSubM__m__i">
+                                                        <a title="{{ $v['title'] }}" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51{{ $v['number'] }}&text={{ $v['text'] }}" target="_blank">
+                                                            <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
+                                                            <span>{{ $v['title'] }}</span>
+                                                        </a>
+                                                    </li>
+                                                    @endforeach
                                                 </ul>
+                                                @else
+                                                <p>No hay información</p>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>

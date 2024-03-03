@@ -2,6 +2,7 @@
 namespace App\Repositories\Front;
 use App\{
   Models\Cart,
+  Models\Tax,
   Models\Item,
   Models\Brand,
   Models\PromoCode,
@@ -10,6 +11,7 @@ use App\{
 };
 use App\Models\AttributeOption;
 use App\Models\Attribute;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class CartRepository{
@@ -23,7 +25,8 @@ class CartRepository{
     $qty = isset($input['quantity']) ? $input['quantity'] : 1 ;
     $qty = is_numeric($qty) ? $qty : 1;
     $cart = Session::get('cart');
-    $item = Item::where('id',$input['item_id'])->select('id','name','photo','discount_price','previous_price','brand_id','slug','sku','is_type','item_type','license_name','license_key')->first();
+    $item = Item::where('id',$input['item_id'])->select('id','tax_id','sections_id','name','photo','discount_price','previous_price','on_sale_price','special_offer_price','brand_id','slug','sku','is_type','item_type','license_name','license_key')->first();
+    // $taxes = Tax::where('id',$item->tax_id)->select('id','name','value','status')->first();
     $brand = Brand::where('id',$item->brand_id)->select('id','name','slug')->first();
     $single = isset($request->type) ? ($request->type == '1' ? 1 : 0 ) : 0;
     if(Session::has('cart')){
@@ -107,6 +110,54 @@ class CartRepository{
     $tempCart = Session::get('cart');
     $qtyProdinCart = $qty;
     $date = date('Y-m-d H:i:s');
+
+    $colorCollection = [];
+    $itemAllData = (isset($cart[$item->id.'-'.$cart_item_key])) ? $cart[$item->id.'-'.$cart_item_key] : [];
+    $attrColorCollection = [];
+    if(isset($itemAllData['attribute_collection'])){
+      $arrCountDataProd = json_decode($itemAllData['attribute_collection'], TRUE);
+      if(isset($arrCountDataProd['atributoraiz_collection'])){
+        if(isset($arrCountDataProd['atributoraiz_collection']['color'])){
+          $attrColorCollection['color_code'] = $arrCountDataProd['atributoraiz_collection']['color']['code'];
+          $attrColorCollection['color_name'] = $arrCountDataProd['atributoraiz_collection']['color']['name'];
+        }
+      }
+    }
+
+    if(isset($request->attr_color_code)){
+      if(isset($attrColorCollection['color_code']) && $attrColorCollection['color_name']){
+        if($attrColorCollection['color_code'] != "0" && $attrColorCollection['color_name'] != "0"){
+          $colorCollection['atributoraiz_collection']['color']['code'] = $attrColorCollection['color_code'];
+        }else{
+          $colorCollection['atributoraiz_collection']['color']['code'] = $input['attr_color_code'];
+        }
+      }else{
+        $colorCollection['atributoraiz_collection']['color']['code'] = $input['attr_color_code'];
+      }
+    }
+    if(isset($request->attr_color_name)){
+      if(isset($attrColorCollection['color_code']) && $attrColorCollection['color_name']){
+        if($attrColorCollection['color_code'] != "0" && $attrColorCollection['color_name'] != "0"){
+          $colorCollection['atributoraiz_collection']['color']['name'] = $attrColorCollection['color_name'];
+        }else{
+          $colorCollection['atributoraiz_collection']['color']['name'] = $input['attr_color_name'];
+        }
+      }else{
+        $colorCollection['atributoraiz_collection']['color']['name'] = $input['attr_color_name'];
+      }      
+    }
+    
+    // echo "<pre>";
+    // print_r($cart);
+    // echo "</pre>";
+    // exit();
+    /*
+    echo "<pre>";
+    print_r($request->all());
+    echo "</pre>";
+    exit();
+    */
+
     // if cart is empty then this the first product
     if(!$cart || !isset($cart[$item->id.'-'.$cart_item_key])){
       // echo "recién agregado";
@@ -116,11 +167,12 @@ class CartRepository{
         'options_id' => $option_id,
         'attribute' => $attribute,
         'attribute_price' => $option_price,
+        "attribute_collection" => json_encode($colorCollection),
         "name" => $item->name,
         "slug" => $item->slug,
         "sku" => $item->sku,
-        "brand_id" => $brand->id,
-        "brand_name" => $brand->name,
+        "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
+        "brand_name" => (isset($brand->name) && $brand->name != "") ? $brand->name : "",
         "qty" => $qty,
         "price" => PriceHelper::grandPrice($item),
         "main_price" => $item->discount_price,
@@ -129,27 +181,31 @@ class CartRepository{
         "item_type" => $item->item_type,
         'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
         'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
-      ];
-      
-      $tempCart = [
-        "user_id" => $input['user_id'],
-        "item_id" => $item->id,
-        "name" => $item->name,
-        "slug" => $item->slug,
-        "sku" => $item->sku,
-        "brand_id" => $brand->id,
-        "quantity" => $qty,
-        "price" => PriceHelper::grandPrice($item),
-        "main_price" => $item->discount_price,
-        "photo" => $item->photo,
-        "is_type" => $item->is_type,
-        "item_type" => $item->item_type,
-        "created_at" => $date,
-        "updated_at" => $date,
-      ];
+      ];    
       
       Session::put('cart', $cart);
-      TempCart::insert($tempCart);
+      if(Auth::check() && Auth::user()->role !== 'admin'){
+        if(!empty(auth()->user()) || auth()->user() != ""){
+          $tempCart = [
+            "user_id" => $input['user_id'],
+            "item_id" => $item->id,
+            "attribute_collection" => json_encode($colorCollection),
+            "name" => $item->name,
+            "slug" => $item->slug,
+            "sku" => $item->sku,
+            "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
+            "quantity" => $qty,
+            "price" => PriceHelper::grandPrice($item),
+            "main_price" => $item->discount_price,
+            "photo" => $item->photo,
+            "is_type" => $item->is_type,
+            "item_type" => $item->item_type,
+            "created_at" => $date,
+            "updated_at" => $date,
+          ];
+          TempCart::insert($tempCart);
+        }
+      }
       return __('Producto agregado');
     }
 
@@ -161,9 +217,11 @@ class CartRepository{
         $cart[$item->id.'-'.$cart_item_key]['qty'] =  $qty;
         // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
         $qtyProdinCart = $qty;
+        $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
         $tempCart = [
           "user_id" => $input['user_id'],
           "item_id" => $item->id,
+          "attribute_collection" => json_encode($colorCollection),
           "quantity" => $qtyProdinCart,
           "updated_at" => $date
         ];
@@ -171,15 +229,21 @@ class CartRepository{
         $cart[$item->id.'-'.$cart_item_key]['qty'] +=  $qty;
         // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
         $qtyProdinCart += $qty;
+        $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
         $tempCart = [
           "user_id" => $input['user_id'],
           "item_id" => $item->id,
+          "attribute_collection" => json_encode($colorCollection),
           "quantity" => $qtyProdinCart,
           "updated_at" => $date
         ];
       }
       Session::put('cart', $cart);
-      TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['quantity' => $tempCart['quantity']]);
+      if(Auth::check() && Auth::user()->role !== 'admin'){
+        if(!empty(auth()->user()) || auth()->user() != ""){
+          TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity']]);
+        }
+      }
 
       if($qty_check == 1){
         $mgs = __('Producto agregado');
