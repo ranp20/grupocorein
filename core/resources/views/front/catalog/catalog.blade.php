@@ -66,6 +66,7 @@ function renderStarRating($rating,$maxRating=5) {
                 <span>{{ strlen(strip_tags($item->name)) > $name_string_count ? substr(strip_tags($item->name), 0, 38) . '...' : strip_tags($item->name) }}</span>
               </a>
             </h3>
+            <p class="product-sku__2">SKU: {{ strlen(strip_tags($item->sku)) > $name_string_count ? substr(strip_tags($item->sku), 0, 38) . '...' : strip_tags($item->sku) }}</p>
             <h4 class="product-price">
               @if ($item->previous_price !=0)
               <del>{{PriceHelper::setPreviousPrice($item->previous_price)}}</del>

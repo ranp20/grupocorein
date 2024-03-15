@@ -40,7 +40,8 @@
 .toprated-slider.owl-carousel .owl-nav div:hover,
 .btn,
 .footer-social-links a,
-.a2a_kit a
+.a2a_kit a,
+.brand-list::-webkit-scrollbar-thumb
 {
     background : <?php echo $color?>  !important;
 }
@@ -142,11 +143,6 @@ a.list-group-item:hover,
 
 .category-scroll::-webkit-scrollbar-thumb {
     background-color:  <?php echo $color?>;
-}
-
-.category-scroll {
-    scrollbar-color:  <?php echo $color?> #e4e4e4;
-    scrollbar-width: thin;
 }
 
 .btn-outline-primary {

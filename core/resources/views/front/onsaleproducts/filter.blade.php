@@ -41,10 +41,9 @@
           <a href="{{route('front.catalog').'?category='.$item->category->slug}}">{{$item->category->name}}</a>
         </div>
         <h3 class="product-title">
-          <a href="{{route('front.product',$item->slug)}}">
-          {{ strlen(strip_tags($item->name)) > 35 ? substr(strip_tags($item->name), 0, 35) : strip_tags($item->name) }}
-          </a>
+          <a href="{{route('front.product',$item->slug)}}">{{ strlen(strip_tags($item->name)) > 35 ? substr(strip_tags($item->name), 0, 35) : strip_tags($item->name) }}</a>
         </h3>
+        <p class="product-sku__2">SKU: {{ strlen(strip_tags($item->sku)) > 35 ? substr(strip_tags($item->sku), 0, 35) : strip_tags($item->sku) }}</p>
         <h4 class="product-price">
         @if ($item->previous_price != 0)
         <del>{{PriceHelper::setPreviousPrice($item->previous_price)}}</del>

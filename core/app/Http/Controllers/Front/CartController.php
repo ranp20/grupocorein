@@ -59,6 +59,8 @@ class CartController extends Controller{
 	}
 
     public function destroy($id){
+        // $idprod = str_replace(array("-", ",", ";",":"), '', $id);
+        
         $cart = Session::get('cart');
         unset($cart[$id]);
         if(count($cart) > 0){
@@ -66,9 +68,22 @@ class CartController extends Controller{
         }else{
             Session::forget('cart');
         }
-        Session::flash('success',__('El artículo del carrito se eliminó con éxito.'));
-        return back();
+        // Session::flash('success',__('El artículo del carrito se eliminó con éxito.'));
+        // return back();
+        $data = [
+            "type" => "success",
+            "mssg" => "El artículo del carrito se eliminó con éxito.",
+        ];
+        $res = json_encode($data);
+        return $res;
     }
+
+    // public function deleteItemOfCart($request){
+    //     echo "<pre>";
+    //     print_r($request->all());
+    //     echo "</pre>";
+    //     exit();
+    // }
 
 	public function promoStore(Request $request){
         return response()->json($this->repository->promoStore($request));

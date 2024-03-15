@@ -97,7 +97,9 @@
             </div>
         </div>
     </div>
-  @if ($setting->is_three_c_b_first == 1)
+    <div class="container" id="contBannSec_1">
+
+    @if ($setting->is_three_c_b_first == 1)
         <div class="bannner-section">
             <div class="container ">
                 <div class="row gx-3">
@@ -173,6 +175,7 @@
             </div>
         </div>
     @endif
+    </div>
     @if ($setting->is_popular_category == 1)
         <section class="newproduct-section popular-category-sec mt-50">
             <div class="container">
@@ -218,9 +221,10 @@
                                         <div class="product-category">
                                             <a href="{{route('front.catalog').'?category='.$popular_category_item->category->slug}}">{{$popular_category_item->category->name}}</a>
                                         </div>
-                                        <h3 class="product-title">
-                                            <a href="{{route('front.product',$popular_category_item->slug)}}">{{ strlen(strip_tags($popular_category_item->name)) > 35 ? substr(strip_tags($popular_category_item->name), 0, 35) : strip_tags($popular_category_item->name) }}</a>
+                                        <h3 class="product-title text-bold">
+                                            <a class="text-bold" href="{{route('front.product',$popular_category_item->slug)}}">{{ strlen(strip_tags($popular_category_item->name)) > 35 ? substr(strip_tags($popular_category_item->name), 0, 35) : strip_tags($popular_category_item->name) }}</a>
                                         </h3>
+                                        <p class="product-sku__2">SKU: {{ strlen(strip_tags($popular_category_item->sku)) > 35 ? substr(strip_tags($popular_category_item->sku), 0, 35) : strip_tags($popular_category_item->sku) }}</p>
                                         <h4 class="product-price">
                                         @if ($popular_category_item->previous_price != 0)
                                         <del>{{PriceHelper::setPreviousPrice($popular_category_item->previous_price)}}</del>
@@ -371,6 +375,7 @@
                                             {{ strlen(strip_tags($feature_category_item->name)) > 35 ? substr(strip_tags($feature_category_item->name), 0, 35) : strip_tags($feature_category_item->name) }}
                                             </a>
                                         </h3>
+                                        <p class="product-sku__2">SKU: {{ strlen(strip_tags($feature_category_item->sku)) > 35 ? substr(strip_tags($feature_category_item->sku), 0, 35) : strip_tags($feature_category_item->sku) }}</p>
                                         <h4 class="product-price">
                                         @if ($feature_category_item->previous_price != 0)
                                         <del>{{PriceHelper::setPreviousPrice($feature_category_item->previous_price)}}</del>
@@ -469,7 +474,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row justify-content-center">
+                <div class="row justify-content-center" id="contInfoBlog_1">
                     <div class="col-lg-12">
                         <div class="home-blog-slider owl-carousel">
                             @foreach ($posts as $post)
@@ -507,7 +512,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" id="contBrandList_1">
                     <div class="col-lg-12">
                         <div class="brand-slider owl-carousel">
                             @foreach ($brands as $brand)

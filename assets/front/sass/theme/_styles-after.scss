@@ -795,7 +795,7 @@ figure figcaption{
     display: block !important;
     width: 100% !important;
     max-width: 100% !important;
-    border-radius: 9px !important;
+    border-radius: 5px !important;
 }
 
 @media (max-width:1200px){
@@ -6534,16 +6534,6 @@ video{
     border: 0px;
     background-clip: content-box;
 }
-
-.category-scroll::-webkit-scrollbar-thumb{
-    background-color: red;
-}
-
-.category-scroll{
-    scrollbar-color: red #e4e4e4;
-    scrollbar-width: thin;
-}
-
 .price-range-slider .ui-range-values{
     display: inline-block;
 }
@@ -7130,7 +7120,7 @@ video{
     z-index: 999;
     background: #fff;
     width: 100%;
-    padding: 15px 15px 7px;
+    padding: 0px 15px 15px 7px;
     border: 1px solid #e0e0e0;
     border-top: 0px;
 }
@@ -7833,7 +7823,7 @@ video{
 }
 
 .product-card .product-card-body{
-    padding: 15px 15px 10px;
+    padding: 5px 8px 5px;
 }
 
 .product-card .product-thumb{
