@@ -588,7 +588,7 @@ $(function($){
       getData();
     });
     function cartSubmit(item_key,item_id,cartQty){
-      console.log(item_key,cartQty);
+      // console.log(item_key,cartQty);
       getData(1, item_key,item_id, cartQty);
     };
     function getData(status = 0, check = 0, item_key = 0, qty = 0, add_type = 0){
@@ -643,19 +643,22 @@ $(function($){
         "color_name" : (colorName != "") ? colorName : "0"
       };
 
+      let coupon_id = ($("#setcurr_couponid") && $("#setcurr_couponid").length > 0) ? $("#setcurr_couponid").val() : "0";
+
       if(status == 1){
-        let addToCartUrl = `${mainurl}/product/add/cart?item_id=${itemId}&options_ids=${options_ids}&attribute_ids=${attribute_ids}&quantity=${quantity}&type=${type}&item_key=${item_key}&add_type=${add_type}&attr_color_code=${colorAttrCollection['color_code']}&attr_color_name=${colorAttrCollection['color_name']}`;
+        let addToCartUrl = `${mainurl}/product/add/cart?item_id=${itemId}&options_ids=${options_ids}&attribute_ids=${attribute_ids}&quantity=${quantity}&type=${type}&coupon_id=${coupon_id}&item_key=${item_key}&add_type=${add_type}&attr_color_code=${colorAttrCollection['color_code']}&attr_color_name=${colorAttrCollection['color_name']}`;
         $.ajax({
           type: "GET",
           url: addToCartUrl,
           success: function(data){
+            // console.log(data);
+            // console.log(item_key);
             if($(`.add_to_single_cart[data-id=${item_key}]`).length){
               $(`.add_to_single_cart[data-id=${item_key}]`).attr('data-qty', parseInt(qty));
             }
             $(".cart_count").text(data.qty);
-            $(".cart_view_header").load(
-              $("#header_cart_load").attr("data-target")
-            );
+            // Hacer un refresh del carrito de compras flotante en el header...
+            $(".cart_view_header").load( $("#header_cart_load").attr("data-target") );
             if(qty){
               if($("#view_cart_load").length){
                 $("#view_cart_load").load($("#cart_view_load").attr("data-target"));

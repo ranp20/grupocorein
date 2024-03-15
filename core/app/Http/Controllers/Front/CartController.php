@@ -134,7 +134,7 @@ class CartController extends Controller{
         exit();
         */
         Session::forget('cart');
-        Session::flash('success',__('Carro vaciar con éxito'));
+        Session::flash('success',__('Su carrito está vacío.'));
         return back();
     }
 

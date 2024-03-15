@@ -354,7 +354,7 @@
 
 
 
-
+          <input type="hidden" value="{{ $item->coupon_id }}" id="setcurr_couponid">
           
           <input type="hidden" value="{{PriceHelper::setCurrencySign()}}" id="set_currency">
           <input type="hidden" value="{{PriceHelper::setCurrencyValue()}}" id="set_currency_val">
@@ -1042,18 +1042,11 @@
                     <div class="mdl-CouponCustom__c__mC__cc__countdown">
                       <div class="mdl-CouponCustom__c__mC__cc__countdown__c" id="countdown-coupon"></div>
                     </div>
-                    <div class="mdl-CouponCustom__c__mC__cc__countdown__frmSend">
-                      <form action="" class="d-inline btn-ok" method="POST">
-                        @csrf
+                    <div class="mdl-CouponCustom__c__mC__cc__frmSend">
+                      <div class="mdl-CouponCustom__c__mC__cc__frmSend__cExpd">
                         <p>COUPON EXPIRED!!!</p>
-                      </form>
-                    </div>
-                    <label for="accepcouponvalid" class="ipt_hidcouponvalid__cbtn">
-                      <input type="hidden" class="ipt_hidcouponvalid" id="accepcouponvalid">
-                      <div class="ipt_hidcouponvalid__cbtn__c">
-                        <span></span>
                       </div>
-                    </label>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1086,12 +1079,6 @@
                       <form action="{{ route('front.applycoupon') }}" class="btn-ok" method="POST">
                         @csrf
                         <img src="{{asset('assets/images/coupons/')}}/{{ $imgCoupon }}" alt="" id="cImg-coupon_valid">
-                        <!-- <label for="accepcouponvalid" class="ipt_hidcouponvalid__cbtn">
-                          <input type="hidden" class="ipt_hidcouponvalid" id="accepcouponvalid">
-                          <div class="ipt_hidcouponvalid__cbtn__c">
-                            <span>APLICAR</span>
-                          </div>
-                        </label> -->
                         <input tabindex="-1" placeholder="phdr-whidipts" type="hidden" width="0" height="0" autocomplete="off" spellcheck="false" f-hidden="aria-hidden" class="non-visvalipt h-alternative-shwnon s-fkeynone-step hdd-control d-non" name="prod_id" id="prod_id" value="{{ $item->id }}">
                         <input tabindex="-1" placeholder="phdr-whidipts" type="hidden" width="0" height="0" autocomplete="off" spellcheck="false" f-hidden="aria-hidden" class="non-visvalipt h-alternative-shwnon s-fkeynone-step hdd-control d-non" name="coupon_id" id="coupon_id" value="{{ $idcoupon }}">
                         <button type="submit" class="ipt_hidcouponvalid__cbtn">
@@ -1131,18 +1118,11 @@
                     <div class="mdl-CouponCustom__c__mC__cc__countdown">
                       <div class="mdl-CouponCustom__c__mC__cc__countdown__c" id="countdown-coupon"></div>
                     </div>
-                    <div class="mdl-CouponCustom__c__mC__cc__countdown__frmSend">
-                      <form action="" class="d-inline btn-ok" method="POST">
-                        @csrf
+                    <div class="mdl-CouponCustom__c__mC__cc__frmSend">
+                      <div class="mdl-CouponCustom__c__mC__cc__frmSend__cExpd">
                         <p>COUPON EXPIRED!!!</p>
-                      </form>
-                    </div>
-                    <label for="accepcouponvalid" class="ipt_hidcouponvalid__cbtn">
-                      <input type="hidden" class="ipt_hidcouponvalid" id="accepcouponvalid">
-                      <div class="ipt_hidcouponvalid__cbtn__c">
-                        <span></span>
                       </div>
-                    </label>
+                    </div>
                   </div>                  
                 </div>
               </div>
@@ -1171,12 +1151,6 @@
                       <form action="{{ route('front.applycoupon') }}" class="btn-ok" method="POST">
                         @csrf
                         <img src="{{asset('assets/images/coupons/')}}/{{ $imgCoupon }}" alt="" id="cImg-coupon_valid">
-                        <!-- <label for="accepcouponvalid" class="ipt_hidcouponvalid__cbtn">
-                          <input type="hidden" class="ipt_hidcouponvalid" id="accepcouponvalid">
-                          <div class="ipt_hidcouponvalid__cbtn__c">
-                            <span>APLICAR</span>
-                          </div>
-                        </label> -->
                         <input tabindex="-1" placeholder="phdr-whidipts" type="hidden" width="0" height="0" autocomplete="off" spellcheck="false" f-hidden="aria-hidden" class="non-visvalipt h-alternative-shwnon s-fkeynone-step hdd-control d-non" name="prod_id" id="prod_id" value="{{ $item->id }}">
                         <input tabindex="-1" placeholder="phdr-whidipts" type="hidden" width="0" height="0" autocomplete="off" spellcheck="false" f-hidden="aria-hidden" class="non-visvalipt h-alternative-shwnon s-fkeynone-step hdd-control d-non" name="coupon_id" id="coupon_id" value="{{ $idcoupon }}">
                         <button type="submit" class="ipt_hidcouponvalid__cbtn">

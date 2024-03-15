@@ -114,7 +114,9 @@ a.list-group-item:hover,
  .shop-view>a,
  .genius-banner .inner-content p,
  .details-page-top-right-content .price-area .main-price,
- .free-shippin-aa
+ .free-shippin-aa,
+ .txt-theme,
+ .product-sku
 {
     color : <?php echo $color?> !important;
 }
