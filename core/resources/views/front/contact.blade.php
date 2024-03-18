@@ -31,14 +31,14 @@ function formatPhone($phone){
     <div class="row">
       <div class="col-lg-4 col-md-5 col-sm-5 order-lg-1 order-md-2 order-sm-2">
         <section class="widget widget-featured-posts card rounded p-4 ">
-          <h3 class="widget-title padding-bottom-1x">{{__('Working Days')}}</h3>
+          <h3 class="widget-title">{{__('Working Days')}}</h3>
           <ul class="list-unstyled text-sm">
             <li><span class="text-muted">{{__('Monday-Friday')}}:</span>{{$setting->friday_start}} - {{$setting->friday_end}}</li>
             <li><span class="text-muted">{{__('Saturday')}}:</span>{{$setting->satureday_start}} - {{$setting->satureday_end}}</li>
           </ul>          
         </section>
         <section class="widget widget-featured-posts card rounded p-4">
-          <h3 class="widget-title padding-bottom-1x">{{__('Store address')}}</h3>
+          <h3 class="widget-title">{{__('Store address')}}</h3>
           <p>{{__('Our address information')}}</p>
           <ul class="list-icon margin-bottom-1x">
             <li><i class="icon-map-pin text-muted"></i>{{$setting->footer_address}}</li>

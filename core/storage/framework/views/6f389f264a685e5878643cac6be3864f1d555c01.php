@@ -17,7 +17,7 @@ exit();
   <?php $__currentLoopData = $cart; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
   <?php
     $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-    $cartTotal = ($item['main_price'] + $total + $attribute_price) * $item['qty'];
+    $cartTotal += ($item['price'] + $total + $attribute_price) * $item['qty'];
   ?>
   <div class="entry">
     <div class="entry-thumb">

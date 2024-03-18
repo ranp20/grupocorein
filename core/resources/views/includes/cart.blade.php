@@ -24,9 +24,14 @@
                 <th class="text-center">{{__('Price')}}</th>
                 <th class="text-center">{{__('Quantity')}}</th>
                 <th class="text-center">{{__('Subtotal')}}</th>
+                
+                {{--
+                <!--
                 <th class="text-center">
                   <a class="btn btn-sm btn-primary" href="{{route('front.cart.clear')}}"><span>{{__('Clear Cart')}}</span></a>
                 </th>
+                -->
+                --}}
               </tr>
             </thead>
             <tbody id="cart_view_load" data-target="{{route('cart.get.load')}}">

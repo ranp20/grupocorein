@@ -5,12 +5,13 @@
 <?php if(url()->current() == route('front.index')): ?>
 <title><?php echo $__env->yieldContent('hometitle'); ?></title>
 <?php else: ?>
-<title><?php echo e($setting->title); ?> -<?php echo $__env->yieldContent('title'); ?></title>
+<title><?php echo e($setting->title); ?>: <?php echo $__env->yieldContent('title'); ?></title>
 <?php endif; ?>
 <?php echo $__env->yieldContent('meta'); ?>
 <meta name="author" content="<?php echo e($setting->title); ?>">
 <meta name="distribution" content="web">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=6.0, minimum-scale=1.0, shrink-to-fit=no, viewport-fit=cover"/>
 <link rel="icon" type="image/png" href="<?php echo e(asset('assets/images/'.$setting->favicon)); ?>">
 <link rel="apple-touch-icon" href="<?php echo e(asset('assets/images/'.$setting->favicon)); ?>">
 <link rel="apple-touch-icon" sizes="152x152" href="<?php echo e(asset('assets/images/'.$setting->favicon)); ?>">
@@ -138,8 +139,8 @@ body_theme4
                             </a>
                         </div>
                             <div class="toolbar-item hidden-on-mobile d-flex align-items-center justify-content-center">
-                                <a href="<?php echo e(route('user.login')); ?>">
                                 <?php if(!Auth::user()): ?>
+                                <a href="<?php echo e(route('user.login')); ?>">
                                     <div>
                                         <span class="compare-icon">
                                             <i class="icon-user"></i>
@@ -153,8 +154,8 @@ body_theme4
                                         <i class="icon-user pr-2"></i> <span class="text-label"><?php echo e(Auth::user()->first_name); ?></span>
                                     </div>
                                     <div class="t-h-dropdown-menu">
-                                        <a href="<?php echo e(route('user.dashboard')); ?>"><i class="icon-chevron-right pr-2"></i><?php echo e(__('Dashboard')); ?></a>
-                                        <a href="<?php echo e(route('user.logout')); ?>"><i class="icon-chevron-right pr-2"></i><?php echo e(__('Logout')); ?></a>
+                                        <a href="<?php echo e(route('user.dashboard')); ?>"><span><?php echo e(__('Dashboard')); ?></span><i class="icon-chevron-right pr-2"></i></a>
+                                        <a href="<?php echo e(route('user.logout')); ?>"><span><?php echo e(__('Logout')); ?></span><i class="icon-chevron-right pr-2"></i></a>
                                     </div>
                                 </div>
                                 <?php endif; ?>
@@ -240,7 +241,7 @@ body_theme4
     <div id="csl-fGv8n09c__sGaYs45"><?php echo csrf_field(); ?></div>
     <div class="navbar theme-total">
         <div class="container">
-            <div class="row g-3 w-100">
+            <div class="row g-3 w-100" id="sdonv98349-mfdJasl98C3f">
                 <div class="col-lg-3 d-flex align-items-center justify-content-flex-start cLCategs">
                     <?php echo $__env->make('includes.categories', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                 </div>

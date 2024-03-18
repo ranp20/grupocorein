@@ -354,8 +354,30 @@ $(() => {
   // ----------- HACER HOVER EN UN ELEMENTO CON DROPDOWN
 	var namehoverAll = document.querySelectorAll("*[data-dropdown-custommenu]");
 	var backdropHome = document.querySelector("#backdrop");
+  let ctopbar = document.querySelector(".topbar");
+  let cmtoparea = document.querySelector(".menu-top-area");
 	namehoverAll.forEach(function(i,e){
 		var namehover = i;
+    ctopbar.addEventListener("mouseenter", function(f){
+      namehoverAll.forEach(function(i,e){
+        var namehover = i;      
+        if(namehover.classList.contains("active")){
+          backdropHome.classList.add("hide");
+          namehover.classList.remove('active');
+          namehover.nextElementSibling.classList.remove('active');
+        }
+      });
+    });
+    cmtoparea.addEventListener("mouseenter", function(f){
+      namehoverAll.forEach(function(i,e){
+        var namehover = i;      
+        if(namehover.classList.contains("active")){
+          backdropHome.classList.add("hide");
+          namehover.classList.remove('active');
+          namehover.nextElementSibling.classList.remove('active');
+        }
+      });
+    });
 		namehover.addEventListener("mouseenter",function(){
 			var attrnamehov = this.getAttribute("data-dropdown-custommenu");
 			if(attrnamehov.value === ''){
@@ -368,9 +390,9 @@ $(() => {
 		});
 	});
   // ----------- REMOVER ELEMENTO DROPDOWN AL HACER HOVER EN EL BACKDROP
-	backdropHome.addEventListener("mouseenter", function(){
-		namehoverAll.forEach(function(i,e){
-			var namehover = i;
+	backdropHome.addEventListener("mouseenter", function(f){
+    namehoverAll.forEach(function(i,e){
+			var namehover = i;      
 			if(namehover.classList.contains("active")){
 				backdropHome.classList.add("hide");
 				namehover.classList.remove('active');

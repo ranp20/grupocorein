@@ -17,7 +17,7 @@ exit();
   @foreach ($cart as $key => $item)
   @php
     $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-    $cartTotal = ($item['main_price'] + $total + $attribute_price) * $item['qty'];
+    $cartTotal += ($item['price'] + $total + $attribute_price) * $item['qty'];
   @endphp
   <div class="entry">
     <div class="entry-thumb">

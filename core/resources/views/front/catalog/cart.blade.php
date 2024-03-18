@@ -1,6 +1,6 @@
 @extends('master.front')
 @section('title')
-    {{__('Cart')}}
+  {{__('Shopping Cart')}}
 @endsection
 @section('meta')
 <meta name="keywords" content="{{$setting->meta_keywords}}">

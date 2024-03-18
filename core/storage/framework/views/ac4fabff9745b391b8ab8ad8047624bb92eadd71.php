@@ -1,5 +1,5 @@
 <?php $__env->startSection('title'); ?>
-    <?php echo e(__('Cart')); ?>
+  <?php echo e(__('Shopping Cart')); ?>
 
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('meta'); ?>

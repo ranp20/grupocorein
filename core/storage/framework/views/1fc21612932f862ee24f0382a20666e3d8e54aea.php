@@ -24,9 +24,8 @@
                 <th class="text-center"><?php echo e(__('Price')); ?></th>
                 <th class="text-center"><?php echo e(__('Quantity')); ?></th>
                 <th class="text-center"><?php echo e(__('Subtotal')); ?></th>
-                <th class="text-center">
-                  <a class="btn btn-sm btn-primary" href="<?php echo e(route('front.cart.clear')); ?>"><span><?php echo e(__('Clear Cart')); ?></span></a>
-                </th>
+                
+                
               </tr>
             </thead>
             <tbody id="cart_view_load" data-target="<?php echo e(route('cart.get.load')); ?>">

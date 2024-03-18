@@ -5,12 +5,13 @@
 @if (url()->current() == route('front.index'))
 <title>@yield('hometitle')</title>
 @else
-<title>{{$setting->title}} -@yield('title')</title>
+<title>{{$setting->title}}: @yield('title')</title>
 @endif
 @yield('meta')
 <meta name="author" content="{{$setting->title}}">
 <meta name="distribution" content="web">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=6.0, minimum-scale=1.0, shrink-to-fit=no, viewport-fit=cover"/>
 <link rel="icon" type="image/png" href="{{asset('assets/images/'.$setting->favicon)}}">
 <link rel="apple-touch-icon" href="{{asset('assets/images/'.$setting->favicon)}}">
 <link rel="apple-touch-icon" sizes="152x152" href="{{asset('assets/images/'.$setting->favicon)}}">
@@ -134,8 +135,8 @@ body_theme4
                             </a>
                         </div>
                             <div class="toolbar-item hidden-on-mobile d-flex align-items-center justify-content-center">
-                                <a href="{{route('user.login')}}">
                                 @if(!Auth::user())
+                                <a href="{{route('user.login')}}">
                                     <div>
                                         <span class="compare-icon">
                                             <i class="icon-user"></i>
@@ -149,8 +150,8 @@ body_theme4
                                         <i class="icon-user pr-2"></i> <span class="text-label">{{Auth::user()->first_name}}</span>
                                     </div>
                                     <div class="t-h-dropdown-menu">
-                                        <a href="{{route('user.dashboard')}}"><i class="icon-chevron-right pr-2"></i>{{ __('Dashboard') }}</a>
-                                        <a href="{{route('user.logout')}}"><i class="icon-chevron-right pr-2"></i>{{ __('Logout') }}</a>
+                                        <a href="{{route('user.dashboard')}}"><span>{{ __('Dashboard') }}</span><i class="icon-chevron-right pr-2"></i></a>
+                                        <a href="{{route('user.logout')}}"><span>{{ __('Logout') }}</span><i class="icon-chevron-right pr-2"></i></a>
                                     </div>
                                 </div>
                                 @endif
@@ -242,7 +243,7 @@ body_theme4
     <div id="csl-fGv8n09c__sGaYs45">@csrf</div>
     <div class="navbar theme-total">
         <div class="container">
-            <div class="row g-3 w-100">
+            <div class="row g-3 w-100" id="sdonv98349-mfdJasl98C3f">
                 <div class="col-lg-3 d-flex align-items-center justify-content-flex-start cLCategs">
                     @include('includes.categories')
                 </div>

@@ -100,11 +100,11 @@
 
     <?php if($setting->is_three_c_b_first == 1): ?>
         <div class="bannner-section">
-            <div class="container ">
+            <div>
                 <div class="row gx-3">
                     <div class="col-md-4">
                         <a href="<?php echo e(route('front.catalog').'?category='.$banner_first['firsturl1']); ?>" class="genius-banner" data-href="<?php echo e($banner_first['firsturl1']); ?>" title="<?php echo e((isset($banner_first['title1'])) ? $banner_first['title1'] : ''); ?>">
-                            <img src="<?php echo e(asset('assets/images/'.$banner_first['img1'])); ?>" alt="<?php echo e($banner_first['firsturl1']); ?>" width="100" height="100" decoding="sync">
+                            <img src="<?php echo e(asset('assets/images/'.$banner_first['img1'])); ?>" alt="<?php echo e(__('Category')); ?> <?php echo e($banner_first['firsturl1']); ?>" width="100" height="100" decoding="sync">
                             <div class="inner-content">
                                 <?php if(isset($banner_first['title1'])): ?>
                                     <h4><?php echo e($banner_first['title1']); ?></h4>
@@ -114,7 +114,7 @@
                     </div>
                     <div class="col-md-4">
                         <a href="<?php echo e(route('front.catalog').'?category='.$banner_first['firsturl2']); ?>" class="genius-banner" data-href="<?php echo e($banner_first['firsturl2']); ?>" title="<?php echo e((isset($banner_first['title1'])) ? $banner_first['title2'] : ''); ?>">
-                            <img src="<?php echo e(asset('assets/images/'.$banner_first['img2'])); ?>" alt="<?php echo e($banner_first['firsturl2']); ?>" width="100" height="100" decoding="sync">
+                            <img src="<?php echo e(asset('assets/images/'.$banner_first['img2'])); ?>" alt="<?php echo e(__('Category')); ?> <?php echo e($banner_first['firsturl2']); ?>" width="100" height="100" decoding="sync">
                             <div class="inner-content">
                                 <?php if(isset($banner_first['title2'])): ?>
                                     <h4><?php echo e($banner_first['title2']); ?></h4>
@@ -124,7 +124,7 @@
                     </div>
                     <div class="col-md-4">
                         <a href="<?php echo e(route('front.catalog').'?category='.$banner_first['firsturl3']); ?>" class="genius-banner" data-href="<?php echo e($banner_first['firsturl3']); ?>" title="<?php echo e((isset($banner_first['title1'])) ? $banner_first['title3'] : ''); ?>">
-                            <img src="<?php echo e(asset('assets/images/'.$banner_first['img3'])); ?>" alt="<?php echo e($banner_first['firsturl3']); ?>" width="100" height="100" decoding="sync">
+                            <img src="<?php echo e(asset('assets/images/'.$banner_first['img3'])); ?>" alt="<?php echo e(__('Category')); ?> <?php echo e($banner_first['firsturl3']); ?>" width="100" height="100" decoding="sync">
                             <div class="inner-content">
                                 <?php if(isset($banner_first['title3'])): ?>
                                     <h4><?php echo e($banner_first['title3']); ?></h4>
@@ -138,11 +138,11 @@
     <?php endif; ?>
     <?php if($setting->is_three_c_b_second == 1): ?>
         <div class="bannner-section mt-20">
-            <div class="container ">
+            <div>
                 <div class="row gx-3">
                     <div class="col-md-4">
                         <a href="<?php echo e(route('front.catalog').'?category='.$banner_secend['url1']); ?>" class="genius-banner" data-href="<?php echo e($banner_secend['url1']); ?>" title="<?php echo e((isset($banner_secend['title1'])) ? $banner_secend['title1'] : ''); ?>">
-                            <img class="lazy" data-src="<?php echo e(asset('assets/images/'.$banner_secend['img1'])); ?>" alt="<?php echo e($banner_secend['url1']); ?>" width="100" height="100" decoding="sync">
+                            <img class="lazy" data-src="<?php echo e(asset('assets/images/'.$banner_secend['img1'])); ?>" alt="<?php echo e(__('Category')); ?> <?php echo e($banner_secend['url1']); ?>" width="100" height="100" decoding="sync">
                             <div class="inner-content">
                                 <?php if(isset($banner_secend['title1'])): ?>
                                     <h4><?php echo e($banner_secend['title1']); ?></h4>
@@ -152,7 +152,7 @@
                     </div>
                     <div class="col-md-4">
                         <a href="<?php echo e(route('front.catalog').'?category='.$banner_secend['url2']); ?>" class="genius-banner" data-href="<?php echo e($banner_secend['url2']); ?>" title="<?php echo e((isset($banner_secend['title2'])) ? $banner_secend['title2'] : ''); ?>">
-                            <img class="lazy" data-src="<?php echo e(asset('assets/images/'.$banner_secend['img2'])); ?>" alt="<?php echo e($banner_secend['url2']); ?>" width="100" height="100" decoding="sync">
+                            <img class="lazy" data-src="<?php echo e(asset('assets/images/'.$banner_secend['img2'])); ?>" alt="<?php echo e(__('Category')); ?> <?php echo e($banner_secend['url2']); ?>" width="100" height="100" decoding="sync">
                             <div class="inner-content">
                                 <?php if(isset($banner_secend['title2'])): ?>
                                     <h4> <?php echo e($banner_secend['title2']); ?></h4>
@@ -162,7 +162,7 @@
                     </div>
                     <div class="col-md-4">
                         <a href="<?php echo e(route('front.catalog').'?category='.$banner_secend['url3']); ?>" class="genius-banner" data-href="<?php echo e($banner_secend['url3']); ?>" title="<?php echo e((isset($banner_secend['title3'])) ? $banner_secend['title3'] : ''); ?>">
-                            <img class="lazy" data-src="<?php echo e(asset('assets/images/'.$banner_secend['img3'])); ?>" alt="<?php echo e($banner_secend['url3']); ?>" width="100" height="100" decoding="sync">
+                            <img class="lazy" data-src="<?php echo e(asset('assets/images/'.$banner_secend['img3'])); ?>" alt="<?php echo e(__('Category')); ?> <?php echo e($banner_secend['url3']); ?>" width="100" height="100" decoding="sync">
                             <div class="inner-content">
                                 <?php if(isset($banner_secend['title3'])): ?>
                                     <h4><?php echo e($banner_secend['title3']); ?></h4>

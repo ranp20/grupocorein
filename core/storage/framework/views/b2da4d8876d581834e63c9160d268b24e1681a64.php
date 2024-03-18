@@ -66,7 +66,7 @@
       <div class="sidebar-toggle position-left"><i class="icon-filter"></i></div>
       <aside class="sidebar sidebar-offcanvas position-left"><span class="sidebar-close"><i class="icon-x"></i></span>
         <section class="widget widget-categories card rounded p-4">
-          <h3 class="widget-title"><?php echo e(__('Shop Categories')); ?></h3>
+          <h3 class="widget-title"><?php echo e(__('Categories')); ?></h3>
           <ul id="category_list" class="category-scroll">
             <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $getcategory): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <li class="has-children  <?php echo e(isset($category) && $category->id == $getcategory->id ? 'expanded active' : ''); ?> ">
