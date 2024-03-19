@@ -188,7 +188,9 @@ class CartRepository{
       $arrApplyCoupon = json_decode($couponvalidexist, TRUE);
       $applycoupon_totalprice = $arrApplyCoupon[0]['totalprice']; // PRECIO DEL CUPÓN
       $applycoupon_idcoupon = $arrApplyCoupon[0]['id_coupon']; // ID DEL CUPÓN
-      // echo $applycoupon_totalprice."<br>";
+      // echo "PRECIO CUPÓN: ".$applycoupon_totalprice."<br>";
+      // echo "ID CUPÓN: ".$applycoupon_idcoupon."<br>";
+      // exit();
       if(count($couponinfo) != 0){
         $couponjsontoarray = json_decode($couponinfo, TRUE);
         $couponget_timeend = $couponjsontoarray[0]['time_end'];
@@ -230,8 +232,7 @@ class CartRepository{
               "quantity_withoutcoupon" => "0",
               'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
               'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
-            ];    
-            
+            ];
             Session::put('cart', $cart);
             if(Auth::check() && Auth::user()->role !== 'admin'){
               if(!empty(auth()->user()) || auth()->user() != ""){
@@ -258,7 +259,8 @@ class CartRepository{
                 TempCart::insert($tempCart);
               }
             }
-            return __('Producto agregado. El cupón ya NO es válido (C)');
+            // return __('Producto agregado. El cupón ya NO es válido (C)');
+            return __('Producto agregado. El cupón ya NO es válido');
           }
           // -------------- Si el carrito NO está vacío, verifique si este producto existe y luego incremente la cantidad.
           if(isset($cart[$item->id.'-'.$cart_item_key])){
@@ -303,9 +305,11 @@ class CartRepository{
             }
 
             if($qty_check == 1){
-              $mgs = __('Producto agregado. El cupón ya NO es válido (C)');
+              // $mgs = __('Producto agregado. El cupón ya NO es válido (C)');
+              $mgs = __('Producto agregado. El cupón ya NO es válido');
             }else{
-              $mgs = __('Producto actualizado. El cupón ya NO es válido (C)');
+              // $mgs = __('Producto actualizado. El cupón ya NO es válido (C)');
+              $mgs = __('Producto actualizado. El cupón ya NO es válido');
             }
 
             $qty_check = 0;
@@ -342,8 +346,7 @@ class CartRepository{
                 "quantity_withoutcoupon" => "0",
                 'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
                 'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
-              ];
-              
+              ];              
               Session::put('cart', $cart);
               if(Auth::check() && Auth::user()->role !== 'admin'){
                 if(!empty(auth()->user()) || auth()->user() != ""){
@@ -370,34 +373,35 @@ class CartRepository{
                   TempCart::insert($tempCart);
                 }
               }
-              return __('Producto agregado. El cupón todavía está activo (B)');
+              // return __('Producto agregado. El cupón todavía está activo (B)');
+              return __('Producto agregado. El cupón todavía está activo');
             }
             // -------------- Si el carrito NO está vacío, verifique si este producto existe y luego incremente la cantidad.
             // (HOY - 14/03/2024) : Comprobar si el nuevo precio aplicado con cupón se está respetando...
             if(isset($cart[$item->id.'-'.$cart_item_key])){
               $cart = Session::get('cart');
               $qtyProdinCart = $cart[$item->id.'-'.$cart_item_key]['qty'];
-              if(isset($cart[$item->id.'-'.$cart_item_key]['coupon_price']) && $cart[$item->id.'-'.$cart_item_key]['coupon_price'] != "" && $cart[$item->id.'-'.$cart_item_key]['coupon_price'] != "0"){
+              if($cart[$item->id.'-'.$cart_item_key]['coupon_id'] != 0 && isset($cart[$item->id.'-'.$cart_item_key]['coupon_price']) && $cart[$item->id.'-'.$cart_item_key]['coupon_price'] != "" && $cart[$item->id.'-'.$cart_item_key]['coupon_price'] != "0"){
+                // echo "Si ya tiene estos atributos, mantener la última cantidad antes de la activación del cupón...";
               }else{
                 // echo "Primer producto con este cupón";
                 $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'] = $cart[$item->id.'-'.$cart_item_key]['qty'];
                 $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
               }
-
               if($qty_check == 1){
                 $cart[$item->id.'-'.$cart_item_key]['qty'] =  $qty;
                 // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
                 $qtyProdinCart = $qty;
                 $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                $cart[$item->id.'-'.$cart_item_key]['coupon_id'] = $applycoupon_idcoupon;
                 $cart[$item->id.'-'.$cart_item_key]['coupon_price'] = $applycoupon_totalprice;
-                $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
-                $applycoupon_couponid = $cart[$item->id.'-'.$cart_item_key]['coupon_id'];
+                $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];                
                 $tempCart = [
                   "user_id" => $input['user_id'],
                   "item_id" => $item->id,
                   "attribute_collection" => json_encode($colorCollection),
                   "quantity" => $qtyProdinCart,
-                  "coupon_id" => $applycoupon_couponid,
+                  "coupon_id" => $applycoupon_idcoupon,
                   "coupon_price" => $applycoupon_totalprice,
                   "quantity_withoutcoupon" => $quantity_withoutcoupon,
                   "updated_at" => $date
@@ -407,15 +411,15 @@ class CartRepository{
                 // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
                 $qtyProdinCart += $qty;
                 $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                $cart[$item->id.'-'.$cart_item_key]['coupon_id'] = $applycoupon_idcoupon;
                 $cart[$item->id.'-'.$cart_item_key]['coupon_price'] = $applycoupon_totalprice;
                 $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
-                $applycoupon_couponid = $cart[$item->id.'-'.$cart_item_key]['coupon_id'];
                 $tempCart = [
                   "user_id" => $input['user_id'],
                   "item_id" => $item->id,
                   "attribute_collection" => json_encode($colorCollection),
                   "quantity" => $qtyProdinCart,
-                  "coupon_id" => $applycoupon_couponid,
+                  "coupon_id" => $applycoupon_idcoupon,
                   "coupon_price" => $applycoupon_totalprice,
                   "quantity_withoutcoupon" => $quantity_withoutcoupon,
                   "updated_at" => $date
@@ -429,9 +433,11 @@ class CartRepository{
               }
 
               if($qty_check == 1){
-                $mgs = __('Producto agregado. El cupón todavía está activo (B)');
+                // $mgs = __('Producto agregado. El cupón todavía está activo (B)');
+                $mgs = __('Producto agregado. El cupón todavía está activo');
               }else{
-                $mgs = __('Producto actualizado. El cupón todavía está activo (B)');
+                // $mgs = __('Producto actualizado. El cupón todavía está activo (B)');
+                $mgs = __('Producto actualizado. El cupón todavía está activo');
               }
 
               $qty_check = 0;
@@ -493,7 +499,8 @@ class CartRepository{
                   TempCart::insert($tempCart);
                 }
               }
-              return __('Producto agregado. El cupón ya NO está activo (H)');
+              // return __('Producto agregado. El cupón ya NO está activo (H)');
+              return __('Producto agregado. El cupón ya NO está activo');
             }
             // -------------- Si el carrito NO está vacío, verifique si este producto existe y luego incremente la cantidad.
             if(isset($cart[$item->id.'-'.$cart_item_key])){
@@ -538,9 +545,11 @@ class CartRepository{
               }
 
               if($qty_check == 1){
-                $mgs = __('Producto agregado. El cupón ya NO está activo (H)');
+                // $mgs = __('Producto agregado. El cupón ya NO está activo (H)');
+                $mgs = __('Producto agregado. El cupón ya NO está activo');
               }else{
-                $mgs = __('Producto actualizado. El cupón ya NO está activo (H)');
+                // $mgs = __('Producto actualizado. El cupón ya NO está activo (H)');
+                $mgs = __('Producto actualizado. El cupón ya NO está activo');
               }
 
               $qty_check = 0;
@@ -604,7 +613,8 @@ class CartRepository{
               TempCart::insert($tempCart);
             }
           }
-          return __('Producto agregado. No existe este cupón (A)');
+          // return __('Producto agregado. No existe este cupón (A)');
+          return __('Producto agregado. No existe este cupón');
         }
         // -------------- Si el carrito NO está vacío, verifique si este producto existe y luego incremente la cantidad.
         if(isset($cart[$item->id.'-'.$cart_item_key])){
@@ -649,9 +659,11 @@ class CartRepository{
           }
 
           if($qty_check == 1){
-            $mgs = __('Producto agregado. No existe este cupón (A)');
+            // $mgs = __('Producto agregado. No existe este cupón (A)');
+            $mgs = __('Producto agregado. No existe este cupón');
           }else{
-            $mgs = __('Producto actualizado. No existe este cupón (A)');
+            // $mgs = __('Producto actualizado. No existe este cupón (A)');
+            $mgs = __('Producto actualizado. No existe este cupón');
           }
 
           $qty_check = 0;
@@ -763,10 +775,6 @@ class CartRepository{
         return $mgs;
       }
     }
-    // echo "<pre>";
-    // print_r($cart);
-    // echo "</pre>";
-    // exit();
   }
 	public function promoStore($request){
     $input = $request->all();

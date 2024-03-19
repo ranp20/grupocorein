@@ -149,8 +149,16 @@ class CartController extends Controller{
         exit();
         */
         Session::forget('cart');
-        Session::flash('success',__('Su carrito está vacío.'));
-        return back();
+
+        $data = [
+            "type" => "success",
+            "mssg" => "Su carrito está vacío.",
+        ];
+        $res = json_encode($data);
+        return $res;
+
+        // Session::flash('success',__('Su carrito está vacío.'));
+        // return back();
     }
 
 }

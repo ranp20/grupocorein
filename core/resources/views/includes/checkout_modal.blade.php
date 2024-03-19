@@ -596,8 +596,10 @@
           $billing = Session::get('billing_address');
           $u_email = $billing['bill_email'];
 
+          $u_amount2 = (int) $u_amount;
+
           $store = array(
-            "amount" => $u_amount,
+            "amount" => $u_amount2,
             "currency" => "PEN", 
             "orderId" => $orderIdGen,
             "customer" => array(

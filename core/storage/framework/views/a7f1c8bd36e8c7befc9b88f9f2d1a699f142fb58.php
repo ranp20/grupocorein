@@ -18,6 +18,7 @@
 						<tr>
 							<th><?php echo e(__('Image')); ?></th>
               <th><?php echo e(__('Name')); ?></th>
+              <th><?php echo e(__('Date of Expiry')); ?></th>
 							<th><?php echo e(__('Status')); ?></th>
 							<th><?php echo e(__('Actions')); ?></th>
 						</tr>

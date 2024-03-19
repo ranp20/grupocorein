@@ -1,9 +1,16 @@
 <?php $__currentLoopData = $datas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+<?php
+  date_default_timezone_set('America/Lima');
+  $timestamp_finalDateCoupon = strtotime($data['time_end']);
+  $format_finalDateCoupon = date("d/m/Y - h:i:s A", $timestamp_finalDateCoupon);
+  // $FinalDateCoupon = date("Y/m/d H:i:s", strtotime($data['time_end']));
+?>
 <tr>
   <td>
     <img src="<?php echo e($data->photo ? asset('assets/images/coupons/'.$data->photo) : asset('assets/images/placeholder.png')); ?>" alt="<?php echo e($data->photo ? $data->name : 'Image Not Found'); ?>">
   </td>
   <td><?php echo e($data->name); ?></td>
+  <td><?php echo e($format_finalDateCoupon); ?></td>
   <td>
     <div class="dropdown">
         <button class="btn btn-<?php echo e($data->status == 1 ? 'success' : 'danger'); ?> btn-sm  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

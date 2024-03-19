@@ -6,18 +6,54 @@
   $cartTotal = 0;
 ?>
 <?php
-/*
-echo "<pre>";
-print_r(Session::get('cart'));
-echo "</pre>";
-exit();
-*/
+  // echo "<pre>";
+  // print_r($cart);
+  // echo "</pre>";
+  // exit();
 ?>
 <?php if(Session::has('cart')): ?>
   <?php $__currentLoopData = $cart; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
   <?php
-    $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-    $cartTotal += ($item['price'] + $total + $attribute_price) * $item['qty'];
+  $totalwithoutcoupon = 0;
+  $totalwithcoupon = 0;
+  $totalwithoutcoupon_prod = 0;
+  $totalwithcoupon_prod = 0;
+  $prod_qty = floatval($item['qty']);
+  $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+  $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
+  $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+  if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
+
+    $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+    if(count($namecouponbyid) != 0){
+      $couponbyiddecode = json_decode($namecouponbyid, TRUE);
+      $nameofcouponbyid = $couponbyiddecode[0]['name'];
+      $expiresAtTimer = $couponbyiddecode[0]['time_end'];
+      // ----------- Crear un objeto DateTime a partir de la fecha final...
+      $currentDate = new DateTime();
+      $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+      // ----------- Asegurarse que la fecha es válida...
+      if (!$expirationDate) {
+        die('Invalid date format for countdown.');
+      }
+      // ----------- Obtener las fechas en milisegundos...
+      $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+      $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+      // ----------- Calcular el tiempo restante...
+      $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+      if($remainingTime <= 0){
+        $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
+      }else{
+        $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+        $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+        $cartTotal += $totalwithoutcoupon + $totalwithcoupon; 
+      }
+    }else{
+      $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
+    }
+  }else{
+    $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
+  }
   ?>
   <div class="entry">
     <div class="entry-thumb">
@@ -36,15 +72,39 @@ exit();
       <?php endif; ?>
     </div>
     <div class="entry-content">
-      <h4 class="entry-title"><a href="<?php echo e(route('front.product',$item['slug'])); ?>">
-        <?php echo e(strlen(strip_tags($item['name'])) > 15 ? substr(strip_tags($item['name']), 0, 15) . '...' : strip_tags($item['name'])); ?>
+      <h4 class="entry-title">
+        <a href="<?php echo e(route('front.product',$item['slug'])); ?>"><?php echo e(strlen(strip_tags($item['name'])) > 15 ? substr(strip_tags($item['name']), 0, 15) . '...' : strip_tags($item['name'])); ?></a>
+      </h4>
+      
+      <?php if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00): ?>
+        <?php if(count($namecouponbyid) != 0): ?>
+          <?php if($remainingTime <= 0): ?>
+            <span class="entry-meta"><?php echo e($item['qty']); ?> x <?php echo e(PriceHelper::setCurrencyPrice($item['price'])); ?></span>
+          <?php else: ?>
+            <span class="entry-meta"><?php echo e($item['qty']); ?> x <?php echo e(PriceHelper::setCurrencyPrice($item['coupon_price'])); ?></span>
+          <?php endif; ?>
+        <?php else: ?>
+          <span class="entry-meta"><?php echo e($item['qty']); ?> x <?php echo e(PriceHelper::setCurrencyPrice($item['price'])); ?></span>
+        <?php endif; ?>
+      <?php else: ?>
+        <span class="entry-meta"><?php echo e($item['qty']); ?> x <?php echo e(PriceHelper::setCurrencyPrice($item['price'])); ?></span>
+      <?php endif; ?>
 
-      </a></h4>
-      <span class="entry-meta"><?php echo e($item['qty']); ?> x <?php echo e(PriceHelper::setCurrencyPrice($item['price'])); ?></span>
+
       <?php if(isset($item['attribute']['option_name']) && !empty($item['attribute']['option_name'])): ?>
-      <?php $__currentLoopData = $item['attribute']['option_name']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $optionkey => $option_name): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-      <span class="att"><em><?php echo e($item['attribute']['names'][$optionkey]); ?>:</em> <?php echo e($option_name); ?> (<?php echo e(PriceHelper::setCurrencyPrice($item['attribute']['option_price'][$optionkey])); ?>)</span>
-      <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        <?php $__currentLoopData = $item['attribute']['option_name']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $optionkey => $option_name): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+          <span class="att"><em><?php echo e($item['attribute']['names'][$optionkey]); ?>:</em> <?php echo e($option_name); ?> (<?php echo e(PriceHelper::setCurrencyPrice($item['attribute']['option_price'][$optionkey])); ?>)</span>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+      <?php endif; ?>
+      <?php if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00): ?>
+        <?php if(count($namecouponbyid) != 0): ?>
+          <?php if($remainingTime <= 0): ?>
+          <?php else: ?>
+            <span class="product-withcoupon">
+              <small>Con cupón: <strong><?php echo e($nameofcouponbyid); ?></strong></small>
+            </span>
+          <?php endif; ?>
+        <?php endif; ?>
       <?php endif; ?>
     </div>
     <div class="entry-delete">

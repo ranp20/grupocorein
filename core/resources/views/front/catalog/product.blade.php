@@ -45,8 +45,35 @@
       // VALIDAR SI ESTE CUPÓN PERTENECE Y SI ESTÁ ACTIVADO EN ESTE PRODUCTO...
       if($idcouponapply_user == $user_id && $idcouponapply_prod == $item->id && $idcouponapply_coupon == $item->coupon_id){
         // PROCEDER A DETENER EL CONTADOR Y OCULTAR EL MODAL DE CUPÓN...
-        $remainingTime = 0;
-        $couponapply_totalprice = $arrCouponApply[0]['totalprice'];
+        // $remainingTime = 0;
+        // $couponapply_totalprice = $arrCouponApply[0]['totalprice'];
+        
+        // PROCEDER A MOSTRAR EL CONTEDOR EN EL MODAL DE CUPÓN...
+        $expiresAtTimer = $arrcoupon2[0]['time_end'];
+        $idcoupon = $arrcoupon2[0]['id'];
+        // Crear un objeto DateTime a partir de la fecha final...
+        $currentDate = new DateTime();
+        $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+        $imgCoupon = ($arrcoupon2[0]['photo'] != "") ? $arrcoupon2[0]['photo'] : ""; // IMAGEN DEL CUPÓN...
+        // Asegurarse que la fecha es válida...
+        if (!$expirationDate) {
+          die('Invalid date format for countdown.');
+        }
+        // Obtener las fechas en milisegundos...
+        $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+        $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+        // Calcular el tiempo restante...
+        $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+        if ($remainingTime <= 0) {
+          $htmlcoupon = "EL CUPÓN HA EXPIRADO...!";
+          $remainingTime = 0;
+        } else {
+          $couponapply_totalprice = $arrCouponApply[0]['totalprice']; // TODAVÍA MOSTRAR EL PRECIO CON EL CUPÓN ACTIVADO...
+          $hours = floor($remainingTime / 3600000);
+          $minutes = floor(($remainingTime % 3600000) / 60000);
+          $seconds = floor(($remainingTime % 60000) / 1000);
+          $htmlcoupon = "TIEMPO RESTANTE: {$hours}h {$minutes}m {$seconds}s";
+        }
       }else{
         // PROCEDER A MOSTRAR EL CONTEDOR EN EL MODAL DE CUPÓN...
         $expiresAtTimer = $arrcoupon2[0]['time_end'];
@@ -110,6 +137,8 @@
     }
   }
 
+  // echo "TIEMPO RESTANTE: ".$remainingTime;
+  // echo $htmlcoupon;
 ?>
 
 

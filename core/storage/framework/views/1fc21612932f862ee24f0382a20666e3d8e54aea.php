@@ -14,13 +14,6 @@
 <script type="text/javascript" src="<?php echo e(asset('assets/front/js/plugins/sweetalert2/sweetalert2.all.min.js')); ?>"></script>
 <div class="row">
   <div class="col-xl-9 col-lg-8">
-  <?php
-    // echo "<pre>";
-    // print_r(Session::get('cart'));
-    // // print_r(session()->all());
-    // echo "<pre>";
-    // exit();
-  ?>
     <div class="card" id="cart-summarylist">
       <div class="card-body">
         <div class="table-responsive shopping-cart">
@@ -34,7 +27,7 @@
                 
                 
                 <th class="text-center">
-                  <a class="btn btn-sm btn-primary" href="<?php echo e(route('front.cart.clear')); ?>"><span><?php echo e(__('Clear Cart')); ?></span></a>
+                  <a class="btn btn-sm btn-primary remallwithoutic" href="<?php echo e(route('front.cart.clear')); ?>"><span><?php echo e(__('Clear Cart')); ?></span></a>
                 </th>
                 
               </tr>
@@ -46,8 +39,11 @@
                 $totalwithcoupon = 0;
                 $totalwithoutcoupon_prod = 0;
                 $totalwithcoupon_prod = 0;
+                // ----------- CANTIDAD DE PRODUCTOS TOTAL...
                 $prod_qty = floatval($item['qty']);
+                // ----------- CANTIDAD DE PRODUCTOS SIN CUPÓN TOTAL...
                 $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+                // ----------- CANTIDAD DE PRODUCTOS CON CUPÓN...
                 $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
                 $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
                 if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
@@ -56,17 +52,28 @@
                   if(count($namecouponbyid) != 0){
                     $couponbyiddecode = json_decode($namecouponbyid, TRUE);
                     $nameofcouponbyid = $couponbyiddecode[0]['name'];
-                    // echo "<pre>";
-                    // echo $nameofcouponbyid;
-                    // echo "</pre>";
-
-                    $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
-                    $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
-                    // echo "totalwithoutcoupon: ".$totalwithoutcoupon."<br>";
-                    // echo "totalwithcoupon: ".$totalwithcoupon."<br>";
-                    $cartTotal = $totalwithoutcoupon + $totalwithcoupon;
+                    $expiresAtTimer = $couponbyiddecode[0]['time_end'];
+                    // ----------- Crear un objeto DateTime a partir de la fecha final...
+                    $currentDate = new DateTime();
+                    $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+                    // ----------- Asegurarse que la fecha es válida...
+                    if (!$expirationDate) {
+                      die('Invalid date format for countdown.');
+                    }
+                    // ----------- Obtener las fechas en milisegundos...
+                    $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+                    $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+                    // ----------- Calcular el tiempo restante...
+                    $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+                    if($remainingTime <= 0){
+                      $cartTotal += ($item['price'] + $total + $attribute_price) * $item['qty'];
+                    }else{
+                      $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+                      $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+                      $cartTotal += $totalwithoutcoupon + $totalwithcoupon;
+                    }
                   }else{
-                    $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
+                    $cartTotal += ($item['price'] + $total + $attribute_price) * $item['qty'];
                   }
                 }else{
                   $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
@@ -90,10 +97,7 @@
                     <?php endif; ?>
                     <div class="product-info">
                       <h4 class="product-title">
-                        <a href="<?php echo e(route('front.product',$item['slug'])); ?>">
-                        <?php echo e(strlen(strip_tags($item['name'])) > 45 ? substr(strip_tags($item['name']), 0, 45) . '...' : strip_tags($item['name'])); ?>
-
-                        </a>
+                        <a href="<?php echo e(route('front.product',$item['slug'])); ?>"><?php echo e(strlen(strip_tags($item['name'])) > 45 ? substr(strip_tags($item['name']), 0, 45) . '...' : strip_tags($item['name'])); ?></a>
                       </h4>
                       <p class="product-sku">SKU: <?php echo e(strlen(strip_tags($item['sku'])) > 45 ? substr(strip_tags($item['sku']), 0, 45) . '...' : strip_tags($item['sku'])); ?></p>
                       <?php if(isset($cart['attribute']['option_name']) && !empty($cart['attribute']['option_name'])): ?>
@@ -103,9 +107,12 @@
                       <?php endif; ?>
                       <?php if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00): ?>
                         <?php if(count($namecouponbyid) != 0): ?>
-                        <span class="product-withcoupon">
-                          <small>Con cupón: <strong><?php echo e($nameofcouponbyid); ?></strong></small>
-                        </span>
+                          <?php if($remainingTime <= 0): ?>
+                          <?php else: ?>
+                            <span class="product-withcoupon mt-05rm">
+                              <small>Con cupón: <strong><?php echo e($nameofcouponbyid); ?></strong></small>
+                            </span> 
+                          <?php endif; ?>
                         <?php endif; ?>
                       <?php endif; ?>
                     </div>
@@ -113,7 +120,11 @@
                 </td>
                 <?php if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00): ?>
                   <?php if(count($namecouponbyid) != 0): ?>
-                    <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($item['coupon_price'])); ?></td>
+                    <?php if($remainingTime <= 0): ?>
+                      <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($item['price'])); ?></td>
+                    <?php else: ?>
+                      <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($item['coupon_price'])); ?></td>
+                    <?php endif; ?>
                   <?php else: ?>
                     <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($item['price'])); ?></td>
                   <?php endif; ?>
@@ -137,7 +148,11 @@
                       $totalwithcoupon_prod += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
                       $cartTotal_prod = $totalwithoutcoupon_prod + $totalwithcoupon_prod;
                     ?>
-                    <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($cartTotal_prod)); ?></td>
+                    <?php if($remainingTime <= 0): ?>
+                      <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($item['price'] * $item['qty'])); ?></td>
+                    <?php else: ?>
+                      <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($cartTotal_prod)); ?></td>
+                    <?php endif; ?>
                   <?php else: ?>
                     <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($item['price'] * $item['qty'])); ?></td>
                   <?php endif; ?>
