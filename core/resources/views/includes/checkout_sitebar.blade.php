@@ -134,15 +134,15 @@
           @if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00)
             @if(count($namecouponbyid) != 0)
               @if($remainingTime <= 0)
-                <span class="entry-meta">{{$item['qty']}} x {{PriceHelper::setCurrencyPrice($item['main_price'])}}</span>
+                <span class="entry-meta">{{$item['qty']}} x {{PriceHelper::setCurrencyPrice($item['price'])}}</span>
               @else
                 <span class="entry-meta">{{$item['qty']}} x {{PriceHelper::setCurrencyPrice($item['coupon_price'])}}</span>
               @endif
             @else
-              <span class="entry-meta">{{$item['qty']}} x {{PriceHelper::setCurrencyPrice($item['main_price'])}}</span>
+              <span class="entry-meta">{{$item['qty']}} x {{PriceHelper::setCurrencyPrice($item['price'])}}</span>
             @endif
           @else
-            <span class="entry-meta">{{$item['qty']}} x {{PriceHelper::setCurrencyPrice($item['main_price'])}}</span>
+            <span class="entry-meta">{{$item['qty']}} x {{PriceHelper::setCurrencyPrice($item['price'])}}</span>
           @endif
           @if(isset($cart['attribute']['option_name']) && !empty($cart['attribute']['option_name']))
             @foreach ($item['attribute']['option_name'] as $optionkey => $option_name)

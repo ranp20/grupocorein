@@ -65,6 +65,7 @@
                     $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
                     // ----------- Calcular el tiempo restante...
                     $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+                    
                     if($remainingTime <= 0){
                       $cartTotal += ($item['price'] + $total + $attribute_price) * $item['qty'];
                     }else{
