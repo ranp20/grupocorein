@@ -186,7 +186,8 @@ class CartRepository{
     // (1) -------------- VALIDAR SI EXISTE UN CUPÓN ASIGNADO AL PRODUCTO, OBTENER EL NUEVO PRECIO...
     if(count($couponvalidexist) != 0){
       $arrApplyCoupon = json_decode($couponvalidexist, TRUE);
-      $applycoupon_totalprice = $arrApplyCoupon[0]['totalprice'];
+      $applycoupon_totalprice = $arrApplyCoupon[0]['totalprice']; // PRECIO DEL CUPÓN
+      $applycoupon_idcoupon = $arrApplyCoupon[0]['id_coupon']; // ID DEL CUPÓN
       // echo $applycoupon_totalprice."<br>";
       if(count($couponinfo) != 0){
         $couponjsontoarray = json_decode($couponinfo, TRUE);
@@ -224,6 +225,7 @@ class CartRepository{
               "photo" => $item->photo,
               "type" => $item->item_type,
               "item_type" => $item->item_type,
+              "coupon_id" => "0",
               "coupon_price" => "0",
               "quantity_withoutcoupon" => "0",
               'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
@@ -247,6 +249,7 @@ class CartRepository{
                   "photo" => $item->photo,
                   "is_type" => $item->is_type,
                   "item_type" => $item->item_type,
+                  "coupon_id" => "0",
                   "coupon_price" => "0",
                   "quantity_withoutcoupon" => "0",
                   "created_at" => $date,
@@ -271,6 +274,7 @@ class CartRepository{
                 "item_id" => $item->id,
                 "attribute_collection" => json_encode($colorCollection),
                 "quantity" => $qtyProdinCart,
+                "coupon_id" => "0",
                 "coupon_price" => "0",
                 "quantity_withoutcoupon" => "0",
                 "updated_at" => $date
@@ -285,6 +289,7 @@ class CartRepository{
                 "item_id" => $item->id,
                 "attribute_collection" => json_encode($colorCollection),
                 "quantity" => $qtyProdinCart,
+                "coupon_id" => "0",
                 "coupon_price" => "0",
                 "quantity_withoutcoupon" => "0",
                 "updated_at" => $date
@@ -332,6 +337,7 @@ class CartRepository{
                 "photo" => $item->photo,
                 "type" => $item->item_type,
                 "item_type" => $item->item_type,
+                "coupon_id" => $item->coupon_id,
                 "coupon_price" => $applycoupon_totalprice,
                 "quantity_withoutcoupon" => "0",
                 'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
@@ -355,6 +361,7 @@ class CartRepository{
                     "photo" => $item->photo,
                     "is_type" => $item->is_type,
                     "item_type" => $item->item_type,
+                    "coupon_id" => $item->coupon_id,
                     "coupon_price" => $applycoupon_totalprice,
                     "quantity_withoutcoupon" => "0",
                     "created_at" => $date,
@@ -384,11 +391,13 @@ class CartRepository{
                 $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
                 $cart[$item->id.'-'.$cart_item_key]['coupon_price'] = $applycoupon_totalprice;
                 $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
+                $applycoupon_couponid = $cart[$item->id.'-'.$cart_item_key]['coupon_id'];
                 $tempCart = [
                   "user_id" => $input['user_id'],
                   "item_id" => $item->id,
                   "attribute_collection" => json_encode($colorCollection),
                   "quantity" => $qtyProdinCart,
+                  "coupon_id" => $applycoupon_couponid,
                   "coupon_price" => $applycoupon_totalprice,
                   "quantity_withoutcoupon" => $quantity_withoutcoupon,
                   "updated_at" => $date
@@ -400,11 +409,13 @@ class CartRepository{
                 $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
                 $cart[$item->id.'-'.$cart_item_key]['coupon_price'] = $applycoupon_totalprice;
                 $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
+                $applycoupon_couponid = $cart[$item->id.'-'.$cart_item_key]['coupon_id'];
                 $tempCart = [
                   "user_id" => $input['user_id'],
                   "item_id" => $item->id,
                   "attribute_collection" => json_encode($colorCollection),
                   "quantity" => $qtyProdinCart,
+                  "coupon_id" => $applycoupon_couponid,
                   "coupon_price" => $applycoupon_totalprice,
                   "quantity_withoutcoupon" => $quantity_withoutcoupon,
                   "updated_at" => $date
@@ -449,6 +460,7 @@ class CartRepository{
                 "photo" => $item->photo,
                 "type" => $item->item_type,
                 "item_type" => $item->item_type,
+                "coupon_id" => "0",
                 "coupon_price" => "0",
                 "quantity_withoutcoupon" => "0",
                 'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
@@ -472,6 +484,7 @@ class CartRepository{
                     "photo" => $item->photo,
                     "is_type" => $item->is_type,
                     "item_type" => $item->item_type,
+                    "coupon_id" => "0",
                     "coupon_price" => "0",
                     "quantity_withoutcoupon" => "0",
                     "created_at" => $date,
@@ -496,6 +509,7 @@ class CartRepository{
                   "item_id" => $item->id,
                   "attribute_collection" => json_encode($colorCollection),
                   "quantity" => $qtyProdinCart,
+                  "coupon_id" => "0",
                   "coupon_price" => "0",
                   "quantity_withoutcoupon" => "0",
                   "updated_at" => $date
@@ -510,6 +524,7 @@ class CartRepository{
                   "item_id" => $item->id,
                   "attribute_collection" => json_encode($colorCollection),
                   "quantity" => $qtyProdinCart,
+                  "coupon_id" => "0",
                   "coupon_price" => "0",
                   "quantity_withoutcoupon" => "0",
                   "updated_at" => $date
@@ -556,6 +571,7 @@ class CartRepository{
             "photo" => $item->photo,
             "type" => $item->item_type,
             "item_type" => $item->item_type,
+            "coupon_id" => "0",
             "coupon_price" => "0",
             "quantity_withoutcoupon" => "0",
             'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
@@ -579,6 +595,7 @@ class CartRepository{
                 "photo" => $item->photo,
                 "is_type" => $item->is_type,
                 "item_type" => $item->item_type,
+                "coupon_id" => "0",
                 "coupon_price" => "0",
                 "quantity_withoutcoupon" => "0",
                 "created_at" => $date,
@@ -603,6 +620,7 @@ class CartRepository{
               "item_id" => $item->id,
               "attribute_collection" => json_encode($colorCollection),
               "quantity" => $qtyProdinCart,
+              "coupon_id" => "0",
               "coupon_price" => "0",
               "quantity_withoutcoupon" => "0",
               "updated_at" => $date
@@ -617,6 +635,7 @@ class CartRepository{
               "item_id" => $item->id,
               "attribute_collection" => json_encode($colorCollection),
               "quantity" => $qtyProdinCart,
+              "coupon_id" => "0",
               "coupon_price" => "0",
               "quantity_withoutcoupon" => "0",
               "updated_at" => $date
@@ -662,6 +681,7 @@ class CartRepository{
           "photo" => $item->photo,
           "type" => $item->item_type,
           "item_type" => $item->item_type,
+          "coupon_id" => "0",
           "coupon_price" => "0",
           "quantity_withoutcoupon" => "0",
           'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
@@ -685,6 +705,7 @@ class CartRepository{
               "photo" => $item->photo,
               "is_type" => $item->is_type,
               "item_type" => $item->item_type,
+              "coupon_id" => "0",
               "coupon_price" => "0",
               "quantity_withoutcoupon" => "0",
               "created_at" => $date,
@@ -709,6 +730,7 @@ class CartRepository{
             "item_id" => $item->id,
             "attribute_collection" => json_encode($colorCollection),
             "quantity" => $qtyProdinCart,
+            "coupon_id" => "0",
             "coupon_price" => "0",
             "quantity_withoutcoupon" => "0",
             "updated_at" => $date
@@ -724,6 +746,7 @@ class CartRepository{
             "item_id" => $item->id,
             "attribute_collection" => json_encode($colorCollection),
             "quantity" => $qtyProdinCart,
+            "coupon_id" => "0",
             "coupon_price" => "0",
             "quantity_withoutcoupon" => "0",
             "updated_at" => $date

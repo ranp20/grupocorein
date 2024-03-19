@@ -4,6 +4,12 @@
   $option_price = 0;
   $cartTotal = 0;
 ?>
+<?php
+  // echo "<pre>";
+  // print_r($cart);
+  // echo "</pre>";
+  // exit();
+?>
 <link rel="stylesheet" href="<?php echo e(asset('assets/front/js/plugins/sweetalert2/sweetalert2.min.css')); ?>">
 <script type="text/javascript" src="<?php echo e(asset('assets/front/js/plugins/sweetalert2/sweetalert2.all.min.js')); ?>"></script>
 <div class="row">
@@ -44,16 +50,27 @@
                 $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
                 $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
                 $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-                if($item['quantity_withoutcoupon'] != "" && $item['quantity_withoutcoupon'] != "0" && $item['coupon_price'] != "" && 
-                   $item['coupon_price'] != 0 && $item['coupon_price'] != "0.00"){
-                  $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
-                  $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
-                  // echo "totalwithoutcoupon: ".$totalwithoutcoupon."<br>";
-                  // echo "totalwithcoupon: ".$totalwithcoupon."<br>";
-                  $cartTotal = $totalwithoutcoupon + $totalwithcoupon;
+                if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
+
+                  $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+                  if(count($namecouponbyid) != 0){
+                    $couponbyiddecode = json_decode($namecouponbyid, TRUE);
+                    $nameofcouponbyid = $couponbyiddecode[0]['name'];
+                    // echo "<pre>";
+                    // echo $nameofcouponbyid;
+                    // echo "</pre>";
+
+                    $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+                    $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+                    // echo "totalwithoutcoupon: ".$totalwithoutcoupon."<br>";
+                    // echo "totalwithcoupon: ".$totalwithcoupon."<br>";
+                    $cartTotal = $totalwithoutcoupon + $totalwithcoupon;
+                  }else{
+                    $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
+                  }
                 }else{
                   $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
-                }                                
+                }
               ?>
               <tr>
                 <td>
@@ -84,18 +101,22 @@
                           <span><em><?php echo e($item['attribute']['names'][$optionkey]); ?>:</em> <?php echo e($option_name); ?> (<?php echo e(PriceHelper::setCurrencyPrice($item['attribute']['option_price'][$optionkey])); ?>)</span>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                       <?php endif; ?>
-                      <?php if($item['quantity_withoutcoupon'] != "" && $item['quantity_withoutcoupon'] != "0" && $item['coupon_price'] != "" && 
-                          $item['coupon_price'] != 0 && $item['coupon_price'] != "0.00"): ?>
-                          <span class="product-withcoupon">
-                            <small>Con cupón</small>
-                          </span>
+                      <?php if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00): ?>
+                        <?php if(count($namecouponbyid) != 0): ?>
+                        <span class="product-withcoupon">
+                          <small>Con cupón: <strong><?php echo e($nameofcouponbyid); ?></strong></small>
+                        </span>
+                        <?php endif; ?>
                       <?php endif; ?>
                     </div>
                   </div>
                 </td>
-                <?php if($item['quantity_withoutcoupon'] != "" && $item['quantity_withoutcoupon'] != "0" && $item['coupon_price'] != "" && 
-                   $item['coupon_price'] != 0 && $item['coupon_price'] != "0.00"): ?>
-                   <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($item['coupon_price'])); ?></td>
+                <?php if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00): ?>
+                  <?php if(count($namecouponbyid) != 0): ?>
+                    <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($item['coupon_price'])); ?></td>
+                  <?php else: ?>
+                    <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($item['price'])); ?></td>
+                  <?php endif; ?>
                 <?php else: ?>
                   <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($item['price'])); ?></td>
                 <?php endif; ?>
@@ -109,14 +130,17 @@
                   </div>
                   <?php endif; ?>
                 </td>
-                <?php if($item['quantity_withoutcoupon'] != "" && $item['quantity_withoutcoupon'] != "0" && $item['coupon_price'] != "" && 
-                   $item['coupon_price'] != 0 && $item['coupon_price'] != "0.00"): ?>
-                  <?php
-                    $totalwithoutcoupon_prod += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
-                    $totalwithcoupon_prod += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
-                    $cartTotal_prod = $totalwithoutcoupon_prod + $totalwithcoupon_prod;
-                  ?>
-                  <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($cartTotal_prod)); ?></td>
+                <?php if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00): ?>
+                  <?php if(count($namecouponbyid) != 0): ?>
+                    <?php
+                      $totalwithoutcoupon_prod += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+                      $totalwithcoupon_prod += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+                      $cartTotal_prod = $totalwithoutcoupon_prod + $totalwithcoupon_prod;
+                    ?>
+                    <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($cartTotal_prod)); ?></td>
+                  <?php else: ?>
+                    <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($item['price'] * $item['qty'])); ?></td>
+                  <?php endif; ?>
                 <?php else: ?>
                   <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($item['price'] * $item['qty'])); ?></td>
                 <?php endif; ?>

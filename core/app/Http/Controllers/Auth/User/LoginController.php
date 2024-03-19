@@ -58,6 +58,9 @@ class LoginController extends Controller{
             "photo" => $v['photo'],
             "type" => $v['is_type'],
             "item_type" => $v['item_type'],
+            "coupon_id" => $v['coupon_id'],
+            "coupon_price" => $v['coupon_price'],
+            "quantity_withoutcoupon" => $v['quantity_withoutcoupon'],
             'item_l_n' => null,
             'item_l_k' => null,
             "user_id" => $v['user_id']

@@ -1022,7 +1022,7 @@ img{
 					padding: 1rem;
 				}
 				&:last-child{
-					border: none;
+					border-bottom: none;
 				}
 			}
 		}
@@ -1065,7 +1065,7 @@ img{
 	}
 }
 .product-sku{
-	opacity: 0.6;
+	opacity: 0.65;
 	font-size: 0.85rem;
 	font-weight: bold;
 	&__2{
@@ -1219,10 +1219,14 @@ img{
 }
 .product-withcoupon{
 	small{
-		padding: 2px 4px 4px 4px;
-    border-radius: 6px;
-    background-color: yellow;
-    // background-color: #8bc82f;
-    border: thin solid #ddd;
+		// padding: 2px 4px 4px 4px;
+    
+		strong{
+			padding: 2px 4px 4px 4px;
+			border-radius: 6px;
+			background-color: yellow;
+			// background-color: #8bc82f;
+			border: thin solid #ddd;
+		}
 	}
 }

@@ -4,6 +4,12 @@
   $option_price = 0;
   $cartTotal = 0;
 @endphp
+<?php
+  // echo "<pre>";
+  // print_r($cart);
+  // echo "</pre>";
+  // exit();
+?>
 <link rel="stylesheet" href="{{ asset('assets/front/js/plugins/sweetalert2/sweetalert2.min.css')}}">
 <script type="text/javascript" src="{{ asset('assets/front/js/plugins/sweetalert2/sweetalert2.all.min.js')}}"></script>
 <div class="row">
@@ -44,16 +50,27 @@
                 $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
                 $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
                 $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-                if($item['quantity_withoutcoupon'] != "" && $item['quantity_withoutcoupon'] != "0" && $item['coupon_price'] != "" && 
-                   $item['coupon_price'] != 0 && $item['coupon_price'] != "0.00"){
-                  $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
-                  $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
-                  // echo "totalwithoutcoupon: ".$totalwithoutcoupon."<br>";
-                  // echo "totalwithcoupon: ".$totalwithcoupon."<br>";
-                  $cartTotal = $totalwithoutcoupon + $totalwithcoupon;
+                if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
+
+                  $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+                  if(count($namecouponbyid) != 0){
+                    $couponbyiddecode = json_decode($namecouponbyid, TRUE);
+                    $nameofcouponbyid = $couponbyiddecode[0]['name'];
+                    // echo "<pre>";
+                    // echo $nameofcouponbyid;
+                    // echo "</pre>";
+
+                    $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+                    $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+                    // echo "totalwithoutcoupon: ".$totalwithoutcoupon."<br>";
+                    // echo "totalwithcoupon: ".$totalwithcoupon."<br>";
+                    $cartTotal = $totalwithoutcoupon + $totalwithcoupon;
+                  }else{
+                    $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
+                  }
                 }else{
                   $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
-                }                                
+                }
               @endphp
               <tr>
                 <td>
@@ -83,18 +100,22 @@
                           <span><em>{{$item['attribute']['names'][$optionkey]}}:</em> {{$option_name}} ({{PriceHelper::setCurrencyPrice($item['attribute']['option_price'][$optionkey])}})</span>
                         @endforeach
                       @endif
-                      @if($item['quantity_withoutcoupon'] != "" && $item['quantity_withoutcoupon'] != "0" && $item['coupon_price'] != "" && 
-                          $item['coupon_price'] != 0 && $item['coupon_price'] != "0.00")
-                          <span class="product-withcoupon">
-                            <small>Con cupón</small>
-                          </span>
+                      @if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00)
+                        @if(count($namecouponbyid) != 0)
+                        <span class="product-withcoupon">
+                          <small>Con cupón: <strong>{{ $nameofcouponbyid }}</strong></small>
+                        </span>
+                        @endif
                       @endif
                     </div>
                   </div>
                 </td>
-                @if($item['quantity_withoutcoupon'] != "" && $item['quantity_withoutcoupon'] != "0" && $item['coupon_price'] != "" && 
-                   $item['coupon_price'] != 0 && $item['coupon_price'] != "0.00")
-                   <td class="text-center text-lg text-bold">{{PriceHelper::setCurrencyPrice($item['coupon_price'])}}</td>
+                @if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00)
+                  @if(count($namecouponbyid) != 0)
+                    <td class="text-center text-lg text-bold">{{PriceHelper::setCurrencyPrice($item['coupon_price'])}}</td>
+                  @else
+                    <td class="text-center text-lg text-bold">{{PriceHelper::setCurrencyPrice($item['price'])}}</td>
+                  @endif
                 @else
                   <td class="text-center text-lg text-bold">{{PriceHelper::setCurrencyPrice($item['price'])}}</td>
                 @endif
@@ -108,14 +129,17 @@
                   </div>
                   @endif
                 </td>
-                @if($item['quantity_withoutcoupon'] != "" && $item['quantity_withoutcoupon'] != "0" && $item['coupon_price'] != "" && 
-                   $item['coupon_price'] != 0 && $item['coupon_price'] != "0.00")
-                  @php
-                    $totalwithoutcoupon_prod += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
-                    $totalwithcoupon_prod += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
-                    $cartTotal_prod = $totalwithoutcoupon_prod + $totalwithcoupon_prod;
-                  @endphp
-                  <td class="text-center text-lg text-bold">{{PriceHelper::setCurrencyPrice($cartTotal_prod)}}</td>
+                @if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00)
+                  @if(count($namecouponbyid) != 0)
+                    @php
+                      $totalwithoutcoupon_prod += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+                      $totalwithcoupon_prod += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+                      $cartTotal_prod = $totalwithoutcoupon_prod + $totalwithcoupon_prod;
+                    @endphp
+                    <td class="text-center text-lg text-bold">{{PriceHelper::setCurrencyPrice($cartTotal_prod)}}</td>
+                  @else
+                    <td class="text-center text-lg text-bold">{{PriceHelper::setCurrencyPrice($item['price'] * $item['qty'])}}</td>
+                  @endif
                 @else
                   <td class="text-center text-lg text-bold">{{PriceHelper::setCurrencyPrice($item['price'] * $item['qty'])}}</td>
                 @endif

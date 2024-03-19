@@ -304,7 +304,7 @@ class FrontendController extends Controller{
       'sec_details'   => isset($item[0]->specification_description) ? json_decode($item[0]->specification_description,true) : [],
       'attributes'    => $item[0]->attributes,
       'related_items' => $item[0]->category->items()->whereStatus(1)->where('id','!=',$item[0]->id)->take(8)->get(),
-      'coupons'       => Coupons::where('id','=',$item[0]->coupon_id)->take(1)->get(),
+      'coupons'       => Coupons::where('id','=',$item[0]->coupon_id)->where("status","!=",0)->take(1)->get(),
       'applycoupon'   => ApplyCoupon::where('id_coupon','=',$item[0]->coupon_id)->take(1)->get()
     ]);
   }
