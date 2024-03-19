@@ -1217,3 +1217,12 @@ img{
     transform: translate(0%, -50%);
 	}
 }
+.product-withcoupon{
+	small{
+		padding: 2px 4px 4px 4px;
+    border-radius: 6px;
+    background-color: yellow;
+    // background-color: #8bc82f;
+    border: thin solid #ddd;
+	}
+}

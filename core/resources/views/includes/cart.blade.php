@@ -4,16 +4,17 @@
   $option_price = 0;
   $cartTotal = 0;
 @endphp
-<?php
-  // echo "<pre>";
-  // print_r(Session::get('cart'));
-  // print_r(session()->all());
-  // echo "<pre>";
-?>
 <link rel="stylesheet" href="{{ asset('assets/front/js/plugins/sweetalert2/sweetalert2.min.css')}}">
 <script type="text/javascript" src="{{ asset('assets/front/js/plugins/sweetalert2/sweetalert2.all.min.js')}}"></script>
 <div class="row">
   <div class="col-xl-9 col-lg-8">
+  <?php
+    // echo "<pre>";
+    // print_r(Session::get('cart'));
+    // // print_r(session()->all());
+    // echo "<pre>";
+    // exit();
+  ?>
     <div class="card" id="cart-summarylist">
       <div class="card-body">
         <div class="table-responsive shopping-cart">
@@ -25,20 +26,34 @@
                 <th class="text-center">{{__('Quantity')}}</th>
                 <th class="text-center">{{__('Subtotal')}}</th>
                 
-                {{--
-                <!--
+                
                 <th class="text-center">
                   <a class="btn btn-sm btn-primary" href="{{route('front.cart.clear')}}"><span>{{__('Clear Cart')}}</span></a>
                 </th>
-                -->
-                --}}
+                
               </tr>
             </thead>
             <tbody id="cart_view_load" data-target="{{route('cart.get.load')}}">
               @foreach ($cart as $key => $item)
               @php
+                $totalwithoutcoupon = 0;
+                $totalwithcoupon = 0;
+                $totalwithoutcoupon_prod = 0;
+                $totalwithcoupon_prod = 0;
+                $prod_qty = floatval($item['qty']);
+                $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+                $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
                 $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-                $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
+                if($item['quantity_withoutcoupon'] != "" && $item['quantity_withoutcoupon'] != "0" && $item['coupon_price'] != "" && 
+                   $item['coupon_price'] != 0 && $item['coupon_price'] != "0.00"){
+                  $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+                  $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+                  // echo "totalwithoutcoupon: ".$totalwithoutcoupon."<br>";
+                  // echo "totalwithcoupon: ".$totalwithcoupon."<br>";
+                  $cartTotal = $totalwithoutcoupon + $totalwithcoupon;
+                }else{
+                  $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
+                }                                
               @endphp
               <tr>
                 <td>
@@ -64,14 +79,25 @@
                       </h4>
                       <p class="product-sku">SKU: {{ strlen(strip_tags($item['sku'])) > 45 ? substr(strip_tags($item['sku']), 0, 45) . '...' : strip_tags($item['sku']) }}</p>
                       @if(isset($cart['attribute']['option_name']) && !empty($cart['attribute']['option_name']))
-                      @foreach ($item['attribute']['option_name'] as $optionkey => $option_name)
-                      <span><em>{{$item['attribute']['names'][$optionkey]}}:</em> {{$option_name}} ({{PriceHelper::setCurrencyPrice($item['attribute']['option_price'][$optionkey])}})</span>
-                      @endforeach
+                        @foreach ($item['attribute']['option_name'] as $optionkey => $option_name)
+                          <span><em>{{$item['attribute']['names'][$optionkey]}}:</em> {{$option_name}} ({{PriceHelper::setCurrencyPrice($item['attribute']['option_price'][$optionkey])}})</span>
+                        @endforeach
+                      @endif
+                      @if($item['quantity_withoutcoupon'] != "" && $item['quantity_withoutcoupon'] != "0" && $item['coupon_price'] != "" && 
+                          $item['coupon_price'] != 0 && $item['coupon_price'] != "0.00")
+                          <span class="product-withcoupon">
+                            <small>Con cupón</small>
+                          </span>
                       @endif
                     </div>
                   </div>
                 </td>
-                <td class="text-center text-lg text-bold">{{PriceHelper::setCurrencyPrice($item['price'])}}</td>
+                @if($item['quantity_withoutcoupon'] != "" && $item['quantity_withoutcoupon'] != "0" && $item['coupon_price'] != "" && 
+                   $item['coupon_price'] != 0 && $item['coupon_price'] != "0.00")
+                   <td class="text-center text-lg text-bold">{{PriceHelper::setCurrencyPrice($item['coupon_price'])}}</td>
+                @else
+                  <td class="text-center text-lg text-bold">{{PriceHelper::setCurrencyPrice($item['price'])}}</td>
+                @endif
                 <td class="text-center d-flex align-items-center justify-content-center border border-0">
                   @if ($item['item_type'] != 'digital')
                   <div class="qtySelector product-quantity pt-3">
@@ -82,7 +108,17 @@
                   </div>
                   @endif
                 </td>
-                <td class="text-center text-lg text-bold">{{PriceHelper::setCurrencyPrice($item['price'] * $item['qty'])}}</td>
+                @if($item['quantity_withoutcoupon'] != "" && $item['quantity_withoutcoupon'] != "0" && $item['coupon_price'] != "" && 
+                   $item['coupon_price'] != 0 && $item['coupon_price'] != "0.00")
+                  @php
+                    $totalwithoutcoupon_prod += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+                    $totalwithcoupon_prod += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+                    $cartTotal_prod = $totalwithoutcoupon_prod + $totalwithcoupon_prod;
+                  @endphp
+                  <td class="text-center text-lg text-bold">{{PriceHelper::setCurrencyPrice($cartTotal_prod)}}</td>
+                @else
+                  <td class="text-center text-lg text-bold">{{PriceHelper::setCurrencyPrice($item['price'] * $item['qty'])}}</td>
+                @endif
                 <td class="text-center">
                   {{--
                   <!--

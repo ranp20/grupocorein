@@ -4,16 +4,17 @@
   $option_price = 0;
   $cartTotal = 0;
 ?>
-<?php
-  // echo "<pre>";
-  // print_r(Session::get('cart'));
-  // print_r(session()->all());
-  // echo "<pre>";
-?>
 <link rel="stylesheet" href="<?php echo e(asset('assets/front/js/plugins/sweetalert2/sweetalert2.min.css')); ?>">
 <script type="text/javascript" src="<?php echo e(asset('assets/front/js/plugins/sweetalert2/sweetalert2.all.min.js')); ?>"></script>
 <div class="row">
   <div class="col-xl-9 col-lg-8">
+  <?php
+    // echo "<pre>";
+    // print_r(Session::get('cart'));
+    // // print_r(session()->all());
+    // echo "<pre>";
+    // exit();
+  ?>
     <div class="card" id="cart-summarylist">
       <div class="card-body">
         <div class="table-responsive shopping-cart">
@@ -26,13 +27,33 @@
                 <th class="text-center"><?php echo e(__('Subtotal')); ?></th>
                 
                 
+                <th class="text-center">
+                  <a class="btn btn-sm btn-primary" href="<?php echo e(route('front.cart.clear')); ?>"><span><?php echo e(__('Clear Cart')); ?></span></a>
+                </th>
+                
               </tr>
             </thead>
             <tbody id="cart_view_load" data-target="<?php echo e(route('cart.get.load')); ?>">
               <?php $__currentLoopData = $cart; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
               <?php
+                $totalwithoutcoupon = 0;
+                $totalwithcoupon = 0;
+                $totalwithoutcoupon_prod = 0;
+                $totalwithcoupon_prod = 0;
+                $prod_qty = floatval($item['qty']);
+                $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+                $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
                 $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-                $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
+                if($item['quantity_withoutcoupon'] != "" && $item['quantity_withoutcoupon'] != "0" && $item['coupon_price'] != "" && 
+                   $item['coupon_price'] != 0 && $item['coupon_price'] != "0.00"){
+                  $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+                  $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+                  // echo "totalwithoutcoupon: ".$totalwithoutcoupon."<br>";
+                  // echo "totalwithcoupon: ".$totalwithcoupon."<br>";
+                  $cartTotal = $totalwithoutcoupon + $totalwithcoupon;
+                }else{
+                  $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
+                }                                
               ?>
               <tr>
                 <td>
@@ -59,14 +80,25 @@
                       </h4>
                       <p class="product-sku">SKU: <?php echo e(strlen(strip_tags($item['sku'])) > 45 ? substr(strip_tags($item['sku']), 0, 45) . '...' : strip_tags($item['sku'])); ?></p>
                       <?php if(isset($cart['attribute']['option_name']) && !empty($cart['attribute']['option_name'])): ?>
-                      <?php $__currentLoopData = $item['attribute']['option_name']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $optionkey => $option_name): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                      <span><em><?php echo e($item['attribute']['names'][$optionkey]); ?>:</em> <?php echo e($option_name); ?> (<?php echo e(PriceHelper::setCurrencyPrice($item['attribute']['option_price'][$optionkey])); ?>)</span>
-                      <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <?php $__currentLoopData = $item['attribute']['option_name']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $optionkey => $option_name): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                          <span><em><?php echo e($item['attribute']['names'][$optionkey]); ?>:</em> <?php echo e($option_name); ?> (<?php echo e(PriceHelper::setCurrencyPrice($item['attribute']['option_price'][$optionkey])); ?>)</span>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                      <?php endif; ?>
+                      <?php if($item['quantity_withoutcoupon'] != "" && $item['quantity_withoutcoupon'] != "0" && $item['coupon_price'] != "" && 
+                          $item['coupon_price'] != 0 && $item['coupon_price'] != "0.00"): ?>
+                          <span class="product-withcoupon">
+                            <small>Con cupón</small>
+                          </span>
                       <?php endif; ?>
                     </div>
                   </div>
                 </td>
-                <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($item['price'])); ?></td>
+                <?php if($item['quantity_withoutcoupon'] != "" && $item['quantity_withoutcoupon'] != "0" && $item['coupon_price'] != "" && 
+                   $item['coupon_price'] != 0 && $item['coupon_price'] != "0.00"): ?>
+                   <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($item['coupon_price'])); ?></td>
+                <?php else: ?>
+                  <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($item['price'])); ?></td>
+                <?php endif; ?>
                 <td class="text-center d-flex align-items-center justify-content-center border border-0">
                   <?php if($item['item_type'] != 'digital'): ?>
                   <div class="qtySelector product-quantity pt-3">
@@ -77,7 +109,17 @@
                   </div>
                   <?php endif; ?>
                 </td>
-                <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($item['price'] * $item['qty'])); ?></td>
+                <?php if($item['quantity_withoutcoupon'] != "" && $item['quantity_withoutcoupon'] != "0" && $item['coupon_price'] != "" && 
+                   $item['coupon_price'] != 0 && $item['coupon_price'] != "0.00"): ?>
+                  <?php
+                    $totalwithoutcoupon_prod += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+                    $totalwithcoupon_prod += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+                    $cartTotal_prod = $totalwithoutcoupon_prod + $totalwithcoupon_prod;
+                  ?>
+                  <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($cartTotal_prod)); ?></td>
+                <?php else: ?>
+                  <td class="text-center text-lg text-bold"><?php echo e(PriceHelper::setCurrencyPrice($item['price'] * $item['qty'])); ?></td>
+                <?php endif; ?>
                 <td class="text-center">
                   
                   

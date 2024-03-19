@@ -21,13 +21,19 @@ use Illuminate\Support\Facades\Session;
 class CartRepository{
   public function store($request){
     $msg = '';
-    $qty_check  = 0;
+    $qty_check = 0;
+    $qty_check_coupon = 0;
+    $quantity_withoutcoupon = 0;
     $input = $request->all();
     $input['option_name']=[];
     $input['option_price']=[];
     $input['attr_name'] =[];
-    $qty = isset($input['quantity']) ? $input['quantity'] : 1 ;
+    // -------------- CANTIDAD DE PRODUCTOS AÑADIDOS CON EL PRECIO ORIGINAL (SIN CUPÓN)
+    $qty = isset($input['quantity']) ? $input['quantity'] : 1;
     $qty = is_numeric($qty) ? $qty : 1;
+    // -------------- CANTIDAD DE PRODUCTOS AÑADIDOS CON EL PRECIO DE CUPÓN (CON CUPÓN)
+    // $qty = isset($input['quantity']) ? $input['quantity'] : 1;
+    // $qty = is_numeric($qty) ? $qty : 1;
     $cart = Session::get('cart');
     $item = Item::where('id',$input['item_id'])->select('id','tax_id','sections_id','name','photo','discount_price','previous_price','on_sale_price','special_offer_price','brand_id','coupon_id','slug','sku','is_type','item_type','license_name','license_key')->first();
     // -------------- REDIRIGIR HACIA LA PÁGINA DE ERROR 404, EN CASO DE NO ENCONTRAR EL PRODUCTO...
@@ -218,6 +224,8 @@ class CartRepository{
               "photo" => $item->photo,
               "type" => $item->item_type,
               "item_type" => $item->item_type,
+              "coupon_price" => "0",
+              "quantity_withoutcoupon" => "0",
               'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
               'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
             ];    
@@ -239,6 +247,8 @@ class CartRepository{
                   "photo" => $item->photo,
                   "is_type" => $item->is_type,
                   "item_type" => $item->item_type,
+                  "coupon_price" => "0",
+                  "quantity_withoutcoupon" => "0",
                   "created_at" => $date,
                   "updated_at" => $date,
                 ];
@@ -261,6 +271,8 @@ class CartRepository{
                 "item_id" => $item->id,
                 "attribute_collection" => json_encode($colorCollection),
                 "quantity" => $qtyProdinCart,
+                "coupon_price" => "0",
+                "quantity_withoutcoupon" => "0",
                 "updated_at" => $date
               ];
             }else{
@@ -273,13 +285,15 @@ class CartRepository{
                 "item_id" => $item->id,
                 "attribute_collection" => json_encode($colorCollection),
                 "quantity" => $qtyProdinCart,
+                "coupon_price" => "0",
+                "quantity_withoutcoupon" => "0",
                 "updated_at" => $date
               ];
             }
             Session::put('cart', $cart);
             if(Auth::check() && Auth::user()->role !== 'admin'){
               if(!empty(auth()->user()) || auth()->user() != ""){
-                TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity']]);
+                TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price']]);
               }
             }
 
@@ -313,11 +327,13 @@ class CartRepository{
                 "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
                 "brand_name" => (isset($brand->name) && $brand->name != "") ? $brand->name : "",
                 "qty" => $qty,
-                "price" => $applycoupon_totalprice,
+                "price" => PriceHelper::grandPrice($item),
                 "main_price" => $item->discount_price,
                 "photo" => $item->photo,
                 "type" => $item->item_type,
                 "item_type" => $item->item_type,
+                "coupon_price" => $applycoupon_totalprice,
+                "quantity_withoutcoupon" => "0",
                 'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
                 'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
               ];
@@ -334,11 +350,13 @@ class CartRepository{
                     "sku" => $item->sku,
                     "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
                     "quantity" => $qty,
-                    "price" => $applycoupon_totalprice,
+                    "price" => PriceHelper::grandPrice($item),
                     "main_price" => $item->discount_price,
                     "photo" => $item->photo,
                     "is_type" => $item->is_type,
                     "item_type" => $item->item_type,
+                    "coupon_price" => $applycoupon_totalprice,
+                    "quantity_withoutcoupon" => "0",
                     "created_at" => $date,
                     "updated_at" => $date,
                   ];
@@ -352,16 +370,27 @@ class CartRepository{
             if(isset($cart[$item->id.'-'.$cart_item_key])){
               $cart = Session::get('cart');
               $qtyProdinCart = $cart[$item->id.'-'.$cart_item_key]['qty'];
+              if(isset($cart[$item->id.'-'.$cart_item_key]['coupon_price']) && $cart[$item->id.'-'.$cart_item_key]['coupon_price'] != "" && $cart[$item->id.'-'.$cart_item_key]['coupon_price'] != "0"){
+              }else{
+                // echo "Primer producto con este cupón";
+                $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'] = $cart[$item->id.'-'.$cart_item_key]['qty'];
+                $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
+              }
+
               if($qty_check == 1){
                 $cart[$item->id.'-'.$cart_item_key]['qty'] =  $qty;
                 // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
                 $qtyProdinCart = $qty;
                 $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                $cart[$item->id.'-'.$cart_item_key]['coupon_price'] = $applycoupon_totalprice;
+                $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
                 $tempCart = [
                   "user_id" => $input['user_id'],
                   "item_id" => $item->id,
                   "attribute_collection" => json_encode($colorCollection),
                   "quantity" => $qtyProdinCart,
+                  "coupon_price" => $applycoupon_totalprice,
+                  "quantity_withoutcoupon" => $quantity_withoutcoupon,
                   "updated_at" => $date
                 ];
               }else{
@@ -369,18 +398,22 @@ class CartRepository{
                 // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
                 $qtyProdinCart += $qty;
                 $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                $cart[$item->id.'-'.$cart_item_key]['coupon_price'] = $applycoupon_totalprice;
+                $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
                 $tempCart = [
                   "user_id" => $input['user_id'],
                   "item_id" => $item->id,
                   "attribute_collection" => json_encode($colorCollection),
                   "quantity" => $qtyProdinCart,
+                  "coupon_price" => $applycoupon_totalprice,
+                  "quantity_withoutcoupon" => $quantity_withoutcoupon,
                   "updated_at" => $date
                 ];
               }
               Session::put('cart', $cart);
               if(Auth::check() && Auth::user()->role !== 'admin'){
                 if(!empty(auth()->user()) || auth()->user() != ""){
-                  TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity']]);
+                  TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price'], 'quantity_withoutcoupon' => $tempCart['quantity_withoutcoupon']]);
                 }
               }
 
@@ -416,6 +449,8 @@ class CartRepository{
                 "photo" => $item->photo,
                 "type" => $item->item_type,
                 "item_type" => $item->item_type,
+                "coupon_price" => "0",
+                "quantity_withoutcoupon" => "0",
                 'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
                 'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
               ];    
@@ -437,6 +472,8 @@ class CartRepository{
                     "photo" => $item->photo,
                     "is_type" => $item->is_type,
                     "item_type" => $item->item_type,
+                    "coupon_price" => "0",
+                    "quantity_withoutcoupon" => "0",
                     "created_at" => $date,
                     "updated_at" => $date,
                   ];
@@ -459,6 +496,8 @@ class CartRepository{
                   "item_id" => $item->id,
                   "attribute_collection" => json_encode($colorCollection),
                   "quantity" => $qtyProdinCart,
+                  "coupon_price" => "0",
+                  "quantity_withoutcoupon" => "0",
                   "updated_at" => $date
                 ];
               }else{
@@ -471,13 +510,15 @@ class CartRepository{
                   "item_id" => $item->id,
                   "attribute_collection" => json_encode($colorCollection),
                   "quantity" => $qtyProdinCart,
+                  "coupon_price" => "0",
+                  "quantity_withoutcoupon" => "0",
                   "updated_at" => $date
                 ];
               }
               Session::put('cart', $cart);
               if(Auth::check() && Auth::user()->role !== 'admin'){
                 if(!empty(auth()->user()) || auth()->user() != ""){
-                  TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity']]);
+                  TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price']]);
                 }
               }
 
@@ -515,6 +556,8 @@ class CartRepository{
             "photo" => $item->photo,
             "type" => $item->item_type,
             "item_type" => $item->item_type,
+            "coupon_price" => "0",
+            "quantity_withoutcoupon" => "0",
             'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
             'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
           ];    
@@ -536,6 +579,8 @@ class CartRepository{
                 "photo" => $item->photo,
                 "is_type" => $item->is_type,
                 "item_type" => $item->item_type,
+                "coupon_price" => "0",
+                "quantity_withoutcoupon" => "0",
                 "created_at" => $date,
                 "updated_at" => $date,
               ];
@@ -558,6 +603,8 @@ class CartRepository{
               "item_id" => $item->id,
               "attribute_collection" => json_encode($colorCollection),
               "quantity" => $qtyProdinCart,
+              "coupon_price" => "0",
+              "quantity_withoutcoupon" => "0",
               "updated_at" => $date
             ];
           }else{
@@ -570,13 +617,15 @@ class CartRepository{
               "item_id" => $item->id,
               "attribute_collection" => json_encode($colorCollection),
               "quantity" => $qtyProdinCart,
+              "coupon_price" => "0",
+              "quantity_withoutcoupon" => "0",
               "updated_at" => $date
             ];
           }
           Session::put('cart', $cart);
           if(Auth::check() && Auth::user()->role !== 'admin'){
             if(!empty(auth()->user()) || auth()->user() != ""){
-              TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity']]);
+              TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price']]);
             }
           }
 
@@ -613,6 +662,8 @@ class CartRepository{
           "photo" => $item->photo,
           "type" => $item->item_type,
           "item_type" => $item->item_type,
+          "coupon_price" => "0",
+          "quantity_withoutcoupon" => "0",
           'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
           'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
         ];    
@@ -634,6 +685,8 @@ class CartRepository{
               "photo" => $item->photo,
               "is_type" => $item->is_type,
               "item_type" => $item->item_type,
+              "coupon_price" => "0",
+              "quantity_withoutcoupon" => "0",
               "created_at" => $date,
               "updated_at" => $date,
             ];
@@ -656,6 +709,8 @@ class CartRepository{
             "item_id" => $item->id,
             "attribute_collection" => json_encode($colorCollection),
             "quantity" => $qtyProdinCart,
+            "coupon_price" => "0",
+            "quantity_withoutcoupon" => "0",
             "updated_at" => $date
           ];
           $mgs = __('Producto agregado');
@@ -669,6 +724,8 @@ class CartRepository{
             "item_id" => $item->id,
             "attribute_collection" => json_encode($colorCollection),
             "quantity" => $qtyProdinCart,
+            "coupon_price" => "0",
+            "quantity_withoutcoupon" => "0",
             "updated_at" => $date
           ];
           $mgs = __('Producto actualizado');
@@ -676,7 +733,7 @@ class CartRepository{
         Session::put('cart', $cart);
         if(Auth::check() && Auth::user()->role !== 'admin'){
           if(!empty(auth()->user()) || auth()->user() != ""){
-            TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity']]);
+            TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price']]);
           }
         }
         $qty_check = 0;
