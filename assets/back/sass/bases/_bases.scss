@@ -524,3 +524,19 @@ label.color-picker > span > input[type=color]::-webkit-color-swatch {
 	height: 300px;
 	// background-color: red;
 }
+.mssgSmall{
+	margin-left: 10px;
+	small{
+		color: #fff;
+		border: thin solid #ddd;
+		padding: 2px 8px 4px 8px;
+		border-radius: 6px;
+		font-size: 0.7rem !important;
+	}
+	&__expired{
+		background-color: #f3545d;
+	}
+	&__not-expired{
+		background-color: #35cd3a;
+	}
+}
