@@ -54,7 +54,9 @@
 .hero-slider > .owl-carousel.dots-inside .owl-dots .owl-dot,
 .widget-title::after,
 .scroll-to-top-btn:hover,
-a.list-group-item::before, .list-group-item-action::before
+a.list-group-item::before, .list-group-item-action::before,
+#c-mtoggSearchMob,
+#c-mtoggSearchMob .site-header, #c-mtoggSearchMob .search-box-wrap
 {
     background-color : <?php echo $color?> !important;
 }

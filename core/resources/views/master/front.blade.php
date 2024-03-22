@@ -12,7 +12,8 @@
 <meta name="distribution" content="web">
 <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> -->
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=6.0, minimum-scale=1.0, shrink-to-fit=no, viewport-fit=cover"/>
-<link rel="icon" type="image/png" href="{{asset('assets/images/'.$setting->favicon)}}">
+<meta name="theme-color" content="#8BC82F"/>
+<link rel="icon" type="image/ico" href="./favicon.ico">
 <link rel="apple-touch-icon" href="{{asset('assets/images/'.$setting->favicon)}}">
 <link rel="apple-touch-icon" sizes="152x152" href="{{asset('assets/images/'.$setting->favicon)}}">
 <link rel="apple-touch-icon" sizes="180x180" href="{{asset('assets/images/'.$setting->favicon)}}">
@@ -102,39 +103,51 @@ body_theme4
                 @endphp
                 <div class="col-lg-12">
                     <div class="d-flex justify-content-between">
-                        <div class="site-branding"><a class="site-logo align-self-center" href="{{route('front.index')}}"><img src="{{asset('assets/images/'.$setting->logo)}}" alt="{{$setting->title}}"></a></div>
-                        <div class="search-box-wrap d-none d-lg-block d-flex">
-                        <div class="search-box-inner align-self-center">
-                            <div class="search-box d-flex">                               
-                                <form class="input-group" id="header_search_form" action="{{route('front.catalog')}}" method="get">
-                                    <input type="hidden" name="category" value="" id="search__category">
-                                    <span class="input-group-btn">
-                                        <button type="submit" title="Buscar..."><i class="icon-search"></i></button>
-                                    </span>
-                                    <input class="form-control" type="text" data-target="{{route('front.search.suggest')}}" autocomplete="off" spellcheck="false" id="__product__search" name="search" placeholder="{{__('Search')}}" value="{{ $getSessProdSearch }}">
-                                    <div class="serch-result d-none px-0 pb-0">{{-- search result --}}</div>
-                                </form>
-                            </div>
-                        </div>
-                            <span class="d-block d-lg-none close-m-serch"><i class="icon-x"></i></span>
-                        </div>
-                        <div class="toolbar d-flex">
-                        <div class="toolbar-item close-m-serch visible-on-mobile">
-                            <a href="javascript:void(0);">
-                                <div>
-                                    <i class="icon-search"></i>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="toolbar-item visible-on-mobile mobile-menu-toggle">
+                        <div class="toolbar-item visible-on-mobile mobile-menu-toggle" id="btn-toggMenuMob__only">
                             <a href="javascript:void(0);">
                                 <div>
                                     <i class="icon-menu"></i>
-                                    <span class="text-label">{{__('Menu')}}</span>
+                                    <span class="text-label">Menu</span>
                                 </div>
                             </a>
                         </div>
-                            <div class="toolbar-item hidden-on-mobile d-flex align-items-center justify-content-center">
+                        <div class="site-branding">
+                            <a class="site-logo align-self-center" href="{{route('front.index')}}">
+                                <img src="{{asset('assets/images/'.$setting->logo)}}" alt="{{$setting->title}}">
+                            </a>
+                        </div>
+                        <div class="search-box-wrap d-none d-lg-block d-flex">
+                            <div class="search-box-inner align-self-center">
+                                <div class="search-box d-flex">                               
+                                    <form class="input-group" id="header_search_form" action="{{route('front.catalog')}}" method="get">
+                                        <input type="hidden" name="category" value="" id="search__category">
+                                        <span class="input-group-btn">
+                                            <button type="submit" title="Buscar..."><i class="icon-search"></i></button>
+                                        </span>
+                                        <input class="form-control" type="text" data-target="{{route('front.search.suggest')}}" autocomplete="off" spellcheck="false" id="__product__search" name="search" placeholder="{{__('Search')}}" value="{{ $getSessProdSearch }}">
+                                        <div class="serch-result d-none px-0 pb-0">{{-- search result --}}</div>
+                                    </form>
+                                </div>
+                            </div>
+                            <span class="d-block d-lg-none close-m-serch"><i class="icon-x"></i></span>
+                        </div>
+                        <div class="toolbar d-flex">
+                            <div class="toolbar-item close-m-serch visible-on-mobile d-none">
+                                <a href="javascript:void(0);">
+                                    <div>
+                                        <i class="icon-search"></i>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="toolbar-item visible-on-mobile mobile-menu-toggle d-none">
+                                <a href="javascript:void(0);">
+                                    <div>
+                                        <i class="icon-menu"></i>
+                                        <span class="text-label">{{__('Menu')}}</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="toolbar-item hidden-on-mobile d-flex align-items-center justify-content-center" id="c-mtoggleUserMob">
                                 @if(!Auth::user())
                                 <a href="{{route('user.login')}}">
                                     <div>
@@ -156,28 +169,28 @@ body_theme4
                                 </div>
                                 @endif
                             </div>
-                        <div class="toolbar-item hidden-on-mobile"><a href="{{route('fornt.compare.index')}}">
-                            <div><span class="compare-icon"><i class="icon-repeat"></i><span class="count-label compare_count">{{Session::has('compare') ? count(Session::get('compare')) : '0'}}</span></span><span class="text-label">{{ __('Compare') }}</span></div>
-                            </a>
-                        </div>
-                        @if(Auth::check())
-                        <div class="toolbar-item hidden-on-mobile"><a href="{{route('user.wishlist.index')}}">
-                            <div><span class="compare-icon"><i class="icon-heart"></i><span class="count-label wishlist_count">{{Auth::user()->wishlists->count()}}</span></span><span class="text-label">{{__('Wishlist')}}</span></div>
-                            </a>
-                        </div>
-                        @else
-                        <div class="toolbar-item hidden-on-mobile"><a href="{{route('user.wishlist.index')}}">
-                          <div><span class="compare-icon"><i class="icon-heart"></i></span><span class="text-label">{{__('Wishlist')}}</span></div>
-                          </a>
-                      </div>
-                        @endif
-                        <div class="toolbar-item"><a href="{{route('front.cart')}}">
-                            <div><span class="cart-icon"><i class="icon-shopping-cart"></i><span class="count-label cart_count">{{Session::has('cart') ? count(Session::get('cart')) : '0'}} </span></span><span class="text-label">{{ __('Cart') }}</span></div>
-                            </a>
-                            <div class="toolbar-dropdown cart-dropdown widget-cart  cart_view_header" id="header_cart_load" data-target="{{route('front.header.cart')}}">
-                            @include('includes.header_cart')
+                            <div class="toolbar-item hidden-on-mobile"><a href="{{route('fornt.compare.index')}}">
+                                <div><span class="compare-icon"><i class="icon-repeat"></i><span class="count-label compare_count">{{Session::has('compare') ? count(Session::get('compare')) : '0'}}</span></span><span class="text-label">{{ __('Compare') }}</span></div>
+                                </a>
                             </div>
-                        </div>
+                            @if(Auth::check())
+                            <div class="toolbar-item hidden-on-mobile"><a href="{{route('user.wishlist.index')}}">
+                                <div><span class="compare-icon"><i class="icon-heart"></i><span class="count-label wishlist_count">{{Auth::user()->wishlists->count()}}</span></span><span class="text-label">{{__('Wishlist')}}</span></div>
+                                </a>
+                            </div>
+                            @else
+                            <div class="toolbar-item hidden-on-mobile"><a href="{{route('user.wishlist.index')}}">
+                            <div><span class="compare-icon"><i class="icon-heart"></i></span><span class="text-label">{{__('Wishlist')}}</span></div>
+                            </a>
+                            </div>
+                            @endif
+                            <div class="toolbar-item"><a href="{{route('front.cart')}}">
+                                <div><span class="cart-icon"><i class="icon-shopping-cart"></i><span class="count-label cart_count">{{Session::has('cart') ? count(Session::get('cart')) : '0'}} </span></span><span class="text-label">{{ __('Cart') }}</span></div>
+                                </a>
+                                <div class="toolbar-dropdown cart-dropdown widget-cart  cart_view_header" id="header_cart_load" data-target="{{route('front.header.cart')}}">
+                                @include('includes.header_cart')
+                                </div>
+                            </div>
                         </div>
                         <div class="mobile-menu">
                             <div class="mm-heading-area">
@@ -233,6 +246,28 @@ body_theme4
                                         @include('includes.mobile-category')
                                     </nav>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="c-mtoggSearchMob">
+        <div class="container">
+            <div class="row">
+                <div class="d-flex justify-content-between">
+                    <div class="search-box-wrap d-lg-block d-flex">
+                        <div class="search-box-inner align-self-center">
+                            <div class="search-box d-flex">                               
+                                <form class="input-group" id="header_search_form" action="{{route('front.catalog')}}" method="get">
+                                    <input type="hidden" name="category" value="" id="search__category">
+                                    <span class="input-group-btn">
+                                        <button type="submit" title="Buscar..."><i class="icon-search"></i></button>
+                                    </span>
+                                    <input class="form-control" type="text" data-target="{{route('front.search.suggest')}}" autocomplete="off" spellcheck="false" id="__product__search" name="search" placeholder="{{__('Search')}}" value="{{ $getSessProdSearch }}">
+                                    <div class="serch-result d-none px-0 pb-0">{{-- search result --}}</div>
+                                </form>
                             </div>
                         </div>
                     </div>
