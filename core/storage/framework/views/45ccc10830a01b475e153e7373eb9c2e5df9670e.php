@@ -13,7 +13,7 @@
 <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> -->
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=6.0, minimum-scale=1.0, shrink-to-fit=no, viewport-fit=cover"/>
 <meta name="theme-color" content="#8BC82F"/>
-<link rel="icon" type="image/ico" href="./favicon.ico">
+<link rel="icon" type="image/ico" href="<?php echo e(asset('assets/favicon.ico')); ?>">
 <link rel="apple-touch-icon" href="<?php echo e(asset('assets/images/'.$setting->favicon)); ?>">
 <link rel="apple-touch-icon" sizes="152x152" href="<?php echo e(asset('assets/images/'.$setting->favicon)); ?>">
 <link rel="apple-touch-icon" sizes="180x180" href="<?php echo e(asset('assets/images/'.$setting->favicon)); ?>">
@@ -128,7 +128,7 @@ body_theme4
                                         <span class="input-group-btn">
                                             <button type="submit" title="Buscar..."><i class="icon-search"></i></button>
                                         </span>
-                                        <input class="form-control" type="text" data-target="<?php echo e(route('front.search.suggest')); ?>" autocomplete="off" spellcheck="false" id="__product__search" name="search" placeholder="<?php echo e(__('Search')); ?>" value="<?php echo e($getSessProdSearch); ?>">
+                                        <input class="form-control" type="text" data-target="<?php echo e(route('front.search.suggest')); ?>" autocomplete="off" spellcheck="false" id="__product__search-mob" name="search" placeholder="<?php echo e(__('Search')); ?>" value="<?php echo e($getSessProdSearch); ?>">
                                         <div class="serch-result d-none px-0 pb-0"></div>
                                     </form>
                                 </div>
@@ -258,8 +258,8 @@ body_theme4
                     <div class="search-box-wrap d-lg-block d-flex">
                         <div class="search-box-inner align-self-center">
                             <div class="search-box d-flex">                               
-                                <form class="input-group" id="header_search_form" action="<?php echo e(route('front.catalog')); ?>" method="get">
-                                    <input type="hidden" name="category" value="" id="search__category">
+                                <form class="input-group" id="header_search_form-mob" action="<?php echo e(route('front.catalog')); ?>" method="get">
+                                    <input type="hidden" name="category" value="" id="search__category-mob">
                                     <span class="input-group-btn">
                                         <button type="submit" title="Buscar..."><i class="icon-search"></i></button>
                                     </span>
@@ -277,26 +277,26 @@ body_theme4
     <div class="navbar theme-total">
         <div class="container">
             <div class="row g-3 w-100" id="sdonv98349-mfdJasl98C3f">
-                <div class="col-lg-3 d-flex align-items-center justify-content-flex-start cLCategs">
-                    <?php echo $__env->make('includes.categories', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
-                </div>
+                
                 <div class="col-lg-9 d-flex justify-content-between cGrpOptsNav">
                     <div class="row g-3 w-100 cGrpOptsNav__c">
                         <div class="col-lg-8 cGrpOptsNav__c__cLTabLinks">
                             <div class="nav-inner">
                                 <nav class="site-menu">
                                     <ul>
-                                        <li class="<?php echo e(request()->routeIs('front.index') ? 'active' : ''); ?>"><a href="<?php echo e(route('front.index')); ?>"><?php echo e(__('Home')); ?></a></li>
+                                    
                                         <?php if($setting->is_shop == 1): ?>
-                                        <li class="<?php echo e(request()->routeIs('front.catalog*')  ? 'active' : ''); ?>"><a href="<?php echo e(route('front.catalog')); ?>"><?php echo e(__('Shop')); ?></a></li>
+                                        <li class="<?php echo e(request()->routeIs('front.catalog*')  ? 'active' : ''); ?>">
+                                            <a href="<?php echo e(route('front.catalog')); ?>" data-dropdown-custommenu="products-menu"><?php echo e(__('Shop')); ?></a>
+                                            <?php echo $__env->make('includes.categories', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                                        </li>
                                         <?php endif; ?>
+                                        
+                                        
                                         <?php if($setting->is_brands == 1): ?>
                                         <li class="<?php echo e(request()->routeIs('front.brands')  ? 'active' : ''); ?> allbrands_menulist">
                                             <a href="<?php echo e(route('front.brands')); ?>" class="allbrands-menu-item" data-dropdown-custommenu="brands-menu"><?php echo e(__('Brands')); ?></a>
-                                            
-                                            
-                                            
-                                            <div class="allbrands-list-popup" data-allbrands-js="brands-popup">
+                                            <div class="allbrands-list-popup" data-allbrands-js="brands-popup" data-dropdown-contentmenu="brands-menu">
                                                 <div class="allbrands-list-container">
                                                     <?php
                                                         $Allbrands = DB::table('brands')->select('name','slug')->get()->toArray();
@@ -408,13 +408,13 @@ body_theme4
                             </div>
                         </div>
                         <div class="col-lg-4 cGrpOptsNav__c__cSchdule">
-                            <div class="row g-3 w-100 cGrpOptsNav__c__cSchdule__c">
-                                <div class="col-lg-6 cGrpOptsNav__c__cSchdule__c__i">
-                                    <span class=""><strong>Lunes - Viernes</strong></span><br>
+                            <div class="row g-3 w-100 cGrpOptsNav__c__cSchdule__c mt-0">
+                                <div class="col-lg-4 cGrpOptsNav__c__cSchdule__c__i">
+                                    <span class=""><strong>Lunes - Viernes</strong></span>
                                     <span><?php echo e($setting->friday_start); ?> - <?php echo e($setting->friday_end); ?></span>
                                 </div>
-                                <div class="col-lg-6 cGrpOptsNav__c__cSchdule__c__i">
-                                    <span class=""><strong>Sábado</strong></span><br>
+                                <div class="col-lg-4 cGrpOptsNav__c__cSchdule__c__i">
+                                    <span class=""><strong>Sábado</strong></span>
                                     <span><?php echo e($setting->satureday_start); ?> - <?php echo e($setting->satureday_end); ?></span>                                    
                                 </div>
                             </div>

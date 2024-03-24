@@ -119,7 +119,8 @@ a.list-group-item:hover,
  .details-page-top-right-content .price-area .main-price,
  .free-shippin-aa,
  .txt-theme,
- .product-sku
+ .product-sku,
+ .titulo-as
 {
     color : <?php echo $color?> !important;
 }

@@ -305,7 +305,8 @@ $(function($){
     });
     $(document).on('change', '#category_select', function(){
       let category = $(this).val();
-      $('#search__category').val(category);
+      $('#search__category').val(category); // desktop
+      $('#search__category-mob').val(category); // mobile
     });
     $(document).on('click', '#quick_filter li a', function(){
       $('#quick_filter li').removeClass('active');
@@ -323,6 +324,7 @@ $(function($){
     function removePage(){
       $("#search_form #page").val('');
     }
+    // ---------- SEARCH PRODUCTO IN DESKTOP
     $(document).on('keyup', '#__product__search', function(e){
       let search = $(this).val();
       let category = '';
@@ -344,9 +346,32 @@ $(function($){
         $('.serch-result').addClass('d-none');
       }
     });
+    // ---------- SEARCH PRODUCTO IN MOBILE
+    $(document).on('keyup', '#__product__search-mob', function(e){
+      let search = $(this).val();
+      let category = '';
+      category = $('#search__category-mob').val();
+      if(search){
+        if(e.key == 'ArrowDown' || e.key === 'ArrowUp'){
+          let searchCurrentProd = $(this).val();
+          let url = $(this).attr('data-target');
+          $.get(url + '?search=' + search + '&itemEntrCode=' + searchCurrentProd, function(response){});
+        }else if(e.key === 'Enter'){
+        }else{
+          let url = $(this).attr('data-target');
+          $.get(url + '?search=' + search + '&category=' + category, function(response){
+            $('.serch-result').removeClass('d-none');
+            $('.serch-result').html(response);
+          });
+        }
+      } else{
+        $('.serch-result').addClass('d-none');
+      }
+    });
     // ----------------------- NUEVO CONTENIDO(INICIO)
     function handleKeyPress(event){
       const inputField = document.getElementById('__product__search');
+      const inputField2 = document.getElementById('__product__search-mob');
       const options = document.getElementsByClassName('lSearchM__m__l');
       const optionCount = options.length;
       let selectedOptionIndex = -1;
@@ -368,6 +393,7 @@ $(function($){
           nextOption.classList.add('highlighted');
           let textContent = nextOption.childNodes[3].childNodes[1].textContent;
           inputField.value = textContent.trim();
+          inputField2.value = textContent.trim();
           nextOption.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
       } else if(event.key === 'ArrowUp'){
@@ -380,10 +406,13 @@ $(function($){
           previousOption.classList.add('highlighted');
           let textContent = previousOption.childNodes[3].childNodes[1].textContent;
           inputField.value = textContent.trim();
+          inputField2.value = textContent.trim();
           previousOption.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         } else if(selectedOptionIndex === 0){
           inputField.value = '';
           inputField.focus();
+          inputField2.value = '';
+          inputField2.focus();
           highlightedOption.classList.remove('highlighted');
         }
       } else if(event.key === 'Enter' && highlightedOption){
@@ -404,6 +433,7 @@ $(function($){
     // ----------------------- NUEVO CONTENIDO(FIN)
     $(document).on('click', '#view_all_search_', function(){
       $('#header_search_form').submit();
+      $('#header_search_form-mob').submit();
     });
     $(document).on('click', '#category_list li a.category_search', function(){
       $('#category_list li').removeClass('active');
@@ -758,71 +788,134 @@ $(window).on('load', function(event){
       }, mainbs.announcement_delay * 1000);
     }
   }
+  // ----------- AGREGAR ESTILO A LAS MARCAS, CON O SIN ITEMS...
+  const filterButtons = document.querySelectorAll('.filter-button');
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const letter = button.textContent;
+      const groups = document.querySelectorAll('.brand-group'); 
+      groups.forEach(group => {
+        if (group.id === letter) {
+          group.style.display = 'block';
+        } else {
+          group.style.display = 'none';
+        }
+      });
+    });
+  }); 
+
+  // ----------- HOVER EN ELEMENTOS + BACKDROP
+  const links = document.querySelectorAll('*[data-dropdown-custommenu]');
+  const items = document.querySelectorAll('*[data-dropdown-contentmenu]');
+  const backdropHome = document.querySelector("#backdrop");
+
+  function handleMouseEnter(event) {
+    const target = event.currentTarget;
+    const dropdownId = target.getAttribute('data-dropdown-custommenu');
+    // Remove 'active' class from all links and items
+    links.forEach(link => link.classList.remove('active'));
+    items.forEach(item => item.classList.remove('active'));
+    // Add 'active' class to the current link
+    target.classList.add('active');
+    // Find and add 'active' class to the sibling item
+    items.forEach(item => {
+      if (item.getAttribute('data-dropdown-contentmenu') === dropdownId) {
+        item.classList.add('active');
+      }
+    });
+    // Remove 'hide' class from additional element
+    backdropHome.classList.remove('hide');
+  }
+  function handleMouseLeave(event) {
+    // Remove 'active' class from all links and items
+    links.forEach(link => link.classList.remove('active'));
+    items.forEach(item => item.classList.remove('active'));
+    // Add 'hide' class to additional element
+    backdropHome.classList.add('hide');
+  }
+  // Attach event listeners to links
+  links.forEach(link => {
+    link.addEventListener('mouseenter', handleMouseEnter);
+    link.addEventListener('mouseleave', handleMouseLeave);
+  });
+  // Attach event listeners to items
+  items.forEach(item => {
+    item.addEventListener('mouseenter', handleMouseEnter);
+    item.addEventListener('mouseleave', handleMouseLeave);
+  });
 
 
+
+
+  /*
   // ----------- HACER HOVER EN UN ELEMENTO CON DROPDOWN
-var namehoverAll = document.querySelectorAll("*[data-dropdown-custommenu]");
-var backdropHome = document.querySelector("#backdrop");
-let ctopbar = document.querySelector(".topbar");
-let cmtoparea = document.querySelector(".menu-top-area");
-namehoverAll.forEach(function(i,e){
-  var namehover = i;
-  ctopbar.addEventListener("mouseenter", function(f){
-    namehoverAll.forEach(function(i,e){
-      var namehover = i;      
-      if(namehover.classList.contains("active")){
-        backdropHome.classList.add("hide");
-        namehover.classList.remove('active');
-        namehover.nextElementSibling.classList.remove('active');
-      }
-    });
-  });
-  cmtoparea.addEventListener("mouseenter", function(f){
-    namehoverAll.forEach(function(i,e){
-      var namehover = i;      
-      if(namehover.classList.contains("active")){
-        backdropHome.classList.add("hide");
-        namehover.classList.remove('active');
-        namehover.nextElementSibling.classList.remove('active');
-      }
-    });
-  });
-  namehover.addEventListener("mouseenter",function(){
-    var attrnamehov = this.getAttribute("data-dropdown-custommenu");
-    if(attrnamehov.value === ''){
-      console.log('No es un menu hover');
-    }else{
-      $("#backdrop").removeClass('hide');
-      $(this).addClass('active');
-      $(this).next().addClass('active');
-    }
-  });
-});
-// ----------- REMOVER ELEMENTO DROPDOWN AL HACER HOVER EN EL BACKDROP
-backdropHome.addEventListener("mouseenter", function(){
+  var namehoverAll = document.querySelectorAll("*[data-dropdown-custommenu]");
+  let linkParent = $("*[data-dropdown-custommenu]").parent();
+  var backdropHome = document.querySelector("#backdrop");
+  let ctopbar = document.querySelector(".topbar");
+  let cmtoparea = document.querySelector(".menu-top-area");
+  let cnavbarmenu = document.querySelector(".navbar.theme-total");
   namehoverAll.forEach(function(i,e){
     var namehover = i;
-    if(namehover.classList.contains("active")){
-      backdropHome.classList.add("hide");
-      namehover.classList.remove('active');
-      namehover.nextElementSibling.classList.remove('active');
-    }
-  });
-});
-// Add click event listeners to filter buttons
-const filterButtons = document.querySelectorAll('.filter-button');
-filterButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    const letter = button.textContent;
-    const groups = document.querySelectorAll('.brand-group');
+    ctopbar.addEventListener("mouseenter", function(f){
+      namehoverAll.forEach(function(i,e){
+        var namehover = i;
+        if(namehover.classList.contains("active")){
+          backdropHome.classList.add("hide");
+          namehover.classList.remove('active');
+          namehover.nextElementSibling.classList.remove('active');
+        }
+      });
+    });
+    cmtoparea.addEventListener("mouseenter", function(f){
+      namehoverAll.forEach(function(i,e){
+        var namehover = i;
+        if(namehover.classList.contains("active")){
+          backdropHome.classList.add("hide");
+          namehover.classList.remove('active');
+          namehover.nextElementSibling.classList.remove('active');
+        }
+      });
+    });
+    namehover.addEventListener("mouseenter",function(e, i){
+      var attrnamehov = this.getAttribute("data-dropdown-custommenu");      
+      let t = $(this);
+      let items = $(this).parent();
+      // items.add(find("a")).nextElementSibling().removeClass("active").parent().siblings().removeClass("active")
+      // console.log(items.find("a"));
+      // console.log(items);
+      // console.log($(this).parent().index());
+      let ind = $(this).parent().index();
+      // t.parent().add(linkParent.eq(ind).find("a[data-dropdown-custommenu]").add(find("a[data-dropdown-custommenu]").next())).addClass("active").siblings().removeClass("active");
+      if(attrnamehov.value === ''){
+        console.log('No es un menu hover');
+      }else{
+        // linkParent.eq(ind).find("a[data-dropdown-custommenu]").addClass("active"); // Activar el menú de este link...
+        // linkParent.eq(ind).find("a[data-dropdown-custommenu]").next().addClass("active"); // Activar el sub-menú de este link...
+        // linkParent.eq(ind).siblings().find("a[data-dropdown-custommenu]").removeClass("active"); // Activar el menú de este link...
+        // linkParent.eq(ind).siblings().find("a[data-dropdown-custommenu]").next().removeClass("active"); // Activar el sub-menú de este link...
+        $("#backdrop").removeClass('hide');
+        // $(this).addClass('active');
+        // $(this).next().addClass('active');
+        if($(this).hasClass('active')){
+          linkParent.eq(ind).siblings().find("a[data-dropdown-custommenu]").removeClass("active"); // Activar el menú de este link...
+          linkParent.eq(ind).siblings().find("a[data-dropdown-custommenu]").next().removeClass("active"); // Activar el sub-menú de este link...
+        }
+      }
+    });
     
-    groups.forEach(group => {
-      if (group.id === letter) {
-        group.style.display = 'block';
-      } else {
-        group.style.display = 'none';
+  });
+  // ----------- REMOVER ELEMENTO DROPDOWN AL HACER HOVER EN EL BACKDROP
+  backdropHome.addEventListener("mouseenter", function(){
+    namehoverAll.forEach(function(i,e){
+      var namehover = i;
+      if(namehover.classList.contains("active")){
+        backdropHome.classList.add("hide");
+        namehover.classList.remove('active');
+        namehover.nextElementSibling.classList.remove('active');
       }
     });
   });
-});
+  */
+
 });

@@ -21,7 +21,7 @@ body{
 	font-weight: 400;
   font-style: normal;
   // font-size: 14px;
-	// font-family: $total-font-family;
+	font-family: $total-font-family !important;
 	// font-family: 'Open Sans', sans-serif;
 	// font-size: 15px;
 	// font-weight: 400;
@@ -308,7 +308,8 @@ img{
 	font-size: 13px;
 }
 /* CUSTOMS */
-#header_search_form .input-group-btn{
+#header_search_form .input-group-btn,
+#header_search_form-mob .input-group-btn{
 	top: 20px;
 	right: 12px;
 }
@@ -774,7 +775,8 @@ img{
 	background: #fff;
 	color: #979797;
 	text-align: center;
-	font-weight: 400;
+	// font-weight: 400;
+	font-weight: 300;
 	font-size: 16px;
 	line-height: 1.2;
 	cursor: pointer;
@@ -818,7 +820,11 @@ img{
 }
 
 .brand-group {
-	margin: 10px 10px 35px 10px;
+	// margin: 10px 10px 35px 10px;
+	margin: 10px 5px 35px 5px;
+	&:first-child{
+		margin-top: 0 !important;
+	}
 }
 .brand-list{
 	display: inline-block;
@@ -1130,13 +1136,31 @@ img{
 	}
 	.cGrpOptsNav{
 		margin-top: 0;
+		width: 100%;
 		&__c{
 			margin-top: 0;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
 			&__cLTabLinks{
 				margin-top: 0;
 			}
 			&__cSchdule{
 				margin-top: 0;
+				--bs-gutter-y: 0;
+				&__c{
+					display: flex;
+					align-items: center;
+					justify-content: flex-end;
+					&__i{
+						margin-top: 0;
+						display: flex;
+						flex-flow: column nowrap;
+						span{
+							margin-top: 0;
+						}
+					}
+				}
 			}
 		}
 	}
@@ -1316,5 +1340,42 @@ img{
 	}
 	&__error-mssg{
 		color: red;
+	}
+}
+.not-process{
+	user-select: none !important;
+	cursor: not-allowed !important;
+	opacity: 0.5 !important;
+	position: relative !important;
+	&:before{
+		content: "" !important;
+		width: 100% !important;
+		height: 100% !important;
+		background-color: transparent !important;
+		left: 0 !important;
+		top: 0 !important;
+		position: absolute !important;
+		z-index: 99999 !important;
+	}
+	&:after{
+		content: "" !important;
+		width: 100% !important;
+		height: 100% !important;
+		background-color: transparent !important;
+		left: 0 !important;
+		top: 0 !important;
+		position: absolute !important;
+		z-index: 99999 !important;
+	}
+}
+#c-mtoggSearchMob #__product__search{
+	&:focus{
+		background-color: #fff;
+	}
+}
+.category-list .c-item .sub-c-box .child-c-box > .row > .col-md-12 > .col-md-12{
+	line-height: 1.35;
+	& > .col-md-12{
+		padding: 0px 15px;
 	}
 }

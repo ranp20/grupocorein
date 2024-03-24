@@ -12,7 +12,7 @@
       <div class="product-card">
         <div class="product-thumb cCatalogItm__cImgItm">
           <a href="{{ asset('assets/images/catalog/'.$item->photo) }}" class="d-flex align-items-center justify-content-center" target="_blank">
-            <img src="{{asset('assets/images/catalog/'.$item->photo)}}" alt="Product">
+            <img src="{{asset('assets/images/catalog/'.$item->photo)}}" alt="{{ $item->name }}">
           </a>
         </div>
         <div class="product-card-body">

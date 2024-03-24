@@ -30,18 +30,22 @@ $(() => {
     var lengthPassFirst = $("#reg-pass").val().length;
     let valThis = e.target.value;
     let lengthThis = e.target.value.length;
+    let thisFrmSubmit = $(this).parent().parent().parent().find("*[type=submit]");
     if(lengthThis == lengthPassFirst || lengthThis > lengthPassFirst){
       if(valThis == valPassFirst){
+        thisFrmSubmit.removeClass("not-process");
         $("#mssg_cConfirmTwoPass").text("Las contraseñas coinciden*");
         $("#mssg_cConfirmTwoPass").removeClass("mssgSpn__error-mssg");
         $("#mssg_cConfirmTwoPass").addClass("mssgSpn__success-mssg");
         setTimeout(() => { $("#mssg_cConfirmTwoPass").text(""); }, 2600); // Desaparecer mensaje...
       }else{
+        thisFrmSubmit.addClass("not-process");
         $("#mssg_cConfirmTwoPass").text("Las contraseñas NO coinciden*");
         $("#mssg_cConfirmTwoPass").removeClass("mssgSpn__success-mssg");
         $("#mssg_cConfirmTwoPass").addClass("mssgSpn__error-mssg");
       }
     }else{
+      thisFrmSubmit.addClass("not-process");
       $("#mssg_cConfirmTwoPass").text("");
       // console.log("No es igual."); // Si se desea mostrar el mensaje a medida que el usuario escribe antes de la validación de la longitud...
     }
