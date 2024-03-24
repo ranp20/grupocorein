@@ -1,14 +1,10 @@
 <?php
-
 namespace App\Http\Middleware;
 use Auth;
 use Closure;
 
-class Permission
-{
-
-    public function handle($request, Closure $next,$data)
-    {
+class Permission{
+    public function handle($request, Closure $next,$data){
         if (Auth::guard('admin')->check()) {
             if(Auth::guard('admin')->user()->id == 1){
                 return $next($request);

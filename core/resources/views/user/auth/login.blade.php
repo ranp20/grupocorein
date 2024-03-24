@@ -121,6 +121,7 @@
               <div class="form-group">
                 <label for="reg-pass-confirm">{{__('Confirm Password')}}</label>
                 <input class="form-control" type="password" name="password_confirmation" autocomplete="off" spellcheck="false" placeholder="{{__('Confirm Password')}}" id="reg-pass-confirm" required>
+                <span id="mssg_cConfirmTwoPass"></span>
               </div>
             </div>
             @if(old('reg_enterprise') != "" && old('reg_enterprise') == "on")

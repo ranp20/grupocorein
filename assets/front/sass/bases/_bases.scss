@@ -1310,3 +1310,11 @@ img{
 		z-index: initial !important;
 	}
 }
+.mssgSpn{
+	&__success-mssg{
+		color: green;
+	}
+	&__error-mssg{
+		color: red;
+	}
+}
