@@ -516,6 +516,20 @@
                     <div class="col-lg-12">
                         <div class="brand-slider owl-carousel">
                             @foreach ($brands as $brand)
+                            <?php
+
+                            //Combiar arrays de Foto principal y fotos de galería
+                            $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
+                            $urlBaseDomain = $actual_link . "/grupocorein/"; // LOCAL
+                            // $urlBaseDomain = $actual_link . "/"; // SERVIDOR
+                            // Directorio donde se encuentra la imagen
+                            $imgDirectoryPhoto = $urlBaseDomain . 'assets/images/';
+                            $imgDirectoryDefault = $urlBaseDomain . 'assets/images/Utilities/default_product.png';
+                            // Ruta completa de la imagen
+                            $routePhotoBrand = $imgDirectoryPhoto . $brand->photo;
+                            $routePhotoFinal = "";                       
+
+                            ?>
                             <div class="slider-item">
                                 <a class="text-center" href="{{ route('front.catalog') . '?brand=' . $brand->slug }}">
                                     <img class="d-block hi-100 lazy" data-src="{{ asset('assets/images/' . $brand->photo) }}" alt="{{ $brand->name }}" title="{{ $brand->name }}" width="100" height="100" decoding="sync">
@@ -529,4 +543,14 @@
         </section>
     @endif
     <script type="text/javascript" src="{{ asset('assets/front/js/homepage.js') }}"></script>
+    <script type="text/javascript">
+        // $(document).ready(function(){
+        //     let imgDirectoryDefault = "{{ $imgDirectoryDefault}}";
+        //     $('img').each(function(){
+        //         if($(this)[0].naturalHeight == 0){
+        //             $(this).attr('src',imgDirectoryDefault);
+        //         }
+        //     });
+        // });
+    </script>
 @endsection

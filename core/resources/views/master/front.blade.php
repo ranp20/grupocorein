@@ -66,9 +66,6 @@ body_theme4
 <script rel="preload" href="{{asset('assets/front/js/plugins/jquery-3.4.1.min.js')}}" as="script"></script>
 <link id="mainStyles" rel="stylesheet" media="screen" href="{{asset('assets/front/css/styles.min.css')}}">
 <script type="text/javascript" src="{{asset('assets/front/js/plugins/jquery-3.4.1.min.js')}}" as="script"></script>
-
-
-
 @include('includes.apiwhatsappbutton')
 <header class="site-header navbar-sticky">
     <div class="menu-top-area">
@@ -113,7 +110,16 @@ body_theme4
                         </div>
                         <div class="site-branding">
                             <a class="site-logo align-self-center" href="{{route('front.index')}}">
+                                
+                            
                                 <img src="{{asset('assets/images/'.$setting->logo)}}" alt="{{$setting->title}}">
+                                
+
+                                {{--
+                                <!--
+                                <img src="{{asset('assets/logotype__white.png' )}}" alt="{{$setting->title}}">
+                                -->
+                                --}}
                             </a>
                         </div>
                         <div class="search-box-wrap d-none d-lg-block d-flex">
@@ -124,7 +130,7 @@ body_theme4
                                         <span class="input-group-btn">
                                             <button type="submit" title="Buscar..."><i class="icon-search"></i></button>
                                         </span>
-                                        <input class="form-control" type="text" data-target="{{route('front.search.suggest')}}" autocomplete="off" spellcheck="false" id="__product__search-mob" name="search" placeholder="{{__('Search')}}" value="{{ $getSessProdSearch }}">
+                                        <input class="form-control" type="text" data-target="{{route('front.search.suggest')}}" autocomplete="off" spellcheck="false" id="__product__search" name="search" placeholder="{{__('What are you looking for?')}}" value="{{ $getSessProdSearch }}">
                                         <div class="serch-result d-none px-0 pb-0">{{-- search result --}}</div>
                                     </form>
                                 </div>
@@ -265,7 +271,7 @@ body_theme4
                                     <span class="input-group-btn">
                                         <button type="submit" title="Buscar..."><i class="icon-search"></i></button>
                                     </span>
-                                    <input class="form-control" type="text" data-target="{{route('front.search.suggest')}}" autocomplete="off" spellcheck="false" id="__product__search" name="search" placeholder="{{__('Search')}}" value="{{ $getSessProdSearch }}">
+                                    <input class="form-control" type="text" data-target="{{route('front.search.suggest')}}" autocomplete="off" spellcheck="false" id="__product__search-mob" name="search" placeholder="{{__('What are you looking for?')}}" value="{{ $getSessProdSearch }}">
                                     <div class="serch-result d-none px-0 pb-0">{{-- search result --}}</div>
                                 </form>
                             </div>
@@ -292,7 +298,6 @@ body_theme4
                             <div class="nav-inner">
                                 <nav class="site-menu">
                                     <ul>
-                                    
                                         @if ($setting->is_shop == 1)
                                         <li class="{{ request()->routeIs('front.catalog*')  ? 'active' : '' }}">
                                             <a href="{{route('front.catalog')}}" data-dropdown-custommenu="products-menu">{{__('Shop')}}</a>
@@ -410,17 +415,14 @@ body_theme4
                                         @endif
                                         <li class="{{ request()->routeIs('front.onsaleproducts')  ? 'active' : '' }}"><a href="{{route('front.onsaleproducts')}}">{{__('Promotions')}}</a></li>
                                         <li class="{{ request()->routeIs('front.specialoffer')  ? 'active' : '' }}"><a href="{{route('front.specialoffer')}}">{{__('Special offers')}}</a></li>
-                                        
                                         @if ($setting->is_blog == 1)
                                         <!-- <li class="{{ request()->routeIs('front.blog*') ? 'active' : '' }}"><a href="{{route('front.blog')}}">{{__('Blog')}}</a></li> -->
                                         @endif
-
                                         @if ($setting->is_catalogs == 1)
                                         <li class="{{ (request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : '' }}">
                                             <a class="{{ (request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : '' }}" href="{{route('front.journals')}}"></i>Catálogos</a>
                                         </li>
                                         @endif
-
                                     </ul>
                                 </nav>
                             </div>
@@ -632,7 +634,6 @@ body_theme4
 <script type="text/javascript" src="{{asset('assets/front/js/lazy.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('assets/front/js/lazy.plugin.js')}}"></script>
 <script type="text/javascript" src="{{asset('assets/front/js/myscript.js')}}"></script>
-
 <?php
   $wstpCollection = json_decode($setting->whatsapp_numbers, TRUE);
   $ArrwpsNumbersButton = "";
@@ -645,10 +646,8 @@ body_theme4
   }
 ?>
 <div id="WAButton"></div>
-
 <script type="text/javascript" src="{{ asset('assets/front/js/plugins/floating-whatsapp/floating-wpp.min.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('assets/front/js/plugins/floating-whatsapp/floating-wpp.min.css') }}">
-
 @if(isset($wstpCollection['whatsapp_numbers']))
     @php
         $ArrwpsNumbersButton = $wstpCollection['whatsapp_numbers'];
@@ -672,7 +671,6 @@ body_theme4
         </script>
     @endif
 @endif
-
 @yield('script')
 @if($setting->is_facebook_messenger	== '1')
  {!!  $setting->facebook_messenger !!}
@@ -715,7 +713,6 @@ body_theme4
                 icon_type: 'class'
             });
         }
-
         function DangerNotification(title){
             $.notify({
                 // options
