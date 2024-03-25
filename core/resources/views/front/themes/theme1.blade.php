@@ -527,7 +527,7 @@
                             $imgDirectoryDefault = $urlBaseDomain . 'assets/images/Utilities/default_product.png';
                             // Ruta completa de la imagen
                             $routePhotoBrand = $imgDirectoryPhoto . $brand->photo;
-                            $routePhotoFinal = "";                       
+                            $routePhotoFinal = "";
 
                             ?>
                             <div class="slider-item">

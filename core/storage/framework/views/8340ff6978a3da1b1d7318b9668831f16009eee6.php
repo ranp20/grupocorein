@@ -1,15 +1,12 @@
-
 <?php
     $categories = App\Models\Category::with('subcategory')->whereStatus(1)->orderby('serial','asc')->take(8)->get();
 ?>
-
-
 <div class="widget-categories mobile-cat">
     <ul id="category_list">
         <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $getcategory): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
         <li class="has-children">
-            <a class="category_search" href="<?php echo e(route('front.catalog').'?category='.$getcategory->slug); ?>"><?php echo e($getcategory->name); ?>
-
+            <a class="category_search" href="<?php echo e(route('front.catalog').'?category='.$getcategory->slug); ?>">
+                <span><?php echo e($getcategory->name); ?></span>
                 <?php if($getcategory->subcategory->count() > 0): ?>
                     <span><i class="icon-chevron-down"></i></span>
                 <?php endif; ?>
@@ -31,12 +28,4 @@
           </li>
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     </ul>
-  </div>
-
-
-
-
-
-
-
-<?php /**PATH C:\xampp\htdocs\grupocorein\core\resources\views/includes/mobile-category.blade.php ENDPATH**/ ?>
+</div><?php /**PATH C:\xampp\htdocs\grupocorein\core\resources\views/includes/mobile-category.blade.php ENDPATH**/ ?>

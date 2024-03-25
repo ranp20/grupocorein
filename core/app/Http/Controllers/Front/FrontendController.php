@@ -47,7 +47,8 @@ use App\Models\ApplyCoupon;
 use Illuminate\Support\Facades\Auth;
 use Redirect;
 use Carbon\Carbon;
-
+// use Illuminate\Support\Facades\File;
+// use File;
 use function GuzzleHttp\json_decode;
 use PHPMailer\PHPMailer\{
   PHPMailer,
@@ -251,6 +252,21 @@ class FrontendController extends Controller{
     }else{
       $sliders = Slider::where('home_page','theme4')->get();
     }
+
+    // $brandAll = Brand::whereStatus(1)->whereIsPopular(1)->take(30)->get()->toArray();
+    // foreach($brandAll as $brandf){
+    //   $routePhoto = asset('assets/images/');
+    //   $routePhotoFinal = $routePhoto . "/". $brandf['photo'];
+    //   // echo $brandf['photo']."<br>";
+    //   // echo $routePhotoFinal."<br>";
+    //   if(File::exists($routePhotoFinal)){
+    //     echo "Si existe <br>";
+    //   }
+    // }
+    // echo "<pre>";
+    // print_r($brandAll);
+    // echo "</pre>";
+    // exit();
 
     return view('front.index',[
       'hero_banner'   => $home_customize->hero_banner != '[]' ? json_decode($home_customize->hero_banner,true) : null,

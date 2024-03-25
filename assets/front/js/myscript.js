@@ -845,6 +845,20 @@ $(window).on('load', function(event){
   });
 
 
+  // --------------- ABRIR Y/O CERRAR SIDEBARLEFT NAVBAR
+  $(document).on("click","#btn-toggMenuMob__only", function(){
+    $(".cx-mobilemenu").add($(".cx-mobilemenu").find(".mobile-menu")).addClass("open");
+  });
+  $(document).on("click",".hmenu-close-icon",function(){
+    $(".cx-mobilemenu").add($(".cx-mobilemenu").find(".mobile-menu")).removeClass("open");
+  });
+  $(document).on("click",".cx-mobilemenu",function(e){
+    if(e.target === this){
+      $(".cx-mobilemenu").add($(".cx-mobilemenu").find(".mobile-menu")).removeClass("open");
+    }
+  });
+
+  
 
 
   /*

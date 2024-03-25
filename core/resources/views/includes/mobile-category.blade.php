@@ -1,14 +1,12 @@
-
 @php
     $categories = App\Models\Category::with('subcategory')->whereStatus(1)->orderby('serial','asc')->take(8)->get();
 @endphp
-
-
 <div class="widget-categories mobile-cat">
     <ul id="category_list">
         @foreach ($categories as $getcategory)
         <li class="has-children">
-            <a class="category_search" href="{{route('front.catalog').'?category='.$getcategory->slug}}">{{$getcategory->name}}
+            <a class="category_search" href="{{route('front.catalog').'?category='.$getcategory->slug}}">
+                <span>{{$getcategory->name}}</span>
                 @if ($getcategory->subcategory->count() > 0)
                     <span><i class="icon-chevron-down"></i></span>
                 @endif
@@ -30,11 +28,4 @@
           </li>
         @endforeach
     </ul>
-  </div>
-
-
-
-
-
-
-
+</div>

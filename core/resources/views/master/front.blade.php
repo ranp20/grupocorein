@@ -99,7 +99,7 @@ body_theme4
                     }
                 @endphp
                 <div class="col-lg-12">
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between" id="c-topBarDskMb35mBd6Fhe">
                         <div class="toolbar-item visible-on-mobile mobile-menu-toggle" id="btn-toggMenuMob__only">
                             <a href="javascript:void(0);">
                                 <div>
@@ -198,60 +198,99 @@ body_theme4
                                 </div>
                             </div>
                         </div>
-                        <div class="mobile-menu">
-                            <div class="mm-heading-area">
-                                <h4>{{ __('Navigation') }}</h4>
-                                <div class="toolbar-item visible-on-mobile mobile-menu-toggle mm-t-two">
-                                    <a href="javascript:void(0);">
-                                        <div><i class="icon-x"></i></div>
-                                    </a>
+                        <div class="cx-mobilemenu">
+                            <div class="mobile-menu">
+                                {{--
+                                <!--
+                                <div class="mm-heading-area">
+                                    <h4>{{ __('Navigation') }}</h4>
+                                    <div class="toolbar-item visible-on-mobile mobile-menu-toggle mm-t-two">
+                                        <a href="javascript:void(0);">
+                                            <div><i class="icon-x"></i></div>
+                                        </a>
+                                    </div>
+                                </div>
+                                -->
+                                --}}
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class="nav-item" role="presentation99">
+                                    <span class="active" id="mmenu-tab" data-bs-toggle="tab" data-bs-target="#mmenu"  role="tab" aria-controls="mmenu" aria-selected="true">{{ __('Menu') }}</span>
+                                    </li>
+                                    <li class="nav-item" role="presentation99">
+                                    <span class="" id="mcat-tab" data-bs-toggle="tab" data-bs-target="#mcat"  role="tab" aria-controls="mcat" aria-selected="false">{{ __('Category') }}</span>
+                                    </li>
+                                </ul>
+                                <div class="tab-content p-0" >
+                                    <div class="tab-pane fade show active" id="mmenu" role="tabpanel" aria-labelledby="mmenu-tab">
+                                        <nav class="slideable-menu">
+                                            <ul>
+                                                <li class="{{ request()->routeIs('front.index') ? 'active' : '' }}">
+                                                    <a href="{{route('front.index')}}">
+                                                        <i class="icon-chevron-right"></i>
+                                                        <span>{{__('Home')}}</span>
+                                                    </a>
+                                                </li>
+                                                @if ($setting->is_shop == 1)
+                                                <li class="{{ request()->routeIs('front.catalog*')  ? 'active' : '' }}">
+                                                    <a href="{{route('front.catalog')}}">
+                                                        <i class="icon-chevron-right"></i>
+                                                        <span>{{__('Shop')}}</span>
+                                                    </a>
+                                                </li>
+                                                @endif
+                                                {{--
+                                                <!--
+                                                @if ($setting->is_campaign == 1)
+                                                <li class="{{ request()->routeIs('front.campaign')  ? 'active' : '' }}"><a href="{{route('front.campaign')}}"><i class="icon-chevron-right"></i>Promociones</a></li>
+                                                @endif
+                                                -->
+                                                --}}
+                                                <li class="{{ request()->routeIs('front.onsaleproducts')  ? 'active' : '' }}">
+                                                    <a href="{{route('front.onsaleproducts')}}">
+                                                        <i class="icon-chevron-right"></i>
+                                                        <span>{{__('Promotions')}}</span>
+                                                    </a>
+                                                </li>
+                                                <li class="{{ request()->routeIs('front.specialoffer')  ? 'active' : '' }}">
+                                                    <a href="{{route('front.specialoffer')}}">
+                                                        <i class="icon-chevron-right"></i>
+                                                        <span>{{__('Special offers')}}</span>
+                                                    </a>
+                                                </li>
+                                                @if ($setting->is_brands == 1)
+                                                <li class="{{ request()->routeIs('front.brands')  ? 'active' : '' }}">
+                                                    <a href="{{route('front.brands')}}">
+                                                        <i class="icon-chevron-right"></i>
+                                                        <span>{{__('Brand')}}</span>
+                                                    </a>
+                                                </li>
+                                                @endif
+                                                @if ($setting->is_blog == 1)
+                                                <!-- <li class="{{ request()->routeIs('front.blog*') ? 'active' : '' }}"><a href="{{route('front.blog')}}"><i class="icon-chevron-right"></i>{{__('Blog')}}</a></li> -->
+                                                @endif
+
+                                                @if ($setting->is_catalogs == 1)
+                                                <li class="{{ (request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : '' }}">
+                                                    <a class="{{ (request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : '' }}" href="{{route('front.journals')}}">
+                                                        <i class="icon-chevron-right"></i>
+                                                        <span>Catálogos</span>
+                                                    </a>
+                                                </li>
+                                                @endif
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                    <div class="tab-pane fade" id="mcat" role="tabpanel" aria-labelledby="mcat-tab">
+                                        <nav class="slideable-menu">
+                                            @include('includes.mobile-category')
+                                        </nav>
+                                    </div>
                                 </div>
                             </div>
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li class="nav-item" role="presentation99">
-                                  <span class="active" id="mmenu-tab" data-bs-toggle="tab" data-bs-target="#mmenu"  role="tab" aria-controls="mmenu" aria-selected="true">{{ __('Menu') }}</span>
-                                </li>
-                                <li class="nav-item" role="presentation99">
-                                  <span class="" id="mcat-tab" data-bs-toggle="tab" data-bs-target="#mcat"  role="tab" aria-controls="mcat" aria-selected="false">{{ __('Category') }}</span>
-                                </li>
-                              </ul>
-                              <div class="tab-content p-0" >
-                                <div class="tab-pane fade show active" id="mmenu" role="tabpanel" aria-labelledby="mmenu-tab">
-                                    <nav class="slideable-menu">
-                                        <ul>
-                                            <li class="{{ request()->routeIs('front.index') ? 'active' : '' }}"><a href="{{route('front.index')}}"><i class="icon-chevron-right"></i>{{__('Home')}}</a></li>
-                                            @if ($setting->is_shop == 1)
-                                            <li class="{{ request()->routeIs('front.catalog*')  ? 'active' : '' }}"><a href="{{route('front.catalog')}}"><i class="icon-chevron-right"></i>{{__('Shop')}}</a></li>
-                                            @endif
-                                            {{--
-                                            <!--
-                                            @if ($setting->is_campaign == 1)
-                                            <li class="{{ request()->routeIs('front.campaign')  ? 'active' : '' }}"><a href="{{route('front.campaign')}}"><i class="icon-chevron-right"></i>Promociones</a></li>
-                                            @endif
-                                            -->
-                                            --}}
-                                            <li class="{{ request()->routeIs('front.onsaleproducts')  ? 'active' : '' }}"><a href="{{route('front.onsaleproducts')}}"><i class="icon-chevron-right"></i>{{__('Promotions')}}</a></li>
-                                            <li class="{{ request()->routeIs('front.specialoffer')  ? 'active' : '' }}"><a href="{{route('front.specialoffer')}}"><i class="icon-chevron-right"></i>{{__('Special offers')}}</a></li>
-                                            @if ($setting->is_brands == 1)
-                                            <li class="{{ request()->routeIs('front.brands')  ? 'active' : '' }}"><a href="{{route('front.brands')}}"><i class="icon-chevron-right"></i>{{__('Brand')}}</a></li>
-                                            @endif
-                                            @if ($setting->is_blog == 1)
-                                            <!-- <li class="{{ request()->routeIs('front.blog*') ? 'active' : '' }}"><a href="{{route('front.blog')}}"><i class="icon-chevron-right"></i>{{__('Blog')}}</a></li> -->
-                                            @endif
-
-                                            @if ($setting->is_catalogs == 1)
-                                            <li class="{{ (request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : '' }}">
-                                                <a class="{{ (request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : '' }}" href="{{route('front.journals')}}"></i>Catálogos</a>
-                                            </li>
-                                            @endif
-                                        </ul>
-                                    </nav>
-                                </div>
-                                <div class="tab-pane fade" id="mcat" role="tabpanel" aria-labelledby="mcat-tab">
-                                    <nav class="slideable-menu">
-                                        @include('includes.mobile-category')
-                                    </nav>
-                                </div>
+                            <div class="hmenu-close-icon">
+                                <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 125" style="enable-background:new 0 0 100 100" xml:space="preserve"><path d="m26 82 24-25 25 25 7-7-25-25 25-24-7-8-25 25-24-25-8 8 25 24-25 25z"/></svg>
+                                </span>
                             </div>
                         </div>
                     </div>

@@ -103,7 +103,7 @@ body_theme4
                     }
                 ?>
                 <div class="col-lg-12">
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between" id="c-topBarDskMb35mBd6Fhe">
                         <div class="toolbar-item visible-on-mobile mobile-menu-toggle" id="btn-toggMenuMob__only">
                             <a href="javascript:void(0);">
                                 <div>
@@ -198,54 +198,82 @@ body_theme4
                                 </div>
                             </div>
                         </div>
-                        <div class="mobile-menu">
-                            <div class="mm-heading-area">
-                                <h4><?php echo e(__('Navigation')); ?></h4>
-                                <div class="toolbar-item visible-on-mobile mobile-menu-toggle mm-t-two">
-                                    <a href="javascript:void(0);">
-                                        <div><i class="icon-x"></i></div>
-                                    </a>
+                        <div class="cx-mobilemenu">
+                            <div class="mobile-menu">
+                                
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class="nav-item" role="presentation99">
+                                    <span class="active" id="mmenu-tab" data-bs-toggle="tab" data-bs-target="#mmenu"  role="tab" aria-controls="mmenu" aria-selected="true"><?php echo e(__('Menu')); ?></span>
+                                    </li>
+                                    <li class="nav-item" role="presentation99">
+                                    <span class="" id="mcat-tab" data-bs-toggle="tab" data-bs-target="#mcat"  role="tab" aria-controls="mcat" aria-selected="false"><?php echo e(__('Category')); ?></span>
+                                    </li>
+                                </ul>
+                                <div class="tab-content p-0" >
+                                    <div class="tab-pane fade show active" id="mmenu" role="tabpanel" aria-labelledby="mmenu-tab">
+                                        <nav class="slideable-menu">
+                                            <ul>
+                                                <li class="<?php echo e(request()->routeIs('front.index') ? 'active' : ''); ?>">
+                                                    <a href="<?php echo e(route('front.index')); ?>">
+                                                        <i class="icon-chevron-right"></i>
+                                                        <span><?php echo e(__('Home')); ?></span>
+                                                    </a>
+                                                </li>
+                                                <?php if($setting->is_shop == 1): ?>
+                                                <li class="<?php echo e(request()->routeIs('front.catalog*')  ? 'active' : ''); ?>">
+                                                    <a href="<?php echo e(route('front.catalog')); ?>">
+                                                        <i class="icon-chevron-right"></i>
+                                                        <span><?php echo e(__('Shop')); ?></span>
+                                                    </a>
+                                                </li>
+                                                <?php endif; ?>
+                                                
+                                                <li class="<?php echo e(request()->routeIs('front.onsaleproducts')  ? 'active' : ''); ?>">
+                                                    <a href="<?php echo e(route('front.onsaleproducts')); ?>">
+                                                        <i class="icon-chevron-right"></i>
+                                                        <span><?php echo e(__('Promotions')); ?></span>
+                                                    </a>
+                                                </li>
+                                                <li class="<?php echo e(request()->routeIs('front.specialoffer')  ? 'active' : ''); ?>">
+                                                    <a href="<?php echo e(route('front.specialoffer')); ?>">
+                                                        <i class="icon-chevron-right"></i>
+                                                        <span><?php echo e(__('Special offers')); ?></span>
+                                                    </a>
+                                                </li>
+                                                <?php if($setting->is_brands == 1): ?>
+                                                <li class="<?php echo e(request()->routeIs('front.brands')  ? 'active' : ''); ?>">
+                                                    <a href="<?php echo e(route('front.brands')); ?>">
+                                                        <i class="icon-chevron-right"></i>
+                                                        <span><?php echo e(__('Brand')); ?></span>
+                                                    </a>
+                                                </li>
+                                                <?php endif; ?>
+                                                <?php if($setting->is_blog == 1): ?>
+                                                <!-- <li class="<?php echo e(request()->routeIs('front.blog*') ? 'active' : ''); ?>"><a href="<?php echo e(route('front.blog')); ?>"><i class="icon-chevron-right"></i><?php echo e(__('Blog')); ?></a></li> -->
+                                                <?php endif; ?>
+
+                                                <?php if($setting->is_catalogs == 1): ?>
+                                                <li class="<?php echo e((request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : ''); ?>">
+                                                    <a class="<?php echo e((request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : ''); ?>" href="<?php echo e(route('front.journals')); ?>">
+                                                        <i class="icon-chevron-right"></i>
+                                                        <span>Catálogos</span>
+                                                    </a>
+                                                </li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                    <div class="tab-pane fade" id="mcat" role="tabpanel" aria-labelledby="mcat-tab">
+                                        <nav class="slideable-menu">
+                                            <?php echo $__env->make('includes.mobile-category', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                                        </nav>
+                                    </div>
                                 </div>
                             </div>
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li class="nav-item" role="presentation99">
-                                  <span class="active" id="mmenu-tab" data-bs-toggle="tab" data-bs-target="#mmenu"  role="tab" aria-controls="mmenu" aria-selected="true"><?php echo e(__('Menu')); ?></span>
-                                </li>
-                                <li class="nav-item" role="presentation99">
-                                  <span class="" id="mcat-tab" data-bs-toggle="tab" data-bs-target="#mcat"  role="tab" aria-controls="mcat" aria-selected="false"><?php echo e(__('Category')); ?></span>
-                                </li>
-                              </ul>
-                              <div class="tab-content p-0" >
-                                <div class="tab-pane fade show active" id="mmenu" role="tabpanel" aria-labelledby="mmenu-tab">
-                                    <nav class="slideable-menu">
-                                        <ul>
-                                            <li class="<?php echo e(request()->routeIs('front.index') ? 'active' : ''); ?>"><a href="<?php echo e(route('front.index')); ?>"><i class="icon-chevron-right"></i><?php echo e(__('Home')); ?></a></li>
-                                            <?php if($setting->is_shop == 1): ?>
-                                            <li class="<?php echo e(request()->routeIs('front.catalog*')  ? 'active' : ''); ?>"><a href="<?php echo e(route('front.catalog')); ?>"><i class="icon-chevron-right"></i><?php echo e(__('Shop')); ?></a></li>
-                                            <?php endif; ?>
-                                            
-                                            <li class="<?php echo e(request()->routeIs('front.onsaleproducts')  ? 'active' : ''); ?>"><a href="<?php echo e(route('front.onsaleproducts')); ?>"><i class="icon-chevron-right"></i><?php echo e(__('Promotions')); ?></a></li>
-                                            <li class="<?php echo e(request()->routeIs('front.specialoffer')  ? 'active' : ''); ?>"><a href="<?php echo e(route('front.specialoffer')); ?>"><i class="icon-chevron-right"></i><?php echo e(__('Special offers')); ?></a></li>
-                                            <?php if($setting->is_brands == 1): ?>
-                                            <li class="<?php echo e(request()->routeIs('front.brands')  ? 'active' : ''); ?>"><a href="<?php echo e(route('front.brands')); ?>"><i class="icon-chevron-right"></i><?php echo e(__('Brand')); ?></a></li>
-                                            <?php endif; ?>
-                                            <?php if($setting->is_blog == 1): ?>
-                                            <!-- <li class="<?php echo e(request()->routeIs('front.blog*') ? 'active' : ''); ?>"><a href="<?php echo e(route('front.blog')); ?>"><i class="icon-chevron-right"></i><?php echo e(__('Blog')); ?></a></li> -->
-                                            <?php endif; ?>
-
-                                            <?php if($setting->is_catalogs == 1): ?>
-                                            <li class="<?php echo e((request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : ''); ?>">
-                                                <a class="<?php echo e((request()->routeIs('front.journals*') || request()->routeIs('front.journals*') == 1) ? 'active' : ''); ?>" href="<?php echo e(route('front.journals')); ?>"></i>Catálogos</a>
-                                            </li>
-                                            <?php endif; ?>
-                                        </ul>
-                                    </nav>
-                                </div>
-                                <div class="tab-pane fade" id="mcat" role="tabpanel" aria-labelledby="mcat-tab">
-                                    <nav class="slideable-menu">
-                                        <?php echo $__env->make('includes.mobile-category', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
-                                    </nav>
-                                </div>
+                            <div class="hmenu-close-icon">
+                                <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 125" style="enable-background:new 0 0 100 100" xml:space="preserve"><path d="m26 82 24-25 25 25 7-7-25-25 25-24-7-8-25 25-24-25-8 8 25 24-25 25z"/></svg>
+                                </span>
                             </div>
                         </div>
                     </div>
