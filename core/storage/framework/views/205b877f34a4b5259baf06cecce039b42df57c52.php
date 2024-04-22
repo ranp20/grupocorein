@@ -1,25 +1,25 @@
-@php
+<?php
   $cart = Session::has('cart') ? Session::get('cart') : [];
   $total = 0;
   $qty = 0;
   $option_price = 0;
   $cartTotal = 0;
   $orderGrandTotal = 0;
-@endphp
+?>
 <div class="col-xl-3 col-lg-4">
   <aside class="sidebar">
     <div class="padding-top-2x hidden-lg-up"></div>
     <section class="card widget widget-featured-posts widget-order-summary p-4" id="crdLEvent__sd343fg-34Gas">
-      <h3 class="widget-title">{{__('Order Summary')}}</h3>
-      @php
+      <h3 class="widget-title"><?php echo e(__('Order Summary')); ?></h3>
+      <?php
       $free_shipping = DB::table('shipping_services')->whereStatus(1)->whereIsCondition(1)->first()
-      @endphp
-      @if ($free_shipping)
-        @if ($free_shipping->minimum_price >= $cart_total)
-          <p class="free-shippin-aa"><em>Envío gratis a partir de {{PriceHelper::setCurrencyPrice($free_shipping->minimum_price)}}</em></p>
-        @endif
-      @endif
-      @php
+      ?>
+      <?php if($free_shipping): ?>
+        <?php if($free_shipping->minimum_price >= $cart_total): ?>
+          <p class="free-shippin-aa"><em>Envío gratis a partir de <?php echo e(PriceHelper::setCurrencyPrice($free_shipping->minimum_price)); ?></em></p>
+        <?php endif; ?>
+      <?php endif; ?>
+      <?php
         $shipSessionInfo = "";
         $amountDeliveryTotal = 0;
         $amountGrandTotal = 0;
@@ -28,10 +28,10 @@
           $amountDeliveryTotal = $shipSessionInfo['ship_amountaddress'];
           $amountGrandTotal = $shipSessionInfo['grand_total'];
         }
-      @endphp
-      @if (Session::has('cart'))
-        @foreach ($cart as $key => $item)
-          @php
+      ?>
+      <?php if(Session::has('cart')): ?>
+        <?php $__currentLoopData = $cart; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+          <?php
             $totalwithoutcoupon = 0;
             $totalwithcoupon = 0;
             $totalwithoutcoupon_prod = 0;
@@ -72,58 +72,58 @@
             }else{
               $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
             }
-          @endphp
-        @endforeach
-      @endif
+          ?>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+      <?php endif; ?>
 
       <div id="tblCrtReview-hd46_asdFHG54">
         <table class="table">
           <tr>
-            <td>{{__('Subtotal')}}:</td>
-            <td class="fw-bold spnLstCart__fz1 text-gray-dark">{{PriceHelper::setCurrencyPrice($cartTotal)}}</td>
+            <td><?php echo e(__('Subtotal')); ?>:</td>
+            <td class="fw-bold spnLstCart__fz1 text-gray-dark"><?php echo e(PriceHelper::setCurrencyPrice($cartTotal)); ?></td>
           </tr>
           <tr>
             <td>Envío:</td>
-            @if($amountDeliveryTotal != 0 && $amountDeliveryTotal != "")
+            <?php if($amountDeliveryTotal != 0 && $amountDeliveryTotal != ""): ?>
             <td class="text-gray-dark">
               <div class="cInfAmmtCart">
                 <div class="cInfAmmtCart__c">
-                  <span class="fw-bold spnLstCart__fz1" id="cInfAmmtCart__c-346hg">{{ PriceHelper::setCurrencyPrice($amountDeliveryTotal) }}</span>
+                  <span class="fw-bold spnLstCart__fz1" id="cInfAmmtCart__c-346hg"><?php echo e(PriceHelper::setCurrencyPrice($amountDeliveryTotal)); ?></span>
                 </div>
               </div>
             </td>
-            @else
+            <?php else: ?>
             <td class="text-gray-dark">
               <div class="cInfAmmtCart">
                 <div class="cInfAmmtCart__c">
-                  <span class="fw-bold spnLstCart__fz1" id="cInfAmmtCart__c-346hg">{{ PriceHelper::setCurrencyPrice($amountaddress) }}</span>
+                  <span class="fw-bold spnLstCart__fz1" id="cInfAmmtCart__c-346hg"><?php echo e(PriceHelper::setCurrencyPrice($amountaddress)); ?></span>
                 </div>
               </div>
             </td>
-            @endif
+            <?php endif; ?>
           </tr>
           <tr>
-            <td class="text-lg text-primary">{{__('Order total')}}</td>
-            @if($amountDeliveryTotal != 0 && $amountDeliveryTotal != "")
-              <td class="fw-bold spnLstCart__fz2 text-lg text-primary grand_total_set">{{ PriceHelper::setCurrencyPrice($amountGrandTotal) }}</td>
-            @else
-              @if($amountaddress != 0 && $amountaddress != "")
-                @php
+            <td class="text-lg text-primary"><?php echo e(__('Order total')); ?></td>
+            <?php if($amountDeliveryTotal != 0 && $amountDeliveryTotal != ""): ?>
+              <td class="fw-bold spnLstCart__fz2 text-lg text-primary grand_total_set"><?php echo e(PriceHelper::setCurrencyPrice($amountGrandTotal)); ?></td>
+            <?php else: ?>
+              <?php if($amountaddress != 0 && $amountaddress != ""): ?>
+                <?php
                   $orderGrandTotal = $cartTotal + $amountaddress;
-                @endphp
-                <td class="fw-bold spnLstCart__fz2 text-lg text-primary grand_total_set">{{ PriceHelper::setCurrencyPrice($orderGrandTotal) }}</td>
-              @else
-                <td class="fw-bold spnLstCart__fz2 text-lg text-primary grand_total_set">{{ PriceHelper::setCurrencyPrice($cartTotal) }}</td>
-              @endif
-            @endif
+                ?>
+                <td class="fw-bold spnLstCart__fz2 text-lg text-primary grand_total_set"><?php echo e(PriceHelper::setCurrencyPrice($orderGrandTotal)); ?></td>
+              <?php else: ?>
+                <td class="fw-bold spnLstCart__fz2 text-lg text-primary grand_total_set"><?php echo e(PriceHelper::setCurrencyPrice($cartTotal)); ?></td>
+              <?php endif; ?>
+            <?php endif; ?>
           </tr>
         </table>
       </div>
     </section>
     <section class="card widget widget-featured-posts widget-featured-products p-4">
-      <h3 class="widget-title">{{__('Items In Your Cart')}}</h3>
-      @foreach ($cart as $key => $item)
-      @php
+      <h3 class="widget-title"><?php echo e(__('Items In Your Cart')); ?></h3>
+      <?php $__currentLoopData = $cart; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+      <?php
         $totalwithoutcoupon = 0;
         $totalwithcoupon = 0;
         $totalwithoutcoupon_prod = 0;
@@ -164,59 +164,59 @@
         }else{
           $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
         }
-      @endphp
+      ?>
       <div class="entry">
         <div class="entry-thumb">
-          @php
+          <?php
             $pathProductPhoto = 'assets/images/'.$item['photo'];
             $pathProductPhotoDefault = 'assets/images/Utilities/default_product.png';
-          @endphp
-          @if(file_exists( $pathProductPhoto ))
-          <a href="{{route('front.product',$item['slug'])}}">
-            <img src="{{ asset($pathProductPhoto) }}" alt="Product">
+          ?>
+          <?php if(file_exists( $pathProductPhoto )): ?>
+          <a href="<?php echo e(route('front.product',$item['slug'])); ?>">
+            <img src="<?php echo e(asset($pathProductPhoto)); ?>" alt="Product">
           </a>
-          @else
+          <?php else: ?>
           <div class="product-thumb" style="display: block;border-radius: 5px;overflow: hidden;">
-            <img src="{{ asset($pathProductPhotoDefault) }}" alt="ProductDefault">
+            <img src="<?php echo e(asset($pathProductPhotoDefault)); ?>" alt="ProductDefault">
           </div>
-          @endif
+          <?php endif; ?>
         </div>
         <div class="entry-content">
           <h4 class="entry-title">
-            <a href="{{route('front.product',$item['slug'])}}">{{ strlen(strip_tags($item['name'])) > 45 ? substr(strip_tags($item['name']), 0, 45) . '...' : strip_tags($item['name']) }}</a>
+            <a href="<?php echo e(route('front.product',$item['slug'])); ?>"><?php echo e(strlen(strip_tags($item['name'])) > 45 ? substr(strip_tags($item['name']), 0, 45) . '...' : strip_tags($item['name'])); ?></a>
           </h4>
           
-          @if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00)
-            @if(count($namecouponbyid) != 0)
-              @if($remainingTime <= 0)
-                <span class="entry-meta">{{$item['qty']}} x {{PriceHelper::setCurrencyPrice($item['price'])}}</span>
-              @else
-                <span class="entry-meta">{{$item['qty']}} x {{PriceHelper::setCurrencyPrice($item['coupon_price'])}}</span>
-              @endif
-            @else
-              <span class="entry-meta">{{$item['qty']}} x {{PriceHelper::setCurrencyPrice($item['price'])}}</span>
-            @endif
-          @else
-            <span class="entry-meta">{{$item['qty']}} x {{PriceHelper::setCurrencyPrice($item['price'])}}</span>
-          @endif
-          @if(isset($cart['attribute']['option_name']) && !empty($cart['attribute']['option_name']))
-            @foreach ($item['attribute']['option_name'] as $optionkey => $option_name)
-            <span class="entry-meta"><b>{{$option_name}}</b> : {{PriceHelper::setCurrencySign()}}{{$item['attribute']['option_price'][$optionkey]}}</span>
-            @endforeach
-          @endif
-          @if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00)
-            @if(count($namecouponbyid) != 0)
-              @if($remainingTime <= 0)
-              @else
+          <?php if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00): ?>
+            <?php if(count($namecouponbyid) != 0): ?>
+              <?php if($remainingTime <= 0): ?>
+                <span class="entry-meta"><?php echo e($item['qty']); ?> x <?php echo e(PriceHelper::setCurrencyPrice($item['price'])); ?></span>
+              <?php else: ?>
+                <span class="entry-meta"><?php echo e($item['qty']); ?> x <?php echo e(PriceHelper::setCurrencyPrice($item['coupon_price'])); ?></span>
+              <?php endif; ?>
+            <?php else: ?>
+              <span class="entry-meta"><?php echo e($item['qty']); ?> x <?php echo e(PriceHelper::setCurrencyPrice($item['price'])); ?></span>
+            <?php endif; ?>
+          <?php else: ?>
+            <span class="entry-meta"><?php echo e($item['qty']); ?> x <?php echo e(PriceHelper::setCurrencyPrice($item['price'])); ?></span>
+          <?php endif; ?>
+          <?php if(isset($cart['attribute']['option_name']) && !empty($cart['attribute']['option_name'])): ?>
+            <?php $__currentLoopData = $item['attribute']['option_name']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $optionkey => $option_name): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <span class="entry-meta"><b><?php echo e($option_name); ?></b> : <?php echo e(PriceHelper::setCurrencySign()); ?><?php echo e($item['attribute']['option_price'][$optionkey]); ?></span>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+          <?php endif; ?>
+          <?php if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00): ?>
+            <?php if(count($namecouponbyid) != 0): ?>
+              <?php if($remainingTime <= 0): ?>
+              <?php else: ?>
                 <span class="product-withcoupon">
-                  <small>Con cupón: <strong>{{ $nameofcouponbyid }}</strong></small>
+                  <small>Con cupón: <strong><?php echo e($nameofcouponbyid); ?></strong></small>
                 </span>
-              @endif
-            @endif
-          @endif
+              <?php endif; ?>
+            <?php endif; ?>
+          <?php endif; ?>
         </div>
       </div>
-      @endforeach
+      <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     </section>
   </aside>
-</div>
+</div><?php /**PATH C:\xampp\htdocs\grupocorein\core\resources\views/includes/checkout_sitebar.blade.php ENDPATH**/ ?>

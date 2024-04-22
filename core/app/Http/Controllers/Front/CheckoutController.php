@@ -24,6 +24,9 @@ use App\Models\Departamento;
 use App\Models\Provincia;
 use App\Models\Distrito;
 use App\Models\Ciudad;
+use App\Models\Coupons;
+use DateTime;
+use DateTimeZone;
 use Cartalyst\Stripe\Api\Orders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -68,12 +71,66 @@ class CheckoutController extends Controller{
     $grand_total = 0;
     $attribute_price = 0;
     foreach($cart as $key => $item){
+      // $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+      // $total += ($item['price'] + $attribute_price) * $item['qty'];
+      // $cart_total = $total;
+      $keywithoutguion = str_replace("-","",$key);
+      $keywithoutguion2 = (int) $keywithoutguion;
+      $itemBD = Item::findOrFail($keywithoutguion2);
+
+      if($itemBD->tax_id){
+        $total_tax += $itemBD::taxCalculate($itemBD);
+      }
+
+      $total =0;
+      $option_price = 0;
+      $cartTotal = 0;
+
+      // -------------------------- VALIDACIÓN DE CUPONES
+      $totalwithoutcoupon = 0;
+      $totalwithcoupon = 0;
+      $totalwithoutcoupon_prod = 0;
+      $totalwithcoupon_prod = 0;
+      // ----------- CANTIDAD DE PRODUCTOS TOTAL...
+      $prod_qty = floatval($item['qty']);
+      // ----------- CANTIDAD DE PRODUCTOS SIN CUPÓN TOTAL...
+      $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+      // ----------- CANTIDAD DE PRODUCTOS CON CUPÓN...
+      $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
       $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-      $total += ($item['price'] + $attribute_price) * $item['qty'];
-      $cart_total = $total;
-      $item = Item::findOrFail($key);
-      if($item->tax){
-        $total_tax += $item::taxCalculate($item);
+      if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
+
+        // $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        $namecouponbyid = Coupons::where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        if(count($namecouponbyid) != 0){
+          $couponbyiddecode = json_decode($namecouponbyid, TRUE);
+          $nameofcouponbyid = $couponbyiddecode[0]['name'];
+          $expiresAtTimer = $couponbyiddecode[0]['time_end'];
+          // ----------- Crear un objeto DateTime a partir de la fecha final...
+          $currentDate = new DateTime();
+          $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+          // ----------- Asegurarse que la fecha es válida...
+          if (!$expirationDate) {
+            die('Invalid date format for countdown.');
+          }
+          // ----------- Obtener las fechas en milisegundos...
+          $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+          $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+          // ----------- Calcular el tiempo restante...
+          $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+          
+          if($remainingTime <= 0){
+            $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+          }else{
+            $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+            $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+            $cart_total += $totalwithoutcoupon + $totalwithcoupon;
+          }
+        }else{
+          $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+        }
+      }else{
+        $cart_total +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
       }
     }
     $shipping = [];
@@ -200,12 +257,66 @@ class CheckoutController extends Controller{
     $grand_total = 0;
     $attribute_price = 0;
     foreach($cart as $key => $item){
+      // $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+      // $total += ($item['price'] + $attribute_price) * $item['qty'];
+      // $cart_total = $total;
+      $keywithoutguion = str_replace("-","",$key);
+      $keywithoutguion2 = (int) $keywithoutguion;
+      $itemBD = Item::findOrFail($keywithoutguion2);
+
+      if($itemBD->tax_id){
+        $total_tax += $itemBD::taxCalculate($itemBD);
+      }
+
+      $total =0;
+      $option_price = 0;
+      $cartTotal = 0;
+
+      // -------------------------- VALIDACIÓN DE CUPONES
+      $totalwithoutcoupon = 0;
+      $totalwithcoupon = 0;
+      $totalwithoutcoupon_prod = 0;
+      $totalwithcoupon_prod = 0;
+      // ----------- CANTIDAD DE PRODUCTOS TOTAL...
+      $prod_qty = floatval($item['qty']);
+      // ----------- CANTIDAD DE PRODUCTOS SIN CUPÓN TOTAL...
+      $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+      // ----------- CANTIDAD DE PRODUCTOS CON CUPÓN...
+      $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
       $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-      $total += ($item['price'] + $attribute_price) * $item['qty'];
-      $cart_total = $total;
-      $item = Item::findOrFail($key);
-      if($item->tax){
-        $total_tax += $item::taxCalculate($item);
+      if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
+
+        // $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        $namecouponbyid = Coupons::where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        if(count($namecouponbyid) != 0){
+          $couponbyiddecode = json_decode($namecouponbyid, TRUE);
+          $nameofcouponbyid = $couponbyiddecode[0]['name'];
+          $expiresAtTimer = $couponbyiddecode[0]['time_end'];
+          // ----------- Crear un objeto DateTime a partir de la fecha final...
+          $currentDate = new DateTime();
+          $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+          // ----------- Asegurarse que la fecha es válida...
+          if (!$expirationDate) {
+            die('Invalid date format for countdown.');
+          }
+          // ----------- Obtener las fechas en milisegundos...
+          $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+          $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+          // ----------- Calcular el tiempo restante...
+          $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+          
+          if($remainingTime <= 0){
+            $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+          }else{
+            $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+            $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+            $cart_total += $totalwithoutcoupon + $totalwithcoupon;
+          }
+        }else{
+          $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+        }
+      }else{
+        $cart_total +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
       }
     }
     $shipping = [];
@@ -292,12 +403,66 @@ class CheckoutController extends Controller{
     $grand_total = 0;
     $attribute_price = 0;
     foreach($cartGetInfo as $key => $item){
+      // $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+      // $total += ($item['price'] + $attribute_price) * $item['qty'];
+      // $cart_total = $total;
+      $keywithoutguion = str_replace("-","",$key);
+      $keywithoutguion2 = (int) $keywithoutguion;
+      $itemBD = Item::findOrFail($keywithoutguion2);
+
+      if($itemBD->tax_id){
+        $total_tax += $itemBD::taxCalculate($itemBD);
+      }
+
+      $total =0;
+      $option_price = 0;
+      $cartTotal = 0;
+
+      // -------------------------- VALIDACIÓN DE CUPONES
+      $totalwithoutcoupon = 0;
+      $totalwithcoupon = 0;
+      $totalwithoutcoupon_prod = 0;
+      $totalwithcoupon_prod = 0;
+      // ----------- CANTIDAD DE PRODUCTOS TOTAL...
+      $prod_qty = floatval($item['qty']);
+      // ----------- CANTIDAD DE PRODUCTOS SIN CUPÓN TOTAL...
+      $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+      // ----------- CANTIDAD DE PRODUCTOS CON CUPÓN...
+      $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
       $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-      $total += ($item['price'] + $attribute_price) * $item['qty'];
-      $cart_total = $total;
-      $item = Item::findOrFail($key);
-      if($item->tax){
-        $total_tax += $item::taxCalculate($item);
+      if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
+
+        // $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        $namecouponbyid = Coupons::where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        if(count($namecouponbyid) != 0){
+          $couponbyiddecode = json_decode($namecouponbyid, TRUE);
+          $nameofcouponbyid = $couponbyiddecode[0]['name'];
+          $expiresAtTimer = $couponbyiddecode[0]['time_end'];
+          // ----------- Crear un objeto DateTime a partir de la fecha final...
+          $currentDate = new DateTime();
+          $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+          // ----------- Asegurarse que la fecha es válida...
+          if (!$expirationDate) {
+            die('Invalid date format for countdown.');
+          }
+          // ----------- Obtener las fechas en milisegundos...
+          $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+          $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+          // ----------- Calcular el tiempo restante...
+          $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+          
+          if($remainingTime <= 0){
+            $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+          }else{
+            $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+            $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+            $cart_total += $totalwithoutcoupon + $totalwithcoupon;
+          }
+        }else{
+          $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+        }
+      }else{
+        $cart_total +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
       }
     }
     $shipping = [];
@@ -376,15 +541,71 @@ class CheckoutController extends Controller{
     $total_amount = 0;
     $grand_total = 0;
     $attribute_price = 0;
+
     foreach($cart as $key => $item){
+      // $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+      // $total += ($item['price'] + $attribute_price) * $item['qty'];
+      // $cart_total = $total;
+      $keywithoutguion = str_replace("-","",$key);
+      $keywithoutguion2 = (int) $keywithoutguion;
+      $itemBD = Item::findOrFail($keywithoutguion2);
+
+      if($itemBD->tax_id){
+        $total_tax += $itemBD::taxCalculate($itemBD);
+      }
+
+      $total =0;
+      $option_price = 0;
+      $cartTotal = 0;
+
+      // -------------------------- VALIDACIÓN DE CUPONES
+      $totalwithoutcoupon = 0;
+      $totalwithcoupon = 0;
+      $totalwithoutcoupon_prod = 0;
+      $totalwithcoupon_prod = 0;
+      // ----------- CANTIDAD DE PRODUCTOS TOTAL...
+      $prod_qty = floatval($item['qty']);
+      // ----------- CANTIDAD DE PRODUCTOS SIN CUPÓN TOTAL...
+      $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+      // ----------- CANTIDAD DE PRODUCTOS CON CUPÓN...
+      $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
       $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-      $total += ($item['price'] + $attribute_price) * $item['qty'];
-      $cart_total = $total;
-      $item = Item::findOrFail($key);
-      if($item->tax){
-        $total_tax += $item::taxCalculate($item);
+      if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
+
+        // $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        $namecouponbyid = Coupons::where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        if(count($namecouponbyid) != 0){
+          $couponbyiddecode = json_decode($namecouponbyid, TRUE);
+          $nameofcouponbyid = $couponbyiddecode[0]['name'];
+          $expiresAtTimer = $couponbyiddecode[0]['time_end'];
+          // ----------- Crear un objeto DateTime a partir de la fecha final...
+          $currentDate = new DateTime();
+          $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+          // ----------- Asegurarse que la fecha es válida...
+          if (!$expirationDate) {
+            die('Invalid date format for countdown.');
+          }
+          // ----------- Obtener las fechas en milisegundos...
+          $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+          $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+          // ----------- Calcular el tiempo restante...
+          $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+          
+          if($remainingTime <= 0){
+            $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+          }else{
+            $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+            $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+            $cart_total += $totalwithoutcoupon + $totalwithcoupon;
+          }
+        }else{
+          $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+        }
+      }else{
+        $cart_total +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
       }
     }
+
     $shipping = [];
     if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
       $shipping = ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->first();
@@ -478,12 +699,66 @@ class CheckoutController extends Controller{
     $grand_total = 0;
     $attribute_price = 0;
     foreach($cart as $key => $item){
+      // $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+      // $total += ($item['price'] + $attribute_price) * $item['qty'];
+      // $cart_total = $total;
+      $keywithoutguion = str_replace("-","",$key);
+      $keywithoutguion2 = (int) $keywithoutguion;
+      $itemBD = Item::findOrFail($keywithoutguion2);
+
+      if($itemBD->tax_id){
+        $total_tax += $itemBD::taxCalculate($itemBD);
+      }
+
+      $total =0;
+      $option_price = 0;
+      $cartTotal = 0;
+
+      // -------------------------- VALIDACIÓN DE CUPONES
+      $totalwithoutcoupon = 0;
+      $totalwithcoupon = 0;
+      $totalwithoutcoupon_prod = 0;
+      $totalwithcoupon_prod = 0;
+      // ----------- CANTIDAD DE PRODUCTOS TOTAL...
+      $prod_qty = floatval($item['qty']);
+      // ----------- CANTIDAD DE PRODUCTOS SIN CUPÓN TOTAL...
+      $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+      // ----------- CANTIDAD DE PRODUCTOS CON CUPÓN...
+      $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
       $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-      $total += ($item['price'] + $attribute_price) * $item['qty'];
-      $cart_total = $total;
-      $item = Item::findOrFail($key);
-      if($item->tax){
-        $total_tax += $item::taxCalculate($item);
+      if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
+
+        // $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        $namecouponbyid = Coupons::where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        if(count($namecouponbyid) != 0){
+          $couponbyiddecode = json_decode($namecouponbyid, TRUE);
+          $nameofcouponbyid = $couponbyiddecode[0]['name'];
+          $expiresAtTimer = $couponbyiddecode[0]['time_end'];
+          // ----------- Crear un objeto DateTime a partir de la fecha final...
+          $currentDate = new DateTime();
+          $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+          // ----------- Asegurarse que la fecha es válida...
+          if (!$expirationDate) {
+            die('Invalid date format for countdown.');
+          }
+          // ----------- Obtener las fechas en milisegundos...
+          $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+          $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+          // ----------- Calcular el tiempo restante...
+          $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+          
+          if($remainingTime <= 0){
+            $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+          }else{
+            $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+            $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+            $cart_total += $totalwithoutcoupon + $totalwithcoupon;
+          }
+        }else{
+          $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+        }
+      }else{
+        $cart_total +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
       }
     }
     $shipping = [];
@@ -822,12 +1097,66 @@ class CheckoutController extends Controller{
     $total = 0;
     $attribute_price = 0;
     foreach($cart as $key => $item){
+      // $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+      // $total += ($item['price'] + $attribute_price) * $item['qty'];
+      // $cart_total = $total;
+      $keywithoutguion = str_replace("-","",$key);
+      $keywithoutguion2 = (int) $keywithoutguion;
+      $itemBD = Item::findOrFail($keywithoutguion2);
+
+      if($itemBD->tax_id){
+        $total_tax += $itemBD::taxCalculate($itemBD);
+      }
+
+      $total =0;
+      $option_price = 0;
+      $cartTotal = 0;
+
+      // -------------------------- VALIDACIÓN DE CUPONES
+      $totalwithoutcoupon = 0;
+      $totalwithcoupon = 0;
+      $totalwithoutcoupon_prod = 0;
+      $totalwithcoupon_prod = 0;
+      // ----------- CANTIDAD DE PRODUCTOS TOTAL...
+      $prod_qty = floatval($item['qty']);
+      // ----------- CANTIDAD DE PRODUCTOS SIN CUPÓN TOTAL...
+      $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+      // ----------- CANTIDAD DE PRODUCTOS CON CUPÓN...
+      $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
       $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-      $total += ($item['price'] + $attribute_price) * $item['qty'];
-      $cart_total = $total;
-      $item = Item::findOrFail($key);
-      if($item->tax){
-        $total_tax += $item::taxCalculate($item);
+      if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
+
+        // $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        $namecouponbyid = Coupons::where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        if(count($namecouponbyid) != 0){
+          $couponbyiddecode = json_decode($namecouponbyid, TRUE);
+          $nameofcouponbyid = $couponbyiddecode[0]['name'];
+          $expiresAtTimer = $couponbyiddecode[0]['time_end'];
+          // ----------- Crear un objeto DateTime a partir de la fecha final...
+          $currentDate = new DateTime();
+          $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+          // ----------- Asegurarse que la fecha es válida...
+          if (!$expirationDate) {
+            die('Invalid date format for countdown.');
+          }
+          // ----------- Obtener las fechas en milisegundos...
+          $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+          $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+          // ----------- Calcular el tiempo restante...
+          $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+          
+          if($remainingTime <= 0){
+            $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+          }else{
+            $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+            $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+            $cart_total += $totalwithoutcoupon + $totalwithcoupon;
+          }
+        }else{
+          $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+        }
+      }else{
+        $cart_total +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
       }
     }
     $shipping = [];

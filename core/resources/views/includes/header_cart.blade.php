@@ -14,46 +14,46 @@
 @if (Session::has('cart'))
   @foreach ($cart as $key => $item)
   @php
-  $totalwithoutcoupon = 0;
-  $totalwithcoupon = 0;
-  $totalwithoutcoupon_prod = 0;
-  $totalwithcoupon_prod = 0;
-  $prod_qty = floatval($item['qty']);
-  $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
-  $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
-  $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-  if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
+    $totalwithoutcoupon = 0;
+    $totalwithcoupon = 0;
+    $totalwithoutcoupon_prod = 0;
+    $totalwithcoupon_prod = 0;
+    $prod_qty = floatval($item['qty']);
+    $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+    $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
+    $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+    if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
 
-    $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
-    if(count($namecouponbyid) != 0){
-      $couponbyiddecode = json_decode($namecouponbyid, TRUE);
-      $nameofcouponbyid = $couponbyiddecode[0]['name'];
-      $expiresAtTimer = $couponbyiddecode[0]['time_end'];
-      // ----------- Crear un objeto DateTime a partir de la fecha final...
-      $currentDate = new DateTime();
-      $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
-      // ----------- Asegurarse que la fecha es válida...
-      if (!$expirationDate) {
-        die('Invalid date format for countdown.');
-      }
-      // ----------- Obtener las fechas en milisegundos...
-      $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
-      $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
-      // ----------- Calcular el tiempo restante...
-      $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
-      if($remainingTime <= 0){
-        $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
+      $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+      if(count($namecouponbyid) != 0){
+        $couponbyiddecode = json_decode($namecouponbyid, TRUE);
+        $nameofcouponbyid = $couponbyiddecode[0]['name'];
+        $expiresAtTimer = $couponbyiddecode[0]['time_end'];
+        // ----------- Crear un objeto DateTime a partir de la fecha final...
+        $currentDate = new DateTime();
+        $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+        // ----------- Asegurarse que la fecha es válida...
+        if (!$expirationDate) {
+          die('Invalid date format for countdown.');
+        }
+        // ----------- Obtener las fechas en milisegundos...
+        $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+        $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+        // ----------- Calcular el tiempo restante...
+        $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+        if($remainingTime <= 0){
+          $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
+        }else{
+          $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+          $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+          $cartTotal += $totalwithoutcoupon + $totalwithcoupon; 
+        }
       }else{
-        $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
-        $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
-        $cartTotal += $totalwithoutcoupon + $totalwithcoupon; 
+        $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
       }
     }else{
       $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
     }
-  }else{
-    $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
-  }
   @endphp
   <div class="entry">
     <div class="entry-thumb">
