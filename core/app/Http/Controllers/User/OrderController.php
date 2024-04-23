@@ -54,6 +54,8 @@ class OrderController extends Controller{
         $newSubtotalProds = $v['price'] * $v['qty'];
         $newSubtotalProdsFormat = (isset($v['subtotal']) && !empty($v['subtotal'])) ? $v['subtotal'] : PriceHelper::setCurrencyPrice($newSubtotalProds);
         $newSubtotalAllProds += $newSubtotalProds;
+        $itemPhoto = (isset($v['photo']) && !empty($v['photo'])) ? $v['photo'] : '';
+        $urlPhoto = asset('assets/images/'.$itemPhoto);
         $get_SessionCartFormat[$countAllProds] = [
           'id' => $newIdProds,
           'options_id' => (isset($v['options_id']) && !empty($v['options_id'])) ? $v['options_id'] : [],
@@ -66,7 +68,8 @@ class OrderController extends Controller{
           'qty' => (isset($v['qty']) && !empty($v['qty'])) ? $v['qty'] : 0,
           'price' => (isset($v['price']) && !empty($v['price'])) ? PriceHelper::setCurrencyPrice($v['price']) : 0,
           'main_price' => (isset($v['main_price']) && !empty($v['main_price'])) ? PriceHelper::setCurrencyPrice($v['main_price']) : 0,
-          'photo' => (isset($v['photo']) && !empty($v['photo'])) ? $v['photo'] : '',
+          'photo' => $itemPhoto,
+          'photo_url' => $urlPhoto,
           'type' => (isset($v['type']) && !empty($v['type'])) ? $v['type'] : '',
           'item_type' => (isset($v['item_type']) && !empty($v['item_type'])) ? $v['item_type'] : 'Normal',
           'item_l_n' => (isset($v['item_l_n']) && !empty($v['item_l_n'])) ? $v['item_l_n'] : [],
