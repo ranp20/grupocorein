@@ -6,13 +6,14 @@ use App\{
   Models\TrackOrder,
   Helpers\EmailHelper,
   Helpers\PriceHelper,
-  Models\Notification,
+  Models\Notification
 };
 use App\Helpers\SmsHelper;
 use App\Models\Item;
 use App\Models\PromoCode;
 use App\Models\ShippingService;
 use App\Models\State;
+use App\Models\TempCart;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -195,6 +196,9 @@ trait IzipayCheckout{
         }
       }       
       Session::put('order_id',$order->id);
+      $idusertempcart = isset($user) ? $user->id : 0;
+      TempCart::where("user_id", $idusertempcart)->delete(); // ELIMINAR EL CARRITO DE COMPRAS DEL CLIENTE...
+
       Session::forget('cart');
       Session::forget('discount');
       Session::forget('coupon');

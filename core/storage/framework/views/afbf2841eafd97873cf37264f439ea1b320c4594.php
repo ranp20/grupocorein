@@ -262,15 +262,15 @@
                         <?php echo e($order->currency_sign); ?><?php echo e(round($item['coupon_price']*$order->currency_value,2)); ?>
 
                       <?php else: ?>
-                        <?php echo e($order->currency_sign); ?><?php echo e(round($item['main_price']*$order->currency_value,2)); ?>
+                        <?php echo e($order->currency_sign); ?><?php echo e(round($item['price']*$order->currency_value,2)); ?>
 
                       <?php endif; ?>
                     <?php else: ?>
-                      <?php echo e($order->currency_sign); ?><?php echo e(round($item['main_price']*$order->currency_value,2)); ?>
+                      <?php echo e($order->currency_sign); ?><?php echo e(round($item['price']*$order->currency_value,2)); ?>
 
                     <?php endif; ?>
                   <?php else: ?>
-                    <?php echo e(round($item['main_price']*$order->currency_value,2)); ?><?php echo e($order->currency_sign); ?>
+                    <?php echo e(round($item['price']*$order->currency_value,2)); ?><?php echo e($order->currency_sign); ?>
 
                   <?php endif; ?>
                 </td>

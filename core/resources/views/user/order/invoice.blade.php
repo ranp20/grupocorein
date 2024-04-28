@@ -58,8 +58,7 @@
     <div class="row">
       <div class="col-12">
         <h5><b>{{__('Order Details')}} :</b></h5>
-        <span class="text-muted">{{__('Código de Pedido')}} : </span>{{ $order->id_gencode }}<br>
-        <span class="text-muted">{{__('Transaction Id')}} : </span>{{$order->txnid}}<br>
+        <span class="text-muted">{{__('Transaction Id')}} : </span>{{$order->id_gencode}}<br>
         <span class="text-muted">{{__('Order Id')}} : </span>{{$order->transaction_number}}<br>
         <?php
           // $notifCreate = \Carbon\Carbon::parse($notf->created_at);
