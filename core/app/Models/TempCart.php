@@ -18,6 +18,7 @@ class TempCart extends Model{
     'coupon_id',
     'coupon_price',
     'quantity_withoutcoupon',
+    'coupon_valid',
     'is_type',
     'item_type'
   ];

@@ -2237,52 +2237,39 @@ button:focus{
 .btn-warning:hover{
     color: #fff
 }
-
 .btn-primary{
     background-color: #377dff;
-    
 }
-
 .btn-primary:hover{
     background-color: #377dff
 }
-
 .btn-success{
     background-color: #4caf50
 }
-
 .btn-success:hover{
     background-color: #3e8f41
 }
-
 .btn-info{
     background-color: #2196f3
 }
-
 .btn-info:hover{
     background-color: #0c7fda
 }
-
 .btn-warning{
     background-color: #ffa000
 }
-
 .btn-warning:hover{
     background-color: #d18300
 }
-
 .btn-danger{
     background-color: #f44336
 }
-
 .btn-danger:hover{
     background-color: #ef1d0d
 }
-
 .btn-white{
     background-color: #fff
 }
-
 .btn-white:hover{
     background-color: #e8e8e8
 }
@@ -6545,6 +6532,16 @@ video{
     display: block;
     font-size: 12px;
     font-weight: 400;
+    position: relative;
+    top: 4px;
+    // border: thin solid red;
+}
+.site-header .toolbar .toolbar-item > .link-a-menu-login .main-link > i{
+    top: 3px;
+    font-size: 21px;
+}
+.site-header .toolbar .toolbar-item > .link-a-menu-login::before{
+    top: 34% !important;
 }
 
 .site-header .toolbar .toolbar-item>a>div>.cart-icon,
@@ -8052,7 +8049,7 @@ screen and (-ms-high-contrast:none){
 }
 
 .t-h-dropdown .main-link i{
-    margin-top: 2px;
+    // margin-top: 2px;
     position: relative;
     top: 0;
     left: 4px
@@ -9699,36 +9696,18 @@ screen and (-ms-high-contrast:none){
 .footer-social-links a:hover::before{
     width: 100%;
 }
-
-.btn-check:focus + .btn-primary, .btn-primary:focus{
-    border-color: unset !important;
-    box-shadow: unset !important;
-}
-
-.btn.btn-primary{
-    position: relative;
-    overflow: hidden;
-    background: #8bc82f !important;
-
-}
-.btn.btn-primary span{
-    position: relative;
-    z-index: 1;
-    color: #fff!important;
-}
-.btn.btn-primary::before{
-    position: absolute;
-    content: '';
-    top: 0px;
-    left: 0px;
-    width: 0px;
-    height: 100%;
-    background: #111;
-    transition: all .3s linear;
-}
-.btn.btn-primary:hover::before{
-    width: 100%;
-}
+// ------------- BTN: PRIMARY
+.btn-check:focus + .btn-primary, .btn-primary:focus{border-color: unset !important;box-shadow: unset !important;}
+.btn.btn-primary{position: relative;overflow: hidden;background: #8bc82f !important;}
+.btn.btn-primary span{position: relative;z-index: 1;color: #fff!important;}
+.btn.btn-primary::before{position: absolute;content: '';top: 0px;left: 0px;width: 0px;height: 100%;background: #111;transition: all .3s linear;}
+.btn.btn-primary:hover::before{width: 100%;}
+// ------------- BTN: INFO
+.btn-check:focus + .btn-info, .btn-info:focus{border-color: unset !important;box-shadow: unset !important;}
+.btn.btn-info{position: relative;overflow: hidden;background: #003399  !important;}
+.btn.btn-info span{position: relative;z-index: 1 !important;color: #fff!important;}
+.btn.btn-info::before{position: absolute;content: '';top: 0px;left: 0px;width: 0px;height: 100%;background: #111;transition: all .3s linear;}
+.btn.btn-info:hover::before{width: 100%;}
 
 .a2a_kit a{
     display: inline-block;
@@ -9941,6 +9920,9 @@ screen and (-ms-high-contrast:none){
 }
 .link-a-menu-login .main-link .text-label{
     font-size: 12px;
+    position: relative;
+    top: 7px;
+    // border: thin solid red;
 }
 .t-h-dropdown .t-h-dropdown-menu{
     position: absolute;
@@ -9966,7 +9948,6 @@ screen and (-ms-high-contrast:none){
     display: inline-block;
     width: 35px;
     height: 35px;
-    background: red;
     line-height: 35px;
     border-radius: 4px;
     color: #fff;
@@ -10820,7 +10801,8 @@ screen and (-ms-high-contrast:none){
     box-shadow: none;
     margin: 0 0 7px;
     color: #000;
-    border: 2px solid transparent;
+    // border: 2px solid transparent;
+    border: 2px solid #2222;
     display: inline-flex;
     width: 30px;
     height: 30px;

@@ -128,7 +128,17 @@ main table.summary td,main table.summary th{padding:8px;border-bottom:0}body,foo
 					<td class="width-19"><span>{{ maxcharacters($v['name'], 42) }}</span></td>
 					<td class="width-7">{{ maxcharacters($v['brand_name'], 23) }}</td>
 					<td class="width-2 pl-2">{{ $v['qty'] }}</td>
-					<td class="width-3">{{ $v['price'] }}</td>
+					<td class="width-3">
+						@if($v['coupon_id'] != 0 && $v['coupon_price'] != 0)
+							@if($v['coupon_valid'] == "available")
+								{{ $v['coupon_price'] }}
+							@else
+								{{ $v['price'] }}
+							@endif
+						@else
+							{{ $v['price'] }}
+						@endif
+					</td>
 					<td class="width-2 pl-2">{{ '0.00' }}</td>
 					<!-- <td class="width-3 pl-2">'160'</td> -->
 					<td class="width-3">{{ $v['subtotal'] }}</td>

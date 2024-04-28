@@ -22,7 +22,10 @@
       <p class="card-text">{{__('Make sure you make note of your order number, which is')}} <span class="fw-bold">{{$order->id_gencode}}</span></p>
       <!-- <p class="card-text">{{__('You will be receiving an email shortly with confirmation of your order.')}}</p> -->
       <div class="padding-top-1x padding-bottom-1x">
-        <a class="btn btn-primary m-4" href="{{route('front.catalog')}}"><span><i class="icon-package pr-2"></i> {{__('View our products again')}}</span></a>
+        <a class="btn btn-primary m-0" href="{{route('front.catalog')}}"><span><i class="icon-package pr-2"></i> {{__('View our products again')}}</span></a>
+      </div>
+      <div class="padding-bottom-1x">
+        <a class="btn btn-info m-0" href="{{route('user.order.index')}}"><span><i class="icon-shopping-bag pr-2"></i> {{__('Go to orders')}}</span></a>
       </div>
     </div>
   </div>

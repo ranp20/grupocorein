@@ -50,10 +50,41 @@ class OrderController extends Controller{
       $countAllProds = 0;
       $newSubtotalAllProds = 0;
       foreach($get_SessionCart as $k => $v){
+        $total = 0;
+        // -------------------------- VALIDACIÓN DE CUPONES
+        $totalwithoutcoupon = 0;
+        $totalwithcoupon = 0;
+        $newSubtotalProdsFormat = 0;
         $newIdProds = str_replace('-','', $k);
-        $newSubtotalProds = $v['price'] * $v['qty'];
-        $newSubtotalProdsFormat = (isset($v['subtotal']) && !empty($v['subtotal'])) ? $v['subtotal'] : PriceHelper::setCurrencyPrice($newSubtotalProds);
-        $newSubtotalAllProds += $newSubtotalProds;
+        // $newSubtotalProds = $v['price'] * $v['qty'];
+        // $newSubtotalProdsFormat = (isset($v['subtotal']) && !empty($v['subtotal'])) ? $v['subtotal'] : PriceHelper::setCurrencyPrice($newSubtotalProds);
+        // ----------- CANTIDAD DE PRODUCTOS TOTAL...
+        $prod_qty = floatval($v['qty']);
+        // ----------- CANTIDAD DE PRODUCTOS SIN CUPÓN TOTAL...
+        $prod_quantity_withoutcoupon = floatval($v['quantity_withoutcoupon']);
+        // ----------- CANTIDAD DE PRODUCTOS CON CUPÓN...
+        $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
+        $attribute_price = (isset($v['attribute_price']) && !empty($v['attribute_price'])) ? $v['attribute_price'] : 0;
+        if($v['coupon_id'] != "" && $v['coupon_id'] != "0" && $v['coupon_price'] != "" && $v['coupon_price'] != 0 && $v['coupon_price'] != 0.00){
+          if($v['coupon_valid'] == "available"){
+            $totalwithoutcoupon += ($v['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+            $totalwithcoupon += ($v['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+            $newSubtotalProdsFormat += $totalwithoutcoupon + $totalwithcoupon;
+          }else{
+            if(isset($v['subtotal']) && !empty($v['subtotal'])){
+              $newSubtotalProdsFormat = $v['subtotal'];
+            }else{
+              $newSubtotalProdsFormat += ($v['price'] + $total + $attribute_price) * $v['qty'];
+            }
+          }
+        }else{
+          if(isset($v['subtotal']) && !empty($v['subtotal'])){
+            $newSubtotalProdsFormat = $v['subtotal'];
+          }else{
+            $newSubtotalProdsFormat += ($v['price'] + $total + $attribute_price) * $v['qty'];
+          }
+        }
+        $newSubtotalAllProds += $newSubtotalProdsFormat;
         $itemPhoto = (isset($v['photo']) && !empty($v['photo'])) ? $v['photo'] : '';
         $urlPhoto = asset('assets/images/'.$itemPhoto);
         $get_SessionCartFormat[$countAllProds] = [
@@ -72,10 +103,14 @@ class OrderController extends Controller{
           'photo_url' => $urlPhoto,
           'type' => (isset($v['type']) && !empty($v['type'])) ? $v['type'] : '',
           'item_type' => (isset($v['item_type']) && !empty($v['item_type'])) ? $v['item_type'] : 'Normal',
+          "coupon_id" => (isset($v['coupon_id']) && !empty($v['coupon_id'])) ? $v['coupon_id'] : 0,
+          "coupon_price" => (isset($v['coupon_price']) && !empty($v['coupon_price'])) ? $v['coupon_price'] : 0,
+          "quantity_withoutcoupon" => (isset($v['quantity_withoutcoupon']) && !empty($v['quantity_withoutcoupon'])) ? $v['quantity_withoutcoupon'] : 0,
+          "coupon_valid" => (isset($v['coupon_valid']) && !empty($v['coupon_valid'])) ? $v['coupon_valid'] : "not_available",
           'item_l_n' => (isset($v['item_l_n']) && !empty($v['item_l_n'])) ? $v['item_l_n'] : [],
           'item_l_k' => (isset($v['item_l_k']) && !empty($v['item_l_k'])) ? $v['item_l_k'] : [],
           'user_id' => (isset($v['user_id']) && !empty($v['user_id'])) ? $v['user_id'] : $get_idUser,
-          'subtotal' => $newSubtotalProdsFormat,
+          'subtotal' => PriceHelper::setCurrencyPrice($newSubtotalProdsFormat),
         ];
         $countAllProds++;
       }

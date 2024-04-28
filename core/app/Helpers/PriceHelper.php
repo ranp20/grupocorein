@@ -1,6 +1,7 @@
 <?php
 namespace App\Helpers;
 use App\Models\AttributeOption;
+use App\Models\Coupons;
 use App\Models\Currency;
 use App\Models\Item;
 use App\Models\Tax;
@@ -9,6 +10,8 @@ use App\Models\Setting;
 use App\Models\State;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Session;
+use DateTime;
+use DateTimeZone;
 class PriceHelper{
   public static function setPrice($price){
     $curr = Currency::where('is_default',1)->first();
@@ -119,7 +122,8 @@ class PriceHelper{
     }else{
       $curr = Currency::where('is_default',1)->first();
     }
-    $price = $item->discount_price + $option_price;
+    $discount_price = (isset($item->discount_price)) ? $item->discount_price : 0;
+    $price = $discount_price + $option_price;
     $setting = Setting::first();
     $price = self::testPrice(round($price*$curr->value,2));
     if($setting->currency_direction == 1){
@@ -130,12 +134,17 @@ class PriceHelper{
   }
   public static function grandPrice($item){
     $option_price = 0;
-    $taxes = Tax::where('id',$item->tax_id)->select('id','name','value','status')->first();
-    $taxes = $taxes->value;
-    $taxesformat = $taxes / 100;
+    $taxes = 0;
+    $taxesformat = 0;
+    if(isset($item->tax_id)){
+      $taxes = Tax::where('id',$item->tax_id)->select('id','name','value','status')->first();
+      $taxes = $taxes->value;
+      $taxesformat = $taxes / 100;
+    }
+    
     $price1 = 0;
     $price2 = 0;
-    if(count($item->attributes) > 0){
+    if(isset($item->attributes) && count($item->attributes) > 0){
       foreach($item->attributes as $attr){
         if(isset($attr->options[0])){
           $option_price += PriceHelper::convertPrice($attr->options[0]->price);
@@ -148,35 +157,29 @@ class PriceHelper{
       $curr = Currency::where('is_default',1)->first();
     }
 
+    $discount_price = (isset($item->discount_price)) ? $item->discount_price : 0;
     $sum1 = 0;
     $sum2 = 0;
     $sum3 = 0;
-    if($item->sections_id != 0){
-      if($item->sections_id != 0 && $item->sections_id == 1){
-        $sum1 = $item->on_sale_price;
-        $sum2 = $sum1 * $taxesformat;
-        $sum3 = $sum1 + $sum2;
+    if(isset($item->sections_id)){
+      if($item->sections_id != 0){
+        if($item->sections_id != 0 && $item->sections_id == 1){
+          $sum1 = $item->on_sale_price;
+          $sum2 = $sum1 * $taxesformat;
+          $sum3 = $sum1 + $sum2;
+        }else{
+          $sum1 = $item->special_offer_price;
+          $sum2 = $sum1 * $taxesformat;
+          $sum3 = $sum1 + $sum2;
+        }
       }else{
-        $sum1 = $item->special_offer_price;
-        $sum2 = $sum1 * $taxesformat;
-        $sum3 = $sum1 + $sum2;
+        $sum1 = $discount_price + $option_price;
+        $sum2 = $sum1;
+        $sum3 = $sum2;
       }
-    }else{
-      $sum1 = $item->discount_price + $option_price;
-      $sum2 = $sum1;
-      $sum3 = $sum2;
     }
 
     $price = $sum3;
-    /*
-    echo "<pre>";
-    echo $item->sections_id."<br>";
-    echo $item->on_sale_price."<br>";
-    echo $item->special_offer_price."<br>";
-    echo $price;
-    echo "</pre>";
-    exit();
-    */
     return $price;
   }
   public static function Discount($discount){
@@ -192,22 +195,65 @@ class PriceHelper{
     $total_tax = 0;
     $cart_total = 0;
     $total = 0;
+
+    // echo "<pre>";
+    // print_r($order);
+    // echo "</pre>";
+    // exit();
+
     foreach($cart as $key => $item){
-      if($item['attribute_price'] != "" && count($item['attribute_price']) > 0){
-        $total += ($item['price'] + $item['attribute_price']) * $item['qty'];
-      }else{
-        $total += ($item['price'] * $item['qty']);
-      }
-      $cart_total = $total;
-      if(Item::where('id',$key)->exists()){
-        $item = Item::findOrFail($key);
-        if(isset($item)){
-          if($item && $item->tax){
-            $total_tax += $item::taxCalculate($item);
+      $keywithoutguion = str_replace("-","",$key);
+      $keywithoutguion2 = (int) $keywithoutguion;
+
+      if(Item::where('id',$keywithoutguion2)->exists()){
+        $itemBD = Item::findOrFail($keywithoutguion2);
+        if(isset($itemBD)){
+          if($itemBD && $itemBD->tax){
+            $total_tax += $itemBD::taxCalculate($itemBD);
           }
         }
+
+        $total =0;
+        $option_price = 0;
+        $cartTotal = 0;
+
+        // -------------------------- VALIDACIÓN DE CUPONES
+        $totalwithoutcoupon = 0;
+        $totalwithcoupon = 0;
+        $totalwithoutcoupon_prod = 0;
+        $totalwithcoupon_prod = 0;
+        // ----------- CANTIDAD DE PRODUCTOS TOTAL...
+        $prod_qty = floatval($item['qty']);
+        // ----------- CANTIDAD DE PRODUCTOS SIN CUPÓN TOTAL...
+        $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+        // ----------- CANTIDAD DE PRODUCTOS CON CUPÓN...
+        $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
+        $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+        if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
+          $namecouponbyid = Coupons::where("id","=",$item['coupon_id'])->take(1)->get();
+          // NOTA: VALIDAR POR EL ESTADO DEL CUPÓN ALMACENADO EN LA VARIABLES "CART", NO VALIDAR SU EXISTENCIA Y/O ESTADO DESDE LA BD...
+          if(count($namecouponbyid) != 0){
+            $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+            $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+            $cart_total += $totalwithoutcoupon + $totalwithcoupon;
+          }else{
+            if($item['coupon_id'] != 0 && $item['coupon_price'] != 0){
+              if($item['coupon_valid'] == "available"){ // --------- VALIDAR SI EL CUPÓN AÚN ERA VÁLIDO ANTES DE SELECCIONAR EL MÉTODO DE PAGO
+                $cart_total += ($item['coupon_price'] + $total + $attribute_price) * $item['qty'];
+              }else{
+                $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+              }
+            }else{
+              $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+            }
+          }
+        }else{
+          $cart_total +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
+        }
+
       }
     }
+
     $shipping = [];
     if(json_decode($order->shipping)){
       $shipping = json_decode($order->shipping,true);
@@ -217,19 +263,14 @@ class PriceHelper{
       $discount = json_decode($order->discount,true);
     }
 
-    // $grand_total = ($cart_total + ($shipping?$shipping['price']:0)) + $total_tax;
-    $grand_total = ($cart_total + ($shipping?$shipping['price']:0));
-    /*
-    echo $total_tax;
-    echo "<br>";
-    echo $cart_total;
-    print_r($shipping);
-    echo "<pre>";
-    echo "TOTAL: ";
-    print_r($grand_total);
-    echo "<pre>";
-    exit();
-    */
+    $shipping_info = [];
+    if(json_decode($order->shipping_info)){
+      $shipping_info = json_decode($order->shipping_info, true);
+    }
+
+    $ship_amountaddress = $shipping_info['ship_amountaddress']; // MONTO DEL ENVÍO...
+    $grand_total = ($cart_total + ($shipping ? $shipping['price'] : 0)) + $ship_amountaddress;
+
     $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
     $grand_total = $grand_total + $order->state_price;
     $total_amount = round($grand_total * $order->currency_value,2);

@@ -76,7 +76,9 @@
                 @endphp
                 <td>{{ $order->created_at->format('d/m/Y')}}</td>
                 <td>
-                  <a href="{{route('user.order.invoice',$order->id)}}" class="btn btn-info btn-sm">{{__('Invoice')}}</a>
+                  <a href="{{route('user.order.invoice',$order->id)}}" class="btn btn-info btn-sm">
+                    <span>{{__('Invoice')}}</span>
+                  </a>
                 </td>
               </tr>
               @endforeach

@@ -1,37 +1,37 @@
-@extends('master.front')
-@section('title')
-  {{__('Invoice')}}
-@endsection
-@section('content')
+<?php $__env->startSection('title'); ?>
+  <?php echo e(__('Invoice')); ?>
+
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
 <div class="page-title">
   <div class="container">
     <div class="row">
       <div class="col-lg-12">
         <ul class="breadcrumbs">
-          <li><a href="{{route('user.order.index')}}">{{__('Orders')}}</a> </li>
+          <li><a href="<?php echo e(route('user.order.index')); ?>"><?php echo e(__('Orders')); ?></a> </li>
           <li class="separator"></li>
-          <li>{{__('Order Invoice')}}</li>
+          <li><?php echo e(__('Order Invoice')); ?></li>
         </ul>
       </div>
     </div>
   </div>
 </div>
 <div class="row" id="asda_al-IIDASD88tokeN">
-  @csrf
+  <?php echo csrf_field(); ?>
 </div>
-@php
+<?php
   if($order->state){
     $state = json_decode($order->state,true);
   }else{
     $state = [];
   }
-@endphp
+?>
 <div class="container padding-bottom-3x mb-1 print_invoice">
   <div class="card card-body p-5">
     <div class="row">
       <div class="col-lg-12">
-        <a href="{{route('user.order.index')}}" class="btn btn-sm btn-primary d-inline-block"><span>{{__('Back')}}</span></a>
-        <a href="{{route('user.order.print',$order->id)}}" target="_blank" class="btn btn-sm btn-primary invoice_price d-inline-block"><span>{{__('Print')}}</span></a>
+        <a href="<?php echo e(route('user.order.index')); ?>" class="btn btn-sm btn-primary d-inline-block"><span><?php echo e(__('Back')); ?></span></a>
+        <a href="<?php echo e(route('user.order.print',$order->id)); ?>" target="_blank" class="btn btn-sm btn-primary invoice_price d-inline-block"><span><?php echo e(__('Print')); ?></span></a>
       </div>
     </div>
     <div class="row cCrd__cTitle">
@@ -39,7 +39,7 @@
         <!-- <h3 class="pb-0 mb-0"><strong>Revise su orden :</strong></h3> -->
       </div>
       <div class="col-3 cCrd__cTitle__cR">
-        <a class="btn btn-primary ms-auto text-align-center d-flex align-items-end justify-content-center" data-href="{{route('user.order.pdforderpreview',$order->id)}}" href="javascript:void(0);" id="cTentr-af1698__1prevChckp" data-getsend="{{ $order->id }}" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        <a class="btn btn-primary ms-auto text-align-center d-flex align-items-end justify-content-center" data-href="<?php echo e(route('user.order.pdforderpreview',$order->id)); ?>" href="javascript:void(0);" id="cTentr-af1698__1prevChckp" data-getsend="<?php echo e($order->id); ?>" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
           <span>VISUALIZAR PEDIDO</span>
           <span>
             <!-- <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 100 125" x="0px" y="0px"><path d="M93.08,48.24C92.3,47.16,73.71,22,50,22S7.7,47.16,6.91,48.24a3,3,0,0,0,0,3.53C7.7,52.84,26.29,78,50,78S92.3,52.84,93.08,51.77A3,3,0,0,0,93.08,48.24ZM50,72C32.72,72,17.69,55.51,13.16,50,17.68,44.48,32.68,28,50,28S82.31,44.49,86.84,50C82.32,55.52,67.32,72,50,72Z"/><path d="M50,32.38A17.62,17.62,0,1,0,67.62,50,17.64,17.64,0,0,0,50,32.38Zm0,29.24A11.62,11.62,0,1,1,61.62,50,11.63,11.63,0,0,1,50,61.62Z"/></svg> -->
@@ -52,15 +52,15 @@
     </div>
     <div class="row">
       <div class="col text-center">
-        <img class="img-fluid mb-5 mh-70"  alt="Logo" src="{{asset('assets/images/'.$setting->logo)}}">
+        <img class="img-fluid mb-5 mh-70"  alt="Logo" src="<?php echo e(asset('assets/images/'.$setting->logo)); ?>">
       </div>
     </div>
     <div class="row">
       <div class="col-12">
-        <h5><b>{{__('Order Details')}} :</b></h5>
-        <span class="text-muted">{{__('Código de Pedido')}} : </span>{{ $order->id_gencode }}<br>
-        <span class="text-muted">{{__('Transaction Id')}} : </span>{{$order->txnid}}<br>
-        <span class="text-muted">{{__('Order Id')}} : </span>{{$order->transaction_number}}<br>
+        <h5><b><?php echo e(__('Order Details')); ?> :</b></h5>
+        <span class="text-muted"><?php echo e(__('Código de Pedido')); ?> : </span><?php echo e($order->id_gencode); ?><br>
+        <span class="text-muted"><?php echo e(__('Transaction Id')); ?> : </span><?php echo e($order->txnid); ?><br>
+        <span class="text-muted"><?php echo e(__('Order Id')); ?> : </span><?php echo e($order->transaction_number); ?><br>
         <?php
           // $notifCreate = \Carbon\Carbon::parse($notf->created_at);
           // $notifDate = $notifCreate->locale('es_ES')->diffForHumans(null, false, false, 1);
@@ -77,75 +77,75 @@
           echo $formatter->parse($formatter->format(strtotime($order->created_at)));
           */
         ?>
-        <span class="text-muted">{{__('Order Date')}} : </span>{{ $order->created_at->format('M d, Y')}}<br>
-        <span class="text-muted">{{__('Payment Status')}} : </span>
-        @if($order->payment_status == 'Paid')
-        <div class="badge badge-success">{{__('Paid')}}</div>
-        @else
-        <div class="badge badge-danger">{{__('Unpaid')}}</div>
-        @endif
+        <span class="text-muted"><?php echo e(__('Order Date')); ?> : </span><?php echo e($order->created_at->format('M d, Y')); ?><br>
+        <span class="text-muted"><?php echo e(__('Payment Status')); ?> : </span>
+        <?php if($order->payment_status == 'Paid'): ?>
+        <div class="badge badge-success"><?php echo e(__('Paid')); ?></div>
+        <?php else: ?>
+        <div class="badge badge-danger"><?php echo e(__('Unpaid')); ?></div>
+        <?php endif; ?>
         <br>
-        <span class="text-muted">{{__('Payment Method')}} : </span>{{$order->payment_method }}<br>
+        <span class="text-muted"><?php echo e(__('Payment Method')); ?> : </span><?php echo e($order->payment_method); ?><br>
         <br>
         <br>
       </div>
     </div>
     <div class="row">
       <div class="col-12 col-md-6">
-        <h5>{{__('Billing Address')}} :</h5>
-        @php
+        <h5><?php echo e(__('Billing Address')); ?> :</h5>
+        <?php
           $bill = json_decode($order->billing_info,true);
-        @endphp
-        <span class="text-muted">{{__('Name')}}: </span>{{$bill['bill_first_name']}} {{$bill['bill_last_name']}}<br>
-        <span class="text-muted">{{__('Email')}}: </span>{{$bill['bill_email']}}<br>
-        <span class="text-muted">{{__('Phone')}}: </span>{{$bill['bill_phone']}}<br>
-        @if (isset($bill['bill_address1']))
-        <span class="text-muted">{{__('Address')}}: </span>{{$bill['bill_address1']}}, {{isset($bill['bill_address2']) ? $bill['bill_address2'] : ''}}<br>
-        @endif
-        @if (isset($bill['bill_country']))
-        <span class="text-muted">{{__('Country')}}: </span>{{$bill['bill_country']}}<br>
-        @endif
-        @if (isset($bill['bill_city']))
-        <span class="text-muted">{{__('City')}}: </span>{{$bill['bill_city']}}<br>
-        @endif
-        @if (isset($state['name']))
-        <span class="text-muted">{{__('State')}}: </span>{{$state['name']}}<br>
-        @endif
-        @if (isset($bill['bill_zip']))
-        <span class="text-muted">{{__('Postal Code')}}: </span>{{$bill['bill_zip']}}<br>
-        @endif
-        @if (isset($bill['bill_company']))
-        <span class="text-muted">{{__('Company')}}: </span>{{$bill['bill_company']}}<br>
-        @endif
+        ?>
+        <span class="text-muted"><?php echo e(__('Name')); ?>: </span><?php echo e($bill['bill_first_name']); ?> <?php echo e($bill['bill_last_name']); ?><br>
+        <span class="text-muted"><?php echo e(__('Email')); ?>: </span><?php echo e($bill['bill_email']); ?><br>
+        <span class="text-muted"><?php echo e(__('Phone')); ?>: </span><?php echo e($bill['bill_phone']); ?><br>
+        <?php if(isset($bill['bill_address1'])): ?>
+        <span class="text-muted"><?php echo e(__('Address')); ?>: </span><?php echo e($bill['bill_address1']); ?>, <?php echo e(isset($bill['bill_address2']) ? $bill['bill_address2'] : ''); ?><br>
+        <?php endif; ?>
+        <?php if(isset($bill['bill_country'])): ?>
+        <span class="text-muted"><?php echo e(__('Country')); ?>: </span><?php echo e($bill['bill_country']); ?><br>
+        <?php endif; ?>
+        <?php if(isset($bill['bill_city'])): ?>
+        <span class="text-muted"><?php echo e(__('City')); ?>: </span><?php echo e($bill['bill_city']); ?><br>
+        <?php endif; ?>
+        <?php if(isset($state['name'])): ?>
+        <span class="text-muted"><?php echo e(__('State')); ?>: </span><?php echo e($state['name']); ?><br>
+        <?php endif; ?>
+        <?php if(isset($bill['bill_zip'])): ?>
+        <span class="text-muted"><?php echo e(__('Postal Code')); ?>: </span><?php echo e($bill['bill_zip']); ?><br>
+        <?php endif; ?>
+        <?php if(isset($bill['bill_company'])): ?>
+        <span class="text-muted"><?php echo e(__('Company')); ?>: </span><?php echo e($bill['bill_company']); ?><br>
+        <?php endif; ?>
       </div>
       <div class="col-12 col-md-6">
-        <h5>{{__('Shipping Address :')}}</h5>
-        @php
+        <h5><?php echo e(__('Shipping Address :')); ?></h5>
+        <?php
           $ship = json_decode($order->shipping_info,true)
-        @endphp
-        <span class="text-muted">{{__('Name')}}: </span>{{$ship['ship_first_name']}} {{$ship['ship_last_name']}} <br>
-        @if (isset($ship['ship_email']))
-        <span class="text-muted">{{__('Email')}}: </span>{{$ship['ship_email']}}<br>
-        @endif
-        <span class="text-muted">{{__('Phone')}}: </span>{{$ship['ship_phone']}}<br>
-        @if (isset($ship['ship_address1']))
-        <span class="text-muted">{{__('Address')}}: </span>{{$ship['ship_address1']}}, {{isset($ship['ship_address2']) ? $ship['ship_address2'] : ''}}<br>
-        @endif
-        @if (isset($ship['ship_country']))
-        <span class="text-muted">{{__('Country')}}: </span>{{$ship['ship_country']}}<br>
-        @endif
-        @if (isset($ship['ship_city']))
-        <span class="text-muted">{{__('City')}}: </span>{{$ship['ship_city']}}<br>
-        @endif
-        @if (isset($state['name']))
-        <span class="text-muted">{{__('State')}}: </span>{{$state['name']}}<br>
-        @endif
-        @if (isset($ship['ship_zip']))
-        <span class="text-muted">{{__('Postal Code')}}: </span>{{$ship['ship_zip']}}<br>
-        @endif
-        @if (isset($ship['ship_company']))
-        <span class="text-muted">{{__('Company')}}: </span>{{$ship['ship_company']}}<br>
-        @endif
+        ?>
+        <span class="text-muted"><?php echo e(__('Name')); ?>: </span><?php echo e($ship['ship_first_name']); ?> <?php echo e($ship['ship_last_name']); ?> <br>
+        <?php if(isset($ship['ship_email'])): ?>
+        <span class="text-muted"><?php echo e(__('Email')); ?>: </span><?php echo e($ship['ship_email']); ?><br>
+        <?php endif; ?>
+        <span class="text-muted"><?php echo e(__('Phone')); ?>: </span><?php echo e($ship['ship_phone']); ?><br>
+        <?php if(isset($ship['ship_address1'])): ?>
+        <span class="text-muted"><?php echo e(__('Address')); ?>: </span><?php echo e($ship['ship_address1']); ?>, <?php echo e(isset($ship['ship_address2']) ? $ship['ship_address2'] : ''); ?><br>
+        <?php endif; ?>
+        <?php if(isset($ship['ship_country'])): ?>
+        <span class="text-muted"><?php echo e(__('Country')); ?>: </span><?php echo e($ship['ship_country']); ?><br>
+        <?php endif; ?>
+        <?php if(isset($ship['ship_city'])): ?>
+        <span class="text-muted"><?php echo e(__('City')); ?>: </span><?php echo e($ship['ship_city']); ?><br>
+        <?php endif; ?>
+        <?php if(isset($state['name'])): ?>
+        <span class="text-muted"><?php echo e(__('State')); ?>: </span><?php echo e($state['name']); ?><br>
+        <?php endif; ?>
+        <?php if(isset($ship['ship_zip'])): ?>
+        <span class="text-muted"><?php echo e(__('Postal Code')); ?>: </span><?php echo e($ship['ship_zip']); ?><br>
+        <?php endif; ?>
+        <?php if(isset($ship['ship_company'])): ?>
+        <span class="text-muted"><?php echo e(__('Company')); ?>: </span><?php echo e($ship['ship_company']); ?><br>
+        <?php endif; ?>
       </div>
     </div>
     <div class="row">
@@ -154,17 +154,17 @@
           <table class="table my-4">
             <thead>
               <tr>
-                <th width="50%" class="px-0 bg-transparent border-top-0"><span class="h6">{{__('Products')}}</span></th>
-                <th class="px-0 bg-transparent border-top-0"><span class="h6">{{__('Attribute')}}</span></th>
-                <th class="px-0 bg-transparent border-top-0"><span class="h6">{{__('Quantity')}}</span></th>
-                <th class="px-0 bg-transparent border-top-0 text-right"><span class="h6">{{__('Price')}}</span></th>
+                <th width="50%" class="px-0 bg-transparent border-top-0"><span class="h6"><?php echo e(__('Products')); ?></span></th>
+                <th class="px-0 bg-transparent border-top-0"><span class="h6"><?php echo e(__('Attribute')); ?></span></th>
+                <th class="px-0 bg-transparent border-top-0"><span class="h6"><?php echo e(__('Quantity')); ?></span></th>
+                <th class="px-0 bg-transparent border-top-0 text-right"><span class="h6"><?php echo e(__('Price')); ?></span></th>
               </tr>
             </thead>
             <tbody>
-              @php
+              <?php
                 $option_price = 0;
                 $total = 0;
-              @endphp
+              ?>
               <?php
                 /*
                 echo "<pre>";
@@ -173,8 +173,8 @@
                 exit();
                 */
               ?>
-              @foreach (json_decode($order->cart,true) as $key  => $item)
-              @php
+              <?php $__currentLoopData = json_decode($order->cart,true); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key  => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+              <?php
                 $total += $item['main_price'] * $item['qty'];
                 if($item['attribute_price'] != "" && count($item['attribute_price']) > 0){
                   $option_price += $item['attribute_price'];
@@ -185,203 +185,181 @@
                 }else{
                   $main_item = null;
                 }
-              @endphp
+              ?>
               <tr>
                 <td class="">
-                  {{$item['name']}}
+                  <?php echo e($item['name']); ?>
+
                   <p>
-                    @if($main_item)
-                    @if ($item['item_type'] == 'digital')
-                      @if ($order->payment_status == 'Paid')
-                        @if ($main_item['file_type'] == 'link')
-                        <a href="{{$main_item->link}}" target="_blank" class="btn btn-sm btn-success">{{__('Click Here')}}</a>
-                        @else
-                        <a href="{{asset('assets/files/'.$main_item->file)}}" class="btn btn-sm btn-success">{{__('Download')}}</a>
-                        @endif
-                      @endif
-                    @endif
-                    @if ($item['item_type'] == 'license')
-                    @if ($order->payment_status == 'Paid')
-                        @if ($main_item['file_type'] == 'link')
-                        <a href="{{$main_item->link}}" target="_blank" class="btn btn-sm my-2 btn-success">{{__('Click Here')}}</a>
-                        <p class="py-2">{{__('License Information')}} : {{$item['item_l_n']}} : {{$item['item_l_k']}}</p>
-                        @else
-                        <a href="{{asset('assets/files/'.$main_item->file)}}" class="btn my-2 btn-sm btn-success">{{__('Download')}}</a>
-                        <p class="py-2">{{__('License Information')}} : {{$item['item_l_n']}} : {{$item['item_l_k']}}</p>
-                        @endif
-                      @endif
-                    @endif
-                  @endif
+                    <?php if($main_item): ?>
+                    <?php if($item['item_type'] == 'digital'): ?>
+                      <?php if($order->payment_status == 'Paid'): ?>
+                        <?php if($main_item['file_type'] == 'link'): ?>
+                        <a href="<?php echo e($main_item->link); ?>" target="_blank" class="btn btn-sm btn-success"><?php echo e(__('Click Here')); ?></a>
+                        <?php else: ?>
+                        <a href="<?php echo e(asset('assets/files/'.$main_item->file)); ?>" class="btn btn-sm btn-success"><?php echo e(__('Download')); ?></a>
+                        <?php endif; ?>
+                      <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if($item['item_type'] == 'license'): ?>
+                    <?php if($order->payment_status == 'Paid'): ?>
+                        <?php if($main_item['file_type'] == 'link'): ?>
+                        <a href="<?php echo e($main_item->link); ?>" target="_blank" class="btn btn-sm my-2 btn-success"><?php echo e(__('Click Here')); ?></a>
+                        <p class="py-2"><?php echo e(__('License Information')); ?> : <?php echo e($item['item_l_n']); ?> : <?php echo e($item['item_l_k']); ?></p>
+                        <?php else: ?>
+                        <a href="<?php echo e(asset('assets/files/'.$main_item->file)); ?>" class="btn my-2 btn-sm btn-success"><?php echo e(__('Download')); ?></a>
+                        <p class="py-2"><?php echo e(__('License Information')); ?> : <?php echo e($item['item_l_n']); ?> : <?php echo e($item['item_l_k']); ?></p>
+                        <?php endif; ?>
+                      <?php endif; ?>
+                    <?php endif; ?>
+                  <?php endif; ?>
                   </p>
                 </td>
                 <td class="px-0">
-                  @if(isset($item['attribute_collection']))
-                    @php
+                  <?php if(isset($item['attribute_collection'])): ?>
+                    <?php
                       $attrCollection = json_decode($item['attribute_collection'], TRUE);
                       $attrCollectionColor = "";
-                    @endphp
-                    @if($attrCollection != "" && count($attrCollection) > 0)
-                      @if(isset($attrCollection['atributoraiz_collection']))
-                        @php
+                    ?>
+                    <?php if($attrCollection != "" && count($attrCollection) > 0): ?>
+                      <?php if(isset($attrCollection['atributoraiz_collection'])): ?>
+                        <?php
                           $attrCollectionColor = $attrCollection['atributoraiz_collection'];
-                        @endphp
-                        @if(isset($attrCollectionColor['color']) && count($attrCollectionColor['color']) > 0)
-                          @php
+                        ?>
+                        <?php if(isset($attrCollectionColor['color']) && count($attrCollectionColor['color']) > 0): ?>
+                          <?php
                             $color_code = $attrCollectionColor['color']['code'];
                             $color_name = $attrCollectionColor['color']['name'];
-                          @endphp
-                          @if($color_code != "0" && $color_name != "0")
+                          ?>
+                          <?php if($color_code != "0" && $color_name != "0"): ?>
                             <span class="c-attrPrd__color">
                               <span class="c-attrPrd__color__title"><small>Color: </small></span>
                               <span class="c-attrPrd__color__m">
-                                <span class="c-attrPrd__color__m__i" style="background-color: {{ $color_name }};"></span>
+                                <span class="c-attrPrd__color__m__i" style="background-color: <?php echo e($color_name); ?>;"></span>
                               </span>
                             </span>
-                          @else
+                          <?php else: ?>
                           --
-                          @endif
-                        @else
+                          <?php endif; ?>
+                        <?php else: ?>
                         --
-                        @endif
-                      @else
+                        <?php endif; ?>
+                      <?php else: ?>
                       --
-                      @endif
-                    @else
+                      <?php endif; ?>
+                    <?php else: ?>
                     --
-                    @endif
-                  @else
+                    <?php endif; ?>
+                  <?php else: ?>
                   --
-                  @endif
+                  <?php endif; ?>
                 </td>
-                <td class="px-0">{{$item['qty']}}</td>
+                <td class="px-0"><?php echo e($item['qty']); ?></td>
                 <td class="px-0 text-right text-end">
-                  @if($setting->currency_direction == 1)
-                    @if($item['coupon_id'] != 0 && $item['coupon_price'] != 0)
-                      @if($item['coupon_valid'] == "available")
-                        {{$order->currency_sign}}{{round($item['coupon_price']*$order->currency_value,2)}}
-                      @else
-                        {{$order->currency_sign}}{{round($item['price']*$order->currency_value,2)}}
-                      @endif
-                    @else
-                      {{$order->currency_sign}}{{round($item['price']*$order->currency_value,2)}}
-                    @endif
-                  @else
-                    {{round($item['price']*$order->currency_value,2)}}{{$order->currency_sign}}
-                  @endif
+                  <?php if($setting->currency_direction == 1): ?>
+                    <?php if($item['coupon_id'] != 0 && $item['coupon_price'] != 0): ?>
+                      <?php if($item['coupon_valid'] == "available"): ?>
+                        <?php echo e($order->currency_sign); ?><?php echo e(round($item['coupon_price']*$order->currency_value,2)); ?>
+
+                      <?php else: ?>
+                        <?php echo e($order->currency_sign); ?><?php echo e(round($item['main_price']*$order->currency_value,2)); ?>
+
+                      <?php endif; ?>
+                    <?php else: ?>
+                      <?php echo e($order->currency_sign); ?><?php echo e(round($item['main_price']*$order->currency_value,2)); ?>
+
+                    <?php endif; ?>
+                  <?php else: ?>
+                    <?php echo e(round($item['main_price']*$order->currency_value,2)); ?><?php echo e($order->currency_sign); ?>
+
+                  <?php endif; ?>
                 </td>
               </tr>
-              @endforeach
+              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
               <tr>
                 <td class="padding-top-2x" colspan="5"></td>
               </tr>
-              {{--
-              <!--
-              @if($order->tax!=0)
-              <tr>
-                <td class="px-0 border-top border-top-2"><span class="text-muted">{{__('Tax')}}</span></td>
-                <td class="px-0 text-right text-end border-top border-top-2" colspan="5">
-                  <span>
-                  @if ($setting->currency_direction == 1)
-                    {{$order->currency_sign}}{{round($order->tax*$order->currency_value,2)}}
-                  @else
-                  {{round($order->tax*$order->currency_value,2)}}{{$order->currency_sign}}
-                  @endif
-                  </span>
-                </td>
-              </tr>
-              @endif
-              -->
-              --}}
-              @if(json_decode($order->discount,true))
-              @php
+              
+              <?php if(json_decode($order->discount,true)): ?>
+              <?php
                 $discount = json_decode($order->discount,true);
-              @endphp
+              ?>
               <tr>
-                <td class="px-0 border-top border-top-2"><span class="text-muted">{{__('Coupon discount')}} ({{$discount['code']['code_name']}})</span></td>
+                <td class="px-0 border-top border-top-2"><span class="text-muted"><?php echo e(__('Coupon discount')); ?> (<?php echo e($discount['code']['code_name']); ?>)</span></td>
                 <td class="px-0 text-right text-end border-top border-top-2" colspan="5">
                   <span class="text-danger">
-                  @if ($setting->currency_direction == 1)
-                    -{{$order->currency_sign}}{{round($discount['discount'] * $order->currency_value,2)}}
-                  @else
-                    -{{round($discount['discount'] * $order->currency_value,2)}}{{$order->currency_sign}}
-                  @endif
+                  <?php if($setting->currency_direction == 1): ?>
+                    -<?php echo e($order->currency_sign); ?><?php echo e(round($discount['discount'] * $order->currency_value,2)); ?>
+
+                  <?php else: ?>
+                    -<?php echo e(round($discount['discount'] * $order->currency_value,2)); ?><?php echo e($order->currency_sign); ?>
+
+                  <?php endif; ?>
                   </span>
                 </td>
               </tr>
-              @endif
-              @if(json_decode($order->shipping,true))
-              @php
+              <?php endif; ?>
+              <?php if(json_decode($order->shipping,true)): ?>
+              <?php
                 $shipping = json_decode($order->shipping,true);
-              @endphp
+              ?>
               <tr>
-                <td class="px-0 border-top border-top-2"><span class="text-muted">{{__('Shipping')}}</span></td>
+                <td class="px-0 border-top border-top-2"><span class="text-muted"><?php echo e(__('Shipping')); ?></span></td>
                 <td class="px-0 text-right text-end border-top border-top-2" colspan="5">
                   <span>
-                  @if ($setting->currency_direction == 1)
-                    {{$order->currency_sign}}{{round($shipping['price']*$order->currency_value,2)}}
-                  @else
-                    {{round($shipping['price']*$order->currency_value,2)}}{{$order->currency_sign}}
-                  @endif
+                  <?php if($setting->currency_direction == 1): ?>
+                    <?php echo e($order->currency_sign); ?><?php echo e(round($shipping['price']*$order->currency_value,2)); ?>
+
+                  <?php else: ?>
+                    <?php echo e(round($shipping['price']*$order->currency_value,2)); ?><?php echo e($order->currency_sign); ?>
+
+                  <?php endif; ?>
                   </span>
                 </td>
               </tr>
-              @endif
-              {{--
-              <!--
-              @if(json_decode($order->state_price,true))
+              <?php endif; ?>
+              
               <tr>
                 <td class="px-0 border-top border-top-2">
-                <span class="text-muted">{{__('State Tax')}}</span>
-                </td>
-                <td class="px-0 text-right text-end border-top border-top-2" colspan="5">
-                  <span >
-                  @if ($setting->currency_direction == 1)
-                  {{isset($state['type']) && $state['type'] == 'percentage' ?  ' ('.$state['price'].'%) ' : ''}}  {{$order->currency_sign}}{{round($order['state_price']*$order->currency_value,2)}}
-                  @else
-                  {{isset($state['type']) &&  $state['type'] == 'percentage' ?  ' ('.$state['price'].'%) ' : ''}}  {{round($order['state_price']*$order->currency_value,2)}}{{$order->currency_sign}}
-                  @endif
-                  </span>
-                </td>
-              </tr>
-              @endif
-              -->
-              --}}
-              <tr>
-                <td class="px-0 border-top border-top-2">
-                  <strong>{{__('Shipment')}}</strong>
+                  <strong><?php echo e(__('Shipment')); ?></strong>
                 </td>
                 <td class="px-0 text-right text-end border-top border-top-2" colspan="5">
                   <span class="h6">
-                    @if(isset($order->shipping_info) && $order->shipping_info != "")
-                      @php
+                    <?php if(isset($order->shipping_info) && $order->shipping_info != ""): ?>
+                      <?php
                       $ship = json_decode($order->shipping_info,true)
-                      @endphp
-                      @if($ship['ship_amountaddress'] != 0)
-                        {{$order->currency_sign}}{{round($ship['ship_amountaddress']*$order->currency_value,2)}}
-                      @else
-                      {{$order->currency_sign}}{{ "0" }}
-                      @endif
-                    @else
-                      {{$order->currency_sign}}{{ "0" }}
-                    @endif
+                      ?>
+                      <?php if($ship['ship_amountaddress'] != 0): ?>
+                        <?php echo e($order->currency_sign); ?><?php echo e(round($ship['ship_amountaddress']*$order->currency_value,2)); ?>
+
+                      <?php else: ?>
+                      <?php echo e($order->currency_sign); ?><?php echo e("0"); ?>
+
+                      <?php endif; ?>
+                    <?php else: ?>
+                      <?php echo e($order->currency_sign); ?><?php echo e("0"); ?>
+
+                    <?php endif; ?>
                   </span>
                 </td>
               </tr>
               <tr>
                 <td class="px-0 border-top border-top-2">
-                @if ($order->payment_method == 'Cash On Delivery')
-                <strong>{{__('Total amount')}}</strong>
-                @else
-                <strong>{{__('Total due')}}</strong>
-                @endif
+                <?php if($order->payment_method == 'Cash On Delivery'): ?>
+                <strong><?php echo e(__('Total amount')); ?></strong>
+                <?php else: ?>
+                <strong><?php echo e(__('Total due')); ?></strong>
+                <?php endif; ?>
                 </td>
                 <td class="px-0 text-right text-end border-top border-top-2" colspan="5">
                   <span class="h3">
-                    @if ($setting->currency_direction == 1)
-                    {{$order->currency_sign}}{{PriceHelper::OrderTotal($order)}}
-                    @else
-                    {{PriceHelper::OrderTotal($order)}}{{$order->currency_sign}}
-                    @endif
+                    <?php if($setting->currency_direction == 1): ?>
+                    <?php echo e($order->currency_sign); ?><?php echo e(PriceHelper::OrderTotal($order)); ?>
+
+                    <?php else: ?>
+                    <?php echo e(PriceHelper::OrderTotal($order)); ?><?php echo e($order->currency_sign); ?>
+
+                    <?php endif; ?>
                   </span>
                 </td>
               </tr>
@@ -392,8 +370,8 @@
     </div>
   </div>
 </div>
-<script type="text/javascript" src="{{ asset('node_modules/pdfobject/pdfobject.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('assets/front/js/order-invoice.js') }}"></script>
+<script type="text/javascript" src="<?php echo e(asset('node_modules/pdfobject/pdfobject.min.js')); ?>"></script>
+<script type="text/javascript" src="<?php echo e(asset('assets/front/js/order-invoice.js')); ?>"></script>
 <!-- Modal -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog" id="c-modalPrevOrderPDF">
@@ -422,4 +400,5 @@
     </div>
   </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('master.front', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\grupocorein\core\resources\views/user/order/invoice.blade.php ENDPATH**/ ?>

@@ -195,7 +195,7 @@ class CartRepository{
         $couponjsontoarray = json_decode($couponinfo, TRUE);
         $couponget_timeend = $couponjsontoarray[0]['time_end'];
         $couponget_status = $couponjsontoarray[0]['status'];
-        // (2) -------------- VALIDAR SI EL CUPÓN ESTÁ VENCIDO Y/O PRÓXIMO A VENCER...
+        // (2) -------------- VALIDAR SI EL CUPÓN ESTÁ VENCIDO Y/O PRÓXIMO A VENCER DE ACUEDO A LA FECHA Y HORA...
         // Crear un objeto DateTime a partir de la fecha final...
         $currentDate = new DateTime();
         $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $couponget_timeend, new DateTimeZone('America/Lima'));
@@ -230,6 +230,7 @@ class CartRepository{
               "coupon_id" => "0",
               "coupon_price" => "0",
               "quantity_withoutcoupon" => "0",
+              "coupon_valid" => 'not_available',
               'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
               'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
             ];
@@ -253,6 +254,7 @@ class CartRepository{
                   "coupon_id" => "0",
                   "coupon_price" => "0",
                   "quantity_withoutcoupon" => "0",
+                  "coupon_valid" => 'not_available',
                   "created_at" => $date,
                   "updated_at" => $date,
                 ];
@@ -268,6 +270,7 @@ class CartRepository{
             $qtyProdinCart = $cart[$item->id.'-'.$cart_item_key]['qty'];
             if($qty_check == 1){
               $cart[$item->id.'-'.$cart_item_key]['qty'] =  $qty;
+              $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] =  'not_available';
               // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
               $qtyProdinCart = $qty;
               $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
@@ -279,10 +282,12 @@ class CartRepository{
                 "coupon_id" => "0",
                 "coupon_price" => "0",
                 "quantity_withoutcoupon" => "0",
+                "coupon_valid" => 'not_available',
                 "updated_at" => $date
               ];
             }else{
               $cart[$item->id.'-'.$cart_item_key]['qty'] +=  $qty;
+              $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] =  'not_available';
               // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
               $qtyProdinCart += $qty;
               $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
@@ -294,13 +299,14 @@ class CartRepository{
                 "coupon_id" => "0",
                 "coupon_price" => "0",
                 "quantity_withoutcoupon" => "0",
+                "coupon_valid" => 'not_available',
                 "updated_at" => $date
               ];
             }
             Session::put('cart', $cart);
             if(Auth::check() && Auth::user()->role !== 'admin'){
               if(!empty(auth()->user()) || auth()->user() != ""){
-                TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price']]);
+                TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price'], 'coupon_valid' => $tempCart['coupon_valid']]);
               }
             }
 
@@ -344,6 +350,7 @@ class CartRepository{
                 "coupon_id" => $item->coupon_id,
                 "coupon_price" => $applycoupon_totalprice,
                 "quantity_withoutcoupon" => "0",
+                "coupon_valid" => 'available',
                 'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
                 'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
               ];              
@@ -367,6 +374,7 @@ class CartRepository{
                     "coupon_id" => $item->coupon_id,
                     "coupon_price" => $applycoupon_totalprice,
                     "quantity_withoutcoupon" => "0",
+                    "coupon_valid" => 'available',
                     "created_at" => $date,
                     "updated_at" => $date,
                   ];
@@ -395,7 +403,8 @@ class CartRepository{
                 $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
                 $cart[$item->id.'-'.$cart_item_key]['coupon_id'] = $applycoupon_idcoupon;
                 $cart[$item->id.'-'.$cart_item_key]['coupon_price'] = $applycoupon_totalprice;
-                $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];                
+                $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
+                $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] =  'available';
                 $tempCart = [
                   "user_id" => $input['user_id'],
                   "item_id" => $item->id,
@@ -404,6 +413,7 @@ class CartRepository{
                   "coupon_id" => $applycoupon_idcoupon,
                   "coupon_price" => $applycoupon_totalprice,
                   "quantity_withoutcoupon" => $quantity_withoutcoupon,
+                  "coupon_valid" => 'available',
                   "updated_at" => $date
                 ];
               }else{
@@ -414,6 +424,7 @@ class CartRepository{
                 $cart[$item->id.'-'.$cart_item_key]['coupon_id'] = $applycoupon_idcoupon;
                 $cart[$item->id.'-'.$cart_item_key]['coupon_price'] = $applycoupon_totalprice;
                 $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
+                $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] =  'available';
                 $tempCart = [
                   "user_id" => $input['user_id'],
                   "item_id" => $item->id,
@@ -422,13 +433,14 @@ class CartRepository{
                   "coupon_id" => $applycoupon_idcoupon,
                   "coupon_price" => $applycoupon_totalprice,
                   "quantity_withoutcoupon" => $quantity_withoutcoupon,
+                  "coupon_valid" => 'available',
                   "updated_at" => $date
                 ];
               }
               Session::put('cart', $cart);
               if(Auth::check() && Auth::user()->role !== 'admin'){
                 if(!empty(auth()->user()) || auth()->user() != ""){
-                  TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price'], 'quantity_withoutcoupon' => $tempCart['quantity_withoutcoupon']]);
+                  TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price'], 'quantity_withoutcoupon' => $tempCart['quantity_withoutcoupon'], 'coupon_valid' => $tempCart['coupon_valid']]);
                 }
               }
 
@@ -469,6 +481,7 @@ class CartRepository{
                 "coupon_id" => "0",
                 "coupon_price" => "0",
                 "quantity_withoutcoupon" => "0",
+                "coupon_valid" => 'not_available',
                 'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
                 'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
               ];    
@@ -493,6 +506,7 @@ class CartRepository{
                     "coupon_id" => "0",
                     "coupon_price" => "0",
                     "quantity_withoutcoupon" => "0",
+                    "coupon_valid" => 'not_available',
                     "created_at" => $date,
                     "updated_at" => $date,
                   ];
@@ -519,6 +533,7 @@ class CartRepository{
                   "coupon_id" => "0",
                   "coupon_price" => "0",
                   "quantity_withoutcoupon" => "0",
+                  "coupon_valid" => 'not_available',
                   "updated_at" => $date
                 ];
               }else{
@@ -534,13 +549,14 @@ class CartRepository{
                   "coupon_id" => "0",
                   "coupon_price" => "0",
                   "quantity_withoutcoupon" => "0",
+                  "coupon_valid" => 'not_available',
                   "updated_at" => $date
                 ];
               }
               Session::put('cart', $cart);
               if(Auth::check() && Auth::user()->role !== 'admin'){
                 if(!empty(auth()->user()) || auth()->user() != ""){
-                  TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price']]);
+                  TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price'], 'coupon_valid' => $tempCart['coupon_valid']]);
                 }
               }
 
@@ -583,6 +599,7 @@ class CartRepository{
             "coupon_id" => "0",
             "coupon_price" => "0",
             "quantity_withoutcoupon" => "0",
+            "coupon_valid" => 'not_available',
             'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
             'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
           ];    
@@ -607,6 +624,7 @@ class CartRepository{
                 "coupon_id" => "0",
                 "coupon_price" => "0",
                 "quantity_withoutcoupon" => "0",
+                "coupon_valid" => 'not_available',
                 "created_at" => $date,
                 "updated_at" => $date,
               ];
@@ -633,6 +651,7 @@ class CartRepository{
               "coupon_id" => "0",
               "coupon_price" => "0",
               "quantity_withoutcoupon" => "0",
+              "coupon_valid" => 'not_available',
               "updated_at" => $date
             ];
           }else{
@@ -648,13 +667,14 @@ class CartRepository{
               "coupon_id" => "0",
               "coupon_price" => "0",
               "quantity_withoutcoupon" => "0",
+              "coupon_valid" => 'not_available',
               "updated_at" => $date
             ];
           }
           Session::put('cart', $cart);
           if(Auth::check() && Auth::user()->role !== 'admin'){
             if(!empty(auth()->user()) || auth()->user() != ""){
-              TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price']]);
+              TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price'], 'coupon_valid' => $tempCart['coupon_valid']]);
             }
           }
 
@@ -696,6 +716,7 @@ class CartRepository{
           "coupon_id" => "0",
           "coupon_price" => "0",
           "quantity_withoutcoupon" => "0",
+          "coupon_valid" => 'not_available',
           'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
           'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
         ];    
@@ -720,6 +741,7 @@ class CartRepository{
               "coupon_id" => "0",
               "coupon_price" => "0",
               "quantity_withoutcoupon" => "0",
+              "coupon_valid" => 'not_available',
               "created_at" => $date,
               "updated_at" => $date,
             ];
@@ -745,6 +767,7 @@ class CartRepository{
             "coupon_id" => "0",
             "coupon_price" => "0",
             "quantity_withoutcoupon" => "0",
+            "coupon_valid" => 'not_available',
             "updated_at" => $date
           ];
           $mgs = __('Producto agregado');
@@ -761,6 +784,7 @@ class CartRepository{
             "coupon_id" => "0",
             "coupon_price" => "0",
             "quantity_withoutcoupon" => "0",
+            "coupon_valid" => 'not_available',
             "updated_at" => $date
           ];
           $mgs = __('Producto actualizado');
@@ -768,7 +792,7 @@ class CartRepository{
         Session::put('cart', $cart);
         if(Auth::check() && Auth::user()->role !== 'admin'){
           if(!empty(auth()->user()) || auth()->user() != ""){
-            TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price']]);
+            TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price'], 'coupon_valid' => $tempCart['coupon_valid']]);
           }
         }
         $qty_check = 0;

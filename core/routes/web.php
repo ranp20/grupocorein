@@ -101,13 +101,11 @@ Route::group(['middleware' => 'adminlocalize'], function (){
       Route::resource('childcategory', 'Back\ChieldCategoryController', ['as' => 'back', 'except' => 'show']);
     });
 
-
     Route::group(['middleware' => 'permissions:Manage Coupons'], function (){
       //------------ CATEGORY ------------
       Route::get('coupons/status/{id}/{status}', 'Back\CouponsController@status')->name('back.coupons.status');
       Route::resource('coupons', 'Back\CouponsController', ['as' => 'back', 'except' => 'show']);
     });
-
 
     Route::group(['middleware' => 'permissions:Customer List'], function (){
       //------------ USER ------------
@@ -269,14 +267,12 @@ Route::group(['middleware' => 'adminlocalize'], function (){
     Route::get('/subscribers/send-mail', 'Back\SubscriberController@sendMail')->name('back.subscribers.mail');
     Route::post('/subscribers/send-mail/submit', 'Back\SubscriberController@sendMailSubmit')->name('back.subscribers.mail.submit');
   });
-  
   Route::group(['middleware' => 'permissions:Manage Stores'], function (){
     //------------ CATEGORY ------------
     // Route::get('stores/status/{id}/{status}', 'Back\StoresController@status')->name('back.stores.status');
     // Route::get('stores/feature/{id}/{status}', 'Back\StoresController@feature')->name('back.stores.feature');
     Route::resource('store', 'Back\StoreController', ['as' => 'back', 'except' => 'show']);
   });
-  
 });
 // ************************************ ADMIN PANEL ENDS**********************************************
 // ************************************ GLOBAL LOCALIZATION **********************************************
@@ -425,6 +421,7 @@ Route::group(['middleware' => 'maintainance'], function (){
     Route::post('/checkout/pdforderpreview', 'Front\CheckoutController@getGeneratePDFOrderPreview')->name('front.checkout.pdforderpreview');
     Route::post('/checkout/setdatavoucher', 'Front\CheckoutController@selTypeOfVoucher')->name('front.checkout.setdatavoucher');
     Route::post('/checkout/datavoucher', 'Front\CheckoutController@sendDataVoucher')->name('front.checkout.submitdatavoucher');
+    // Route::post('/checkout/updatesesscart', 'Front\CheckoutController@updateSessionCRUD')->name('front.checkout.submitupdatesesscart');
     //------------ NUEVO CONTENIDO(FIN)
     
     Route::post('/paytm/notify', 'Payment\PaytmController@notify')->name('front.paytm.notify');
