@@ -14,6 +14,7 @@ use App\Models\Setting;
 use App\Models\Brand;
 use App\Models\Coupons;
 use App\Models\Item;
+use App\Models\RootUnit;
 use App\Models\TempCart;
 use Auth;
 use DateTime;
@@ -48,8 +49,9 @@ class LoginController extends Controller{
           foreach($dataCartSess as $k => $v){
             $idProdFormatSessCart = $v['item_id']."-";
             $brandByIdTempCart = Brand::where('id',$v['brand_id'])->select('id','name','slug')->first();
-            $item = Item::where('id',$v['item_id'])->select('id','tax_id','sections_id','name','photo','discount_price','previous_price','on_sale_price','special_offer_price','brand_id','coupon_id','slug','sku','is_type','item_type','license_name','license_key')->first();
-  
+            $item = Item::where('id',$v['item_id'])->select('id','tax_id','sections_id','name','photo','discount_price','previous_price','on_sale_price','special_offer_price','brand_id','coupon_id','unidad_raiz','atributo_raiz','atributoraiz_collection','slug','sku','is_type','item_type','license_name','license_key')->first();
+            $RootUnitByIdItem = RootUnit::where('id', $item->unidad_raiz)->select('id', 'name')->take(1)->first();
+
             // --------- NOTA (26/04/2024) VALIDAR EL TIEMPO Y EL ESTADO DEL CUPÓN EN EL ITEM...
             if($v['coupon_id'] != "" && $v['coupon_id'] != "0" && $v['coupon_price'] != "" && $v['coupon_price'] != 0 && $v['coupon_price'] != 0.00){
   
@@ -85,6 +87,8 @@ class LoginController extends Controller{
                     "sku" => $v['sku'],
                     "brand_id" => (isset($brandByIdTempCart->id) && $brandByIdTempCart->id != "") ? $brandByIdTempCart->id : "",
                     "brand_name" => (isset($brandByIdTempCart->name) && $brandByIdTempCart->name != "") ? $brandByIdTempCart->name : "",
+                    "rootunit_id" => (isset($RootUnitByIdItem->id) && $RootUnitByIdItem->id != "") ? $RootUnitByIdItem->id : "",
+                    "rootunit_name" => (isset($RootUnitByIdItem->name) && $RootUnitByIdItem->name != "") ? $RootUnitByIdItem->name : "",
                     "qty" => $v['quantity'],
                     "price" => PriceHelper::grandPrice($item),
                     "main_price" => $item->discount_price,
@@ -111,6 +115,8 @@ class LoginController extends Controller{
                       "sku" => $v['sku'],
                       "brand_id" => (isset($brandByIdTempCart->id) && $brandByIdTempCart->id != "") ? $brandByIdTempCart->id : "",
                       "brand_name" => (isset($brandByIdTempCart->name) && $brandByIdTempCart->name != "") ? $brandByIdTempCart->name : "",
+                      "rootunit_id" => (isset($RootUnitByIdItem->id) && $RootUnitByIdItem->id != "") ? $RootUnitByIdItem->id : "",
+                      "rootunit_name" => (isset($RootUnitByIdItem->name) && $RootUnitByIdItem->name != "") ? $RootUnitByIdItem->name : "",
                       "qty" => $v['quantity'],
                       "price" => PriceHelper::grandPrice($item),
                       "main_price" => $item->discount_price,
@@ -136,6 +142,8 @@ class LoginController extends Controller{
                       "sku" => $v['sku'],
                       "brand_id" => (isset($brandByIdTempCart->id) && $brandByIdTempCart->id != "") ? $brandByIdTempCart->id : "",
                       "brand_name" => (isset($brandByIdTempCart->name) && $brandByIdTempCart->name != "") ? $brandByIdTempCart->name : "",
+                      "rootunit_id" => (isset($RootUnitByIdItem->id) && $RootUnitByIdItem->id != "") ? $RootUnitByIdItem->id : "",
+                      "rootunit_name" => (isset($RootUnitByIdItem->name) && $RootUnitByIdItem->name != "") ? $RootUnitByIdItem->name : "",
                       "qty" => $v['quantity'],
                       "price" => PriceHelper::grandPrice($item),
                       "main_price" => $item->discount_price,
@@ -163,6 +171,8 @@ class LoginController extends Controller{
                   "sku" => $v['sku'],
                   "brand_id" => (isset($brandByIdTempCart->id) && $brandByIdTempCart->id != "") ? $brandByIdTempCart->id : "",
                   "brand_name" => (isset($brandByIdTempCart->name) && $brandByIdTempCart->name != "") ? $brandByIdTempCart->name : "",
+                  "rootunit_id" => (isset($RootUnitByIdItem->id) && $RootUnitByIdItem->id != "") ? $RootUnitByIdItem->id : "",
+                  "rootunit_name" => (isset($RootUnitByIdItem->name) && $RootUnitByIdItem->name != "") ? $RootUnitByIdItem->name : "",
                   "qty" => $v['quantity'],
                   "price" => PriceHelper::grandPrice($item),
                   "main_price" => $item->discount_price,
@@ -189,6 +199,8 @@ class LoginController extends Controller{
                 "sku" => $v['sku'],
                 "brand_id" => (isset($brandByIdTempCart->id) && $brandByIdTempCart->id != "") ? $brandByIdTempCart->id : "",
                 "brand_name" => (isset($brandByIdTempCart->name) && $brandByIdTempCart->name != "") ? $brandByIdTempCart->name : "",
+                "rootunit_id" => (isset($RootUnitByIdItem->id) && $RootUnitByIdItem->id != "") ? $RootUnitByIdItem->id : "",
+                "rootunit_name" => (isset($RootUnitByIdItem->name) && $RootUnitByIdItem->name != "") ? $RootUnitByIdItem->name : "",
                 "qty" => $v['quantity'],
                 "price" => PriceHelper::grandPrice($item),
                 "main_price" => $item->discount_price,

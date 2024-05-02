@@ -1,18 +1,16 @@
 <?php
 namespace App\Repositories\Back;
 use App\{
-    Models\Item,
-    Models\Gallery,
-    Helpers\ImageHelper
+  Models\Item,
+  Models\Gallery,
+  Helpers\ImageHelper
 };
 use App\Models\Currency;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Http\UploadedFile;
-
+use Illuminate\Http\UploadedFile; 
 class ItemRepository{
   public function store($request){
     $input = $request->all();
-
     if($request->has('unidadraiz')){
       $input['unidad_raiz'] = $request->unidadraiz;
     }
@@ -44,9 +42,8 @@ class ItemRepository{
       }
     }
     $input['atributoraiz_collection'] = json_encode($atributoraiz_collection, true);
-    
-    if ($file = $request->file('photo')) {
-      $images_name = ImageHelper::ItemhandleUploadedImage($request->file('photo'),'assets/images');
+    if($file = $request->file('photo')){
+      $images_name = ImageHelper::ItemhandleUploadedImagePrincipalItem($request->file('photo'),'assets/images/items');
       $input['photo'] = $images_name[0];
       $input['thumbnail'] = $images_name[1];
     }
@@ -75,7 +72,6 @@ class ItemRepository{
       $input['specification_name'] = null;
       $input['specification_description'] = null;
     }
-
     $specification_collection = [];
     $nameFinal = "";
     $specificationdescription = (isset($request->specification_description)) ? $request->specification_description : "";
@@ -106,29 +102,29 @@ class ItemRepository{
     if($request->item_type == 'digital'){
       if($request->hasFile('file')){
         $file = $request->file;
-        $name = time().str_replace(' ', '', $file->getClientOriginalName());
-        $file->move('assets/files',$name);
+        $name = str_replace(' ', '', $file->getClientOriginalName());
+        $file->move('assets/files/items',$name);
         $input['file'] = $name;
       }
     }
     if($request->item_type == 'license'){
       if($request->hasFile('file')){
         $file = $request->file;
-        $name = time().str_replace(' ', '', $file->getClientOriginalName());
-        $file->move('assets/files',$name);
+        $name = str_replace(' ', '', $file->getClientOriginalName());
+        $file->move('assets/files/items',$name);
         $input['file'] = $name;
       }
     }
     $input['is_type'] = 'undefine';
     /*-- NUEVO CONTENIDO (INICIO) --*/
     if($request->hasFile('adj_doc')){
-      if ($request->file('adj_doc')->isValid()) {
+      if($request->file('adj_doc')->isValid()){
         $file = $request->file('adj_doc');
         $filename = pathinfo($request->file('adj_doc')->getClientOriginalName(), PATHINFO_FILENAME);
         $name_replace = str_replace(' ', '', $filename);
         // $nameFinal = time()."-".date('h-i-s')."-".$name_replace;
         $nameFinal = $name_replace;
-        $destination = 'assets/files/item/adj_doc'.'/';
+        $destination = 'assets/files/items/';
         $ext= $file->getClientOriginalExtension();
         $namecomplete = $nameFinal.".".$ext;
         $file->move($destination, $namecomplete);
@@ -136,7 +132,6 @@ class ItemRepository{
         $input['adj_doc'] = $namecomplete;
       }
     }
-    
     /*
     echo "<pre>";
     print_r($request->all());
@@ -149,8 +144,6 @@ class ItemRepository{
     echo "</pre>";
     exit();
     */
-    
-
     /*-- NUEVO CONTENIDO (FIN) --*/
     $item_id = Item::create($input)->id;
     if(isset($input['galleries'])){
@@ -194,7 +187,7 @@ class ItemRepository{
     }
     $input['atributoraiz_collection'] = json_encode($atributoraiz_collection, true);
     if($request->file('photo')){
-      $images_name = ImageHelper::ItemhandleUpdatedUploadedImage($request->photo,'/assets/images',$item,'/assets/images/','photo');
+      $images_name = ImageHelper::ItemhandleUpdatedUploadedImagePrincipalItem($request->photo,'/assets/images/items',$item,'/assets/images/items/','photo');
       $input['photo'] = $images_name[0];
       $input['thumbnail'] = $images_name[1];
     }
@@ -266,8 +259,8 @@ class ItemRepository{
     if($request->item_type == 'digital'){
       if(!$request->hasFile('file')){
         if($request->link){
-          if(file_exists('assets/files/'.$item->file)){
-            unlink('assets/files/'.$item->file);
+          if(file_exists('assets/files/items/'.$item->file)){
+            unlink('assets/files/items/'.$item->file);
           }
           $input['file'] = null;
         }
@@ -277,27 +270,27 @@ class ItemRepository{
     if($request->item_type == 'digital'){
       if($request->hasFile('file')){
         if($item->file){
-          if(file_exists('assets/files/'.$item->file)){
-            unlink('assets/files/'.$item->file);
+          if(file_exists('assets/files/items/'.$item->file)){
+            unlink('assets/files/items/'.$item->file);
           }
         }
         $file = $request->file;
-        $name = time().str_replace(' ', '', $file->getClientOriginalName());
-        $file->move('assets/files',$name);
+        $name = str_replace(' ', '', $file->getClientOriginalName());
+        $file->move('assets/files/items',$name);
         $input['file'] = $name;
         $input['link'] = null;
       }
     }
     /*-- NUEVO CONTENIDO (INICIO) --*/
     if($request->hasFile('adj_doc')){
-      if ($request->file('adj_doc')->isValid()) {
+      if($request->file('adj_doc')->isValid()){
         $file = $request->file('adj_doc');
         $filename = pathinfo($request->file('adj_doc')->getClientOriginalName(), PATHINFO_FILENAME);
         $name_replace = str_replace(' ', '', $filename);
-        $nameFinal = time()."-".date('h-i-s')."-".$name_replace;
-        $destination = 'assets/files/item/adj_doc'.'/';
+        // $nameFinal = time()."-".date('h-i-s')."-".$name_replace;
+        $destination = 'assets/files/items/';
         $ext= $file->getClientOriginalExtension();
-        $namecomplete = $nameFinal.".".$ext;
+        $namecomplete = $name_replace.".".$ext;
         $file->move($destination, $namecomplete);
         $input['adj_doc'] = $namecomplete;
       }
@@ -307,13 +300,11 @@ class ItemRepository{
     echo "<pre>";
     print_r($input);
     echo "<pre>";
-    
     echo "<pre>";
     print_r(json_decode($input['atributoraiz_collection'], TRUE));
     echo "<pre>";
     exit();
     */
-    
     $item->update($input);
     if(isset($input['galleries'])){
       $this->galleriesUpdate($request,$item->id);
@@ -344,26 +335,28 @@ class ItemRepository{
       }
       $item->attributes()->delete();
     }
-    ImageHelper::handleDeletedImage($item,'photo','assets/images/');
-    ImageHelper::handleDeletedImage($item,'thumbnail','assets/images/');
+    ImageHelper::handleDeletedImage($item,'photo','assets/images/items/');
+    ImageHelper::handleDeletedImage($item,'thumbnail','assets/images/items/');
     if($item->item_type == 'digital' && $item->file){
-      ImageHelper::handleDeletedImage($item,'file','assets/files/');
+      ImageHelper::handleDeletedImage($item,'file','assets/files/items/');
     }
     $item->delete();
   }
+  // ------------------- INSERTAR IMÁGENES DEL PRODUCTO EN TABLA "galleries" ($path)
   public function galleriesUpdate($request,$item_id=null){
     Gallery::insert($this->storeImageData($request,$item_id));
   }
   public function galleryDelete($gallery){
-    ImageHelper::handleDeletedImage($gallery,'photo','/assets/images/');
+    ImageHelper::handleDeletedImage($gallery,'photo','/assets/images/items/');
     $gallery->delete();
   }
+  // ------------------- SUBIR IMÁGENES DEL PRODUCTO EN DIRECTORIO ($path)
   public function storeImageData($request,$item_id=null){
     $storeData = [];
-    if ($galleries = $request->file('galleries')) {
+    if($galleries = $request->file('galleries')){
       foreach($galleries as $key => $gallery){
         $storeData[$key] = [
-          'photo'=>  ImageHelper::handleUploadedImage($gallery,'assets/images'),
+          'photo'=>  ImageHelper::handleUploadedImageGallery($gallery,'assets/images/items'),
           'item_id' => $item_id ? $item_id : $request['item_id'],
         ];
       }
@@ -371,7 +364,7 @@ class ItemRepository{
     return $storeData;
   }
   /*
-  public function pathToUploadedFile( $path, $test = true ) {
+  public function pathToUploadedFile( $path, $test = true ){
     $filesystem = new Filesystem;
     $name = $filesystem->name( $path );
     $extension = $filesystem->extension( $path );

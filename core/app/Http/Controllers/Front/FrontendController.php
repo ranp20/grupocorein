@@ -305,6 +305,12 @@ class FrontendController extends Controller{
   }
   public function product($slug){
     $item = Item::with('category')->whereStatus(1)->whereSlug($slug)->get();
+    $itemsProd = "";
+    if(isset($item) && !empty($item) && count($item) > 0){
+      $itemProd = $item[0];
+    }else{
+      return view('front.catalog.catalog');
+    }
     // $coupon = Item::with('coupons')->where('coupon_id','=',$item[0]->coupon_id)->get();
     $video = "";
     if($item[0]->video != "" && $item[0]->video != "null" && $item[0]->video != null){
@@ -312,7 +318,7 @@ class FrontendController extends Controller{
       $video = end($video);
     }
     return view('front.catalog.product',[
-      'item'          => $item[0],
+      'item'          => $itemProd,
       'reviews'       => $item[0]->reviews()->where('status',1)->paginate(3),
       'galleries'     => $item[0]->galleries,
       'video'         => $video,

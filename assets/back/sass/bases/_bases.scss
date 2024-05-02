@@ -541,3 +541,42 @@ label.color-picker > span > input[type=color]::-webkit-color-swatch {
 		background-color: #35cd3a;
 	}
 }
+// -------------- TABLA DE RESUMEN ORDEN EN USAR
+.c_tblMobAdaptative{
+	overflow: auto;
+}
+#tbl-user_invoice{
+	min-width: 1000px;
+	overflow-y: auto;
+	overflow-x: auto;
+	thead{
+		tr{
+			th{
+				font-size: 12px;
+				span{
+					font-size: 12px;
+				}
+			}
+		}
+	}
+	tbody{
+		tr{
+			td{
+				font-size: 12px;
+				span{
+					font-size: 12px;
+				}
+			}
+		}
+	}
+}
+// -------- HOVER IMG IN LIST TABLE
+.link_viewTargetBlankImg{
+	display: table;
+	vertical-align: middle;
+	border: thin solid transparent;
+	&:hover{
+		border: thin solid #177dff;
+	}
+	img{}
+}

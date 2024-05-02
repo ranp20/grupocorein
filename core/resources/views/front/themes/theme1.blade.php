@@ -39,16 +39,8 @@
         <div  class="hero-area3" >
             <div class="background"></div>
             <div class="heroarea-slider owl-carousel">
-                <?php
-                /*
-                echo "<pre>";
-                print_r($sliders);
-                echo "</pre>";
-                */
-                ?>
                 @foreach ($sliders as $slider)
-                
-                <div class="item cSldcPrd1__m__itm" style="background: url('{{ asset('assets/images/' . $slider->photo) }}')">
+                <div class="item cSldcPrd1__m__itm" style="background: url('{{ asset('assets/images/sliders/'.$slider->photo) }}')">
                     <div class="container">
                         <div class="row">
                             <div class="col-xl-5 col-lg-6 d-flex align-self-center">
@@ -60,7 +52,7 @@
                             <div class="col-xl-7 col-lg-6 order-first order-lg-last">
                                 <div class="layer-4">
                                     <div class="right-img">
-                                    <img class="img-fluid full-img" src="{{ asset('assets/images/' . $slider->logo) }}" alt="{{$slider->logo}}" width="100" height="100" decoding="sync">
+                                    <img class="img-fluid full-img" src="{{ asset('assets/images/sliders/'.$slider->logo) }}" alt="{{$slider->logo}}" width="100" height="100" decoding="sync">
                                     </div>
                                 </div>
                             </div>
@@ -105,7 +97,7 @@
                 <div class="row gx-3">
                     <div class="col-md-4">
                         <a href="{{ route('front.catalog').'?category='.$banner_first['firsturl1'] }}" class="genius-banner" data-href="{{ $banner_first['firsturl1'] }}" title="{{ (isset($banner_first['title1'])) ? $banner_first['title1'] : '' }}">
-                            <img src="{{ asset('assets/images/'.$banner_first['img1']) }}" alt="{{ __('Category') }} {{ $banner_first['firsturl1'] }}" width="100" height="100" decoding="sync">
+                            <img src="{{ asset('assets/images/banners/'.$banner_first['img1']) }}" alt="{{ __('Category') }} {{ $banner_first['firsturl1'] }}" width="100" height="100" decoding="sync">
                             <div class="inner-content">
                                 @if (isset($banner_first['title1']))
                                     <h4>{{$banner_first['title1']}}</h4>
@@ -115,7 +107,7 @@
                     </div>
                     <div class="col-md-4">
                         <a href="{{ route('front.catalog').'?category='.$banner_first['firsturl2'] }}" class="genius-banner" data-href="{{ $banner_first['firsturl2'] }}" title="{{ (isset($banner_first['title1'])) ? $banner_first['title2'] : '' }}">
-                            <img src="{{ asset('assets/images/'.$banner_first['img2']) }}" alt="{{ __('Category') }} {{ $banner_first['firsturl2'] }}" width="100" height="100" decoding="sync">
+                            <img src="{{ asset('assets/images/banners/'.$banner_first['img2']) }}" alt="{{ __('Category') }} {{ $banner_first['firsturl2'] }}" width="100" height="100" decoding="sync">
                             <div class="inner-content">
                                 @if (isset($banner_first['title2']))
                                     <h4>{{$banner_first['title2']}}</h4>
@@ -125,7 +117,7 @@
                     </div>
                     <div class="col-md-4">
                         <a href="{{ route('front.catalog').'?category='.$banner_first['firsturl3'] }}" class="genius-banner" data-href="{{ $banner_first['firsturl3'] }}" title="{{ (isset($banner_first['title1'])) ? $banner_first['title3'] : '' }}">
-                            <img src="{{ asset('assets/images/'.$banner_first['img3']) }}" alt="{{ __('Category') }} {{ $banner_first['firsturl3'] }}" width="100" height="100" decoding="sync">
+                            <img src="{{ asset('assets/images/banners/'.$banner_first['img3']) }}" alt="{{ __('Category') }} {{ $banner_first['firsturl3'] }}" width="100" height="100" decoding="sync">
                             <div class="inner-content">
                                 @if (isset($banner_first['title3']))
                                     <h4>{{$banner_first['title3']}}</h4>
@@ -143,7 +135,7 @@
                 <div class="row gx-3">
                     <div class="col-md-4">
                         <a href="{{ route('front.catalog').'?category='.$banner_secend['url1'] }}" class="genius-banner" data-href="{{ $banner_secend['url1'] }}" title="{{ (isset($banner_secend['title1'])) ? $banner_secend['title1'] : '' }}">
-                            <img class="lazy" data-src="{{ asset('assets/images/'.$banner_secend['img1']) }}" alt="{{ __('Category') }} {{ $banner_secend['url1'] }}" width="100" height="100" decoding="sync">
+                            <img class="lazy" data-src="{{ asset('assets/images/banners/'.$banner_secend['img1']) }}" alt="{{ __('Category') }} {{ $banner_secend['url1'] }}" width="100" height="100" decoding="sync">
                             <div class="inner-content">
                                 @if (isset($banner_secend['title1']))
                                     <h4>{{$banner_secend['title1']}}</h4>
@@ -153,7 +145,7 @@
                     </div>
                     <div class="col-md-4">
                         <a href="{{ route('front.catalog').'?category='.$banner_secend['url2'] }}" class="genius-banner" data-href="{{ $banner_secend['url2'] }}" title="{{ (isset($banner_secend['title2'])) ? $banner_secend['title2'] : '' }}">
-                            <img class="lazy" data-src="{{ asset('assets/images/'.$banner_secend['img2']) }}" alt="{{ __('Category') }} {{ $banner_secend['url2'] }}" width="100" height="100" decoding="sync">
+                            <img class="lazy" data-src="{{ asset('assets/images/banners/'.$banner_secend['img2']) }}" alt="{{ __('Category') }} {{ $banner_secend['url2'] }}" width="100" height="100" decoding="sync">
                             <div class="inner-content">
                                 @if (isset($banner_secend['title2']))
                                     <h4> {{$banner_secend['title2']}}</h4>
@@ -163,7 +155,7 @@
                     </div>
                     <div class="col-md-4">
                         <a href="{{ route('front.catalog').'?category='.$banner_secend['url3'] }}" class="genius-banner" data-href="{{ $banner_secend['url3'] }}" title="{{ (isset($banner_secend['title3'])) ? $banner_secend['title3'] : '' }}">
-                            <img class="lazy" data-src="{{ asset('assets/images/'.$banner_secend['img3']) }}" alt="{{ __('Category') }} {{ $banner_secend['url3'] }}" width="100" height="100" decoding="sync">
+                            <img class="lazy" data-src="{{ asset('assets/images/banners/'.$banner_secend['img3']) }}" alt="{{ __('Category') }} {{ $banner_secend['url3'] }}" width="100" height="100" decoding="sync">
                             <div class="inner-content">
                                 @if (isset($banner_secend['title3']))
                                     <h4>{{$banner_secend['title3']}}</h4>
@@ -195,21 +187,21 @@
                     <img  src="{{asset('assets/images/ajax_loader.gif')}}" alt="">
                 </div>
                 <div class="row" id="popular_category_view">
+                    @if(!empty($popular_category_items) && count($popular_category_items) > 0)
                     <div class="col-lg-12">
-                        <div class="popular-category-slider  owl-carousel">
+                        <div class="popular-category-slider owl-carousel">
                             @foreach ($popular_category_items as $popular_category_item)
                             <div class="slider-item">
                                 <div class="product-card">
                                     <div class="product-thumb">
                                         @if (!$popular_category_item->is_stock())
-                                            <div class="product-badge bg-secondary border-default text-body
-                                            ">{{__('out of stock')}}</div>
+                                            <div class="product-badge bg-secondary border-default text-body">{{__('out of stock')}}</div>
                                         @endif
                                         @if($popular_category_item->previous_price && $popular_category_item->previous_price !=0)
                                         <div class="product-badge product-badge2 bg-info"> -{{PriceHelper::DiscountPercentage($popular_category_item)}}</div>
                                         @endif
                                         <a href="{{route('front.product',$popular_category_item->slug)}}" class="d-flex align-items-center justify-content-center">
-                                            <img class="lazy" data-src="{{asset('assets/images/'.$popular_category_item->thumbnail)}}" alt="Product">
+                                            <img class="lazy" data-src="{{asset('assets/images/items/'.$popular_category_item->thumbnail)}}" alt="Product">
                                         </a>
                                         <div class="product-button-group">
                                             <a class="product-button wishlist_store" href="{{route('user.wishlist.store',$popular_category_item->id)}}" title="{{__('Wishlist')}}"><i class="icon-heart"></i></a>
@@ -308,20 +300,25 @@
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                            @endforeach
                         </div>
                     </div>
+                    @else
+                    <div class="card">
+                        <div class="card-body text-center">{{__('No Product Found')}}</div>
+                    </div>
+                    @endif
                 </div>
             </div>
         </section>
     @endif
     @if ($setting->is_two_c_b == 1)
         <div class="bannner-section mt-50">
-            <div class="container ">
+            <div class="container">
                 <div class="row gx-3">
                     <div class="col-md-12">
                         <a href="{{ route('front.catalog').'?category='.$banner_third['url1']}}" data-href="{{ $banner_third['url1'] }}" class="">
-                            <img class="lazy" data-src="{{ asset('assets/images/'.$banner_third['img1']) }}" alt="{{ (isset($banner_third['title1'])) ? $banner_third['title1'] : '' }}" width="100" height="100" decoding="sync">
+                            <img class="lazy" data-src="{{ asset('assets/images/banners/'.$banner_third['img1']) }}" alt="{{ (isset($banner_third['title1'])) ? $banner_third['title1'] : '' }}" width="100" height="100" decoding="sync">
                         </a>
                     </div>                 
                 </div>
@@ -347,6 +344,7 @@
                     <img  src="{{asset('assets/images/ajax_loader.gif')}}" alt="" width="100" height="100" decoding="sync">
                 </div>
                 <div class="row g-3" id="feature_category_view">
+                    @if(!empty($feature_category_items) && count($feature_category_items) > 0)
                     <div class="col-lg-12">
                         <div class="feature-category-slider  owl-carousel">
                             @foreach ($feature_category_items as $feature_category_item)
@@ -354,14 +352,13 @@
                                 <div class="product-card">
                                     <div class="product-thumb" >
                                         @if (!$feature_category_item->is_stock())
-                                            <div class="product-badge bg-secondary border-default text-body
-                                            ">{{__('out of stock')}}</div>
+                                            <div class="product-badge bg-secondary border-default text-body">{{__('out of stock')}}</div>
                                         @endif
                                         @if($feature_category_item->previous_price && $feature_category_item->previous_price !=0)
                                         <div class="product-badge product-badge2 bg-info"> -{{PriceHelper::DiscountPercentage($feature_category_item)}}</div>
                                         @endif                                
                                         <a href="{{route('front.product',$feature_category_item->slug)}}" class="d-flex align-items-center justify-content-center">
-                                            <img class="lazy" data-src="{{asset('assets/images/'.$feature_category_item->thumbnail)}}" alt="Product">
+                                            <img class="lazy" data-src="{{asset('assets/images/items/'.$feature_category_item->thumbnail)}}" alt="Product">
                                         </a>
                                         <div class="product-button-group"><a class="product-button wishlist_store" href="{{route('user.wishlist.store',$feature_category_item->id)}}" title="{{__('Wishlist')}}"><i class="icon-heart"></i></a>
                                             <a data-target="{{route('fornt.compare.product',$feature_category_item->id)}}" class="product-button product_compare" href="javascript:;" title="{{__('Compare')}}"><i class="icon-repeat"></i></a>
@@ -460,6 +457,11 @@
                             @endforeach
                         </div>
                     </div>
+                    @else
+                    <div class="card">
+                        <div class="card-body text-center">{{__('No Product Found')}}</div>
+                    </div>
+                    @endif
                 </div>
             </div>
         </section>
@@ -481,10 +483,14 @@
                                 <div class="slider-item">
                                     <a href="{{route('front.blog.details',$post->slug)}}" class="blog-post">
                                         <div class="post-thumb">
-                                            <img class="lazy" data-src="{{ asset('assets/images/' . json_decode($post->photo, true)[array_key_first(json_decode($post->photo, true))]) }}" alt="Blog Post" width="100" height="100" decoding="sync">
+                                            @if(isset(json_decode($post->photo, true)[0]))
+                                                <img class="lazy" data-src="{{ asset('assets/images/blogs/' . json_decode($post->photo, true)[array_key_first(json_decode($post->photo, true))]) }}" alt="Blog Post" width="100" height="100" decoding="sync">
+                                            @else
+                                                <img class="lazy" data-src="{{ asset('assets/images/placeholder.png') }}" alt="Blog Post" width="100" height="100" decoding="sync">
+                                            @endif
                                         </div>
                                         <div class="post-body">
-                                            <h3 class="post-title"> {{ strlen(strip_tags($post->title)) > 100 ? substr(strip_tags($post->title), 0, 100) : strip_tags($post->title) }}
+                                            <h3 class="post-title">{{ strlen(strip_tags($post->title)) > 100 ? substr(strip_tags($post->title), 0, 100) : strip_tags($post->title) }}
                                             </h3>
                                             <ul class="post-meta">
                                                 <li><i class="icon-user"></i>{{ __('SiteProyectName') }}</li>
@@ -504,9 +510,9 @@
     @endif
     @if ($setting->is_popular_brand == 1)
         <section class="brand-section mt-30 mb-60">
-            <div class="container ">
+            <div class="container">
                 <div class="row">
-                    <div class="col-lg-12 ">
+                    <div class="col-lg-12">
                         <div class="section-title">
                             <h2 class="h3">Marcas</h2>
                         </div>
@@ -523,7 +529,7 @@
                             $urlBaseDomain = $actual_link . "/grupocorein/"; // LOCAL
                             // $urlBaseDomain = $actual_link . "/"; // SERVIDOR
                             // Directorio donde se encuentra la imagen
-                            $imgDirectoryPhoto = $urlBaseDomain . 'assets/images/';
+                            $imgDirectoryPhoto = $urlBaseDomain . 'assets/images/brands/';
                             $imgDirectoryDefault = $urlBaseDomain . 'assets/images/Utilities/default_product.png';
                             // Ruta completa de la imagen
                             $routePhotoBrand = $imgDirectoryPhoto . $brand->photo;
@@ -532,7 +538,7 @@
                             ?>
                             <div class="slider-item">
                                 <a class="text-center" href="{{ route('front.catalog') . '?brand=' . $brand->slug }}">
-                                    <img class="d-block hi-100 lazy" data-src="{{ asset('assets/images/' . $brand->photo) }}" alt="{{ $brand->name }}" title="{{ $brand->name }}" width="100" height="100" decoding="sync">
+                                    <img class="d-block hi-100 lazy" data-src="{{ asset('assets/images/brands/' . $brand->photo) }}" alt="{{ $brand->name }}" title="{{ $brand->name }}" width="100" height="100" decoding="sync">
                                 </a>
                             </div>
                             @endforeach

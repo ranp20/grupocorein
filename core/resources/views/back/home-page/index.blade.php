@@ -36,7 +36,7 @@
                 <div class="form-group">
                   <label for="name">{{ __('Image 1') }} *</label>
                   <br>
-                    <img class="admin-img" src="{{isset($hero_banner['img1']) ? asset('assets/images/'.$hero_banner['img1']) : asset('assets/images/placeholder.png') }}" alt="No Image Found">
+                    <img class="admin-img" src="{{isset($hero_banner['img1']) ? asset('assets/images/banners/'.$hero_banner['img1']) : asset('assets/images/placeholder.png') }}" alt="No Image Found">
                   <br>
                   <span class="mt-1">{{ __('Image Size Should Be 496 x 204.') }}</span>
                 </div>
@@ -62,7 +62,7 @@
                 <div class="form-group">
                   <label for="name">{{ __('Image 2') }} *</label>
                   <br>
-                    <img class="admin-img" src="{{isset($hero_banner['img2']) ? asset('assets/images/'.$hero_banner['img2']) : asset('assets/images/placeholder.png') }}" alt="No Image Found">
+                    <img class="admin-img" src="{{isset($hero_banner['img2']) ? asset('assets/images/banners/'.$hero_banner['img2']) : asset('assets/images/placeholder.png') }}" alt="No Image Found">
                   <br>
                   <span class="mt-1">{{ __('Image Size Should Be 496 x 204.') }}</span>
                 </div>
@@ -95,7 +95,7 @@
                 <div class="form-group">
                   <label for="name">{{ __('Image 1') }} *</label>
                   <br>
-                    <img class="admin-img" src="{{  asset('assets/images/'.$first_banner['img1']) }}" alt="No Image Found">
+                    <img class="admin-img" src="{{  asset('assets/images/banners/'.$first_banner['img1']) }}" alt="No Image Found">
                   <br>
                   <span class="mt-1">{{ __('Image Size Should Be 496 x 204.') }}</span>
                 </div>
@@ -121,7 +121,7 @@
                 <div class="form-group">
                   <label for="name">{{ __('Image 2') }} *</label>
                   <br>
-                    <img class="admin-img" src="{{  asset('assets/images/'.$first_banner['img2']) }}" alt="No Image Found">
+                    <img class="admin-img" src="{{  asset('assets/images/banners/'.$first_banner['img2']) }}" alt="No Image Found">
                   <br>
                   <span class="mt-1">{{ __('Image Size Should Be 496 x 204.') }}</span>
                 </div>
@@ -147,7 +147,7 @@
                 <div class="form-group">
                   <label for="name">{{ __('Image 3') }} *</label>
                   <br>
-                    <img class="admin-img" src="{{  asset('assets/images/'.$first_banner['img3']) }}" alt="No Image Found">
+                    <img class="admin-img" src="{{  asset('assets/images/banners/'.$first_banner['img3']) }}" alt="No Image Found">
                   <br>
                   <span class="mt-1">{{ __('Image Size Should Be 496 x 204.') }}</span>
                 </div>
@@ -308,7 +308,7 @@
                 <div class="form-group">
                   <label for="name">{{ __('Image 1') }} *</label>
                   <br>
-                    <img class="admin-img" src="{{  asset('assets/images/'.$secend_banner['img1']) }}" alt="No Image Found">
+                    <img class="admin-img" src="{{  asset('assets/images/banners/'.$secend_banner['img1']) }}" alt="No Image Found">
                   <br>
                   <span class="mt-1">{{ __('Image Size Should Be 496 x 204.') }}</span>
                 </div>
@@ -334,7 +334,7 @@
                 <div class="form-group">
                   <label for="name">{{ __('Image 2') }} *</label>
                   <br>
-                    <img class="admin-img" src="{{  asset('assets/images/'.$secend_banner['img2']) }}" alt="No Image Found">
+                    <img class="admin-img" src="{{  asset('assets/images/banners/'.$secend_banner['img2']) }}" alt="No Image Found">
                   <br>
                   <span class="mt-1">{{ __('Image Size Should Be 496 x 204.') }}</span>
                 </div>
@@ -360,7 +360,7 @@
                 <div class="form-group">
                   <label for="name">{{ __('Image 3') }} *</label>
                   <br>
-                    <img class="admin-img" src="{{  asset('assets/images/'.$secend_banner['img3']) }}" alt="No Image Found">
+                    <img class="admin-img" src="{{  asset('assets/images/banners/'.$secend_banner['img3']) }}" alt="No Image Found">
                   <br>
                   <span class="mt-1">{{ __('Image Size Should Be 496 x 204.') }}</span>
                 </div>
@@ -630,7 +630,7 @@
                 <div class="form-group">
                   <label for="name">{{ __('Image 1') }} *</label>
                   <br>
-                    <img class="admin-img" src="{{  asset('assets/images/'.$third_banner['img1']) }}" alt="No Image Found">
+                    <img class="admin-img" src="{{  asset('assets/images/banners/'.$third_banner['img1']) }}" alt="No Image Found">
                   <br>
                   <span class="mt-1">{{ __('Image Size Should Be 1190 x 370.') }}</span>
                 </div>
@@ -656,7 +656,7 @@
                 <div class="form-group">
                   <label for="name">{{ __('Image 2') }} *</label>
                   <br>
-                    <img class="admin-img" src="{{  asset('assets/images/'.$third_banner['img2']) }}" alt="No Image Found">
+                    <img class="admin-img" src="{{  asset('assets/images/banners/'.$third_banner['img2']) }}" alt="No Image Found">
                   <br>
                   <span class="mt-1">{{ __('Image Size Should Be 1190 x 370.') }}</span>
                 </div>
@@ -690,7 +690,7 @@
                 <div class="form-group">
                   <label for="name">{{ __('Banner 1 Image') }} *</label>
                   <br>
-                    <img class="admin-img" src="{{ isset($home4_banner['img1']) ?  asset('assets/images/'.$home4_banner['img1']) : asset('assets/images/placeholder.png') }}" alt="No Image Found">
+                    <img class="admin-img" src="{{ isset($home4_banner['img1']) ?  asset('assets/images/banners/'.$home4_banner['img1']) : asset('assets/images/placeholder.png') }}" alt="No Image Found">
                   <br>
                   <span class="mt-1">{{ __('Image Size Should Be 496 x 204.') }}</span>
                 </div>
@@ -712,7 +712,7 @@
                 <div class="form-group">
                   <label for="name">{{ __('Banner 2 Image') }} *</label>
                   <br>
-                    <img class="admin-img" src="{{ isset($home4_banner['img2']) ?  asset('assets/images/'.$home4_banner['img2']) : asset('assets/images/placeholder.png') }}" alt="No Image Found">
+                    <img class="admin-img" src="{{ isset($home4_banner['img2']) ?  asset('assets/images/banners/'.$home4_banner['img2']) : asset('assets/images/placeholder.png') }}" alt="No Image Found">
                   <br>
                   <span class="mt-1">{{ __('Image Size Should Be 496 x 204.') }}</span>
                 </div>
@@ -734,7 +734,7 @@
                 <div class="form-group">
                   <label for="name">{{ __('Banner 3 Image') }} * <small>({{ __('Middle Big Image') }})</small></label>
                   <br>
-                    <img class="admin-img" src="{{ isset($home4_banner['img3']) ?  asset('assets/images/'.$home4_banner['img3']) : asset('assets/images/placeholder.png') }}" alt="No Image Found">
+                    <img class="admin-img" src="{{ isset($home4_banner['img3']) ?  asset('assets/images/banners/'.$home4_banner['img3']) : asset('assets/images/placeholder.png') }}" alt="No Image Found">
                   <br>
                   <span class="mt-1">{{ __('Image Size Should Be 496 x 204.') }}</span>
                 </div>
@@ -756,7 +756,7 @@
                 <div class="form-group">
                   <label for="name">{{ __('Banner 4 Image') }} *</label>
                   <br>
-                    <img class="admin-img" src="{{ isset($home4_banner['img4']) ?  asset('assets/images/'.$home4_banner['img4']) : asset('assets/images/placeholder.png') }}" alt="No Image Found">
+                    <img class="admin-img" src="{{ isset($home4_banner['img4']) ?  asset('assets/images/banners/'.$home4_banner['img4']) : asset('assets/images/placeholder.png') }}" alt="No Image Found">
                   <br>
                   <span class="mt-1">{{ __('Image Size Should Be 496 x 204.') }}</span>
                 </div>
@@ -778,7 +778,7 @@
                 <div class="form-group">
                   <label for="name">{{ __('Banner 5 Image') }} *</label>
                   <br>
-                    <img class="admin-img" src="{{ isset($home4_banner['img5']) ?  asset('assets/images/'.$home4_banner['img5']) : asset('assets/images/placeholder.png') }}" alt="No Image Found">
+                    <img class="admin-img" src="{{ isset($home4_banner['img5']) ?  asset('assets/images/banners/'.$home4_banner['img5']) : asset('assets/images/placeholder.png') }}" alt="No Image Found">
                   <br>
                   <span class="mt-1">{{ __('Image Size Should Be 496 x 204.') }}</span>
                 </div>

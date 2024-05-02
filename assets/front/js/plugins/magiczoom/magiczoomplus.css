@@ -1021,11 +1021,11 @@ a[data-zoom-id] img,
 }
 
 .mz-thumb:not(.mz-thumb-selected):hover img {
-    border-bottom-color: rgba(180, 180, 180, .3);
+    /* border-bottom-color: rgba(180, 180, 180, .3); */
 }
 
 .mz-thumb.mz-thumb-selected img {
-    border-bottom-color: rgb(180, 180, 180);
+    /* border-bottom-color: rgb(180, 180, 180); */
 }
 
 /** Thumbnails in expanded view **/

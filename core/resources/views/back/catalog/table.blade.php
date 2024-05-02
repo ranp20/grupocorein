@@ -2,8 +2,8 @@
 <tr>
   <td>{{ $data->name }}</td>
   <td>
-    <a href="{{ $data->photo ? asset('assets/images/catalog/'.$data->photo) : asset('assets/images/placeholder.png') }}" target="_blank">
-      <img src="{{ $data->photo ? asset('assets/images/catalog/'.$data->photo) : asset('assets/images/placeholder.png') }}" alt="Image Not Found">
+    <a href="{{ $data->photo ? asset('assets/images/catalogs/'.$data->photo) : asset('assets/images/placeholder.png') }}" target="_blank">
+      <img src="{{ $data->photo ? asset('assets/images/catalogs/'.$data->photo) : asset('assets/images/placeholder.png') }}" alt="Image Not Found">
     </a>
   </td>
   <td>

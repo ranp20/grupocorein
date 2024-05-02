@@ -41,7 +41,7 @@
                 @endif
               </div>
               <div class="c-cMnul__Flinks__cImg">
-                <img src="{{ asset('assets/images/'.$categ['photo']) }}" alt="{{ $categ['slug'] }}" width="100" height="100" decoding="sync">
+                <img src="{{ asset('assets/images/categories/'.$categ['photo']) }}" alt="{{ $categ['slug'] }}" width="100" height="100" decoding="sync">
               </div>
             </a>
           </div>

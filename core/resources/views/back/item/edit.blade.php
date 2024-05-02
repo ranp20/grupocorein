@@ -212,7 +212,7 @@
               <label class="d-block">{{ __('Featured Image') }} *</label>
             </div>
             <div class="form-group pb-0 pt-0 mt-0 mb-0">
-              <img class="admin-img lg" src="{{ $item->photo ? asset('assets/images/'.$item->photo) : asset('assets/images/placeholder.png') }}">
+              <img class="admin-img lg" src="{{ $item->photo ? asset('assets/images/items/'.$item->photo) : asset('assets/images/placeholder.png') }}">
             </div>
             <div class="form-group position-relative ">
               <label class="file">
@@ -237,8 +237,8 @@
                     <span data-toggle="modal" data-target="#confirm-delete" href="javascript:;" data-href="{{ route('back.item.gallery.delete',$gallery->id) }}" class="remove-gallery-img">
                       <i class="fas fa-trash"></i>
                     </span>
-                    <a class="popup-link" href="{{ $gallery->photo ? asset('assets/images/'.$gallery->photo) : asset('assets/images/placeholder.png') }}">
-                      <img class="admin-gallery-img" src="{{ $gallery->photo ? asset('assets/images/'.$gallery->photo) : asset('assets/images/placeholder.png') }}" alt="No Image Found">
+                    <a class="popup-link" href="{{ $gallery->photo ? asset('assets/images/items/'.$gallery->photo) : asset('assets/images/placeholder.png') }}">
+                      <img class="admin-gallery-img" src="{{ $gallery->photo ? asset('assets/images/items/'.$gallery->photo) : asset('assets/images/placeholder.png') }}" alt="No Image Found">
                     </a>
                   </div>
                   @empty

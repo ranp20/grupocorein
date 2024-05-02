@@ -3,6 +3,27 @@
   {{__('Invoice')}}
 @endsection
 @section('content')
+<?php
+	function formatPhone($phone){
+		$output_phone = "";
+		$output_phone = preg_replace('/(\d{1,3})(?=(\d{3})+$)/', '$1 ', $phone);
+		return $output_phone;
+	}
+	function cambiaf_mysql($date){
+		$originalDate = $date;
+		$newDate = date("Y/m/d H:i:s", strtotime($originalDate));
+		return $newDate;
+	}
+	function maxcharacters($string, $maxletters){
+		$output_strg = "";
+		if(strlen($string) > $maxletters){
+			$output_strg = substr($string, 0, $maxletters) . "...";
+		}else{
+			$output_strg = $string;
+		}
+		return $output_strg;
+	}
+?>
 <div class="page-title">
   <div class="container">
     <div class="row">
@@ -149,45 +170,100 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <div class="gd-responsive-table">
-          <table class="table my-4">
+        <div class="gd-responsive-table c_tblMobAdaptative">
+          <table class="table my-4" id="tbl-user_invoice">
             <thead>
               <tr>
-                <th width="50%" class="px-0 bg-transparent border-top-0"><span class="h6">{{__('Products')}}</span></th>
-                <th class="px-0 bg-transparent border-top-0"><span class="h6">{{__('Attribute')}}</span></th>
-                <th class="px-0 bg-transparent border-top-0"><span class="h6">{{__('Quantity')}}</span></th>
-                <th class="px-0 bg-transparent border-top-0 text-right"><span class="h6">{{__('Price')}}</span></th>
+                <th width="5%"  class="px-0 bg-transparent border-top-0"><span class="h6">{{__('Image')}}</span></th>
+                <th width="10%" class="px-0 bg-transparent border-top-0"><span class="h6">{{__('Code')}}</span></th>
+                <th width="25%" class="px-0 bg-transparent border-top-0"><span class="h6">{{__('Description')}}</span></th>
+                <th width="10%" class="px-0 bg-transparent border-top-0"><span class="h6">{{__('Brand')}}</span></th>
+                <th width="6%"  class="px-0 bg-transparent border-top-0 text-center"><span class="h6">{{__('Quantity')}}</span></th>
+                <th width="8%"  class="px-0 bg-transparent border-top-0"><span class="h6">{{__('U. de m.')}}</span></th>
+                <th width="10%" class="px-0 bg-transparent border-top-0"><span class="h6">{{__('Attribute')}}</span></th>
+                <th width="8%"  class="px-0 bg-transparent border-top-0 text-center"><span class="h6">{{__('Price')}}</span></th>
+                <th width="8%"  class="px-0 bg-transparent border-top-0 text-center"><span class="h6">{{__('Dscto.%')}}</span></th>
+                <th width="8%"  class="px-0 bg-transparent border-top-0 text-center"><span class="h6">{{__('Subtotal')}}</span></th>
               </tr>
             </thead>
             <tbody>
               @php
                 $option_price = 0;
                 $total = 0;
+                $newSubtotalAllProds = 0;
               @endphp
               <?php
-                /*
-                echo "<pre>";
-                print_r(json_decode($order->cart, TRUE));
-                echo "</pre>";
-                exit();
-                */
+                // echo "<pre>";
+                // print_r(json_decode($order->cart, TRUE));
+                // echo "</pre>";
+                // exit();
               ?>
               @foreach (json_decode($order->cart,true) as $key  => $item)
               @php
+                $keywithoutguion = str_replace("-","",$key);
+                $keywithoutguion2 = (int) $keywithoutguion;
                 $total += $item['main_price'] * $item['qty'];
                 if($item['attribute_price'] != "" && count($item['attribute_price']) > 0){
                   $option_price += $item['attribute_price'];
                 }
                 $grandSubtotal = $total + $option_price;
-                if(App\Models\Item::where('id',$key)->exists()){
-                  $main_item = App\Models\Item::findOrFail($key);
+                $couponInfo_format = '0.00';
+                if(App\Models\Item::where('id',$keywithoutguion2)->exists()){
+                  $main_item = App\Models\Item::findOrFail($keywithoutguion2);
+                  $couponData = "";
+                  if($item['coupon_valid'] == 'available'){
+                    $couponData = DB::table('tbl_coupons')->where('id','=',$item['coupon_id'])->select('name','discount_percentage')->orderBy('id','desc')->get()->toArray()[0];
+                    $couponInfo_format = floatval($couponData->discount_percentage);
+                  }
                 }else{
                   $main_item = null;
+                  $couponData = "";
                 }
+                $itemPhoto = (isset($item['photo']) && !empty($item['photo'])) ? $item['photo'] : '';
+                $urlPhoto = asset('assets/images/'.$itemPhoto);
+                $total = 0;
+                // -------------------------- VALIDACIÓN DE CUPONES
+                $totalwithoutcoupon = 0;
+                $totalwithcoupon = 0;
+                $newSubtotalProdsFormat = 0;
+                // ----------- CANTIDAD DE PRODUCTOS TOTAL...
+                $prod_qty = floatval($item['qty']);
+                // ----------- CANTIDAD DE PRODUCTOS SIN CUPÓN TOTAL...
+                $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+                // ----------- CANTIDAD DE PRODUCTOS CON CUPÓN...
+                $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
+                $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+                if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
+                  if($item['coupon_valid'] == "available"){
+                    $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+                    $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+                    $newSubtotalProdsFormat += $totalwithoutcoupon + $totalwithcoupon;
+                  }else{
+                    if(isset($item['subtotal']) && !empty($item['subtotal'])){
+                      $newSubtotalProdsFormat = $item['subtotal'];
+                    }else{
+                      $newSubtotalProdsFormat += ($item['price'] + $total + $attribute_price) * $item['qty'];
+                    }
+                  }
+                }else{
+                  if(isset($item['subtotal']) && !empty($item['subtotal'])){
+                    $newSubtotalProdsFormat = $item['subtotal'];
+                  }else{
+                    $newSubtotalProdsFormat += ($item['price'] + $total + $attribute_price) * $item['qty'];
+                  }
+                }
+                $newSubtotalAllProds += $newSubtotalProdsFormat;
               @endphp
               <tr>
-                <td class="">
-                  {{$item['name']}}
+                <td>
+                  <div class="d-block w-100 txt-center">
+                    <img src="{{ $urlPhoto }}" class="m-auto w-50px h-50px" alt="{{ maxcharacters($item['name'], 42) }}" width="55px" height="55px">
+                  </div>
+                </td>
+                <td><span>{{ $item['sku'] }}</span></td>
+                {{--
+                <!-- <td class="">
+                  <span>{{ maxcharacters($item['name'], 42) }}</span>
                   <p>
                     @if($main_item)
                     @if ($item['item_type'] == 'digital')
@@ -212,7 +288,12 @@
                     @endif
                   @endif
                   </p>
-                </td>
+                </td> -->
+                --}}
+                <td><span>{{ maxcharacters($main_item->sort_details, 42) }}</span></td>
+                <td class="px-0">{{ $item['brand_name'] }}</td>
+                <td class="px-0 text-center">{{ $item['qty'] }}</td>
+                <td class="px-0">{{ $item['rootunit_name'] }}</td>
                 <td class="px-0">
                   @if(isset($item['attribute_collection']))
                     @php
@@ -252,8 +333,7 @@
                   --
                   @endif
                 </td>
-                <td class="px-0">{{$item['qty']}}</td>
-                <td class="px-0 text-right text-end">
+                <td class="px-0 text-right text-center">
                   @if($setting->currency_direction == 1)
                     @if($item['coupon_id'] != 0 && $item['coupon_price'] != 0)
                       @if($item['coupon_valid'] == "available")
@@ -268,10 +348,20 @@
                     {{round($item['price']*$order->currency_value,2)}}{{$order->currency_sign}}
                   @endif
                 </td>
+                <td class="text-center"><span>{{ $couponInfo_format.'%' }}</span></td>
+                <td class="text-center">
+                  <span>
+                  @if($setting->currency_direction == 1)
+                    {{$order->currency_sign}}{{round($newSubtotalProdsFormat*$order->currency_value,2)}}
+                  @else
+                    {{round($newSubtotalProdsFormat*$order->currency_value,2)}}{{$order->currency_sign}}
+                  @endif
+                  </span>
+                </td>
               </tr>
               @endforeach
               <tr>
-                <td class="padding-top-2x" colspan="5"></td>
+                <td class="padding-top-2x" colspan="9"></td>
               </tr>
               {{--
               <!--
@@ -292,38 +382,38 @@
               -->
               --}}
               @if(json_decode($order->discount,true))
-              @php
-                $discount = json_decode($order->discount,true);
-              @endphp
-              <tr>
-                <td class="px-0 border-top border-top-2"><span class="text-muted">{{__('Coupon discount')}} ({{$discount['code']['code_name']}})</span></td>
-                <td class="px-0 text-right text-end border-top border-top-2" colspan="5">
-                  <span class="text-danger">
-                  @if ($setting->currency_direction == 1)
-                    -{{$order->currency_sign}}{{round($discount['discount'] * $order->currency_value,2)}}
-                  @else
-                    -{{round($discount['discount'] * $order->currency_value,2)}}{{$order->currency_sign}}
-                  @endif
-                  </span>
-                </td>
-              </tr>
-              @endif
+                @php
+                  $discount = json_decode($order->discount,true);
+                @endphp
+                <tr>
+                  <td class="px-0 border-top border-top-2" colspan="2"><span class="text-muted">{{__('Coupon discount')}} ({{$discount['code']['code_name']}})</span></td>
+                  <td class="px-0 text-right text-end border-top border-top-2" colspan="9">
+                    <span class="text-danger">
+                    @if ($setting->currency_direction == 1)
+                      -{{$order->currency_sign}}{{round($discount['discount'] * $order->currency_value,2)}}
+                    @else
+                      -{{round($discount['discount'] * $order->currency_value,2)}}{{$order->currency_sign}}
+                    @endif
+                    </span>
+                  </td>
+                </tr>
+                @endif
               @if(json_decode($order->shipping,true))
-              @php
-                $shipping = json_decode($order->shipping,true);
-              @endphp
-              <tr>
-                <td class="px-0 border-top border-top-2"><span class="text-muted">{{__('Shipping')}}</span></td>
-                <td class="px-0 text-right text-end border-top border-top-2" colspan="5">
-                  <span>
-                  @if ($setting->currency_direction == 1)
-                    {{$order->currency_sign}}{{round($shipping['price']*$order->currency_value,2)}}
-                  @else
-                    {{round($shipping['price']*$order->currency_value,2)}}{{$order->currency_sign}}
-                  @endif
-                  </span>
-                </td>
-              </tr>
+                @php
+                  $shipping = json_decode($order->shipping,true);
+                @endphp
+                <tr>
+                  <td class="px-0 border-top border-top-2" colspan="2"><span class="text-muted">{{__('Shipping')}}</span></td>
+                  <td class="px-0 text-right text-end border-top border-top-2" colspan="9">
+                    <span>
+                    @if ($setting->currency_direction == 1)
+                      {{$order->currency_sign}}{{round($shipping['price']*$order->currency_value,2)}}
+                    @else
+                      {{round($shipping['price']*$order->currency_value,2)}}{{$order->currency_sign}}
+                    @endif
+                    </span>
+                  </td>
+                </tr>
               @endif
               {{--
               <!--
@@ -332,7 +422,7 @@
                 <td class="px-0 border-top border-top-2">
                 <span class="text-muted">{{__('State Tax')}}</span>
                 </td>
-                <td class="px-0 text-right text-end border-top border-top-2" colspan="5">
+                <td class="px-0 text-right text-end border-top border-top-2" colspan="9">
                   <span >
                   @if ($setting->currency_direction == 1)
                   {{isset($state['type']) && $state['type'] == 'percentage' ?  ' ('.$state['price'].'%) ' : ''}}  {{$order->currency_sign}}{{round($order['state_price']*$order->currency_value,2)}}
@@ -346,10 +436,24 @@
               -->
               --}}
               <tr>
-                <td class="px-0 border-top border-top-2">
+                <td class="px-0 border-top border-top-2" colspan="2">
+                  <strong>{{__('Subtotal')}}</strong>
+                </td>
+                <td class="px-0 text-right text-end border-top border-top-2" colspan="9">
+                  <span class="h6">
+                  @if($setting->currency_direction == 1)
+                    {{$order->currency_sign}}{{round($newSubtotalAllProds*$order->currency_value,2)}}
+                  @else
+                    {{round($newSubtotalAllProds*$order->currency_value,2)}}{{$order->currency_sign}}
+                  @endif
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td class="px-0 border-top border-top-2" colspan="2">
                   <strong>{{__('Shipment')}}</strong>
                 </td>
-                <td class="px-0 text-right text-end border-top border-top-2" colspan="5">
+                <td class="px-0 text-right text-end border-top border-top-2" colspan="9">
                   <span class="h6">
                     @if(isset($order->shipping_info) && $order->shipping_info != "")
                       @php
@@ -367,14 +471,14 @@
                 </td>
               </tr>
               <tr>
-                <td class="px-0 border-top border-top-2">
+                <td class="px-0 border-top border-top-2" colspan="2">
                 @if ($order->payment_method == 'Cash On Delivery')
-                <strong>{{__('Total amount')}}</strong>
+                  <strong>{{__('Total amount')}}</strong>
                 @else
-                <strong>{{__('Total due')}}</strong>
+                  <strong>{{__('Total due')}}</strong>
                 @endif
                 </td>
-                <td class="px-0 text-right text-end border-top border-top-2" colspan="5">
+                <td class="px-0 text-right text-end border-top border-top-2" colspan="9">
                   <span class="h3">
                     @if ($setting->currency_direction == 1)
                     {{$order->currency_sign}}{{PriceHelper::OrderTotal($order)}}

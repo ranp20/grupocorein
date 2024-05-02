@@ -13,6 +13,7 @@ use App\Models\ApplyCoupon;
 use App\Models\AttributeOption;
 use App\Models\Attribute;
 use App\Models\Coupons;
+use App\Models\RootUnit;
 use DateTime;
 use DateTimeZone;
 use Illuminate\Support\Facades\Auth;
@@ -35,7 +36,7 @@ class CartRepository{
     // $qty = isset($input['quantity']) ? $input['quantity'] : 1;
     // $qty = is_numeric($qty) ? $qty : 1;
     $cart = Session::get('cart');
-    $item = Item::where('id',$input['item_id'])->select('id','tax_id','sections_id','name','photo','discount_price','previous_price','on_sale_price','special_offer_price','brand_id','coupon_id','slug','sku','is_type','item_type','license_name','license_key')->first();
+    $item = Item::where('id',$input['item_id'])->select('id','tax_id','sections_id','name','photo','discount_price','previous_price','on_sale_price','special_offer_price','brand_id','coupon_id','unidad_raiz','atributo_raiz','atributoraiz_collection','slug','sku','is_type','item_type','license_name','license_key')->first();
     // -------------- REDIRIGIR HACIA LA PÁGINA DE ERROR 404, EN CASO DE NO ENCONTRAR EL PRODUCTO...
     if(!$item){
       abort(404);
@@ -154,6 +155,7 @@ class CartRepository{
 
     // $taxes = Tax::where('id',$item->tax_id)->select('id','name','value','status')->first();
     $brand = Brand::where('id',$item->brand_id)->select('id','name','slug')->first();
+    $rootunit = RootUnit::where('id',$item->unidad_raiz)->select('id','name')->first();
     $user_id = (isset($input['user_id']) && $input['user_id'] != "") ? $input['user_id'] : 0;
     $item_id = (isset($input['item_id']) && $input['item_id'] != "") ? $input['item_id'] : 0;
     $coupon_id = (isset($input['coupon_id']) && $input['coupon_id'] != "") ? $input['coupon_id'] : 0;
@@ -221,6 +223,8 @@ class CartRepository{
               "sku" => $item->sku,
               "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
               "brand_name" => (isset($brand->name) && $brand->name != "") ? $brand->name : "",
+              "rootunit_id" => (isset($rootunit->id) && $rootunit->id != "") ? $rootunit->id : "",
+              "rootunit_name" => (isset($rootunit->name) && $rootunit->name != "") ? $rootunit->name : "",
               "qty" => $qty,
               "price" => PriceHelper::grandPrice($item),
               "main_price" => $item->discount_price,
@@ -341,6 +345,8 @@ class CartRepository{
                 "sku" => $item->sku,
                 "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
                 "brand_name" => (isset($brand->name) && $brand->name != "") ? $brand->name : "",
+                "rootunit_id" => (isset($rootunit->id) && $rootunit->id != "") ? $rootunit->id : "",
+                "rootunit_name" => (isset($rootunit->name) && $rootunit->name != "") ? $rootunit->name : "",
                 "qty" => $qty,
                 "price" => PriceHelper::grandPrice($item),
                 "main_price" => $item->discount_price,
@@ -472,6 +478,8 @@ class CartRepository{
                 "sku" => $item->sku,
                 "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
                 "brand_name" => (isset($brand->name) && $brand->name != "") ? $brand->name : "",
+                "rootunit_id" => (isset($rootunit->id) && $rootunit->id != "") ? $rootunit->id : "",
+                "rootunit_name" => (isset($rootunit->name) && $rootunit->name != "") ? $rootunit->name : "",
                 "qty" => $qty,
                 "price" => PriceHelper::grandPrice($item),
                 "main_price" => $item->discount_price,
@@ -590,6 +598,8 @@ class CartRepository{
             "sku" => $item->sku,
             "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
             "brand_name" => (isset($brand->name) && $brand->name != "") ? $brand->name : "",
+            "rootunit_id" => (isset($rootunit->id) && $rootunit->id != "") ? $rootunit->id : "",
+            "rootunit_name" => (isset($rootunit->name) && $rootunit->name != "") ? $rootunit->name : "",
             "qty" => $qty,
             "price" => PriceHelper::grandPrice($item),
             "main_price" => $item->discount_price,
@@ -707,6 +717,8 @@ class CartRepository{
           "sku" => $item->sku,
           "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
           "brand_name" => (isset($brand->name) && $brand->name != "") ? $brand->name : "",
+          "rootunit_id" => (isset($rootunit->id) && $rootunit->id != "") ? $rootunit->id : "",
+          "rootunit_name" => (isset($rootunit->name) && $rootunit->name != "") ? $rootunit->name : "",
           "qty" => $qty,
           "price" => PriceHelper::grandPrice($item),
           "main_price" => $item->discount_price,

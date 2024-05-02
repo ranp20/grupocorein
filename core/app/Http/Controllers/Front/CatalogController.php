@@ -159,7 +159,7 @@ class CatalogController extends Controller{
       'brand' => $brand,
       'unidadraiz' => $unidadraiz,
       'atributoraiz' => $atributoraiz,
-      'items' => $items,
+      'items' => (isset($items) && !empty($items) && count($items) > 0) ? $items : [],
       'name_string_count' => $name_string_count,
       'category' => $category,
       'subcategory' => $subcategory,

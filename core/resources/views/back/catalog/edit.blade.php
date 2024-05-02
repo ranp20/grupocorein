@@ -37,7 +37,7 @@
 												<label class="d-block">{{ __('Featured Image') }} *</label>
 											</div>
 											<div class="form-group pb-0 pt-0 mt-0 mb-0">
-												<img class="admin-img lg" src="{{ $catalog->photo ? asset('assets/images/catalog/'.$catalog->photo) : asset('assets/images/placeholder.png') }}">
+												<img class="admin-img lg" src="{{ $catalog->photo ? asset('assets/images/catalogs/'.$catalog->photo) : asset('assets/images/placeholder.png') }}">
 											</div>
 											<div class="form-group position-relative ">
 												@if($catalog->photo != "")

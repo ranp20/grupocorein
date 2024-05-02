@@ -149,6 +149,8 @@ input[f-hidden="aria-hidden"]{
 	margin: 0;
 	padding: 0;
 }
+.w-50px{width: 50px;}
+.h-50px{height: 50px;}
 .w-100{width: 100%;}
 .text-center{text-align: center;}
 .text-left{text-align: left;}
@@ -1158,6 +1160,17 @@ img{
 	// background-color: #fff;
 	// padding: 15px 10px 0px 10px;
 	// border-radius: 15px;
+	.owl-stage{
+		.slider-item{
+			.post-thumb{
+				max-height: 203px;
+				height: auto;
+				img{
+					height: auto;	
+				}
+			}
+		}
+	}
 }
 #contBrandList_1{
 	// background-color: #f3f5f6;
@@ -1710,4 +1723,52 @@ img{
 			}
 		}
 	}
+}
+// -------------- TABLA DE RESUMEN ORDEN EN USAR
+.c_tblMobAdaptative{
+	overflow: auto;
+}
+#tbl-user_invoice{
+	min-width: 1000px;
+	overflow-y: auto;
+	overflow-x: auto;
+	thead{
+		tr{
+			th{
+				font-size: 12px;
+				span{
+					font-size: 12px;
+				}
+			}
+		}
+	}
+	tbody{
+		tr{
+			td{
+				font-size: 12px;
+				span{
+					font-size: 12px;
+				}
+			}
+		}
+	}
+}
+// ---------- MAGICZOOM CUSTOMS
+.MagicZoom > figure{
+	max-width: 480px;
+	width: auto;
+	max-height: 480px;
+	height: auto;
+}
+.MagicZoom > figure > img{
+	max-height: 480px !important;
+	height: auto;
+}
+a[data-zoom-id] img, .mz-thumb img{
+	padding-bottom: 0 !important;
+	border: thin solid transparent !important;
+}
+.mz-thumb:not(.mz-thumb-selected):hover img,
+.mz-thumb.mz-thumb-selected img{
+	border: thin solid rgb(180, 180, 180) !important;
 }

@@ -42,7 +42,8 @@
                     @csrf
                     <input type="hidden" name="home_page" value="theme1" id="">
                     @include('alerts.alerts')
-                    <div class="form-group">
+                    {{--
+                    <!-- <div class="form-group">
                       <label id="change_label" for="name">{{ __('Brand Logo') }} </label>
                       <br>
                         <img class="admin-img" src="{{  asset('assets/images/placeholder.png') }}" alt="No Image Found">
@@ -54,14 +55,15 @@
                         <input type="file" accept="image/*" class="upload-photo" name="logo" id="file" aria-label="File browser example" >
                         <span class="file-custom text-left">{{ __('Upload Image...') }}</span>
                       </label>
-                    </div>
+                    </div> -->
+                    --}}
                     <div class="form-group">
                       <label for="title">{{ __('Title') }} *</label>
-                      <input type="text" name="title" class="form-control" id="title" placeholder="{{ __('Enter Title') }}" value="{{ old('title') }}" >
+                      <input type="text" name="title" class="form-control" id="title" placeholder="{{ __('Enter Title') }}" value="{{ old('title') }}">
                     </div>
                     <div class="form-group">
                       <label for="slider-link">{{ __('Link') }} *</label>
-                      <input type="text" name="link" class="form-control" id="slider-link" placeholder="{{ __('Enter Link') }}" value="{{ old('link') }}" >
+                      <input type="text" name="link" class="form-control" id="slider-link" placeholder="{{ __('Enter Link') }}" value="{{ old('link') }}">
                     </div>
                     <div class="form-group">
                       <label for="details">{{ __('Details') }} *</label>
@@ -76,7 +78,7 @@
                     </div>
                     <div class="form-group position-relative">
                       <label class="file">
-                        <input type="file" accept="image/*" class="upload-photo" name="photo" id="file" aria-label="File browser example" >
+                        <input type="file" accept="image/*" class="upload-photo" name="photo" id="file" aria-label="File browser example" required>
                         <span class="file-custom text-left">{{ __('Upload Image...') }}</span>
                       </label>
                     </div>
@@ -85,7 +87,8 @@
                     </div>
                   </form>
                 </div>
-                <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                {{--
+                <!-- <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                   <form action="{{ route('back.slider.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="home_page" value="theme2" id="">
@@ -209,7 +212,8 @@
                       <button type="submit" class="btn btn-secondary">{{ __('Submit') }}</button>
                     </div>
                   </form>
-                </div>
+                </div> -->
+                --}}
               </div>
             </div>
           </div>

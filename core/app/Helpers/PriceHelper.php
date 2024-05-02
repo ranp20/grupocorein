@@ -49,6 +49,32 @@ class PriceHelper{
       return  $price.$curr->sign;
     }
   }
+  public static function setCurrencyOfCoupon($coupon_price){
+    if(Session::has('currency')){
+      $curr = Currency::findOrFail(Session::get('currency'));
+    }else{
+      $curr = Currency::where('is_default',1)->first();
+    }
+    $setting = Setting::first();
+    $coupon_price = self::testPriceofCoupon(round($coupon_price*$curr->value,2));
+    if($setting->currency_direction == 1){
+      return $curr->sign . $coupon_price;
+    }else{
+      return  $coupon_price.$curr->sign;
+    }
+  }
+  public static function testPriceofCoupon($coupon_price){
+    $setting = Setting::first();
+    if($setting->is_decimal == 1){
+      if(is_numeric( $coupon_price ) || floor( $coupon_price ) != $coupon_price){
+        return number_format($coupon_price, 2, $setting->decimal_separator, $setting->thousand_separator);
+      }else{
+        return number_format($coupon_price, 2, $setting->decimal_separator, $setting->thousand_separator);
+      }
+    }else{
+      return number_format($coupon_price);
+    }
+  }
   public static function setPreviousPrice($price){
     if(Session::has('currency')){
       $curr = Currency::findOrFail(Session::get('currency'));

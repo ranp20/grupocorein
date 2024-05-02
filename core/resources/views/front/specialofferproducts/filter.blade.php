@@ -28,7 +28,7 @@
           <div class="product-badge product-badge2 bg-info"> -{{PriceHelper::DiscountPercentage($item)}}</div>
         @endif
         <a href="{{route('front.product',$item->slug)}}" class="d-flex align-items-center justify-content-center">
-          <img src="{{asset('assets/images/'.$item->thumbnail)}}" alt="Product">
+          <img src="{{asset('assets/images/items/'.$item->thumbnail)}}" alt="Product">
         </a>
         <div class="product-button-group">
           <a class="product-button wishlist_store" href="{{route('user.wishlist.store',$item->id)}}" title="{{__('Wishlist')}}"><i class="icon-heart"></i></a>

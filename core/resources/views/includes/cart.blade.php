@@ -48,10 +48,12 @@
                 $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
                 if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
 
-                  $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+                  $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->select('name', 'discount_percentage', 'time_end', 'status')->take(1)->get();
                   if(count($namecouponbyid) != 0){
                     $couponbyiddecode = json_decode($namecouponbyid, TRUE);
                     $nameofcouponbyid = $couponbyiddecode[0]['name'];
+                    $discount_percentageofcouponbyid = floatval($couponbyiddecode[0]['discount_percentage']);
+                    $discount_percentage_format = $discount_percentageofcouponbyid;
                     $expiresAtTimer = $couponbyiddecode[0]['time_end'];
                     // ----------- Crear un objeto DateTime a partir de la fecha final...
                     $currentDate = new DateTime();
@@ -84,7 +86,7 @@
                 <td>
                   <div class="product-item">
                     @php
-                      $pathProductPhoto = 'assets/images/'.$item['photo'];
+                      $pathProductPhoto = 'assets/images/items/'.$item['photo'];
                       $pathProductPhotoDefault = 'assets/images/Utilities/default_product.png';
                     @endphp
                     @if(file_exists( $pathProductPhoto ))
@@ -111,7 +113,10 @@
                           @if($remainingTime <= 0)
                           @else
                             <span class="product-withcoupon mt-05rm">
-                              <small>Con cupón: <strong>{{ $nameofcouponbyid }}</strong></small>
+                              {{--
+                              <!-- <small>Con cupón: <strong>{{ $nameofcouponbyid }}</strong></small> -->
+                              --}}
+                              <small>Descuento por CUPÓN: <strong>{{ $discount_percentage_format }} %</strong></small>
                             </span> 
                           @endif
                         @endif

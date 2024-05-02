@@ -2,7 +2,9 @@
 <tr id="product-bulk-delete">
   <td><input type="checkbox" class="bulk-item" value="{{$data->id}}"></td>
   <td>
-    <img src="{{ $data->thumbnail ? asset('assets/images/'.$data->thumbnail) : asset('assets/images/placeholder.png') }}" alt="Image Not Found">
+    <a class="link_viewTargetBlankImg" href="{{ $data->thumbnail ? asset('assets/images/items/'.$data->thumbnail) : asset('assets/images/placeholder.png') }}" target="_blank">
+      <img src="{{ $data->thumbnail ? asset('assets/images/items/'.$data->thumbnail) : asset('assets/images/placeholder.png') }}" alt="Image Not Found">
+    </a>
   </td>
   <td>
     {{ $data->name }}

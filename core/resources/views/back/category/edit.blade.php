@@ -22,7 +22,7 @@
 								<div class="form-group">
 									<label for="name">{{ __('Current Image') }} *</label>
 									<br>
-										<img class="admin-img" src="{{ $category->photo ? asset('assets/images/'.$category->photo) : asset('assets/images/placeholder.png') }}" alt="No Image Found">
+										<img class="admin-img" src="{{ $category->photo ? asset('assets/images/categories/'.$category->photo) : asset('assets/images/placeholder.png') }}" alt="No Image Found">
                     <br>
 									<span class="mt-1">{{ __('Image Size Should Be 60 x 60.') }}</span>
 								</div>
@@ -53,8 +53,7 @@
 									<input type="number" name="serial" class="form-control" id="serial" placeholder="{{ __('Enter Serial Number') }}" value="{{ $category->serial }}">
 								</div>
 								<div class="form-group">
-									<button type="submit"
-										class="btn btn-secondary ">{{ __('Submit') }}</button>
+									<button type="submit" class="btn btn-secondary ">{{ __('Submit') }}</button>
 								</div>
 							</form>
 						</div>

@@ -8,6 +8,7 @@ use App\{
 };
 use App\Helpers\PriceHelper;
 use App\Helpers\SmsHelper;
+use App\Models\Coupons;
 use App\Models\Notification;
 use App\Models\Setting;
 use App\Models\User;
@@ -194,6 +195,14 @@ class OrderController extends Controller{
         $newSubtotalAllProds += $newSubtotalProdsFormat;
         $itemPhoto = (isset($v['photo']) && !empty($v['photo'])) ? $v['photo'] : '';
         $urlPhoto = asset('assets/images/'.$itemPhoto);
+        $couponDataInfo_format = "0.00";
+        if(isset($v['coupon_id']) && !empty($v['coupon_id']) && $v['coupon_id'] != 0 && $v['coupon_id'] != "0"){
+          $couponDataInfo = Coupons::where('id', "=", $v['coupon_id'])->select('name','discount_percentage')->take(1)->get()->toArray();
+          if(count($couponDataInfo) > 0){
+            $couponDataInfo_convert = floatval($couponDataInfo[0]['discount_percentage']);
+            $couponDataInfo_format = $couponDataInfo_convert;
+          }
+        }        
         $get_SessionCartFormat[$countAllProds] = [
           'id' => $newIdProds,
           'options_id' => (isset($v['options_id']) && !empty($v['options_id'])) ? $v['options_id'] : [],
@@ -203,6 +212,7 @@ class OrderController extends Controller{
           'slug' => (isset($v['slug']) && !empty($v['slug'])) ? $v['slug'] : 'No-encontrado',
           'sku' => (isset($v['sku']) && !empty($v['sku'])) ? $v['sku'] : 'No-encontrado',
           'brand_name' => (isset($v['brand_name']) && !empty($v['brand_name'])) ? $v['brand_name'] : 'No-encontrado',
+          'rootunit_name' => (isset($v['rootunit_name']) && !empty($v['rootunit_name'])) ? $v['rootunit_name'] : 'No-encontrado',
           'qty' => (isset($v['qty']) && !empty($v['qty'])) ? $v['qty'] : 0,
           'price' => (isset($v['price']) && !empty($v['price'])) ? PriceHelper::setCurrencyPrice($v['price']) : 0,
           'main_price' => (isset($v['main_price']) && !empty($v['main_price'])) ? PriceHelper::setCurrencyPrice($v['main_price']) : 0,
@@ -211,9 +221,10 @@ class OrderController extends Controller{
           'type' => (isset($v['type']) && !empty($v['type'])) ? $v['type'] : '',
           'item_type' => (isset($v['item_type']) && !empty($v['item_type'])) ? $v['item_type'] : 'Normal',
           "coupon_id" => (isset($v['coupon_id']) && !empty($v['coupon_id'])) ? $v['coupon_id'] : 0,
-          "coupon_price" => (isset($v['coupon_price']) && !empty($v['coupon_price'])) ? $v['coupon_price'] : 0,
+          "coupon_price" => (isset($v['coupon_price']) && !empty($v['coupon_price'])) ? PriceHelper::setCurrencyOfCoupon($v['coupon_price']) : 0,
           "quantity_withoutcoupon" => (isset($v['quantity_withoutcoupon']) && !empty($v['quantity_withoutcoupon'])) ? $v['quantity_withoutcoupon'] : 0,
           "coupon_valid" => (isset($v['coupon_valid']) && !empty($v['coupon_valid'])) ? $v['coupon_valid'] : "not_available",
+          "coupon_percentage" => $couponDataInfo_format,
           'item_l_n' => (isset($v['item_l_n']) && !empty($v['item_l_n'])) ? $v['item_l_n'] : [],
           'item_l_k' => (isset($v['item_l_k']) && !empty($v['item_l_k'])) ? $v['item_l_k'] : [],
           'user_id' => (isset($v['user_id']) && !empty($v['user_id'])) ? $v['user_id'] : $get_idUser,

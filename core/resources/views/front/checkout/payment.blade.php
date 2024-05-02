@@ -60,6 +60,11 @@ $orderIdGenFirst = genCodeRandom();
 </div>
 <div class="container padding-bottom-3x mb-1  checkut-page">
   <div class="row">
+    <?php
+      // echo "<pre>";
+      // print_r(Session::get('cart'));
+      // echo "</pre>";
+    ?>
     <div class="col-xl-9 col-lg-8">
       <div class="steps flex-sm-nowrap mb-2">
         <a class="step" href="{{route('front.checkout.billing')}}">
@@ -74,13 +79,6 @@ $orderIdGenFirst = genCodeRandom();
       </div>
       <div class="card">
         <div class="card-body">
-          <?php
-            /*
-            echo "<pre>";
-            print_r(Session::get('cart'));
-            echo "<pre>";
-            */
-          ?>
           <div class="row cCrd__cTitle">
             <div class="col-9 cCrd__cTitle__cL">
               <h6 class="pb-0 mb-0">{{__('Review Your Order')}} :</h6>

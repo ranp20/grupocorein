@@ -39,7 +39,7 @@ class HomePageController extends Controller{
         if($request->hasFile($single_image)){
           $data = HomeCutomize::first();
           $check = json_decode($data->hero_banner,true);
-          $input[$single_image] = ImageHelper::handleUploadedImage($request->$single_image,'assets/images',isset($check[$single_image]) ? $check[$single_image] : null);
+          $input[$single_image] = ImageHelper::handleUploadedImage($request->$single_image,'assets/images/banners',isset($check[$single_image]) ? $check[$single_image] : null);
         }
       }
       unset($input['_token']);
@@ -71,7 +71,7 @@ class HomePageController extends Controller{
       if($request->hasFile($single_image)){
         $data = HomeCutomize::first();
         $check = json_decode($data->banner_first,true);
-        $input[$single_image] = ImageHelper::handleUploadedImage($request->$single_image,'assets/images',$check[$single_image]);
+        $input[$single_image] = ImageHelper::handleUploadedImage($request->$single_image,'assets/images/banners',$check[$single_image]);
       }else{
         $check = json_decode($data->banner_first,true);
         $input[$single_image] = $check[$single_image];
@@ -98,7 +98,7 @@ class HomePageController extends Controller{
       if($request->hasFile($single_image)){
         $data = HomeCutomize::first();
         $check = json_decode($data->banner_secend,true);
-        $input[$single_image] = ImageHelper::handleUploadedImage($request->$single_image,'assets/images',$check[$single_image]);
+        $input[$single_image] = ImageHelper::handleUploadedImage($request->$single_image,'assets/images/banners',$check[$single_image]);
       }else{
         $check = json_decode($data->banner_secend,true);
         $input[$single_image] = $check[$single_image];
@@ -123,7 +123,7 @@ class HomePageController extends Controller{
       if($request->hasFile($single_image)){
         $data = HomeCutomize::first();
         $check = json_decode($data->banner_third,true);
-        $input[$single_image] = ImageHelper::handleUploadedImage($request->$single_image,'assets/images',$check[$single_image]);
+        $input[$single_image] = ImageHelper::handleUploadedImage($request->$single_image,'assets/images/banners',$check[$single_image]);
       }else{
         $check = json_decode($data->banner_third,true);
         $input[$single_image] = $check[$single_image];
@@ -188,7 +188,7 @@ class HomePageController extends Controller{
       if($request->hasFile($single_image)){
         $data = HomeCutomize::first();
         $check = json_decode($data->home_page4,true);
-        $input[$single_image] = ImageHelper::handleUploadedImage($request->$single_image,'assets/images',$check[$single_image]);
+        $input[$single_image] = ImageHelper::handleUploadedImage($request->$single_image,'assets/images/banners',$check[$single_image]);
       }
     }
     unset($input['_token']);

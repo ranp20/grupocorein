@@ -359,7 +359,9 @@ img.boton-as{
     width: 220px;
 }
 .gateway_image{
-    width: 324px
+    width: 324px;
+    max-height: 40px;
+    height: auto;
 }
 .site-header .site-menu>ul>li .sub-menu>li>a,
 .toolbar-dropdown>li>a{

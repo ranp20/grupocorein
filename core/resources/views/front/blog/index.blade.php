@@ -42,7 +42,7 @@ function cambiaf_mysql($date){
           <div class="col-md-6">
             <a href="{{route('front.blog.details',$post->slug)}}" class="blog-post">
               <div class="post-thumb">
-                <img class="lazy" data-src="{{ asset('assets/images/' . json_decode($post->photo, true)[array_key_first(json_decode($post->photo, true))]) }}" alt="Blog Post">
+                <img class="lazy" data-src="{{ asset('assets/images/blogs/' . json_decode($post->photo, true)[array_key_first(json_decode($post->photo, true))]) }}" alt="Blog Post">
               </div>
               <div class="post-body">
                 <h3 class="post-title"> {{ strlen(strip_tags($post->title)) > 55 ? substr(strip_tags($post->title), 0, 55) : strip_tags($post->title) }}</h3>
@@ -92,7 +92,7 @@ function cambiaf_mysql($date){
           <h3 class="widget-title">{{__('Most Recent Added Posts')}}</h3>
           @foreach ($recent_posts as $recent)
           <div class="entry">
-          <div class="entry-thumb"><a href="{{route('front.blog.details',$recent->slug)}}"><img src="{{ asset('assets/images/'.json_decode($recent->photo,true)[array_key_first(json_decode($recent->photo,true))]) }}" alt="Post"></a></div>
+          <div class="entry-thumb"><a href="{{route('front.blog.details',$recent->slug)}}"><img src="{{ asset('assets/images/blogs/'.json_decode($recent->photo,true)[array_key_first(json_decode($recent->photo,true))]) }}" alt="Post"></a></div>
           <div class="entry-content">
             <h4 class="entry-title"><a href="{{route('front.blog.details',$recent->slug)}}">
               {{ strlen(strip_tags($recent->title)) > 55 ? substr(strip_tags($recent->title), 0, 55) . '...' : strip_tags($recent->title) }}

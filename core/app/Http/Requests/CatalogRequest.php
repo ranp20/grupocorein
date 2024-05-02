@@ -2,7 +2,6 @@
 namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 class CatalogRequest extends FormRequest{
-  
   public function authorize(){
     return true;
   }

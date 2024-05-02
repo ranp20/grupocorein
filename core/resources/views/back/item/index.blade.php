@@ -6,6 +6,9 @@
       <div class="d-sm-flex align-items-center justify-content-between">
         <h3 class="mb-0 bc-title"><b>{{ __('All Products') }}</b></h3>
         <div class="right">
+          <a class="btn btn-primary btn-sm d-inline-block" href="{{ route('back.item.add') }}">
+            <span class="sub-item">{{ __('Add Product') }}</span>
+          </a>
           <a href="{{route('back.csv.export')}}" class="btn btn-info btn-sm d-inline-block">{{__('CSV Export')}}</a>
           <form class="d-inline-block" action="{{route('back.bulk.delete')}}" method="get">
             <input type="hidden" value="" name="ids[]" id="bulk_delete">
@@ -136,7 +139,6 @@
 		</div>
 	</div>
 </div>
-{{-- DELETE MODAL --}}
 <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="confirm-deleteModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -160,5 +162,4 @@
     </div>
   </div>
 </div>
-{{-- DELETE MODAL ENDS --}}
 @endsection

@@ -9,7 +9,7 @@
     @foreach ($categories as $key => $pcategory)
     <div class="c-item">
       <a class="d-block navi-link" href="{{route('front.catalog').'?category='.$pcategory->slug}}">
-        <img class="lazy" data-src="{{asset('assets/images/'.$pcategory->photo)}}">
+        <img class="lazy" data-src="{{asset('assets/images/categories/'.$pcategory->photo)}}">
         <span class="text-gray-dark">{{$pcategory->name}}</span>
         @if ($pcategory->subcategory->count() > 0)
         <i class="icon-chevron-right"></i>
