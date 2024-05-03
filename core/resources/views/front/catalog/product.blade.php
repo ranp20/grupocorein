@@ -962,7 +962,7 @@
               <!-- NUEVO CONTENIDO (INICIO) -->
               @if($item->adj_doc != "" && $item->adj_doc != null)
               <div class="ficha">
-                <a href="{{ asset('assets/files/item/adj_doc/'.$item->adj_doc) }}" target="_blank" title="Ficha Técnica del producto">
+                <a href="{{ asset('assets/files/items/'.$item->adj_doc) }}" target="_blank" title="Ficha Técnica del producto">
                   <img class="fic" src="{{route('front.index')}}/assets/images/ficha-tecnica.png">
                 </a>
               </div>
