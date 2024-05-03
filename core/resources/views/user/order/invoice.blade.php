@@ -220,7 +220,7 @@
                   $couponData = "";
                 }
                 $itemPhoto = (isset($item['photo']) && !empty($item['photo'])) ? $item['photo'] : '';
-                $urlPhoto = asset('assets/images/'.$itemPhoto);
+                $urlPhoto = asset('assets/images/items/'.$itemPhoto);
                 $total = 0;
                 // -------------------------- VALIDACIÓN DE CUPONES
                 $totalwithoutcoupon = 0;
