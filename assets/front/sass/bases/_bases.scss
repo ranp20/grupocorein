@@ -1300,10 +1300,13 @@ img{
 .link-a-menu-login .t-h-dropdown-menu > a{
 	position: relative;
 	i{
-		position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translate(0%, -50%);
+		// position: absolute;
+		position: relative;
+    // right: 0;
+    // top: 50%;
+    // transform: translate(0%, -50%);
+		margin-right: 5px;
+		top: 2px;
 	}
 }
 .product-sku{

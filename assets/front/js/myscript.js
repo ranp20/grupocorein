@@ -744,13 +744,17 @@ $(function($){
       });
     });
     // user panel script start
-    $(document).on("change", "#avater", function(){
+    $(document).on("change", "#avater", function(event){
       var file = event.target.files[0];
       var reader = new FileReader();
-      reader.onload = function(e){
-        $("#avater_photo_view").attr("src", e.target.result);
-      };
-      reader.readAsDataURL(file);
+      if(event.target.files[0] == undefined || event.target.files[0] == "undefined"){
+        $("#avater_photo_view").attr("src", "../assets/images/placeholder.png");
+      }else{
+        reader.readAsDataURL(file);
+        reader.onload = function(e){
+          $("#avater_photo_view").attr("src", e.target.result);
+        };
+      }
     });
     $('#submit_number').on('click', function(e){
       var link = $(this).data('href') + '?order_number=' + $('#order_number').val();

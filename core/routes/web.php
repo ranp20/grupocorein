@@ -289,6 +289,7 @@ Route::group(['middleware' => 'maintainance'], function (){
       Route::post('/login/departamento', 'Auth\User\LoginController@getAllDepartamentos')->name('user.departamento');
       Route::get('/login/provincia', 'Auth\User\LoginController@getProvinciaByIdDepartamento')->name('user.provincia');
       Route::get('/login/distrito', 'Auth\User\LoginController@getDistritoByIdProvincia')->name('user.distrito');
+      Route::post('/changeiconuser', 'User\AccountController@changeIconUser')->name('user.account.changeiconuser');
       //------------ REGISTER ------------
       Route::get('/register', 'Auth\User\RegisterController@showForm')->name('user.register');
       Route::post('/register-submit', 'Auth\User\RegisterController@register')->name('user.register.submit');

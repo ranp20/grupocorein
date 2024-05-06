@@ -305,6 +305,37 @@ class FrontendController extends Controller{
   }
   public function product($slug){
     $item = Item::with('category')->whereStatus(1)->whereSlug($slug)->get();
+
+    $couponAddToItem = [];
+    if(Auth::check()){
+      if(!empty(auth()->user()) || auth()->user() != ""){
+        $user = Auth::user();
+        $iduser = $user->id;
+        $idprod = $item[0]->id;
+        $idcoupon = $item[0]->coupon_id;        
+        
+        $applyCouponValid = ApplyCoupon::where('id_user','=',$iduser)->where('id_prod','=',$idprod)->where('id_coupon','=',$idcoupon)->take(1)->get()->toArray();
+
+        // echo "<pre>";
+        // print_r($applyCouponValid);
+        // echo "</pre>";
+
+        if(count($applyCouponValid) > 0){
+          $couponAddToItem = $applyCouponValid;
+        }else{
+          $couponAddToItem = ApplyCoupon::where('id_coupon','=',$item[0]->coupon_id)->take(1)->get();
+        }
+      }else{
+        $couponAddToItem = ApplyCoupon::where('id_coupon','=',$item[0]->coupon_id)->take(1)->get();
+      }
+    }else{
+      $couponAddToItem = ApplyCoupon::where('id_coupon','=',$item[0]->coupon_id)->take(1)->get();
+    }
+    // echo "<pre>";
+    // print_r($couponAddToItem);
+    // echo "</pre>";
+    // exit();
+
     $itemsProd = "";
     if(isset($item) && !empty($item) && count($item) > 0){
       $itemProd = $item[0];
@@ -327,7 +358,8 @@ class FrontendController extends Controller{
       'attributes'    => $item[0]->attributes,
       'related_items' => $item[0]->category->items()->whereStatus(1)->where('id','!=',$item[0]->id)->take(8)->get(),
       'coupons'       => Coupons::where('id','=',$item[0]->coupon_id)->where("status","!=",0)->take(1)->get(),
-      'applycoupon'   => ApplyCoupon::where('id_coupon','=',$item[0]->coupon_id)->take(1)->get()
+      // 'applycoupon'   => json_encode($couponAddToItem, TRUE)
+      'applycoupon'   => $couponAddToItem
     ]);
   }
   public function brands(){
@@ -645,10 +677,10 @@ class FrontendController extends Controller{
   // ------------------ SPECIAL OFFER PRODUCTS ------------------
 	public function getProductByCategoryName(Request $request){
     
-    echo "<pre>";
-    print_r($request['category']);
-    echo "<pre>";
-    exit();
+    // echo "<pre>";
+    // print_r($request['category']);
+    // echo "<pre>";
+    // exit();
     
     return redirect('/catalog?category='. $request['category']);
     /*
@@ -1136,9 +1168,31 @@ class FrontendController extends Controller{
     }
     return $numberStr;
   }
-
+  // ------------------- APLICAR CUPÓN AL PRODUCTO...
   public function applycoupon(Request $request){
    
+    // NOTA: (03/05/2024) GUARDAR UNA SOLA VEZ EL CUPÓN POR PRODUCTO, VALIDAR EL ID DEL CLIENTE, ID DEL PRODUCTO E ID DEL CUPÓN
+    // if(Auth::check()){
+    //   if(!empty(auth()->user()) || auth()->user() != ""){
+    //     $user = Auth::user();
+    //     $iduser = $user->id;
+    //     $idprod = $request->prod_id;
+    //     $idcoupon = $request->coupon_id;
+    //     $applyCouponValid = ApplyCoupon::where('id_user','=',$iduser)->where('id_prod','=',$idprod)->where('id_coupon','=',$idcoupon)->take(1)->get()->toArray();
+    //     if(count($applyCouponValid) > 0){
+    //       echo "YA APLICADO";
+    //     }else{
+    //       echo "NO APLICADO";
+    //     }
+    //   }else{
+    //     echo "NO EXISTE USUARIO";
+    //   }
+    // }else{
+    //   echo "NO EXISTE USUARIO";
+    // }
+    // exit();
+
+
     // INFORMACIÓN A UTILIZAR EN EL CÁLCULO...
     $TaxesAll = Tax::get();
     $sumFinalPrice1 = 0;
@@ -1153,82 +1207,88 @@ class FrontendController extends Controller{
         $iduser = $user->id;
         $idprod = $request->prod_id;
         $idcoupon = $request->coupon_id;
-        $coupon = Coupons::select('name','discount_percentage')->where('id','=',$idcoupon)->take(1)->get()->toArray();
-        $item = Item::where('id','=',$idprod)->take(1)->get()->toArray();
-        // CALCULO PARA EL DESCUENTO DEL PRECIO DEL PRODUCTO SEGÚN EL CUPÓN...
-        $discount_percentage = $coupon[0]['discount_percentage'] / 100;
+        
+        $applyCouponValid = ApplyCoupon::where('id_user','=',$iduser)->where('id_prod','=',$idprod)->where('id_coupon','=',$idcoupon)->take(1)->get()->toArray();
+        if(count($applyCouponValid) > 0){
+          // REDIRIGIR A LA PÁGINA ANTERIOR(DETALLE DEL PRODUCTO) SI YA ESTÁ ACTIVADO EN ESTE PRODUCTO...
+          return redirect()->back()->withSuccess(__('The coupon has already been activated on this product.'));
+        }else{
+          $coupon = Coupons::select('name','discount_percentage')->where('id','=',$idcoupon)->take(1)->get()->toArray();
+          $item = Item::where('id','=',$idprod)->take(1)->get()->toArray();
+          // CALCULO PARA EL DESCUENTO DEL PRECIO DEL PRODUCTO SEGÚN EL CUPÓN...
+          $discount_percentage = $coupon[0]['discount_percentage'] / 100;
 
-        if(isset($item[0]['sections_id']) && $item[0]['sections_id'] != 0){
-          if($item[0]['sections_id'] == 1){
-            if($item[0]['on_sale_price'] != 0 && $item[0]['on_sale_price'] != ""){
-              if(isset($item[0]['tax_id']) && $item[0]['tax_id'] == 1){                
-                  $sumFinalPrice1 = $item[0]['on_sale_price'] * $incIGV_format;
+          if(isset($item[0]['sections_id']) && $item[0]['sections_id'] != 0){
+            if($item[0]['sections_id'] == 1){
+              if($item[0]['on_sale_price'] != 0 && $item[0]['on_sale_price'] != ""){
+                if(isset($item[0]['tax_id']) && $item[0]['tax_id'] == 1){                
+                    $sumFinalPrice1 = $item[0]['on_sale_price'] * $incIGV_format;
+                    $sumFinalPrice2 = $item[0]['on_sale_price'] + $sumFinalPrice1;
+                    $coupon_1 = $sumFinalPrice2 * $discount_percentage;
+                    $coupon_2 = $sumFinalPrice2 - $coupon_1;
+                    // echo number_format($coupon_2, 2)."<br>"; // REDONDEANDO LOS DECIMALES...
+                    $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
+                    // echo $finalprice."<br>";
+                }else{                
+                  $sumFinalPrice1 = $item[0]['on_sale_price'];
                   $sumFinalPrice2 = $item[0]['on_sale_price'] + $sumFinalPrice1;
                   $coupon_1 = $sumFinalPrice2 * $discount_percentage;
                   $coupon_2 = $sumFinalPrice2 - $coupon_1;
-                  // echo number_format($coupon_2, 2)."<br>"; // REDONDEANDO LOS DECIMALES...
                   $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
                   // echo $finalprice."<br>";
-              }else{                
-                $sumFinalPrice1 = $item[0]['on_sale_price'];
-                $sumFinalPrice2 = $item[0]['on_sale_price'] + $sumFinalPrice1;
-                $coupon_1 = $sumFinalPrice2 * $discount_percentage;
-                $coupon_2 = $sumFinalPrice2 - $coupon_1;
+                }
+              }else{
+                $discount_price = $item[0]['discount_price'];
+                $coupon_1 = $discount_price * $discount_percentage;
+                $coupon_2 = $discount_price - $coupon_1;
                 $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
                 // echo $finalprice."<br>";
               }
             }else{
-              $discount_price = $item[0]['discount_price'];
-              $coupon_1 = $discount_price * $discount_percentage;
-              $coupon_2 = $discount_price - $coupon_1;
-              $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
-              // echo $finalprice."<br>";
+              if($item[0]['special_offer_price'] != 0 && $item[0]['special_offer_price'] != ""){
+                if(isset($item[0]['tax_id']) && $item[0]['tax_id'] == 1){
+                  $sumFinalPrice1 = $item[0]['special_offer_price'] * $incIGV_format;
+                  $sumFinalPrice2 = $item[0]['special_offer_price'] + $sumFinalPrice1;
+                  $coupon_1 = $sumFinalPrice2 * $discount_percentage;
+                  $coupon_2 = $sumFinalPrice2 - $coupon_1;
+                  $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
+                  // echo $finalprice."<br>";
+                }else{                
+                  $sumFinalPrice1 = $item[0]['special_offer_price'];
+                  $sumFinalPrice2 = $item[0]['special_offer_price'] + $sumFinalPrice1;
+                  $coupon_1 = $sumFinalPrice2 * $discount_percentage;
+                  $coupon_2 = $sumFinalPrice2 - $coupon_1;
+                  $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
+                  // echo $finalprice."<br>";
+                }
+              }else{
+                $discount_price = $item[0]['discount_price'];
+                $coupon_1 = $discount_price * $discount_percentage;
+                $coupon_2 = $discount_price - $coupon_1;
+                $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
+                // echo $finalprice."<br>";
+              }
             }
           }else{
-            if($item[0]['special_offer_price'] != 0 && $item[0]['special_offer_price'] != ""){
-              if(isset($item[0]['tax_id']) && $item[0]['tax_id'] == 1){
-                $sumFinalPrice1 = $item[0]['special_offer_price'] * $incIGV_format;
-                $sumFinalPrice2 = $item[0]['special_offer_price'] + $sumFinalPrice1;
-                $coupon_1 = $sumFinalPrice2 * $discount_percentage;
-                $coupon_2 = $sumFinalPrice2 - $coupon_1;
-                $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
-                // echo $finalprice."<br>";
-              }else{                
-                $sumFinalPrice1 = $item[0]['special_offer_price'];
-                $sumFinalPrice2 = $item[0]['special_offer_price'] + $sumFinalPrice1;
-                $coupon_1 = $sumFinalPrice2 * $discount_percentage;
-                $coupon_2 = $sumFinalPrice2 - $coupon_1;
-                $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
-                // echo $finalprice."<br>";
-              }
-            }else{
-              $discount_price = $item[0]['discount_price'];
-              $coupon_1 = $discount_price * $discount_percentage;
-              $coupon_2 = $discount_price - $coupon_1;
-              $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
-              // echo $finalprice."<br>";
-            }
+            $discount_price = $item[0]['discount_price'];
+            $coupon_1 = $discount_price * $discount_percentage;
+            $coupon_2 = $discount_price - $coupon_1;
+            $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
+            // echo $finalprice."<br>";
           }
-        }else{
-          $discount_price = $item[0]['discount_price'];
-          $coupon_1 = $discount_price * $discount_percentage;
-          $coupon_2 = $discount_price - $coupon_1;
-          $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
-          // echo $finalprice."<br>";
-        }
 
-        // $user = User::findOrFail($user->id);
-        $arrcoupon = array(
-          'id_user' => $iduser,
-          'id_prod' => $idprod,
-          'id_coupon' => $idcoupon,
-          'totalprice' => $finalprice,
-          'status' => 1
-        );
-        // AGREGAR A LA TABLA "tbl_applycoupons"...
-        $this->applycoupon->addToUser($arrcoupon);
-        return redirect()->back()->withSuccess(__('New coupon activated successfully.'));
-        // exit();        
+          // $user = User::findOrFail($user->id);
+          $arrcoupon = array(
+            'id_user' => $iduser,
+            'id_prod' => $idprod,
+            'id_coupon' => $idcoupon,
+            'totalprice' => $finalprice,
+            'status' => 1
+          );
+          // AGREGAR A LA TABLA "tbl_applycoupons"...
+          $this->applycoupon->addToUser($arrcoupon);
+          return redirect()->back()->withSuccess(__('New coupon activated successfully.'));          
+        }        
       }else{
         // REDIRIGIR A INICIAR SESIÓN...
         return redirect(route('user.login'));

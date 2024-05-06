@@ -57,6 +57,17 @@ body_theme3
 body_theme4
 @endif
 ">
+<?php
+function maxcharacters($string, $maxletters){
+    $output_strg = "";
+    if(strlen($string) > $maxletters){
+        $output_strg = substr($string, 0, $maxletters) . "...";
+    }else{
+        $output_strg = $string;
+    }
+    return $output_strg;
+}
+?>
 @if ($setting->is_loader == 1)
 <div id="preloader">
     <img src="{{ asset('assets/images/'.$setting->loader) }}" alt="{{ __('Loading...') }}" width="100" height="100" decoding="sync">
@@ -166,11 +177,21 @@ body_theme4
                                 @else
                                 <div class="t-h-dropdown mx-0 link-a-menu-login">
                                     <div class="main-link d-flex align-items-center flex-column">
-                                        <i class="icon-user pr-2"></i> <span class="text-label">{{Auth::user()->first_name}}</span>
+                                        <i class="icon-user pr-2"></i> <span class="text-label">{{ maxcharacters(Auth::user()->first_name, 11) }}</span>
                                     </div>
                                     <div class="t-h-dropdown-menu">
-                                        <a href="{{route('user.dashboard')}}"><span>{{ __('Dashboard') }}</span><i class="icon-chevron-right pr-2"></i></a>
-                                        <a href="{{route('user.logout')}}"><span>{{ __('Logout') }}</span><i class="icon-chevron-right pr-2"></i></a>
+                                        <a href="{{route('user.dashboard')}}">
+                                            <i class="icon-command"></i>
+                                            <span>{{ __('Dashboard') }}</span>
+                                        </a>
+                                        <a href="{{route('user.order.index')}}">
+                                            <i class="icon-shopping-bag"></i>
+                                            <span>{{ __('Orders') }}</span>
+                                        </a>
+                                        <a href="{{route('user.logout')}}">
+                                            <i class="icon-log-out"></i>
+                                            <span>{{ __('Logout') }}</span>
+                                        </a>
                                     </div>
                                 </div>
                                 @endif

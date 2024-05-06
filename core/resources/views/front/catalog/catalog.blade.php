@@ -15,11 +15,144 @@ function renderStarRating($rating,$maxRating=5) {
   $html = $html;
   return $html;
 }
+
+$user_id = 0;
+if(Auth::check()){
+  if(!empty(auth()->user()) || auth()->user() != ""){
+    $user = Auth::user();
+    $user_id = Auth::user()->id;
+  }
+}
 @endphp
 <div class="row g-3" id="main_div">
   @if(isset($items) && !empty($items) && $items->count() > 0)
     @if($checkType != 'list')
       @foreach($items as $item)
+        <?php
+          $TaxesAll = DB::table('taxes')->get();
+          $sumFinalPrice1 = 0;
+          $sumFinalPrice2 = 0;
+          $sumTotalPriceFinal = 0;
+          $couponInfo_totalprice = 0;
+          $incIGV = $TaxesAll[0]->value;
+          $sinIGV = $TaxesAll[1]->value;
+          $incIGV_format = $incIGV / 100;
+          $sinIGV_format = $sinIGV;
+          $getAllCouponInfo = [];
+          $getAllDataCouponById = [];
+          // --------------- VALIDAR SI YA SE ACTIVÓ UN CUPÓN EN EL PRODUCTO ('tbl_applycoupons')
+          if(!empty($item->coupon_id) && $item->coupon_id != "" && $item->coupon_id != null && $item->coupon_id != 0){
+            $getAllCouponInfo = DB::table('tbl_applycoupons')->where("id_user","=",$user_id)->where("id_prod","=",$item->id)->where("id_coupon","=",$item->coupon_id)->where("status","!=",0)->select('id_user', 'id_prod', 'id_coupon', 'totalprice')->take(1)->get();
+            if(count($getAllCouponInfo) > 0){
+              $allDataConvert = json_decode($getAllCouponInfo, TRUE);
+              $getAllDataCouponById = DB::table('tbl_coupons')->where("id","=",$allDataConvert[0]['id_coupon'])->where("status","!=",0)->select('name', 'discount_percentage')->take(1)->get();
+              if(count($getAllDataCouponById) > 0){
+                $allCouponDataConvertById = json_decode($getAllDataCouponById, TRUE);
+                $coupinf_discount_percentage = $allCouponDataConvertById[0]['discount_percentage'];
+                $couponInfo_totalprice = $allDataConvert[0]['totalprice']; // SETEAR LA VARIABLE DE PRECIO TOTAL PARA CUPÓN ACTIVADO
+              }
+            }
+          }
+
+          if($item->sections_id != 0){
+            if($item->sections_id == 1 && $item->on_sale_price != 0 && $item->on_sale_price != ""){
+              if($item->tax_id == 1){
+                $sumFinalPrice1 = $item->on_sale_price * $incIGV_format;
+                $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
+                // if(count($getAllCouponInfo) > 0){
+                //   $sumTotalPriceFinal = $couponInfo_totalprice;
+                // }else{
+                //   $sumTotalPriceFinal = $sumFinalPrice2;
+                // }
+                if(count($getAllDataCouponById) > 0){
+                  $sumTotalPriceFinal = $couponInfo_totalprice;
+                }else{
+                  $sumTotalPriceFinal = $sumFinalPrice2;
+                }
+              }else{
+                $sumFinalPrice1 = $item->on_sale_price;
+                $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
+                // if(count($getAllCouponInfo) > 0){
+                //   $sumTotalPriceFinal = $couponInfo_totalprice;
+                // }else{
+                //   $sumTotalPriceFinal = $sumFinalPrice2;
+                // }
+                if(count($getAllDataCouponById) > 0){
+                  $sumTotalPriceFinal = $couponInfo_totalprice;
+                }else{
+                  $sumTotalPriceFinal = $sumFinalPrice2;
+                }
+              }                    
+            }else if($item->sections_id == 2 && $item->special_offer_price != 0 && $item->special_offer_price != ""){
+              if($item->tax_id == 1){
+                $sumFinalPrice1 = $item->special_offer_price * $incIGV_format;
+                $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                // if(count($getAllCouponInfo) > 0){
+                //   $sumTotalPriceFinal = $couponInfo_totalprice;
+                // }else{
+                //   $sumTotalPriceFinal = $sumFinalPrice2;
+                // }
+                if(count($getAllDataCouponById) > 0){
+                  $sumTotalPriceFinal = $couponInfo_totalprice;
+                }else{
+                  $sumTotalPriceFinal = $sumFinalPrice2;
+                }
+              }else{
+                $sumFinalPrice1 = $item->special_offer_price;
+                $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                // if(count($getAllCouponInfo) > 0){
+                //   $sumTotalPriceFinal = $couponInfo_totalprice;
+                // }else{
+                //   $sumTotalPriceFinal = $sumFinalPrice2;
+                // }
+                if(count($getAllDataCouponById) > 0){
+                  $sumTotalPriceFinal = $couponInfo_totalprice;
+                }else{
+                  $sumTotalPriceFinal = $sumFinalPrice2;
+                }
+              }
+            }else{
+              if($item->tax_id == 1){                
+                $sumFinalPrice1 = $item->special_offer_price * $incIGV_format;
+                $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                // if(count($getAllCouponInfo) > 0){
+                //   $sumTotalPriceFinal = $couponInfo_totalprice;
+                // }else{
+                //   $sumTotalPriceFinal = $sumFinalPrice2;
+                // }
+                if(count($getAllDataCouponById) > 0){
+                  $sumTotalPriceFinal = $couponInfo_totalprice;
+                }else{
+                  $sumTotalPriceFinal = $sumFinalPrice2;
+                }
+              }else{
+                $sumFinalPrice1 = $item->special_offer_price;
+                $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1; 
+                // if(count($getAllCouponInfo) > 0){
+                //   $sumTotalPriceFinal = $couponInfo_totalprice;
+                // }else{
+                //   $sumTotalPriceFinal = $sumFinalPrice2;
+                // }
+                if(count($getAllDataCouponById) > 0){
+                  $sumTotalPriceFinal = $couponInfo_totalprice;
+                }else{
+                  $sumTotalPriceFinal = $sumFinalPrice2;
+                }
+              }
+            }
+          }else{
+            // if(count($getAllCouponInfo) > 0){
+            //   $sumTotalPriceFinal = $couponInfo_totalprice;
+            // }else{
+            //   $sumTotalPriceFinal = $item->discount_price;
+            // }
+            if(count($getAllDataCouponById) > 0){
+              $sumTotalPriceFinal = $couponInfo_totalprice;
+            }else{
+              $sumTotalPriceFinal = $item->discount_price;
+            }
+          }
+        ?>
         <div class="col-gd">
           <div class="product-card ">
             @if($item->is_stock())
@@ -70,56 +203,7 @@ function renderStarRating($rating,$maxRating=5) {
                 @if($item->previous_price !=0)
                 <del>{{PriceHelper::setPreviousPrice($item->previous_price)}}</del>
                 @endif
-                @php
-                  $TaxesAll = DB::table('taxes')->get();
-                  $sumFinalPrice1 = 0;
-                  $sumFinalPrice2 = 0;
-                  $incIGV = $TaxesAll[0]->value;
-                  $sinIGV = $TaxesAll[1]->value;
-                  $incIGV_format = $incIGV / 100;
-                  $sinIGV_format = $sinIGV;
-                @endphp
-                  @if(isset($item->sections_id) && $item->sections_id != 0)
-                    @if($item->sections_id == 1)
-                      @if($item->on_sale_price != 0 && $item->on_sale_price != "")
-                        @if(isset($item->tax_id) && $item->tax_id == 1)
-                          @php
-                            $sumFinalPrice1 = $item->on_sale_price * $incIGV_format;
-                            $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
-                          @endphp
-                          <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
-                        @else
-                          @php
-                            $sumFinalPrice1 = $item->on_sale_price;
-                            $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
-                          @endphp
-                          <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
-                        @endif
-                      @else
-                        <span>{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
-                      @endif
-                    @else
-                      @if($item->special_offer_price != 0 && $item->special_offer_price != "")
-                        @if(isset($item->tax_id) && $item->tax_id == 1)
-                          @php
-                            $sumFinalPrice1 = $item->special_offer_price * $incIGV_format;
-                            $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
-                          @endphp
-                          <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
-                        @else
-                          @php
-                            $sumFinalPrice1 = $item->special_offer_price;
-                            $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
-                          @endphp
-                          <span>{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
-                        @endif
-                      @else
-                        <span>{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
-                      @endif
-                    @endif
-                  @else
-                    <span>{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
-                  @endif
+                <span>{{PriceHelper::setCurrencyPrice($sumTotalPriceFinal)}}</span>
               </h4>
               <div class="cWtspBtnCtc">
                 <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51{{$setting->footer_phone}}&text=Solicito información sobre: {{route('front.product',$item->slug)}}" target="_blank" class="cWtspBtnCtc__pLink">
@@ -159,6 +243,131 @@ function renderStarRating($rating,$maxRating=5) {
       @endforeach
     @else
       @foreach($items as $item)
+        <?php
+          $TaxesAll = DB::table('taxes')->get();
+          $sumFinalPrice1 = 0;
+          $sumFinalPrice2 = 0;
+          $sumTotalPriceFinal = 0;
+          $couponInfo_totalprice = 0;
+          $incIGV = $TaxesAll[0]->value;
+          $sinIGV = $TaxesAll[1]->value;
+          $incIGV_format = $incIGV / 100;
+          $sinIGV_format = $sinIGV;
+          $getAllCouponInfo = [];
+          $getAllDataCouponById = [];
+          // --------------- VALIDAR SI YA SE ACTIVÓ UN CUPÓN EN EL PRODUCTO ('tbl_applycoupons')
+          if(!empty($item->coupon_id) && $item->coupon_id != "" && $item->coupon_id != null && $item->coupon_id != 0){
+            $getAllCouponInfo = DB::table('tbl_applycoupons')->where("id_user","=",$user_id)->where("id_prod","=",$item->id)->where("id_coupon","=",$item->coupon_id)->where("status","!=",0)->select('id_user', 'id_prod', 'id_coupon', 'totalprice')->take(1)->get();
+            if(count($getAllCouponInfo) > 0){
+              $allDataConvert = json_decode($getAllCouponInfo, TRUE);
+              $getAllDataCouponById = DB::table('tbl_coupons')->where("id","=",$allDataConvert[0]['id_coupon'])->where("status","!=",0)->select('name', 'discount_percentage')->take(1)->get();
+              if(count($getAllDataCouponById) > 0){
+                $allCouponDataConvertById = json_decode($getAllDataCouponById, TRUE);
+                $coupinf_discount_percentage = $allCouponDataConvertById[0]['discount_percentage'];
+                $couponInfo_totalprice = $allDataConvert[0]['totalprice']; // SETEAR LA VARIABLE DE PRECIO TOTAL PARA CUPÓN ACTIVADO
+              }
+            }
+          }
+
+          if($item->sections_id != 0){
+            if($item->sections_id == 1 && $item->on_sale_price != 0 && $item->on_sale_price != ""){
+              if($item->tax_id == 1){
+                $sumFinalPrice1 = $item->on_sale_price * $incIGV_format;
+                $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
+                // if(count($getAllCouponInfo) > 0){
+                //   $sumTotalPriceFinal = $couponInfo_totalprice;
+                // }else{
+                //   $sumTotalPriceFinal = $sumFinalPrice2;
+                // }
+                if(count($getAllDataCouponById) > 0){
+                  $sumTotalPriceFinal = $couponInfo_totalprice;
+                }else{
+                  $sumTotalPriceFinal = $sumFinalPrice2;
+                }
+              }else{
+                $sumFinalPrice1 = $item->on_sale_price;
+                $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
+                // if(count($getAllCouponInfo) > 0){
+                //   $sumTotalPriceFinal = $couponInfo_totalprice;
+                // }else{
+                //   $sumTotalPriceFinal = $sumFinalPrice2;
+                // }
+                if(count($getAllDataCouponById) > 0){
+                  $sumTotalPriceFinal = $couponInfo_totalprice;
+                }else{
+                  $sumTotalPriceFinal = $sumFinalPrice2;
+                }
+              }                    
+            }else if($item->sections_id == 2 && $item->special_offer_price != 0 && $item->special_offer_price != ""){
+              if($item->tax_id == 1){
+                $sumFinalPrice1 = $item->special_offer_price * $incIGV_format;
+                $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                // if(count($getAllCouponInfo) > 0){
+                //   $sumTotalPriceFinal = $couponInfo_totalprice;
+                // }else{
+                //   $sumTotalPriceFinal = $sumFinalPrice2;
+                // }
+                if(count($getAllDataCouponById) > 0){
+                  $sumTotalPriceFinal = $couponInfo_totalprice;
+                }else{
+                  $sumTotalPriceFinal = $sumFinalPrice2;
+                }
+              }else{
+                $sumFinalPrice1 = $item->special_offer_price;
+                $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                // if(count($getAllCouponInfo) > 0){
+                //   $sumTotalPriceFinal = $couponInfo_totalprice;
+                // }else{
+                //   $sumTotalPriceFinal = $sumFinalPrice2;
+                // }
+                if(count($getAllDataCouponById) > 0){
+                  $sumTotalPriceFinal = $couponInfo_totalprice;
+                }else{
+                  $sumTotalPriceFinal = $sumFinalPrice2;
+                }
+              }
+            }else{
+              if($item->tax_id == 1){                
+                $sumFinalPrice1 = $item->special_offer_price * $incIGV_format;
+                $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                // if(count($getAllCouponInfo) > 0){
+                //   $sumTotalPriceFinal = $couponInfo_totalprice;
+                // }else{
+                //   $sumTotalPriceFinal = $sumFinalPrice2;
+                // }
+                if(count($getAllDataCouponById) > 0){
+                  $sumTotalPriceFinal = $couponInfo_totalprice;
+                }else{
+                  $sumTotalPriceFinal = $sumFinalPrice2;
+                }
+              }else{
+                $sumFinalPrice1 = $item->special_offer_price;
+                $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1; 
+                // if(count($getAllCouponInfo) > 0){
+                //   $sumTotalPriceFinal = $couponInfo_totalprice;
+                // }else{
+                //   $sumTotalPriceFinal = $sumFinalPrice2;
+                // }
+                if(count($getAllDataCouponById) > 0){
+                  $sumTotalPriceFinal = $couponInfo_totalprice;
+                }else{
+                  $sumTotalPriceFinal = $sumFinalPrice2;
+                }
+              }
+            }
+          }else{
+            // if(count($getAllCouponInfo) > 0){
+            //   $sumTotalPriceFinal = $couponInfo_totalprice;
+            // }else{
+            //   $sumTotalPriceFinal = $item->discount_price;
+            // }
+            if(count($getAllDataCouponById) > 0){
+              $sumTotalPriceFinal = $couponInfo_totalprice;
+            }else{
+              $sumTotalPriceFinal = $item->discount_price;
+            }
+          }
+        ?>
         <div class="col-lg-12">
           <div class="product-card product-list">
             <div class="product-thumb">
@@ -186,11 +395,15 @@ function renderStarRating($rating,$maxRating=5) {
               @if($item->previous_price && $item->previous_price !=0)
               <div class="product-badge product-badge2 bg-info"> -{{PriceHelper::DiscountPercentage($item)}}</div>
               @endif
-              <img class="lazy" data-src="{{asset('assets/images/items/'.$item->thumbnail)}}" alt="Product" width="100" height="100" decoding="sync">
-              <div class="product-button-group">
-                <a class="product-button wishlist_store" href="{{route('user.wishlist.store',$item->id)}}" title="{{__('Wishlist')}}"><i class="icon-heart"></i></a>
-                <a data-target="{{route('fornt.compare.product',$item->id)}}" class="product-button product_compare" href="javascript:;" title="{{__('Compare')}}"><i class="icon-repeat"></i></a>
-                @include('includes.item_footer',['sitem' => $item])
+              <div class="product-thumb">
+                <a href="{{route('front.product',$item->slug)}}" class="d-flex align-items-center justify-content-center">
+                  <img class="lazy" data-src="{{asset('assets/images/items/'.$item->thumbnail)}}" alt="Product" width="100" height="100" decoding="sync">
+                </a>
+                <div class="product-button-group">
+                  <a class="product-button wishlist_store" href="{{route('user.wishlist.store',$item->id)}}" title="{{__('Wishlist')}}"><i class="icon-heart"></i></a>
+                  <a data-target="{{route('fornt.compare.product',$item->id)}}" class="product-button product_compare" href="javascript:;" title="{{__('Compare')}}"><i class="icon-repeat"></i></a>
+                  @include('includes.item_footer',['sitem' => $item])
+                </div>
               </div>
             </div>
             <div class="product-card-inner">
@@ -212,9 +425,9 @@ function renderStarRating($rating,$maxRating=5) {
                 --}}
                 <h4 class="product-price">
                   @if($item->previous_price !=0)
-                  <del>{{PriceHelper::setPreviousPrice($item->previous_price)}}</del>
+                    <del>{{PriceHelper::setPreviousPrice($item->previous_price)}}</del>
                   @endif
-                  {{PriceHelper::grandCurrencyPrice($item)}}
+                  <span>{{PriceHelper::setCurrencyPrice($sumTotalPriceFinal)}}</span>
                 </h4>
                 <p class="text-sm sort_details_show  text-muted hidden-xs-down my-1">
                 {{ strlen(strip_tags($item->sort_details)) > 100 ? substr(strip_tags($item->sort_details), 0, 100) : strip_tags($item->sort_details) }}

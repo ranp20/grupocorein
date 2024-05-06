@@ -181,4 +181,28 @@ class ImageHelper{
     }
     return $filename;
   }
+  // ------------------- ACTUALIZAR ICONO DE USUARIO ($path)
+  public static function handleUpdatedUploadedImageUser($file,$path,$data,$delete_path,$field){
+    // $name = $file->getClientOriginalName();
+    // $file->move(base_path('..').$path,$name);
+    if($data[$field] != null){
+      if(file_exists(base_path('../').$delete_path.$data[$field])){
+        unlink(base_path('../').$delete_path.$data[$field]);
+      }
+    }
+    $photo = $file->getClientOriginalName();
+    $path_info = pathinfo($photo);
+    $filename = $path_info['filename'];
+    $extension = $path_info['extension'];
+    $ext = $file->getClientOriginalExtension();
+    $fileNameFinal = $filename.'.'.$ext;
+    $image = \Image::make($file);
+    $image->resize(150, 150, function ($constraint){
+      $constraint->aspectRatio(); // Mantener la proporción original
+      $constraint->upsize(); // No ampliar la imagen si es más pequeña que el widthxheight especificado
+    });
+    $image->save(base_path('../').$path.'/'.$fileNameFinal);
+    // $file->move($path,$photo);
+    return $fileNameFinal;
+  }
 }

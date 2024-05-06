@@ -89,11 +89,42 @@ class AccountController extends Controller{
     Session::flash('success',__('Address update successfully'));
     return back();
   }
+  public function changeIconUser(Request $request){
+    if(isset($request['user_id'])){
+      $user = User::findOrFail($request['user_id']);
+    }else{
+      $user = Auth::user();
+    }
+    $input = $request->all();
+    if($file = $request->file('photo')){
+      $input['photo'] = ImageHelper::handleUpdatedUploadedImageUser($file,'/assets/images/users',$user,'/assets/images/users/','photo');
+      $user = Auth::user();
+      $user->update($input);
+      $data = [
+        "type" => "success",
+        "mssg" => "Su avatar fue actualizado correctamente.",
+      ];
+      $res = json_encode($data);
+      return $res;
+    }
+  }
   public function removeAccount(){
     $user = User::where('id',Auth::user()->id)->first();
-    ImageHelper::handleDeletedImage($user,'photo','assets/images/');
+    ImageHelper::handleDeletedImage($user,'photo','assets/images/users');
     $user->delete();
     Session::flash('success',__('Your account successfully remove'));
+    session()->forget('cart');
+    session()->forget('compare');
+    session()->forget('view_catalog');
+    session()->forget('billing_address');
+    session()->forget('shipping_address');
+    session()->forget('coupon');
+    session()->forget('payment_id');
+    session()->forget('order_id');
+    session()->forget('searhproduct_user');
+    session()->forget('data_voucher');
+    session()->forget('message');
+    Auth::logout();
     return redirect(route('front.index'));
   }
 }

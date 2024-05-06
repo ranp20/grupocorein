@@ -1751,7 +1751,7 @@ class CheckoutController extends Controller{
       }
       $newSubtotalAllProds += $newSubtotalProdsFormat;
       $itemPhoto = (isset($v['photo']) && !empty($v['photo'])) ? $v['photo'] : '';
-      $urlPhoto = asset('assets/images/'.$itemPhoto);
+      $urlPhoto = asset('assets/images/items/'.$itemPhoto);
       $couponDataInfo_format = "0.00";
       if(isset($v['coupon_id']) && !empty($v['coupon_id']) && $v['coupon_id'] != 0 && $v['coupon_id'] != "0"){
         $couponDataInfo = Coupons::where('id', "=", $v['coupon_id'])->select('name','discount_percentage')->take(1)->get()->toArray();

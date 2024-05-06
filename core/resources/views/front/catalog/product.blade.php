@@ -11,18 +11,14 @@
   <link rel="stylesheet" href="{{ asset('node_modules/owl-carousel/owl-carousel/owl.carousel.css')}}">
   <link rel="stylesheet" href="{{ asset('node_modules/owl-carousel/owl-carousel/owl.theme.css')}}">
   <script type="text/javascript" src="{{ asset('node_modules/owl-carousel/owl-carousel/owl.carousel.min.js')}}"></script>
-  <script type="text/javascript" src="{{ asset('assets/front/js/extraindex.js') }}"></script>
-  {{--
-  <!-- <script src="{{ asset('node_modules/@fancyapps/ui/dist/fancybox/fancybox.umd.js') }}"></script>   -->
-  <!-- <link rel="stylesheet" href="{{ asset('node_modules/@fancyapps/ui/dist/fancybox/fancybox.css') }}"/> -->
-  --}}
-  
+  <script type="text/javascript" src="{{ asset('assets/front/js/extraindex.js') }}"></script>  
   <script src="{{ asset('assets/front/js/plugins/magiczoom/magiczoomplus.js') }}"></script>
   <link rel="stylesheet" href="{{ asset('assets/front/js/plugins/magiczoom/magiczoomplus.css') }}"/>
 
 
 
 <?php
+
   if($item->stock != "" && $item->stock > 0){
     $user_id = 0;
     $millisecondsExpirationDate = 0;
@@ -35,7 +31,8 @@
     }
 
     if(count($applycoupon) > 0){
-      $arrCouponApply = json_decode($applycoupon, TRUE);
+      // $arrCouponApply = json_decode($applycoupon, TRUE);
+      $arrCouponApply = $applycoupon;
       $idcouponapply_user = $arrCouponApply[0]['id_user'];
       $idcouponapply_prod = $arrCouponApply[0]['id_prod'];
       $idcouponapply_coupon = $arrCouponApply[0]['id_coupon'];
@@ -660,7 +657,7 @@
             @endphp
             @if(count($colorsAvailables2) > 0)
             <div>
-              <p><strong>Número</strong></p>
+              <p><strong>Color:</strong></p>
               <div>
                 <ul class="variable-items-wrapper color-variable-wrapper" data-attribute_name="attribute_pa_numero">                
                   @foreach($arrColorAdd as $k => $v)
@@ -1207,7 +1204,7 @@
                       <div class="mdl-CouponCustom__c__mC__cc__frmSend">
                         <form action="{{ route('front.applycoupon') }}" class="btn-ok" method="POST">
                           @csrf
-                          <img src="{{asset('assets/images/coupons/')}}/{{ $imgCoupon }}" alt="" id="cImg-coupon_valid">
+                          <img src="{{asset('assets/images/coupons/')}}/{{ $arrcoupon2[0]['photo'] }}" alt="" id="cImg-coupon_valid">
                           <input tabindex="-1" placeholder="phdr-whidipts" type="hidden" width="0" height="0" autocomplete="off" spellcheck="false" f-hidden="aria-hidden" class="non-visvalipt h-alternative-shwnon s-fkeynone-step hdd-control d-non" name="prod_id" id="prod_id" value="{{ $item->id }}">
                           <input tabindex="-1" placeholder="phdr-whidipts" type="hidden" width="0" height="0" autocomplete="off" spellcheck="false" f-hidden="aria-hidden" class="non-visvalipt h-alternative-shwnon s-fkeynone-step hdd-control d-non" name="coupon_id" id="coupon_id" value="{{ $idcoupon }}">
                           <button type="submit" class="ipt_hidcouponvalid__cbtn">
@@ -1279,7 +1276,7 @@
                       <div class="mdl-CouponCustom__c__mC__cc__frmSend">
                         <form action="{{ route('front.applycoupon') }}" class="btn-ok" method="POST">
                           @csrf
-                          <img src="{{asset('assets/images/coupons/')}}/{{ $imgCoupon }}" alt="" id="cImg-coupon_valid">
+                          <img src="{{asset('assets/images/coupons/')}}/{{ $arrcoupon2[0]['photo'] }}" alt="" id="cImg-coupon_valid">
                           <input tabindex="-1" placeholder="phdr-whidipts" type="hidden" width="0" height="0" autocomplete="off" spellcheck="false" f-hidden="aria-hidden" class="non-visvalipt h-alternative-shwnon s-fkeynone-step hdd-control d-non" name="prod_id" id="prod_id" value="{{ $item->id }}">
                           <input tabindex="-1" placeholder="phdr-whidipts" type="hidden" width="0" height="0" autocomplete="off" spellcheck="false" f-hidden="aria-hidden" class="non-visvalipt h-alternative-shwnon s-fkeynone-step hdd-control d-non" name="coupon_id" id="coupon_id" value="{{ $idcoupon }}">
                           <button type="submit" class="ipt_hidcouponvalid__cbtn">
@@ -1314,7 +1311,7 @@
         <script type="text/javascript">
           // -------------- CUENTA REGRESIVA PARA CUPÓN DE DESCUENTO...
           var expirationTimestamp = {{ $millisecondsExpirationDate }};
-          var imgCouponValid = "{{ asset('assets/images/coupons/') }}/{{ $imgCoupon }}";
+          var imgCouponValid = "{{ asset('assets/images/coupons/') }}/{{ $arrcoupon2[0]['photo'] }}";
           var expirationTimestamp2 = parseInt(expirationTimestamp);
           const targetDateTimestamp = expirationTimestamp2;
           const updateInterval = setInterval(updateElements, 1000);
@@ -1363,10 +1360,12 @@
         </script>
         @endif
       @else
+        @if($idcouponapply_user == $user_id && $idcouponapply_prod == $item->id && $idcouponapply_coupon == $item->coupon_id)
+        @else
         <script type="text/javascript">
           // -------------- CUENTA REGRESIVA PARA CUPÓN DE DESCUENTO...
           var expirationTimestamp = {{ $millisecondsExpirationDate }};
-          var imgCouponValid = "{{ asset('assets/images/coupons/') }}/{{ $imgCoupon }}";
+          var imgCouponValid = "{{ asset('assets/images/coupons/') }}/{{ $arrcoupon2[0]['photo'] }}";
           var expirationTimestamp2 = parseInt(expirationTimestamp);
           const targetDateTimestamp = expirationTimestamp2;
           const updateInterval = setInterval(updateElements, 1000);
@@ -1413,6 +1412,7 @@
           }
           
         </script>
+        @endif
       @endif
     @endif
   @else
@@ -1424,7 +1424,7 @@
         <script type="text/javascript">
           // -------------- CUENTA REGRESIVA PARA CUPÓN DE DESCUENTO...
           var expirationTimestamp = {{ $millisecondsExpirationDate }};
-          var imgCouponValid = "{{ asset('assets/images/coupons/') }}/{{ $imgCoupon }}";
+          var imgCouponValid = "{{ asset('assets/images/coupons/') }}/{{ $arrcoupon2[0]['photo'] }}";
           var expirationTimestamp2 = parseInt(expirationTimestamp);
           const targetDateTimestamp = expirationTimestamp2;
           const updateInterval = setInterval(updateElements, 1000);
@@ -1475,7 +1475,7 @@
         <script type="text/javascript">
           // -------------- CUENTA REGRESIVA PARA CUPÓN DE DESCUENTO...
           var expirationTimestamp = {{ $millisecondsExpirationDate }};
-          var imgCouponValid = "{{ asset('assets/images/coupons/') }}/{{ $imgCoupon }}";
+          var imgCouponValid = "{{ asset('assets/images/coupons/') }}/{{ $arrcoupon2[0]['photo'] }}";
           var expirationTimestamp2 = parseInt(expirationTimestamp);
           const targetDateTimestamp = expirationTimestamp2;
           const updateInterval = setInterval(updateElements, 1000);
