@@ -539,4 +539,11 @@
     getDistritos(url,ciudad_id);
   });
   /*-------------- NUEVO CONTENIDO (FIN) --------------*/
+  // ------------ AGREGAR @CSRF_FIELD EN TODOS LOS FORMULARIO EXISTENTES...
+  $('form').each(function(i, form){
+    var $form = $(form);
+    if(! $form.find('input[name="_token"]').length){
+      $('form').prepend('<input type="hidden" name="_token" value="'+ $('meta[name="csrf-token"]').prop('content') +'"/>');
+    }
+  });
 })(jQuery); // End of use strict
