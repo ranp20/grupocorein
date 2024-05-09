@@ -8,6 +8,7 @@ class CreateTempCartsTable extends Migration{
       $table->id();
       $table->integer('user_id');
       $table->integer('item_id');
+      $table->text('attribute_collection')->nullable();
       $table->text('name')->nullable();
       $table->text('slug')->nullable();
       $table->string('sku')->nullable();
@@ -17,6 +18,10 @@ class CreateTempCartsTable extends Migration{
       $table->double('main_price')->default(0)->nullable();
       $table->string('photo')->nullable();
       $table->string('is_type')->nullable();
+      $table->integer('coupon_id')->default(0)->nullable();
+      $table->double('coupon_price', 12, 2)->default(0)->nullable();
+      $table->integer('quantity_withoutcoupon')->default(0)->nullable();
+      $table->char('coupon_valid', 13)->default('not_available')->nullable();
       $table->enum('item_type',['normal', 'digital'])->default('normal');
       $table->timestamps();
     });

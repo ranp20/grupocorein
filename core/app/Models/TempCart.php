@@ -15,11 +15,11 @@ class TempCart extends Model{
     'price',
     'main_price',
     'photo',
+    'is_type',
     'coupon_id',
     'coupon_price',
     'quantity_withoutcoupon',
     'coupon_valid',
-    'is_type',
     'item_type'
   ];
   public $timestamps = false;
