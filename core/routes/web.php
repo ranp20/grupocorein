@@ -1,4 +1,4 @@
-  <?php
+<?php
 // ************************************ ADMIN PANEL **********************************************
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -100,13 +100,11 @@ Route::group(['middleware' => 'adminlocalize'], function (){
       Route::get('childcategory/status/{id}/{status}', 'Back\ChieldCategoryController@status')->name('back.childcategory.status');
       Route::resource('childcategory', 'Back\ChieldCategoryController', ['as' => 'back', 'except' => 'show']);
     });
-
     Route::group(['middleware' => 'permissions:Manage Coupons'], function (){
       //------------ CATEGORY ------------
       Route::get('coupons/status/{id}/{status}', 'Back\CouponsController@status')->name('back.coupons.status');
       Route::resource('coupons', 'Back\CouponsController', ['as' => 'back', 'except' => 'show']);
     });
-
     Route::group(['middleware' => 'permissions:Customer List'], function (){
       //------------ USER ------------
       Route::resource('user', 'Back\UserController', ['as' => 'back', 'except' => ['create', 'store', 'edit']]);
@@ -212,16 +210,21 @@ Route::group(['middleware' => 'adminlocalize'], function (){
       Route::get('/setting/configuration/sms', 'Back\SmsSettingController@sms')->name('back.setting.sms');
       Route::post('/setting/sms/update', 'Back\SmsSettingController@smsUpdate')->name('back.sms.update');
       // ----------- SMS SETTING ---------------//
-      // ------------ LANGUAGE SETTING ------------
+      //------------ LANGUAGE SETTING ------------
       Route::resource('language', 'Back\LanguageController', ['as' => 'back']);
       Route::get('language/status/{id}/{status}', 'Back\LanguageController@status')->name('back.language.status');
-      // ------------ SLIDER ------------
+      //------------ SLIDER ------------
       Route::resource('slider', 'Back\SliderController', ['as' => 'back', 'except' => 'show']);
-      // ------------ SERVICE ------------
+      //------------ SERVICE ------------
       Route::resource('service', 'Back\ServiceController', ['as' => 'back', 'except' => 'show']);
-      // ------------ Genarate Sitemap ------------
-      // Route::get('sitemap/status/{id}/{status}', 'Back\SitemapController@status')->name('back.sitemap.status');
-      // Route::resource('sitemap', 'Back\SitemapController', ['as' => 'back', 'except' => 'show']);
+      // --------- Genarate Sitemap _______
+    //   Route::get('/sitemap', 'Back\SitemapController@index')->name('admin.sitemap.index');
+    //   Route::get('/sitemap/add', 'Back\SitemapController@add')->name('admin.sitemap.add');
+    //   Route::post('/sitemap/store', 'Back\SitemapController@store')->name('admin.sitemap.store');
+    //   Route::delete('/sitemap/delete/{id}/', 'Back\SitemapController@delete')->name('admin.sitemap.delete');
+    //   Route::post('/sitemap/download', 'Back\SitemapController@download')->name('admin.sitemap.download');
+      
+      
       Route::get('/sitemap', 'Back\SitemapController@index')->name('back.sitemap.index');
       Route::get('/sitemap/add', 'Back\SitemapController@add')->name('back.sitemap.add');
       Route::post('/sitemap/store', 'Back\SitemapController@store')->name('back.sitemap.store');
@@ -230,6 +233,7 @@ Route::group(['middleware' => 'adminlocalize'], function (){
       Route::get('sitemap/status/{id}/{status}', 'Back\SitemapController@status')->name('back.sitemap.status');
       Route::delete('/sitemap/delete/{id}/', 'Back\SitemapController@delete')->name('back.sitemap.delete');
       Route::post('/sitemap/download', 'Back\SitemapController@download')->name('back.sitemap.download');
+      
     });
     // --- NUEVO CONTENIDO (INICIO) --- //
     Route::group(['middleware' => 'permissions:Manage Locations'], function (){ 
@@ -246,7 +250,7 @@ Route::group(['middleware' => 'adminlocalize'], function (){
       //------------ CIUDAD ------------
       // Route::resource('ciudad', 'Back\CiudadController', ['as' => 'back', 'except' => 'show']);
     });
-    Route::group(['middleware' => 'permissions:Manage Quotations'], function (){
+    Route::group(['middleware' => 'permissions:Manage Quotations'], function (){            
       //------------ QUOTATION ------------
       // Route::get('quotation/add', 'Back\QuotationSpreadsheetsController@add')->name('back.quotation.add');
       Route::resource('quotation', 'Back\QuotationSpreadsheetsController', ['as' => 'back', 'except' => 'show']);
@@ -355,6 +359,7 @@ Route::group(['middleware' => 'maintainance'], function (){
     Route::get('/getproductsbycategory/products', 'Front\FrontendController@getProductByCategoryName')->name('front.getproductsbycategory');
     Route::get('/onsaleproducts/getFilterOnSaleProducts', 'Front\FrontendController@getFilterOnSaleProducts')->name('front.getFilterOnSaleProducts');
     Route::get('/specialofferproducts/getFilterSpecialOfferProducts', 'Front\FrontendController@getFilterSpecialOfferProducts')->name('front.getFilterSpecialOfferProducts');
+    // Route::get('/faq/getCatalogsByAnio', 'Front\FrontendController@getCatalogsByAnio')->name('front.getCatalogsByAnio');
     Route::get('/blog', 'Front\FrontendController@blog')->name('front.blog');
     // Route::get('/brands', 'Front\FrontendController@brands')->name('front.brand');
     Route::get('/allcategories', 'Front\FrontendController@allCategories')->name('front.allcategories');
@@ -388,7 +393,6 @@ Route::group(['middleware' => 'maintainance'], function (){
     Route::get('/product/cart/update/{id}', 'Front\CartController@update')->name('product.update.single');
     Route::post('/promo/submit', 'Front\CartController@promoStore')->name('front.promo.submit');
     Route::get('/cart/destroy/{id}', 'Front\CartController@destroy')->name('front.cart.destroy');
-    // Route::post('/cart/deleteprodtocart', 'Front\CartController@deleteItemOfCart')->name('front.cart.deleteprodtocart');
     Route::post('/shipping/submit', 'Front\CartController@shippingStore')->name('front.shipping.submit');
     Route::post('/shipping/charge/get', 'Front\CartController@shippingCharge')->name('front.shipping.charge');
     //------------ CATALOG ------------
@@ -422,7 +426,6 @@ Route::group(['middleware' => 'maintainance'], function (){
     Route::post('/checkout/pdforderpreview', 'Front\CheckoutController@getGeneratePDFOrderPreview')->name('front.checkout.pdforderpreview');
     Route::post('/checkout/setdatavoucher', 'Front\CheckoutController@selTypeOfVoucher')->name('front.checkout.setdatavoucher');
     Route::post('/checkout/datavoucher', 'Front\CheckoutController@sendDataVoucher')->name('front.checkout.submitdatavoucher');
-    // Route::post('/checkout/updatesesscart', 'Front\CheckoutController@updateSessionCRUD')->name('front.checkout.submitupdatesesscart');
     //------------ NUEVO CONTENIDO(FIN)
     
     Route::post('/paytm/notify', 'Payment\PaytmController@notify')->name('front.paytm.notify');

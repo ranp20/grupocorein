@@ -38,7 +38,7 @@ main table.summary td,main table.summary th{padding:8px;border-bottom:0}body,foo
 					<img src="{{ asset('assets/images/1669085546GRUPO-COREIN-LOGOTIPO.png') }}" alt="logo_grupocorein" width="100" height="100">
 				</div>
 				<div class="cH-sec__cL__cDataInfo">
-					<p>{{ $dataPDF['system_settinginfo']['site_title'] }}</p>
+					<p>COREIN IMPORT SAC</p>
 					<p>RUC: {{ $dataPDF['system_settinginfo']['site_ruc'] }}</p>
 				</div>
 			</div>

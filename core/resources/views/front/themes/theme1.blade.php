@@ -690,7 +690,7 @@
                   //Combiar arrays de Foto principal y fotos de galería
                   $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
                   $urlBaseDomain = $actual_link . "/grupocorein/"; // LOCAL
-                  // $urlBaseDomain = $actual_link . "/"; // SERVIDOR
+                  //  $urlBaseDomain = $actual_link . "/"; // SERVIDOR
                   // Directorio donde se encuentra la imagen
                   $imgDirectoryPhoto = $urlBaseDomain . 'assets/images/brands/';
                   $imgDirectoryDefault = $urlBaseDomain . 'assets/images/Utilities/default_product.png';

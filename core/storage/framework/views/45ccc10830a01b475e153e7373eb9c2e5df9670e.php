@@ -673,7 +673,7 @@ function maxcharacters($string, $maxletters){
         // echo "------------------------NO EXISTE NÚMERO";
         $wps_generalButton = [
             'title' => 'WhatsApp GENERAL COREIN',
-            'text' => 'Esta es una descripción de número COREIN',
+            'text' => 'Me interesa saber más sobre los productos en GRUPOCOREIN',
             'number' => '994264025',
         ];
       }
@@ -693,7 +693,7 @@ function maxcharacters($string, $maxletters){
             if($wps_generalButton['number'] == "" || $wps_generalButton['number'] == NULL || $wps_generalButton['number'] == "NaN"){
                 $wps_generalButton = [
                     'title' => 'WhatsApp GENERAL COREIN',
-                    'text' => 'Esta es una descripción de número COREIN',
+                    'text' => 'Me interesa saber más sobre los productos en GRUPOCOREIN',
                     'number' => '994264025',
                 ];
             }
