@@ -4,12 +4,6 @@
   $option_price = 0;
   $cartTotal = 0;
 @endphp
-<?php
-  // echo "<pre>";
-  // print_r($cart);
-  // echo "</pre>";
-  // exit();
-?>
 <link rel="stylesheet" href="{{ asset('assets/front/js/plugins/sweetalert2/sweetalert2.min.css')}}">
 <script type="text/javascript" src="{{ asset('assets/front/js/plugins/sweetalert2/sweetalert2.all.min.js')}}"></script>
 <div class="row">
@@ -23,18 +17,17 @@
                 <th>{{__('Product')}}</th>
                 <th class="text-center">{{__('Price')}}</th>
                 <th class="text-center">{{__('Quantity')}}</th>
-                <th class="text-center">{{__('Subtotal')}}</th>
-                
-                
+                <th class="text-center">{{__('Subtotal')}}</th>                
                 <th class="text-center">
                   <a class="btn btn-sm btn-primary remallwithoutic" href="{{route('front.cart.clear')}}"><span>{{__('Clear Cart')}}</span></a>
                 </th>
-                
               </tr>
             </thead>
             <tbody id="cart_view_load" data-target="{{route('cart.get.load')}}">
               @foreach ($cart as $key => $item)
-              @php
+              <?php
+                $txtSectionTypeProdTag = "";
+                $namecouponbyid = [];
                 $totalwithoutcoupon = 0;
                 $totalwithcoupon = 0;
                 $totalwithoutcoupon_prod = 0;
@@ -45,7 +38,8 @@
                 $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
                 // ----------- CANTIDAD DE PRODUCTOS CON CUPÓN...
                 $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
-                $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+                $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;              
+                
                 if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
 
                   $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->select('name', 'discount_percentage', 'time_end', 'status')->take(1)->get();
@@ -81,7 +75,78 @@
                 }else{
                   $cartTotal +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
                 }
-              @endphp
+
+                // echo "<pre>";
+                // print_r($item);
+                // echo "</pre>";
+                // ------------- VALIDAR EL TIPO DE SECCIÓN/ CUPÓN ACTIVADO (TEXTO)
+                $keywithoutguion = str_replace("-","",$key);
+                $keywithoutguion2 = (int) $keywithoutguion;
+                $stockByIdItem = "";
+                if(DB::table('items')->where('id',$keywithoutguion2)){
+                  $itemBD = DB::table('items')->where('id',$keywithoutguion2)->where("status","!=",0)->get();
+                  if(isset($itemBD) && count($itemBD) > 0){
+                    $itemValidTag = $itemBD[0];
+                    if($itemValidTag->stocktype_id == 2){
+                      $stockByIdItem = $itemValidTag->stock;
+                    }else{
+                      $stockByIdItem = "";
+                    }
+                    if($itemValidTag->sections_id != 0){
+                      if($itemValidTag->sections_id == 1 && $itemValidTag->on_sale_price != 0 && $itemValidTag->on_sale_price != ""){
+                        if($itemValidTag->tax_id == 1){
+                          if(count($namecouponbyid) > 0){
+                            $txtSectionTypeProdTag = "txt-applycoupon";
+                          }else{
+                            $txtSectionTypeProdTag = "txt-on_sale";
+                          }
+                        }else{
+                          if(count($namecouponbyid) > 0){
+                            $txtSectionTypeProdTag = "txt-applycoupon";
+                          }else{
+                            $txtSectionTypeProdTag = "txt-on_sale";
+                          }
+                        }
+                      }else if($itemValidTag->sections_id == 2 && $itemValidTag->special_offer_price != 0 && $itemValidTag->special_offer_price != ""){
+                        if($itemValidTag->tax_id == 1){
+                          if(count($namecouponbyid) > 0){
+                            $txtSectionTypeProdTag = "txt-applycoupon";
+                          }else{
+                            $txtSectionTypeProdTag = "txt-special_offer";
+                          }
+                        }else{
+                          if(count($namecouponbyid) > 0){
+                            $txtSectionTypeProdTag = "txt-applycoupon";
+                          }else{
+                            $txtSectionTypeProdTag = "txt-special_offer";
+                          }
+                        }
+                      }else{
+                        if($itemValidTag->tax_id == 1){
+                          if(count($namecouponbyid) > 0){
+                            $txtSectionTypeProdTag = "txt-applycoupon";
+                          }else{
+                            $txtSectionTypeProdTag = "";
+                          }
+                        }else{
+                          if(count($namecouponbyid) > 0){
+                            $txtSectionTypeProdTag = "txt-applycoupon";
+                          }else{
+                            $txtSectionTypeProdTag = "";
+                          }
+                        }
+                      }
+                    }else{
+                      if(count($namecouponbyid) > 0){
+                        $txtSectionTypeProdTag = "txt-applycoupon";
+                      }else{
+                        $txtSectionTypeProdTag = "";
+                      }
+                    }
+                  }
+                }
+                // echo $txtSectionTypeProdTag."<br>";
+              ?>
               <tr>
                 <td>
                   <div class="product-item">
@@ -99,6 +164,34 @@
                     </div>
                     @endif
                     <div class="product-info">
+                      @if($txtSectionTypeProdTag != "")
+                        @if($txtSectionTypeProdTag == "txt-applycoupon")
+                        <div class="productincartlist-flag">
+                          <div class="productincartlist-flag__c pos-rleft0">
+                            <span class="productincartlist-flag__c__cType bg__applycoupon">
+                              <span class="productincartlist-flag__c__cType__spn">Cupón Activado</span>
+                            </span>
+                          </div>
+                        </div>
+                        @elseif($txtSectionTypeProdTag == "txt-on_sale")
+                        <div class="productincartlist-flag">
+                          <div class="productincartlist-flag__c pos-rleft0">
+                            <span class="productincartlist-flag__c__cType bg__onsale">
+                              <span class="productincartlist-flag__c__cType__spn">En Promoción</span>
+                            </span>
+                          </div>
+                        </div>
+                        @elseif($txtSectionTypeProdTag == "txt-special_offer")
+                        <div class="productincartlist-flag">
+                          <div class="productincartlist-flag__c pos-rleft0">
+                            <span class="productincartlist-flag__c__cType bg__specialoffer">
+                              <span class="productincartlist-flag__c__cType__spn">Oferta Especial</span>
+                            </span>
+                          </div>
+                        </div>
+                        @else
+                        @endif
+                      @endif
                       <h4 class="product-title">
                         <a href="{{route('front.product',$item['slug'])}}">{{ strlen(strip_tags($item['name'])) > 45 ? substr(strip_tags($item['name']), 0, 45) . '...' : strip_tags($item['name']) }}</a>
                       </h4>
@@ -138,12 +231,29 @@
                   <td class="text-center text-lg text-bold">{{PriceHelper::setCurrencyPrice($item['price'])}}</td>
                 @endif
                 <td class="text-center d-flex align-items-center justify-content-center border border-0">
-                  @if ($item['item_type'] != 'digital')
+                  @if($item['item_type'] != 'digital')
                   <div class="qtySelector product-quantity pt-3">
+                    @if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00)
+                      @if(count($namecouponbyid) != 0)
+                        @if($remainingTime <= 0)
+                        <input type="hidden" data-id="demo_price" value="{{PriceHelper::setConvertPrice($sumTotalPriceFinal)}}">
+                        @else
+                        <input type="hidden" data-id="demo_price" value="{{PriceHelper::setCurrencyPrice($item['coupon_price'])}}">
+                        @endif
+                      @else
+                        <input type="hidden" data-id="demo_price" value="{{PriceHelper::setCurrencyPrice($item['price'])}}">
+                      @endif
+                    @else
+                      <input type="hidden" data-id="demo_price" value="{{PriceHelper::setCurrencyPrice($item['price'])}}">
+                    @endif
+                    <input type="hidden" value="{{ $item['coupon_id'] }}" data-id="setcurr_couponid">
+                    <input type="hidden" value="{{PriceHelper::setCurrencySign()}}" data-id="set_currency">
+                    <input type="hidden" value="{{PriceHelper::setCurrencyValue()}}" data-id="set_currency_val">
+                    <input type="hidden" value="{{$setting->currency_direction}}" data-id="currency_direction">
                     <span class="decreaseQtycart cartsubclick" data-id="{{$key}}" data-target="{{PriceHelper::GetItemId($key)}}"><i class="fas fa-minus"></i></span>
                     <input type="text" disabled class="qtyValue cartcart-amount" value="{{$item['qty']}}">
                     <span class="increaseQtycart cartaddclick" data-id="{{$key}}" data-target="{{PriceHelper::GetItemId($key)}}"><i class="fas fa-plus"></i></span>
-                    <input type="hidden" value="3333" id="current_stock">
+                    <input type="hidden" class="d-non_yipt hdd-control_yipt non-visvalipt_yipt h-alternative-shwnon_yipt s-fkeynone-step_yipt currentbyprod_stock" f-hidden="aria-hidden_yipt" value="{{ $stockByIdItem }}">
                   </div>
                   @endif
                 </td>
@@ -279,4 +389,3 @@
     </div>
   </div>
 </div>
-<script type="text/javascript" src="{{ asset('assets/front/js/cart.js') }}"></script>

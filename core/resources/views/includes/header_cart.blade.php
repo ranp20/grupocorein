@@ -9,9 +9,14 @@
   // echo "<pre>";
   // print_r($cart);
   // echo "</pre>";
-  // exit();
+  // // exit();
+  // if(count(Session::get('cart')) > 0){
+  //   echo "Hay productos";
+  // }else{
+  //   echo "Vacío";
+  // }
 ?>
-@if (Session::has('cart'))
+@if(Session::has('cart') && count(Session::get('cart')) > 0)
   @foreach ($cart as $key => $item)
   @php
     $totalwithoutcoupon = 0;
@@ -113,7 +118,7 @@
       @endif
     </div>
     <div class="entry-delete">
-      <a href="{{route('front.cart.destroy',$key)}}"><i class="icon-x"></i></a>
+      <a class="remove-from-headercartlist remwithsvgofheadercartlist" href="{{route('front.cart.destroy',$key)}}"><i class="icon-x"></i></a>
     </div>
   </div>
   @endforeach
