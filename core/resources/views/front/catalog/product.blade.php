@@ -7,29 +7,27 @@
 <meta name="description" content="{{$item->meta_description}}">
 @endsection
 @section('content')
-  {{--<!-- <script type="text/javascript" src="{{ asset('assets/front/js/plugins/jquery-3.7.0.min.js') }}"></script> --> --}}
-  <link rel="stylesheet" href="{{ asset('node_modules/owl-carousel/owl-carousel/owl.carousel.css')}}">
-  <link rel="stylesheet" href="{{ asset('node_modules/owl-carousel/owl-carousel/owl.theme.css')}}">
-  <script type="text/javascript" src="{{ asset('node_modules/owl-carousel/owl-carousel/owl.carousel.min.js')}}"></script>
-  <script type="text/javascript" src="{{ asset('assets/front/js/extraindex.js') }}"></script>  
-  <script src="{{ asset('assets/front/js/plugins/magiczoom/magiczoomplus.js') }}"></script>
-  <link rel="stylesheet" href="{{ asset('assets/front/js/plugins/magiczoom/magiczoomplus.css') }}"/>
+{{--<!-- <script type="text/javascript" src="{{ asset('assets/front/js/plugins/jquery-3.7.0.min.js') }}"></script> --> --}}
+<link rel="stylesheet" href="{{ asset('node_modules/owl-carousel/owl-carousel/owl.carousel.css')}}">
+<link rel="stylesheet" href="{{ asset('node_modules/owl-carousel/owl-carousel/owl.theme.css')}}">
+<script type="text/javascript" src="{{ asset('node_modules/owl-carousel/owl-carousel/owl.carousel.min.js')}}"></script>
+<script type="text/javascript" src="{{ asset('assets/front/js/extraindex.js') }}"></script>  
+<script src="{{ asset('assets/front/js/plugins/magiczoom/magiczoomplus.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('assets/front/js/plugins/magiczoom/magiczoomplus.css') }}"/>
 
 
 
 <?php
-
-  if($item->stock != "" && $item->stock > 0){
-    $user_id = 0;
-    $millisecondsExpirationDate = 0;
-    $remainingTime = 0;
-    $userCouponDetail = "";
-    $couponapply_totalprice = 0;
-    if(Auth::check()){
-      $user = Auth::user();
-      $user_id = Auth::user()->id;
-    }
-
+  $user_id = 0;
+  $millisecondsExpirationDate = 0;
+  $remainingTime = 0;
+  $userCouponDetail = "";
+  $couponapply_totalprice = 0;
+  if(Auth::check()){
+    $user = Auth::user();
+    $user_id = Auth::user()->id;
+  }
+  if($item->stocktype_id == 1){
     if(count($applycoupon) > 0){
       // $arrCouponApply = json_decode($applycoupon, TRUE);
       $arrCouponApply = $applycoupon;
@@ -137,9 +135,120 @@
 
     // echo "TIEMPO RESTANTE: ".$remainingTime;
     // echo $htmlcoupon;    
+  }else if($item->stocktype_id == 2){
+    if($item->stock != "" && $item->stock > 0){
+      if(count($applycoupon) > 0){
+        // $arrCouponApply = json_decode($applycoupon, TRUE);
+        $arrCouponApply = $applycoupon;
+        $idcouponapply_user = $arrCouponApply[0]['id_user'];
+        $idcouponapply_prod = $arrCouponApply[0]['id_prod'];
+        $idcouponapply_coupon = $arrCouponApply[0]['id_coupon'];
+        
+        if(count($coupons) > 0){
+          $arrcoupon2 = json_decode($coupons, TRUE);
+          $htmlcoupon = "";
+          // VALIDAR SI ESTE CUPÓN PERTENECE Y SI ESTÁ ACTIVADO EN ESTE PRODUCTO...
+          if($idcouponapply_user == $user_id && $idcouponapply_prod == $item->id && $idcouponapply_coupon == $item->coupon_id){
+            // PROCEDER A DETENER EL CONTADOR Y OCULTAR EL MODAL DE CUPÓN...
+            // $remainingTime = 0;
+            // $couponapply_totalprice = $arrCouponApply[0]['totalprice'];
+            
+            // PROCEDER A MOSTRAR EL CONTEDOR EN EL MODAL DE CUPÓN...
+            $expiresAtTimer = $arrcoupon2[0]['time_end'];
+            $idcoupon = $arrcoupon2[0]['id'];
+            // Crear un objeto DateTime a partir de la fecha final...
+            $currentDate = new DateTime();
+            $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+            $imgCoupon = ($arrcoupon2[0]['photo'] != "") ? $arrcoupon2[0]['photo'] : ""; // IMAGEN DEL CUPÓN...
+            // Asegurarse que la fecha es válida...
+            if (!$expirationDate) {
+              die('Invalid date format for countdown.');
+            }
+            // Obtener las fechas en milisegundos...
+            $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+            $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+            // Calcular el tiempo restante...
+            $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+            if ($remainingTime <= 0) {
+              $htmlcoupon = "EL CUPÓN HA EXPIRADO...!";
+              $remainingTime = 0;
+            } else {
+              $couponapply_totalprice = $arrCouponApply[0]['totalprice']; // TODAVÍA MOSTRAR EL PRECIO CON EL CUPÓN ACTIVADO...
+              $hours = floor($remainingTime / 3600000);
+              $minutes = floor(($remainingTime % 3600000) / 60000);
+              $seconds = floor(($remainingTime % 60000) / 1000);
+              $htmlcoupon = "TIEMPO RESTANTE: {$hours}h {$minutes}m {$seconds}s";
+            }
+          }else{
+            // PROCEDER A MOSTRAR EL CONTEDOR EN EL MODAL DE CUPÓN...
+            $expiresAtTimer = $arrcoupon2[0]['time_end'];
+            $idcoupon = $arrcoupon2[0]['id'];
+            // Crear un objeto DateTime a partir de la fecha final...
+            $currentDate = new DateTime();
+            $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+            $imgCoupon = ($arrcoupon2[0]['photo'] != "") ? $arrcoupon2[0]['photo'] : ""; // IMAGEN DEL CUPÓN...
+            // Asegurarse que la fecha es válida...
+            if (!$expirationDate) {
+              die('Invalid date format for countdown.');
+            }
+            // Obtener las fechas en milisegundos...
+            $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+            $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+            // Calcular el tiempo restante...
+            $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+            if ($remainingTime <= 0) {
+              $htmlcoupon = "EL CUPÓN HA EXPIRADO...!";
+            } else {
+              $hours = floor($remainingTime / 3600000);
+              $minutes = floor(($remainingTime % 3600000) / 60000);
+              $seconds = floor(($remainingTime % 60000) / 1000);
+              $htmlcoupon = "TIEMPO RESTANTE: {$hours}h {$minutes}m {$seconds}s";
+            }
+          }
+        }else{
+          $remainingTime = 0;
+        }
+      }else{
+        if(count($coupons) > 0){
+          $arrcoupon2 = json_decode($coupons, TRUE);
+          $htmlcoupon = "";
+          // echo "ESTE PRODUCTO AÚN NO TIENE CUPÓN ACTIVADO";
+          // PROCEDER A MOSTRAR EL CONTEDOR EN EL MODAL DE CUPÓN...
+          $expiresAtTimer = $arrcoupon2[0]['time_end'];
+          $idcoupon = $arrcoupon2[0]['id'];
+          // Crear un objeto DateTime a partir de la fecha final...
+          $currentDate = new DateTime();
+          $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+          $imgCoupon = ($arrcoupon2[0]['photo'] != "") ? $arrcoupon2[0]['photo'] : ""; // IMAGEN DEL CUPÓN...
+          // Asegurarse que la fecha es válida...
+          if (!$expirationDate) {
+            die('Invalid date format for countdown.');
+          }
+          // Obtener las fechas en milisegundos...
+          $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+          $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+          // Calcular el tiempo restante...
+          $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+          if ($remainingTime <= 0) {
+            $htmlcoupon = "EL CUPÓN HA EXPIRADO...!";
+          } else {
+            $hours = floor($remainingTime / 3600000);
+            $minutes = floor(($remainingTime % 3600000) / 60000);
+            $seconds = floor(($remainingTime % 60000) / 1000);
+            $htmlcoupon = "TIEMPO RESTANTE: {$hours}h {$minutes}m {$seconds}s";
+          }
+        }else{
+          $remainingTime = 0;
+        }
+      }
+
+      // echo "TIEMPO RESTANTE: ".$remainingTime;
+      // echo $htmlcoupon;    
+    }
+  }else{
+    // echo "No existe stock";
   }
 ?>
-
 
 
 <div class="page-title">
@@ -161,30 +270,32 @@
   <div class="row">
     <div class="col-xxl-5 col-lg-6 col-md-6">
       <div class="product-gallery">
-        @if ($item->video)
+        @if($item->video)
         <div class="gallery-wrapper">
           <div class="gallery-item video-btn text-center">
             <a href="{{ $item->video }}" title="Watch video"></a>
           </div>
         </div>
         @endif
-        @if($item->is_stock())
-        <span class="product-badge
-        @if($item->is_type == 'feature')
-        bg-warning
-        @elseif($item->is_type == 'new')
-        bg-success
-        @elseif($item->is_type == 'top')
-        bg-info
-        @elseif($item->is_type == 'best')
-        bg-dark
-        @elseif($item->is_type == 'flash_deal')
+        @if($item->stocktype_id == 1)
+        @elseif($item->stocktype_id == 2)
+          @if($item->is_stock())
+          <span class="product-badge
+          @if($item->is_type == 'feature')
+          bg-warning
+          @elseif($item->is_type == 'new')
           bg-success
-        @endif
-        ">{{  $item->is_type != 'undefine' ?  ucfirst(str_replace('_',' ',$item->is_type)) : ''   }}</span>
-        @else
-        <span class="product-badge bg-secondary border-default text-body
-        ">{{__('out of stock')}}</span>
+          @elseif($item->is_type == 'top')
+          bg-info
+          @elseif($item->is_type == 'best')
+          bg-dark
+          @elseif($item->is_type == 'flash_deal')
+            bg-success
+          @endif
+          ">{{  $item->is_type != 'undefine' ?  ucfirst(str_replace('_',' ',$item->is_type)) : ''   }}</span>
+          @else
+          <span class="product-badge bg-secondary border-default text-body">{{__('out of stock')}}</span>
+          @endif
         @endif
         @if($item->previous_price && $item->previous_price !=0)
         <div class="product-badge bg-goldenrod  ppp-t"> -{{PriceHelper::DiscountPercentage($item)}}</div>
@@ -216,7 +327,7 @@
               }
             ?>
             
-             <div class="item cntAds--i__itm--cInfo">
+            <div class="item cntAds--i__itm--cInfo">
               <figure class="ads_dashboard" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
                 <a href="{{ $imgPathFileFinal }}" width="100" height="100" data-index="0" data-fancybox="gallery">
                   <img src="{{ $imgPathFileFinal }}" alt="zoom"/>
@@ -321,141 +432,147 @@
       return $html;
     }
     @endphp
-    @php
-      $TaxesAll = DB::table('taxes')->get();
-      $sumFinalPrice1 = 0;
-      $sumFinalPrice2 = 0;
-      $incIGV = $TaxesAll[0]->value;
-      $sinIGV = $TaxesAll[1]->value;
-      $incIGV_format = $incIGV / 100;
-      $sinIGV_format = $sinIGV;
-    @endphp
     <div class="col-xxl-7 col-lg-6 col-md-6">
       <div class="details-page-top-right-content d-flex align-items-center">
         <div class="div w-100">
           <input type="hidden" id="item_id" value="{{$item->id}}">
-
-
-
-
-
-
-          @if(isset($item->sections_id) && $item->sections_id != 0)
-            @if($item->sections_id == 1)
-              @if($item->on_sale_price != 0 && $item->on_sale_price != "")
-                @if(isset($item->tax_id) && $item->tax_id == 1)
-                  @php
-                    $sumFinalPrice1 = $item->on_sale_price * $incIGV_format;
-                    $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
-                  @endphp
-                  @if($item->stock != "" && $item->stock > 0)
-                    @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
-                      <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($couponapply_totalprice)}}">
-                    @else
-                      <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($sumFinalPrice2)}}">
-                    @endif
-                  @else
-                    <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($sumFinalPrice2)}}">
-                  @endif
-                @else
-                  @php
-                    $sumFinalPrice1 = $item->on_sale_price;
-                    $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
-                  @endphp
-                  @if($item->stock != "" && $item->stock > 0)
-                    @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
-                      <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($couponapply_totalprice)}}">
-                    @else
-                      <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($sumFinalPrice2)}}">
-                    @endif
-                  @else
-                    <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($sumFinalPrice2)}}">
-                  @endif
-                @endif
-              @else
-                @if($item->stock != "" && $item->stock > 0)
-                  @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
-                    <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($couponapply_totalprice)}}">
-                  @else
-                    <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($item->discount_price)}}">
-                  @endif
-                @else
-                  <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($item->discount_price)}}">
-                @endif
-              @endif
-            @elseif($item->sections_id == 2)
-              @if($item->special_offer_price != 0 && $item->special_offer_price != "")
-                @if(isset($item->tax_id) && $item->tax_id == 1)
-                  @php
-                    $sumFinalPrice1 = $item->special_offer_price * $incIGV_format;
-                    $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
-                  @endphp
-                  @if($item->stock != "" && $item->stock > 0)
-                    @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
-                      <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($couponapply_totalprice)}}">
-                    @else
-                      <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($sumFinalPrice2)}}">
-                    @endif
-                  @else
-                    <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($sumFinalPrice2)}}">
-                  @endif
-                @else
-                  @php
-                    $sumFinalPrice1 = $item->special_offer_price;
-                    $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
-                  @endphp
-                  @if($item->stock != "" && $item->stock > 0)
-                    @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
-                      <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($couponapply_totalprice)}}">
-                    @else
-                      <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($sumFinalPrice2)}}">
-                    @endif
-                  @else
-                    <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($sumFinalPrice2)}}">
-                  @endif
-                @endif
-              @else
-                @if($item->stock != "" && $item->stock > 0)
-                  @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
-                    <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($couponapply_totalprice)}}">
-                  @else
-                    <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($item->discount_price)}}">
-                  @endif
-                @else
-                  <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($item->discount_price)}}">
-                @endif
-              @endif
-            @else
-              @if($item->stock != "" && $item->stock > 0)
-                @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
-                  <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($couponapply_totalprice)}}">
-                @else
-                  <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($item->discount_price)}}">
-                @endif
-              @else
-                <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($item->discount_price)}}">
-              @endif
-            @endif
-          @else
-            @if($item->stock != "" && $item->stock > 0)
-              @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
-                <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($couponapply_totalprice)}}">
-              @else
-                <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($item->discount_price)}}">
-              @endif
-            @else
-              <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($item->discount_price)}}">
-            @endif
-          @endif
-
-
-
-          <input type="hidden" value="{{ $item->coupon_id }}" id="setcurr_couponid">
+          <?php
+            $TaxesAll = DB::table('taxes')->get();
+            $incIGV = $TaxesAll[0]->value;
+            $sinIGV = $TaxesAll[1]->value;
+            $incIGV_format = $incIGV / 100;
+            $sinIGV_format = $sinIGV;
+            $sumFinalPrice1 = 0;
+            $sumFinalPrice2 = 0;
+            $coupinf_discount_percentage = 0;
+            $coupinf_discount_percentage_nonapply = 0;
+            $couponInfo_totalprice = 0;
+            $getAllCouponInfo = [];
+            $getAllDataCouponById = [];
+            $getAllDataCouponById_nonapply = [];
+            $allCouponDataConvertById = [];
+            $allCouponDataConvertById_nonapply = [];
+            $sumTotalPriceFinal = 0;
+            $sumTotalDiscountPriceFinalPrevious = 0;
+            $txtFlagToProduct = "";
+            $txtFlagAvaiCouponToProduct = "";
+            // --------------- VALIDAR SI YA SE ACTIVÓ UN CUPÓN EN EL PRODUCTO ('tbl_applycoupons')
+            if(!empty($item->coupon_id) && $item->coupon_id != "" && $item->coupon_id != null && $item->coupon_id != 0){
+              $getAllCouponInfo = DB::table('tbl_applycoupons')->where("id_user","=",$user_id)->where("id_prod","=",$item->id)->where("id_coupon","=",$item->coupon_id)->where("status","!=",0)->select('id_user', 'id_prod', 'id_coupon', 'totalprice')->take(1)->get();
+              if(count($getAllCouponInfo) > 0){
+                $txtFlagAvaiCouponToProduct = "txt-yesapply";
+                $allDataConvert = json_decode($getAllCouponInfo, TRUE);
+                $getAllDataCouponById = DB::table('tbl_coupons')->where("id","=",$allDataConvert[0]['id_coupon'])->where("status","!=",0)->select('name', 'discount_percentage')->take(1)->get();
+                if(count($getAllDataCouponById) > 0){
+                  $allCouponDataConvertById = json_decode($getAllDataCouponById, TRUE);
+                  $coupinf_discount_percentage = $allCouponDataConvertById[0]['discount_percentage'];
+                  $couponInfo_totalprice = $allDataConvert[0]['totalprice']; // SETEAR LA VARIABLE DE PRECIO TOTAL PARA CUPÓN ACTIVADO
+                }
+              }else{
+                $txtFlagAvaiCouponToProduct = "txt-nonapply";
+                $getAllDataCouponById_nonapply = DB::table('tbl_coupons')->where("id","=",$item->coupon_id)->where("status","!=",0)->select('name', 'discount_percentage')->take(1)->get();
+                if(count($getAllDataCouponById_nonapply) > 0){
+                  $allCouponDataConvertById_nonapply = json_decode($getAllDataCouponById_nonapply, TRUE);
+                  $coupinf_discount_percentage_nonapply = $allCouponDataConvertById_nonapply[0]['discount_percentage'];
+                }
+              }
+            }
+  
+            if($item->sections_id != 0){
+              if($item->sections_id == 1 && $item->on_sale_price != 0 && $item->on_sale_price != ""){
+                if($item->tax_id == 1){
+                  $sumFinalPrice1 = $item->on_sale_price * $incIGV_format;
+                  $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
+                  if(count($getAllDataCouponById) > 0){
+                    $txtFlagToProduct = "txt-applycoupon";
+                    $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (on_sale_price)
+                    $sumTotalPriceFinal = $couponInfo_totalprice;
+                  }else{
+                    $txtFlagToProduct = "txt-on_sale";
+                    $sumTotalDiscountPriceFinalPrevious = $item->discount_price; // PRECIO ACTUAL (discount_price)
+                    $sumTotalPriceFinal = $sumFinalPrice2;
+                  }
+                }else{
+                  $sumFinalPrice2 = $item->on_sale_price;
+                  if(count($getAllDataCouponById) > 0){
+                    $txtFlagToProduct = "txt-applycoupon";
+                    $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (on_sale_price)
+                    $sumTotalPriceFinal = $couponInfo_totalprice;
+                  }else{
+                    $txtFlagToProduct = "txt-on_sale";
+                    $sumTotalDiscountPriceFinalPrevious = $item->discount_price; // PRECIO ACTUAL (discount_price)
+                    $sumTotalPriceFinal = $sumFinalPrice2;
+                  }
+                }
+              }else if($item->sections_id == 2 && $item->special_offer_price != 0 && $item->special_offer_price != ""){
+                if($item->tax_id == 1){
+                  $sumFinalPrice1 = $item->special_offer_price * $incIGV_format;
+                  $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                  if(count($getAllDataCouponById) > 0){
+                    $txtFlagToProduct = "txt-applycoupon";
+                    $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (special_offer_price)
+                    $sumTotalPriceFinal = $couponInfo_totalprice;
+                  }else{
+                    $txtFlagToProduct = "txt-special_offer";
+                    $sumTotalDiscountPriceFinalPrevious = $item->discount_price; // PRECIO ACTUAL (discount_price)
+                    $sumTotalPriceFinal = $sumFinalPrice2;
+                  }
+                }else{
+                  $sumFinalPrice2 = $item->special_offer_price;
+                  if(count($getAllDataCouponById) > 0){
+                    $txtFlagToProduct = "txt-applycoupon";
+                    $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (NO_SECTION)
+                    $sumTotalPriceFinal = $couponInfo_totalprice;
+                  }else{
+                    $txtFlagToProduct = "txt-special_offer";
+                    $sumTotalDiscountPriceFinalPrevious = $item->discount_price; // PRECIO DE LA SECCIÓN (discount_price)
+                    $sumTotalPriceFinal = $sumFinalPrice2;
+                  }
+                }
+              }else{
+                if($item->tax_id == 1){                
+                  $sumFinalPrice1 = $item->discount_price * $incIGV_format;
+                  $sumFinalPrice2 = $item->discount_price + $sumFinalPrice1;
+                  if(count($getAllDataCouponById) > 0){
+                    $txtFlagToProduct = "txt-applycoupon";
+                    $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (NO_SECTION)
+                    $sumTotalPriceFinal = $couponInfo_totalprice;
+                  }else{
+                    $txtFlagToProduct = "";
+                    $sumTotalDiscountPriceFinalPrevious = $item->discount_price; // PRECIO DE LA SECCIÓN (discount_price)
+                    $sumTotalPriceFinal = $sumFinalPrice2;
+                  }
+                }else{
+                  $sumFinalPrice2 = $item->discount_price;
+                  if(count($getAllDataCouponById) > 0){
+                    $txtFlagToProduct = "txt-applycoupon";
+                    $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (NO_SECTION)
+                    $sumTotalPriceFinal = $couponInfo_totalprice;
+                  }else{
+                    $txtFlagToProduct = "";
+                    $sumTotalDiscountPriceFinalPrevious = $item->previous_price; // PRECIO DE LA SECCIÓN (discount_price)
+                    $sumTotalPriceFinal = $sumFinalPrice2;
+                  }
+                }
+              }
+            }else{
+              if(count($getAllDataCouponById) > 0){
+                $txtFlagToProduct = "txt-applycoupon";
+                $sumTotalDiscountPriceFinalPrevious = $item->discount_price; // PRECIO DE LA SECCIÓN (discount_price)
+                $sumTotalPriceFinal = $couponInfo_totalprice;
+              }else{
+                $txtFlagToProduct = "";
+                $sumTotalDiscountPriceFinalPrevious = $item->previous_price; // PRECIO DE LA SECCIÓN (discount_price)
+                $sumTotalPriceFinal = $item->discount_price;
+              }
+            }
+          ?>
+          <input type="hidden" id="demo_price" value="{{PriceHelper::setConvertPrice($sumTotalPriceFinal)}}">
           
+          <input type="hidden" value="{{ $item->coupon_id }}" id="setcurr_couponid">          
           <input type="hidden" value="{{PriceHelper::setCurrencySign()}}" id="set_currency">
           <input type="hidden" value="{{PriceHelper::setCurrencyValue()}}" id="set_currency_val">
           <input type="hidden" value="{{$setting->currency_direction}}" id="currency_direction">
-          
           <input type="hidden" value="{{ $item->sku }}" id="prod-crr_sku">
           <input type="hidden" class="d-non hdd-control non-visvalipt h-alternative-shwnon s-fkeynone-step" f-hidden="aria-hidden" value="" name="set_colr-code" id="set_colr-code">
           <input type="hidden" class="d-non hdd-control non-visvalipt h-alternative-shwnon s-fkeynone-step" f-hidden="aria-hidden" value="" name="set_colr-name" id="set_colr-name">
@@ -527,128 +644,195 @@
             </p>
             @endif
           @endif
-          
           <h4 class="mb-2 p-title-main">{{$item->name}}</h4>
-          <div class="mb-3">
-            @if ($item->is_stock())
-              <span class="text-success  d-inline-block">{{__('In Stock')}}</span>
+          @if($txtFlagToProduct != "")
+            @if($txtFlagToProduct == "txt-applycoupon")
+            <div class="productincartlist-flag">
+              <div class="productincartlist-flag__c pos-rleft0 mb-2">
+                <span class="productincartlist-flag__c__cType bg__applycoupon">
+                  <span class="productincartlist-flag__c__cType__spn">Cupón Activado</span>
+                </span>
+              </div>
+            </div>
+            @elseif($txtFlagToProduct == "txt-on_sale")
+            <div class="productincartlist-flag">
+              <div class="productincartlist-flag__c pos-rleft0 mb-2">
+                <span class="productincartlist-flag__c__cType bg__onsale">
+                  <span class="productincartlist-flag__c__cType__spn">En Promoción</span>
+                </span>
+              </div>
+            </div>
+            @elseif($txtFlagToProduct == "txt-special_offer")
+            <div class="productincartlist-flag">
+              <div class="productincartlist-flag__c pos-rleft0 mb-2">
+                <span class="productincartlist-flag__c__cType bg__specialoffer">
+                  <span class="productincartlist-flag__c__cType__spn">Oferta Especial</span>
+                </span>
+              </div>
+            </div>
             @else
-              <span class="text-danger  d-inline-block">{{__('Out of stock')}}</span>
+            @endif
+          @endif
+          <div class="mb-3">
+            @if($item->stocktype_id == 1)
+              <span class="text-success  d-inline-block">{{__('In Stock')}}</span>
+            @elseif($item->stocktype_id == 2)
+              @if($item->is_stock())
+                <span class="text-success  d-inline-block">{{__('In Stock')}}</span>
+              @else
+                <span class="text-danger  d-inline-block">{{__('Out of stock')}}</span>
+              @endif
             @endif
           </div>
           @if($item->is_type == 'flash_deal')
-          @if (date('d-m-y') != \Carbon\Carbon::parse($item->date)->format('d-m-y'))
-          <div class="countdown countdown-alt mb-3" data-date-time="{{ $item->date }}">
-          </div>
-          @endif
+            @if(date('d-m-y') != \Carbon\Carbon::parse($item->date)->format('d-m-y'))
+            <div class="countdown countdown-alt mb-3" data-date-time="{{ $item->date }}">
+            </div>
+            @endif
           @endif
           <span class="h3 d-block price-area">
-          @if ($item->previous_price != 0)
-            <small class="d-inline-block"><del>{{PriceHelper::setPreviousPrice($item->previous_price)}}</del></small>
-          @endif
-          
-            @if(isset($item->sections_id) && $item->sections_id != 0)
-              @if($item->sections_id == 1)
-                @if($item->on_sale_price != 0 && $item->on_sale_price != "")
-                  @if(isset($item->tax_id) && $item->tax_id == 1)
-                    @php
-                      $sumFinalPrice1 = $item->on_sale_price * $incIGV_format;
-                      $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
-                    @endphp
-                    @if($item->stock != "" && $item->stock > 0)
-                      @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
-                        <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
-                      @else
-                        <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
-                      @endif
-                    @else
-                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
-                    @endif
-                  @else
-                    @php
-                      $sumFinalPrice1 = $item->on_sale_price;
-                      $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
-                    @endphp
-                    @if($item->stock != "" && $item->stock > 0)
-                      @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
-                        <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
-                      @else
-                        <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
-                      @endif
-                    @else
-                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
-                    @endif
-                  @endif
-                @else
-                  @if($item->stock != "" && $item->stock > 0)
-                    @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
-                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
-                    @else
-                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
-                    @endif
-                  @else
-                    <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
-                  @endif
-                @endif
-              @else
-                @if($item->special_offer_price != 0 && $item->special_offer_price != "")
-                  @if(isset($item->tax_id) && $item->tax_id == 1)
-                    @php
-                      $sumFinalPrice1 = $item->special_offer_price * $incIGV_format;
-                      $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
-                    @endphp
-                    @if($item->stock != "" && $item->stock > 0)
-                      @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
-                        <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
-                      @else
-                        <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
-                      @endif
-                    @else
-                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
-                    @endif
-                  @else
-                    @php
-                      $sumFinalPrice1 = $item->special_offer_price;
-                      $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
-                    @endphp
-                    @if($item->stock != "" && $item->stock > 0)
-                      @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
-                        <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
-                      @else
-                        <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
-                      @endif
-                    @else
-                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumFinalPrice2)}}</span>
-                    @endif
-                  @endif
-                @else
-                  @if($item->stock != "" && $item->stock > 0)
-                    @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
-                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
-                    @else
-                      <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
-                    @endif
-                  @else
-                    <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
-                  @endif
-                @endif
-              @endif
-            @else
-              @if($item->stock != "" && $item->stock > 0)
-                @if($couponapply_totalprice != 0 && $couponapply_totalprice != "")
-                  <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($couponapply_totalprice)}}</span>
-                @else
-                  <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
-                @endif
-              @else
-                <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($item->discount_price)}}</span>
-              @endif
-            @endif
-            @if(isset($item->tax_id) && $item->tax_id == 1)
+          <?php
+            $TaxesAll = DB::table('taxes')->get();
+            $incIGV = $TaxesAll[0]->value;
+            $sinIGV = $TaxesAll[1]->value;
+            $incIGV_format = $incIGV / 100;
+            $sinIGV_format = $sinIGV;
+            $sumFinalPrice1 = 0;
+            $sumFinalPrice2 = 0;
+            $coupinf_discount_percentage = 0;
+            $coupinf_discount_percentage_nonapply = 0;
+            $couponInfo_totalprice = 0;
+            $getAllCouponInfo = [];
+            $getAllDataCouponById = [];
+            $getAllDataCouponById_nonapply = [];
+            $allCouponDataConvertById = [];
+            $allCouponDataConvertById_nonapply = [];
+            $sumTotalPriceFinal = 0;
+            $sumTotalDiscountPriceFinalPrevious = 0;
+            $txtFlagToProduct = "";
+            $txtFlagAvaiCouponToProduct = "";
+            // --------------- VALIDAR SI YA SE ACTIVÓ UN CUPÓN EN EL PRODUCTO ('tbl_applycoupons')
+            if(!empty($item->coupon_id) && $item->coupon_id != "" && $item->coupon_id != null && $item->coupon_id != 0){
+              $getAllCouponInfo = DB::table('tbl_applycoupons')->where("id_user","=",$user_id)->where("id_prod","=",$item->id)->where("id_coupon","=",$item->coupon_id)->where("status","!=",0)->select('id_user', 'id_prod', 'id_coupon', 'totalprice')->take(1)->get();
+              if(count($getAllCouponInfo) > 0){
+                $txtFlagAvaiCouponToProduct = "txt-yesapply";
+                $allDataConvert = json_decode($getAllCouponInfo, TRUE);
+                $getAllDataCouponById = DB::table('tbl_coupons')->where("id","=",$allDataConvert[0]['id_coupon'])->where("status","!=",0)->select('name', 'discount_percentage')->take(1)->get();
+                if(count($getAllDataCouponById) > 0){
+                  $allCouponDataConvertById = json_decode($getAllDataCouponById, TRUE);
+                  $coupinf_discount_percentage = $allCouponDataConvertById[0]['discount_percentage'];
+                  $couponInfo_totalprice = $allDataConvert[0]['totalprice']; // SETEAR LA VARIABLE DE PRECIO TOTAL PARA CUPÓN ACTIVADO
+                }
+              }else{
+                $txtFlagAvaiCouponToProduct = "txt-nonapply";
+                $getAllDataCouponById_nonapply = DB::table('tbl_coupons')->where("id","=",$item->coupon_id)->where("status","!=",0)->select('name', 'discount_percentage')->take(1)->get();
+                if(count($getAllDataCouponById_nonapply) > 0){
+                  $allCouponDataConvertById_nonapply = json_decode($getAllDataCouponById_nonapply, TRUE);
+                  $coupinf_discount_percentage_nonapply = $allCouponDataConvertById_nonapply[0]['discount_percentage'];
+                }
+              }
+            }
+  
+            if($item->sections_id != 0){
+              if($item->sections_id == 1 && $item->on_sale_price != 0 && $item->on_sale_price != ""){
+                if($item->tax_id == 1){
+                  $sumFinalPrice1 = $item->on_sale_price * $incIGV_format;
+                  $sumFinalPrice2 = $item->on_sale_price + $sumFinalPrice1;
+                  if(count($getAllDataCouponById) > 0){
+                    $txtFlagToProduct = "txt-applycoupon";
+                    $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (on_sale_price)
+                    $sumTotalPriceFinal = $couponInfo_totalprice;
+                  }else{
+                    $txtFlagToProduct = "txt-on_sale";
+                    $sumTotalDiscountPriceFinalPrevious = $item->discount_price; // PRECIO ACTUAL (discount_price)
+                    $sumTotalPriceFinal = $sumFinalPrice2;
+                  }
+                }else{
+                  $sumFinalPrice2 = $item->on_sale_price;
+                  if(count($getAllDataCouponById) > 0){
+                    // echo "AAAAAAAAAAAAAAAAA";
+                    $txtFlagToProduct = "txt-applycoupon";
+                    $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (on_sale_price)
+                    $sumTotalPriceFinal = $couponInfo_totalprice;
+                  }else{
+                    $txtFlagToProduct = "txt-on_sale";
+                    $sumTotalDiscountPriceFinalPrevious = $item->discount_price; // PRECIO ACTUAL (discount_price)
+                    $sumTotalPriceFinal = $sumFinalPrice2;
+                  }
+                }
+              }else if($item->sections_id == 2 && $item->special_offer_price != 0 && $item->special_offer_price != ""){
+                if($item->tax_id == 1){
+                  $sumFinalPrice1 = $item->special_offer_price * $incIGV_format;
+                  $sumFinalPrice2 = $item->special_offer_price + $sumFinalPrice1;
+                  if(count($getAllDataCouponById) > 0){
+                    $txtFlagToProduct = "txt-applycoupon";
+                    $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (special_offer_price)
+                    $sumTotalPriceFinal = $couponInfo_totalprice;
+                  }else{
+                    $txtFlagToProduct = "txt-special_offer";
+                    $sumTotalDiscountPriceFinalPrevious = $item->discount_price; // PRECIO ACTUAL (discount_price)
+                    $sumTotalPriceFinal = $sumFinalPrice2;
+                  }
+                }else{
+                  $sumFinalPrice2 = $item->special_offer_price;
+                  if(count($getAllDataCouponById) > 0){
+                    $txtFlagToProduct = "txt-applycoupon";
+                    $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (NO_SECTION)
+                    $sumTotalPriceFinal = $couponInfo_totalprice;
+                  }else{
+                    $txtFlagToProduct = "txt-special_offer";
+                    $sumTotalDiscountPriceFinalPrevious = $item->discount_price; // PRECIO DE LA SECCIÓN (discount_price)
+                    $sumTotalPriceFinal = $sumFinalPrice2;
+                  }
+                }
+              }else{
+                if($item->tax_id == 1){                
+                  $sumFinalPrice1 = $item->discount_price * $incIGV_format;
+                  $sumFinalPrice2 = $item->discount_price + $sumFinalPrice1;
+                  if(count($getAllDataCouponById) > 0){
+                    $txtFlagToProduct = "txt-applycoupon";
+                    $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (NO_SECTION)
+                    $sumTotalPriceFinal = $couponInfo_totalprice;
+                  }else{
+                    $txtFlagToProduct = "";
+                    $sumTotalDiscountPriceFinalPrevious = $item->discount_price; // PRECIO DE LA SECCIÓN (discount_price)
+                    $sumTotalPriceFinal = $sumFinalPrice2;
+                  }
+                }else{
+                  $sumFinalPrice2 = $item->discount_price;
+                  if(count($getAllDataCouponById) > 0){
+                    $txtFlagToProduct = "txt-applycoupon";
+                    $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (NO_SECTION)
+                    $sumTotalPriceFinal = $couponInfo_totalprice;
+                  }else{
+                    $txtFlagToProduct = "";
+                    $sumTotalDiscountPriceFinalPrevious = $item->previous_price; // PRECIO DE LA SECCIÓN (discount_price)
+                    $sumTotalPriceFinal = $sumFinalPrice2;
+                  }
+                }
+              }
+            }else{
+              if(count($getAllDataCouponById) > 0){
+                $txtFlagToProduct = "txt-applycoupon";
+                $sumTotalDiscountPriceFinalPrevious = $item->discount_price; // PRECIO DE LA SECCIÓN (discount_price)
+                $sumTotalPriceFinal = $couponInfo_totalprice;
+              }else{
+                $txtFlagToProduct = "";
+                $sumTotalDiscountPriceFinalPrevious = $item->previous_price; // PRECIO DE LA SECCIÓN (discount_price)
+                $sumTotalPriceFinal = $item->discount_price;
+              }
+            }
+          ?>
+          <small class="d-inline-block"><del>{{PriceHelper::setPreviousPrice($sumTotalDiscountPriceFinalPrevious)}}</del></small>
+          <span id="main_price" class="main-price">{{PriceHelper::setCurrencyPrice($sumTotalPriceFinal)}}</span>
+          {{--
+          <!-- @if(isset($item->tax_id) && $item->tax_id == 1)
             <span style="font-size: 13px;margin-left: 5px;">Inc. IGV</span>
-            @else
+          @else
             <span style="font-size: 13px;margin-left: 5px;">Sin IGV</span>
-            @endif
+          @endif -->
+          --}}
+          <span style="font-size: 13px;margin-left: 5px;">Inc. IGV</span>
           </span>
           <p class="text-muted">{{$item->sort_details}} <a href="#details" class="txtd-underline scroll-to">{{__('Read more')}}</a></p>
           @if($item->atributoraiz_collection != "")
@@ -690,7 +874,7 @@
           @endif
           <div class="row margin-top-1x">
             @foreach($attributes as $attribute)
-            @if($attribute->options->count() != 0)
+              @if($attribute->options->count() != 0)
               <div class="col-sm-6">
                 <div class="form-group">
                   <label for="{{ $attribute->name }}">{{ $attribute->name }}</label>
@@ -706,21 +890,29 @@
           </div>
           <div class="row align-items-end pb-4">
             <div class="col-sm-12 cCtActions__Prd">
-              @if($item->stock != "" && $item->stock > 0)
-                @if ($item->item_type == 'normal')
+              @if($item->stocktype_id == 1)
+                @if($item->item_type == 'normal')
                 <div class="qtySelector product-quantity">
                   <span class="decreaseQty subclick"><i class="fas fa-minus"></i></span>
                   <input type="text" class="qtyValue cart-amount" value="1">
                   <span class="increaseQty addclick"><i class="fas fa-plus"></i></span>
-                  <input type="hidden" value="3333" id="current_stock">
+                  @if($item->stocktype_id == 1)
+                    <input type="hidden" class="d-non_yipt hdd-control_yipt non-visvalipt_yipt h-alternative-shwnon_yipt s-fkeynone-step_yipt currentbyprod_stock" f-hidden="aria-hidden_yipt" value="unlimited">
+                  @else
+                    <input type="hidden" class="d-non_yipt hdd-control_yipt non-visvalipt_yipt h-alternative-shwnon_yipt s-fkeynone-step_yipt currentbyprod_stock" f-hidden="aria-hidden_yipt" value="{{ $item->stock }}">
+                  @endif
                 </div>
                 @endif
                 <div class="p-action-button" style="display: flex;align-items:center;justify-content:flex-start;flex-flow:wrap;">
-                  @if ($item->item_type != 'affiliate')
-                    @if ($item->is_stock())
-                    <button class="btn btn-primary m-0 a-t-c-mr" id="add_to_cart"><i class="icon-bag"></i><span>{{ __('Add to Cart') }}</span></button>  
-                    @else
-                      <button class="btn btn-primary m-0"><i class="icon-bag"></i><span>{{__('Out of stock')}}</span></button>
+                  @if($item->item_type != 'affiliate')
+                    @if($item->stocktype_id == 1)
+                      <button class="btn btn-primary m-0 a-t-c-mr" id="add_to_cart"><i class="icon-bag"></i><span>{{ __('Add to Cart') }}</span></button>
+                    @elseif($item->stocktype_id == 2)
+                      @if($item->is_stock())
+                      <button class="btn btn-primary m-0 a-t-c-mr" id="add_to_cart"><i class="icon-bag"></i><span>{{ __('Add to Cart') }}</span></button>
+                      @else
+                        <button class="btn btn-primary m-0"><i class="icon-bag"></i><span>{{__('Out of stock')}}</span></button>
+                      @endif
                     @endif
                   @else
                   @endif
@@ -758,6 +950,63 @@
                     </div>
                   </div>
                 </div>
+              @elseif($item->stocktype_id == 2)
+                @if($item->stock != "" && $item->stock > 0)
+                  @if($item->item_type == 'normal')
+                  <div class="qtySelector product-quantity">
+                    <span class="decreaseQty subclick"><i class="fas fa-minus"></i></span>
+                    <input type="text" class="qtyValue cart-amount" value="1">
+                    <span class="increaseQty addclick"><i class="fas fa-plus"></i></span>
+                    <input type="hidden" class="d-non_yipt hdd-control_yipt non-visvalipt_yipt h-alternative-shwnon_yipt s-fkeynone-step_yipt currentbyprod_stock" f-hidden="aria-hidden_yipt" value="{{ $item->stock }}">
+                  </div>
+                  @endif
+                  <div class="p-action-button" style="display: flex;align-items:center;justify-content:flex-start;flex-flow:wrap;">
+                    @if($item->item_type != 'affiliate')
+                      @if($item->stocktype_id == 1)
+                      @elseif($item->stocktype_id == 2)
+                        @if($item->is_stock())
+                        <button class="btn btn-primary m-0 a-t-c-mr" id="add_to_cart"><i class="icon-bag"></i><span>{{ __('Add to Cart') }}</span></button>  
+                        @else
+                          <button class="btn btn-primary m-0"><i class="icon-bag"></i><span>{{__('Out of stock')}}</span></button>
+                        @endif
+                      @endif
+                    @else
+                    @endif
+                    <div class="cWtspBtnCtc">
+                      <a title="Solicitar información" href="javascript:void(0);" target="_blank" class="cWtspBtnCtc__pLink">
+                        <img src="../assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" width="100" height="100" decoding="sync">
+                      </a>
+                      <div class="cWtspBtnCtc__pSubM">
+                        
+                      @if(isset($setting->whatsapp_numbers) && $setting->whatsapp_numbers != "[]" && !empty($setting->whatsapp_numbers))
+                      <?php
+                          $whatsappCollection = json_decode($setting->whatsapp_numbers, TRUE);
+                          $ArrwpsNumbers = "";
+                          $wps_inproducts = [];
+                          if(isset($whatsappCollection['whatsapp_numbers'])){
+                            $ArrwpsNumbers = $whatsappCollection['whatsapp_numbers'];
+                            if(isset($ArrwpsNumbers['in_product'])){
+                              $wps_inproducts = $ArrwpsNumbers['in_product'];
+                            }
+                          }
+                        ?>
+                        <ul class="cWtspBtnCtc__pSubM__m">
+                          @foreach ($wps_inproducts as $k => $v)
+                          <li class="cWtspBtnCtc__pSubM__m__i">
+                            <a title="{{ $v['title'] }}" class="cWtspBtnCtc__pSubM__m__link" href="https://api.whatsapp.com/send?phone=51{{ $v['number'] }}&text={{ $v['text'] }}" target="_blank">
+                              <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
+                              <span>{{ $v['title'] }}</span>
+                            </a>
+                          </li>
+                          @endforeach
+                        </ul>
+                        @else
+                        <p>No hay información</p>
+                        @endif
+                      </div>
+                    </div>
+                  </div>
+                @endif
               @endif
             </div>
           </div>
@@ -908,18 +1157,18 @@
               </div>
             </div>
             <div class="t-c-b-area">
-              @if ($item->brand_id)
+              @if($item->brand_id)
               <div class="pt-1 mb-1"><span class="text-medium">{{__('Brand')}}:</span>
                 <a href="{{route('front.catalog').'?brand='.$item->brand->slug}}">{{$item->brand->name}}</a>
               </div>
               @endif
               <div class="pt-1 mb-1"><span class="text-medium">{{__('Categories')}}:</span>
                 <a href="{{route('front.catalog').'?category='.$item->category->slug}}">{{$item->category->name}}</a>
-                  @if ($item->subcategory->name)
+                  @if($item->subcategory->name)
                   /
                   @endif
                 <a href="{{route('front.catalog').'?subcategory='.$item->subcategory->slug}}">{{$item->subcategory->name}}</a>
-                  @if ($item->childcategory->name)
+                  @if($item->childcategory->name)
                   /
                   @endif
                 <a href="{{route('front.catalog').'?childcategory='.$item->childcategory->slug}}">{{$item->childcategory->name}}</a>
@@ -927,7 +1176,7 @@
               <div class="pt-1 mb-1"><span class="text-medium">Etiquetas:</span>
                 @if($item->tags)
                 @foreach (explode(',',$item->tags) as $tag)
-                @if ($loop->last)
+                @if($loop->last)
                 <a href="{{route('front.catalog').'?tag='.$tag}}">{{$tag}}</a>
                 @else
                 <a href="{{route('front.catalog').'?tag='.$tag}}">{{$tag}}</a>,
@@ -935,22 +1184,22 @@
                 @endforeach
                 @endif
               </div>
-              @if ($item->item_type == 'normal')
+              @if($item->item_type == 'normal')
               <div class="pt-1 mb-1"><span class="text-medium">STOCK:</span> {{$item->stock}}</div>
               @endif
-              @if ($item->item_type == 'normal')
+              @if($item->item_type == 'normal')
               <div class="pt-1 mb-1"><span class="text-medium">CÓDIGO SAP:</span> {{$item->sap_code}}</div>
               @endif
-              @if ($item->item_type == 'normal')
+              @if($item->item_type == 'normal')
               <div class="pt-1 mb-1"><span class="text-medium">{{__('SKU')}}:</span> {{$item->sku}}</div>
               @endif
-              @if ($item->unidad_raiz)
+              @if($item->unidad_raiz)
               <?php
                 $unidad_raiz_byItem = DB::table('tbl_unidadraiz')->where('id',$item->unidad_raiz)->get()->toArray()[0];
               ?>
               <div class="pt-1 mb-1"><span class="text-medium">{{__('Unidad de medida')}}:</span> <strong>{{ $unidad_raiz_byItem->name }}</strong></div>
               @endif
-              @if ($item->atributo_raiz)
+              @if($item->atributo_raiz)
               <?php
                 $atributo_raiz_byItem = DB::table('tbl_atributoraiz')->where('id',$item->atributo_raiz)->get()->toArray()[0];
               ?>
@@ -969,7 +1218,7 @@
             <div class="mt-4 p-d-f-area">
               <div class="left">
                 <a class="btn btn-primary btn-sm wishlist_store wishlist_text" href="{{route('user.wishlist.store',$item->id)}}"><span><i class="icon-heart"></i></span>
-                @if (Auth::check() && App\Models\Wishlist::where('user_id',Auth::user()->id)->where('item_id',$item->id)->exists())
+                @if(Auth::check() && App\Models\Wishlist::where('user_id',Auth::user()->id)->where('item_id',$item->id)->exists())
                 <span>{{__('Added To Wishlist')}}</span>
                 @else
                 <span class="wishlist1">{{__('Wishlist')}}</span>
@@ -1046,7 +1295,7 @@
     </div>
   </div>
 </div>
-@if(count($related_items)>0)
+@if(count($related_items) > 0)
 <div class="relatedproduct-section container padding-bottom-3x mb-1 s-pt-30">
   <div class="row">
     <div class="col-lg-12">
@@ -1058,83 +1307,311 @@
   <div class="row">
     <div class="col-lg-12">
       <div class="relatedproductslider owl-carousel">
-        @foreach ($related_items as $related)
-          <div class="slider-item" style="margin-right: 15px;">
-            <div class="product-card">
-              @if ($related->is_stock())
-                @if($related->is_type == 'new')
-                @else
-                  <div class="product-badge
-                  @if($related->is_type == 'feature')
-                  bg-warning
+        @foreach ($related_items as $related_item)
+        <?php
+          $TaxesAll = DB::table('taxes')->get();
+          $incIGV = $TaxesAll[0]->value;
+          $sinIGV = $TaxesAll[1]->value;
+          $incIGV_format = $incIGV / 100;
+          $sinIGV_format = $sinIGV;
+          $sumFinalPrice1 = 0;
+          $sumFinalPrice2 = 0;
+          $coupinf_discount_percentage = 0;
+          $coupinf_discount_percentage_nonapply = 0;
+          $couponInfo_totalprice = 0;
+          $getAllCouponInfo = [];
+          $getAllDataCouponById = [];
+          $getAllDataCouponById_nonapply = [];
+          $allCouponDataConvertById = [];
+          $allCouponDataConvertById_nonapply = [];
+          $sumTotalPriceFinal = 0;
+          $sumTotalDiscountPriceFinalPrevious = 0;
+          $txtFlagToProduct = "";
+          $txtFlagAvaiCouponToProduct = "";
+          // --------------- VALIDAR SI YA SE ACTIVÓ UN CUPÓN EN EL PRODUCTO ('tbl_applycoupons')
+          if(!empty($related_item->coupon_id) && $related_item->coupon_id != "" && $related_item->coupon_id != null && $related_item->coupon_id != 0){
+            $getAllCouponInfo = DB::table('tbl_applycoupons')->where("id_user","=",$user_id)->where("id_prod","=",$related_item->id)->where("id_coupon","=",$related_item->coupon_id)->where("status","!=",0)->select('id_user', 'id_prod', 'id_coupon', 'totalprice')->take(1)->get();
+            if(count($getAllCouponInfo) > 0){
+              $txtFlagAvaiCouponToProduct = "txt-yesapply";
+              $allDataConvert = json_decode($getAllCouponInfo, TRUE);
+              $getAllDataCouponById = DB::table('tbl_coupons')->where("id","=",$allDataConvert[0]['id_coupon'])->where("status","!=",0)->select('name', 'discount_percentage')->take(1)->get();
+              if(count($getAllDataCouponById) > 0){
+                $allCouponDataConvertById = json_decode($getAllDataCouponById, TRUE);
+                $coupinf_discount_percentage = $allCouponDataConvertById[0]['discount_percentage'];
+                $couponInfo_totalprice = $allDataConvert[0]['totalprice']; // SETEAR LA VARIABLE DE PRECIO TOTAL PARA CUPÓN ACTIVADO
+              }
+            }else{
+              $txtFlagAvaiCouponToProduct = "txt-nonapply";
+              $getAllDataCouponById_nonapply = DB::table('tbl_coupons')->where("id","=",$related_item->coupon_id)->where("status","!=",0)->select('name', 'discount_percentage')->take(1)->get();
+              if(count($getAllDataCouponById_nonapply) > 0){
+                $allCouponDataConvertById_nonapply = json_decode($getAllDataCouponById_nonapply, TRUE);
+                $coupinf_discount_percentage_nonapply = $allCouponDataConvertById_nonapply[0]['discount_percentage'];
+              }
+            }
+          }
 
-                  @elseif($related->is_type == 'top')
-                  bg-info
-                  @elseif($related->is_type == 'best')
-                  bg-dark
-                  @elseif($related->is_type == 'flash_deal')
-                  bg-success
-                  @endif
-                  ">{{  $related->is_type != 'undefine' ?  ucfirst(str_replace('_',' ',$related->is_type)) : ''   }}</div>
-                  @endif
-                  @else
-                  <div class="product-badge bg-secondary border-default text-body
-                  ">{{__('out of stock')}}</div>
+          if($related_item->sections_id != 0){
+            if($related_item->sections_id == 1 && $related_item->on_sale_price != 0 && $related_item->on_sale_price != ""){
+              if($related_item->tax_id == 1){
+                $sumFinalPrice1 = $related_item->on_sale_price * $incIGV_format;
+                $sumFinalPrice2 = $related_item->on_sale_price + $sumFinalPrice1;
+                if(count($getAllDataCouponById) > 0){
+                  $txtFlagToProduct = "txt-applycoupon";
+                  $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (on_sale_price)
+                  $sumTotalPriceFinal = $couponInfo_totalprice;
+                }else{
+                  $txtFlagToProduct = "txt-on_sale";
+                  $sumTotalDiscountPriceFinalPrevious = $related_item->discount_price; // PRECIO ACTUAL (discount_price)
+                  $sumTotalPriceFinal = $sumFinalPrice2;
+                }
+              }else{
+                $sumFinalPrice2 = $related_item->on_sale_price;
+                if(count($getAllDataCouponById) > 0){
+                  $txtFlagToProduct = "txt-applycoupon";
+                  $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (on_sale_price)
+                  $sumTotalPriceFinal = $couponInfo_totalprice;
+                }else{
+                  $txtFlagToProduct = "txt-on_sale";
+                  $sumTotalDiscountPriceFinalPrevious = $related_item->discount_price; // PRECIO ACTUAL (discount_price)
+                  $sumTotalPriceFinal = $sumFinalPrice2;
+                }
+              }
+            }else if($related_item->sections_id == 2 && $related_item->special_offer_price != 0 && $related_item->special_offer_price != ""){
+              if($related_item->tax_id == 1){
+                $sumFinalPrice1 = $related_item->special_offer_price * $incIGV_format;
+                $sumFinalPrice2 = $related_item->special_offer_price + $sumFinalPrice1;
+                if(count($getAllDataCouponById) > 0){
+                  $txtFlagToProduct = "txt-applycoupon";
+                  $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (special_offer_price)
+                  $sumTotalPriceFinal = $couponInfo_totalprice;
+                }else{
+                  $txtFlagToProduct = "txt-special_offer";
+                  $sumTotalDiscountPriceFinalPrevious = $related_item->discount_price; // PRECIO ACTUAL (discount_price)
+                  $sumTotalPriceFinal = $sumFinalPrice2;
+                }
+              }else{
+                $sumFinalPrice2 = $related_item->special_offer_price;
+                if(count($getAllDataCouponById) > 0){
+                  $txtFlagToProduct = "txt-applycoupon";
+                  $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (NO_SECTION)
+                  $sumTotalPriceFinal = $couponInfo_totalprice;
+                }else{
+                  $txtFlagToProduct = "txt-special_offer";
+                  $sumTotalDiscountPriceFinalPrevious = $related_item->discount_price; // PRECIO DE LA SECCIÓN (discount_price)
+                  $sumTotalPriceFinal = $sumFinalPrice2;
+                }
+              }
+            }else{
+              if($related_item->tax_id == 1){                
+                $sumFinalPrice1 = $related_item->discount_price * $incIGV_format;
+                $sumFinalPrice2 = $related_item->discount_price + $sumFinalPrice1;
+                if(count($getAllDataCouponById) > 0){
+                  $txtFlagToProduct = "txt-applycoupon";
+                  $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (NO_SECTION)
+                  $sumTotalPriceFinal = $couponInfo_totalprice;
+                }else{
+                  $txtFlagToProduct = "";
+                  $sumTotalDiscountPriceFinalPrevious = $related_item->discount_price; // PRECIO DE LA SECCIÓN (discount_price)
+                  $sumTotalPriceFinal = $sumFinalPrice2;
+                }
+              }else{
+                $sumFinalPrice2 = $related_item->discount_price;
+                if(count($getAllDataCouponById) > 0){
+                  $txtFlagToProduct = "txt-applycoupon";
+                  $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (NO_SECTION)
+                  $sumTotalPriceFinal = $couponInfo_totalprice;
+                }else{
+                  $txtFlagToProduct = "";
+                  $sumTotalDiscountPriceFinalPrevious = $related_item->previous_price; // PRECIO DE LA SECCIÓN (discount_price)
+                  $sumTotalPriceFinal = $sumFinalPrice2;
+                }
+              }
+            }
+          }else{
+            if(count($getAllDataCouponById) > 0){
+              $txtFlagToProduct = "txt-applycoupon";
+              $sumTotalDiscountPriceFinalPrevious = $related_item->discount_price; // PRECIO DE LA SECCIÓN (discount_price)
+              $sumTotalPriceFinal = $couponInfo_totalprice;
+            }else{
+              $txtFlagToProduct = "";
+              $sumTotalDiscountPriceFinalPrevious = $related_item->previous_price; // PRECIO DE LA SECCIÓN (discount_price)
+              $sumTotalPriceFinal = $related_item->discount_price;
+            }
+          }
+        ?>
+        <div class="slider-item" style="margin-right: 15px;">
+          <div class="product-card">              
+            @if($related_item->stocktype_id == 1)
+            @elseif($related_item->stocktype_id == 2)
+              @if($related_item->is_stock())
+              <span class="product-badge
+              @if($related_item->is_type == 'feature')
+              bg-warning
+              @elseif($related_item->is_type == 'new')
+              bg-success
+              @elseif($related_item->is_type == 'top')
+              bg-info
+              @elseif($related_item->is_type == 'best')
+              bg-dark
+              @elseif($related_item->is_type == 'flash_deal')
+                bg-success
               @endif
-              @if($related->previous_price && $related->previous_price !=0)
-              <div class="product-badge product-badge2 bg-info"> -{{PriceHelper::DiscountPercentage($related)}}</div>
+              ">{{  $related_item->is_type != 'undefine' ?  ucfirst(str_replace('_',' ',$related_item->is_type)) : ''   }}</span>
+              @else
+              <span class="product-badge bg-secondary border-default text-body
+              ">{{__('out of stock')}}</span>
               @endif
-              @if($related->previous_price && $related->previous_price !=0)
-              <div class="product-badge product-badge2 bg-info"> -{{PriceHelper::DiscountPercentage($related)}}</div>
-              @endif
-              <div class="product-thumb">
-                <a href="{{route('front.product',$related->slug)}}"><img class="lazy" data-src="{{asset('assets/images/items/'.$related->thumbnail)}}" alt="Product"></a>
-                <div class="product-button-group">
-                  <a class="product-button wishlist_store" href="{{route('user.wishlist.store',$related->id)}}" title="{{__('Wishlist')}}"><i class="icon-heart"></i></a>
-                  <a class="product-button product_compare" href="javascript:;" data-target="{{route('fornt.compare.product',$related->id)}}" title="{{__('Compare')}}"><i class="icon-repeat"></i></a>
-                  @include('includes.item_footer',['sitem' => $related])
-                </div>
+            @endif
+            @if($related_item->previous_price && $related_item->previous_price !=0)
+            <div class="product-badge product-badge2 bg-info"> -{{PriceHelper::DiscountPercentage($related_item)}}</div>
+            @endif
+            <div class="product-thumb">
+              <a href="{{route('front.product',$related_item->slug)}}">
+                <img class="lazy" data-src="{{asset('assets/images/items/'.$related_item->thumbnail)}}" alt="Product">
+              </a>
+              <div class="product-button-group">
+                <a class="product-button wishlist_store" href="{{route('user.wishlist.store',$related_item->id)}}" title="{{__('Wishlist')}}"><i class="icon-heart"></i></a>
+                <a class="product-button product_compare" href="javascript:;" data-target="{{route('fornt.compare.product',$related_item->id)}}" title="{{__('Compare')}}"><i class="icon-repeat"></i></a>
+                @include('includes.item_footer',['sitem' => $related_item])
               </div>
-              <div class="product-card-body">
-                <div class="product-category"><a href="{{route('front.catalog').'?category='.$related->category->slug}}">{{$related->category->name}}</a></div>
-                <h3 class="product-title">
-                  <a href="{{route('front.product',$related->slug)}}">
-                  {{ strlen(strip_tags($related->name)) > 35 ? substr(strip_tags($related->name), 0, 35) : strip_tags($related->name) }}
-                  </a>
-                </h3>
-                <h4 class="product-price">
-                @if ($related->previous_price !=0)
-                <del>{{PriceHelper::setPreviousPrice($related->previous_price)}}</del>
+              @if($related_item->stocktype_id == 1)
+                @if($txtFlagAvaiCouponToProduct != "")
+                  @if($txtFlagAvaiCouponToProduct == "txt-nonapply")
+                    <?php
+                      $colorPercentageVal = "";
+                      $coupinf_discount_percentage_nonapplyFormatInt = (int) $coupinf_discount_percentage_nonapply;
+                      $coupinf_discount_percentage_nonapplyFormatFloat = floatval($coupinf_discount_percentage_nonapply);
+                      // if($coupinf_discount_percentage_nonapplyFormatInt > 0 && $coupinf_discount_percentage_nonapplyFormatInt <= 29){
+                      //   $colorPercentageVal = "bg__avaicoupon--20";
+                      // }else if($coupinf_discount_percentage_nonapplyFormatInt <= 30 && $coupinf_discount_percentage_nonapplyFormatInt <= 49){
+                      //   $colorPercentageVal = "bg__avaicoupon--30";
+                      // }else if($coupinf_discount_percentage_nonapplyFormatInt <= 50 && $coupinf_discount_percentage_nonapplyFormatInt <= 69){
+                      //   $colorPercentageVal = "bg__avaicoupon--50";
+                      // }else if($coupinf_discount_percentage_nonapplyFormatInt <= 70 && $coupinf_discount_percentage_nonapplyFormatInt <= 99){
+                      //   $colorPercentageVal = "bg__avaicoupon--70";
+                      // }else if($coupinf_discount_percentage_nonapplyFormatInt == 100){
+                      //   $colorPercentageVal = "bg__avaicoupon--100";
+                      // }else{
+                      //   $colorPercentageVal = "bg__avaicoupon--10";
+                      // }
+                    ?>
+                    <div class="product-avaicoupon post-abs">
+                      <div class="product-avaicoupon__c pos-r">
+                        <span class="product-avaicoupon__c__cType">
+                          <span class="product-avaicoupon__c__cType__spn">
+                            <span class="product-avaicoupon__c__cType__spn__txtTitle">CUPÓN</span>  
+                            <span class="product-avaicoupon__c__cType__spn__txtNumb">{{ $coupinf_discount_percentage_nonapplyFormatFloat }}%</span>  
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  @endif
                 @endif
-                {{PriceHelper::grandCurrencyPrice($related)}} </h4>
-                <div class="cWtspBtnCtc">
-                  <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51{{$setting->footer_phone}}&text=Solicito información sobre: {{route('front.product',$related->slug)}}" target="_blank" class="cWtspBtnCtc__pLink">
-                    <img src="../assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" width="100" height="100" decoding="sync">
-                  </a>
-                  <div class="cWtspBtnCtc__pSubM">
-                    <ul class="cWtspBtnCtc__pSubM__m">
-                      <li class="cWtspBtnCtc__pSubM__m__i">
-                        <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
-                          <!-- <img src="{{ asset('assets/back/images/WhatsApp') }}/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
-                          <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                          <!-- <span>912 831 232</span> -->
-                          <span>Tienda #1</span>
-                        </a>
-                      </li>
-                      <li class="cWtspBtnCtc__pSubM__m__i">
-                        <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
-                          <!-- <img src="{{ asset('assets/back/images/WhatsApp') }}/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
-                          <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
-                          <!-- <span>974 124 991</span> -->
-                          <span>Tienda #2</span>
-                        </a>
-                      </li>
-                    </ul>
+              @elseif($related_item->stocktype_id == 2)
+                @if($related_item->is_stock())
+                  @if($txtFlagAvaiCouponToProduct != "")
+                    @if($txtFlagAvaiCouponToProduct == "txt-nonapply")
+                      <?php
+                        $colorPercentageVal = "";
+                        $coupinf_discount_percentage_nonapplyFormatInt = (int) $coupinf_discount_percentage_nonapply;
+                        $coupinf_discount_percentage_nonapplyFormatFloat = floatval($coupinf_discount_percentage_nonapply);
+                        // if($coupinf_discount_percentage_nonapplyFormatInt > 0 && $coupinf_discount_percentage_nonapplyFormatInt <= 29){
+                        //   $colorPercentageVal = "bg__avaicoupon--20";
+                        // }else if($coupinf_discount_percentage_nonapplyFormatInt <= 30 && $coupinf_discount_percentage_nonapplyFormatInt <= 49){
+                        //   $colorPercentageVal = "bg__avaicoupon--30";
+                        // }else if($coupinf_discount_percentage_nonapplyFormatInt <= 50 && $coupinf_discount_percentage_nonapplyFormatInt <= 69){
+                        //   $colorPercentageVal = "bg__avaicoupon--50";
+                        // }else if($coupinf_discount_percentage_nonapplyFormatInt <= 70 && $coupinf_discount_percentage_nonapplyFormatInt <= 99){
+                        //   $colorPercentageVal = "bg__avaicoupon--70";
+                        // }else if($coupinf_discount_percentage_nonapplyFormatInt == 100){
+                        //   $colorPercentageVal = "bg__avaicoupon--100";
+                        // }else{
+                        //   $colorPercentageVal = "bg__avaicoupon--10";
+                        // }
+                      ?>
+                      <div class="product-avaicoupon post-abs">
+                        <div class="product-avaicoupon__c pos-r">
+                          <span class="product-avaicoupon__c__cType">
+                            <span class="product-avaicoupon__c__cType__spn">
+                              <span class="product-avaicoupon__c__cType__spn__txtTitle">CUPÓN</span>  
+                              <span class="product-avaicoupon__c__cType__spn__txtNumb">{{ $coupinf_discount_percentage_nonapplyFormatFloat }}%</span>  
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    @endif
+                  @endif
+                @endif
+              @endif
+            </div>
+            <div class="product-card-body">
+              @if($txtFlagToProduct != "")
+                @if($txtFlagToProduct == "txt-applycoupon")
+                <div class="product-flag">
+                  <div class="product-flag__c pos-r">
+                    <span class="product-flag__c__cType bg__applycoupon">
+                      <span class="product-flag__c__cType__spn">Cupón Activado</span>
+                    </span>
                   </div>
+                </div>
+                @elseif($txtFlagToProduct == "txt-on_sale")
+                <div class="product-flag">
+                  <div class="product-flag__c pos-r">
+                    <span class="product-flag__c__cType bg__onsale">
+                      <span class="product-flag__c__cType__spn">En Promoción</span>
+                    </span>
+                  </div>
+                </div>
+                @elseif($txtFlagToProduct == "txt-special_offer")
+                <div class="product-flag">
+                  <div class="product-flag__c pos-r">
+                    <span class="product-flag__c__cType bg__specialoffer">
+                      <span class="product-flag__c__cType__spn">Oferta Especial</span>
+                    </span>
+                  </div>
+                </div>
+                @else
+                @endif
+              @endif
+              <div class="product-category"><a href="{{route('front.catalog').'?category='.$related_item->category->slug}}">{{$related_item->category->name}}</a></div>
+              <h3 class="product-title">
+                <a class="text-bold" href="{{route('front.product',$related_item->slug)}}">
+                {{ strlen(strip_tags($related_item->name)) > 35 ? substr(strip_tags($related_item->name), 0, 35) : strip_tags($related_item->name) }}
+                </a>
+              </h3>
+              <p class="product-sku__2">SKU: {{ strlen(strip_tags($related_item->sku)) > $name_string_count ? substr(strip_tags($related_item->sku), 0, 38) . '...' : strip_tags($related_item->sku) }}</p>
+              <h4 class="product-price">
+                <del>{{PriceHelper::setPreviousPrice($sumTotalDiscountPriceFinalPrevious)}}</del>
+                <span>{{PriceHelper::setCurrencyPrice($sumTotalPriceFinal)}}</span>
+              </h4>
+              <div class="cWtspBtnCtc">
+                <a title="Solicitar información" href="https://api.whatsapp.com/send?phone=51{{$setting->footer_phone}}&text=Solicito información sobre: {{route('front.product',$related_item->slug)}}" target="_blank" class="cWtspBtnCtc__pLink">
+                  <img src="../assets/images/boton-pedir-por-whatsapp.png" class="boton-as cWtspBtnCtc__pLink__imgInit" width="100" height="100" decoding="sync">
+                </a>
+                <div class="cWtspBtnCtc__pSubM">
+                  <ul class="cWtspBtnCtc__pSubM__m">
+                    <li class="cWtspBtnCtc__pSubM__m__i">
+                      <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
+                        <!-- <img src="{{ asset('assets/back/images/WhatsApp') }}/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
+                        <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
+                        <!-- <span>912 831 232</span> -->
+                        <span>Tienda #1</span>
+                      </a>
+                    </li>
+                    <li class="cWtspBtnCtc__pSubM__m__i">
+                      <a class="cWtspBtnCtc__pSubM__m__link" href="" target="_blank">
+                        <!-- <img src="{{ asset('assets/back/images/WhatsApp') }}/icono-tienda-1.png" alt="Icono-tienda" width="100" height="100" decoding="sync"> -->
+                        <img src="{{ asset('assets/images/Utilities') }}/whatsapp-icon.png" alt="Icono-tienda" width="100" height="100" decoding="sync">
+                        <!-- <span>974 124 991</span> -->
+                        <span>Tienda #2</span>
+                      </a>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
           </div>
+        </div>
         @endforeach
       </div>
     </div>
@@ -1143,7 +1620,8 @@
 @endif
 
 
-@if($item->stock != "" && $item->stock > 0)
+
+@if($item->stocktype_id == 1)
   @if(count($applycoupon) > 0)
     @if(count($coupons) > 0)
       @php
@@ -1295,11 +1773,165 @@
       @endif
     @endif
   @endif
+@elseif($item->stocktype_id == 2)
+  @if($item->stock != "" && $item->stock > 0)
+    @if(count($applycoupon) > 0)
+      @if(count($coupons) > 0)
+        @php
+          $arrcoupon2 = json_decode($coupons, TRUE);
+        @endphp
+        @if($remainingTime <= 0)
+          @if($idcouponapply_user == $user_id && $idcouponapply_prod == $item->id && $idcouponapply_coupon == $item->coupon_id)
+          @else
+          <div class="modal fade" id="coupons-desc" tabindex="-1" role="dialog" aria-labelledby="coupons-descModalLabel" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                
+                <div class="mdl-CouponCustom">
+                  <div class="mdl-CouponCustom__c">
+                    <div class="mdl-CouponCustom__c__btnClose" id="mdl-CouponBtnClose">
+                      <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                      </button>
+                    </div>
+                    <div class="mdl-CouponCustom__c__mC">
+                      <div class="mdl-CouponCustom__c__mC__cc">
+                        <div class="mdl-CouponCustom__c__mC__cc__countdown">
+                          <div class="mdl-CouponCustom__c__mC__cc__countdown__c" id="countdown-coupon"></div>
+                        </div>
+                        <div class="mdl-CouponCustom__c__mC__cc__frmSend">
+                          <div class="mdl-CouponCustom__c__mC__cc__frmSend__cExpd">
+                            <p>COUPON EXPIRED!!!</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          @endif
+        @else
+          @if($idcouponapply_user == $user_id && $idcouponapply_prod == $item->id && $idcouponapply_coupon == $item->coupon_id)
+          @else
+          <div class="modal fade" id="coupons-desc" tabindex="-1" role="dialog" aria-labelledby="coupons-descModalLabel" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                
+                <div class="mdl-CouponCustom">
+                  <div class="mdl-CouponCustom__c">
+                    <div class="mdl-CouponCustom__c__btnClose" id="mdl-CouponBtnClose">
+                      <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                      </button>
+                    </div>
+                    <div class="mdl-CouponCustom__c__mC">
+                      <div class="mdl-CouponCustom__c__mC__cc">
+                        <div class="mdl-CouponCustom__c__mC__cc__countdown">
+                          <div class="mdl-CouponCustom__c__mC__cc__countdown__c" id="countdown-coupon"></div>
+                        </div>
+                        <div class="mdl-CouponCustom__c__mC__cc__frmSend">
+                          <form action="{{ route('front.applycoupon') }}" class="btn-ok" method="POST">
+                            @csrf
+                            <img src="{{asset('assets/images/coupons/')}}/{{ $arrcoupon2[0]['photo'] }}" alt="" id="cImg-coupon_valid">
+                            <input tabindex="-1" placeholder="phdr-whidipts" type="hidden" width="0" height="0" autocomplete="off" spellcheck="false" f-hidden="aria-hidden" class="non-visvalipt h-alternative-shwnon s-fkeynone-step hdd-control d-non" name="prod_id" id="prod_id" value="{{ $item->id }}">
+                            <input tabindex="-1" placeholder="phdr-whidipts" type="hidden" width="0" height="0" autocomplete="off" spellcheck="false" f-hidden="aria-hidden" class="non-visvalipt h-alternative-shwnon s-fkeynone-step hdd-control d-non" name="coupon_id" id="coupon_id" value="{{ $idcoupon }}">
+                            <button type="submit" class="ipt_hidcouponvalid__cbtn">
+                              <span>APLICAR</span>
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          @endif
+        @endif
+      @endif
+    @else
+      @if(count($coupons) > 0)
+        @php
+          $arrcoupon2 = json_decode($coupons, TRUE);
+        @endphp
+        @if($remainingTime <= 0)
+          <div class="modal fade" id="coupons-desc" tabindex="-1" role="dialog" aria-labelledby="coupons-descModalLabel" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">            
+                <div class="mdl-CouponCustom">
+                  <div class="mdl-CouponCustom__c">
+                    <div class="mdl-CouponCustom__c__btnClose" id="mdl-CouponBtnClose">
+                      <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                      </button>
+                    </div>
+                    <div class="mdl-CouponCustom__c__mC">
+                      <div class="mdl-CouponCustom__c__mC__cc">
+                        <div class="mdl-CouponCustom__c__mC__cc__countdown">
+                          <div class="mdl-CouponCustom__c__mC__cc__countdown__c" id="countdown-coupon"></div>
+                        </div>
+                        <div class="mdl-CouponCustom__c__mC__cc__frmSend">
+                          <div class="mdl-CouponCustom__c__mC__cc__frmSend__cExpd">
+                            <p>COUPON EXPIRED!!!</p>
+                          </div>
+                        </div>
+                      </div>                  
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        @else
+          <div class="modal fade" id="coupons-desc" tabindex="-1" role="dialog" aria-labelledby="coupons-descModalLabel" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                
+                <div class="mdl-CouponCustom">
+                  <div class="mdl-CouponCustom__c">
+                    <div class="mdl-CouponCustom__c__btnClose" id="mdl-CouponBtnClose">
+                      <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                      </button>
+                    </div>
+                    <div class="mdl-CouponCustom__c__mC">
+                      <div class="mdl-CouponCustom__c__mC__cc">
+                        <div class="mdl-CouponCustom__c__mC__cc__countdown">
+                          <div class="mdl-CouponCustom__c__mC__cc__countdown__c" id="countdown-coupon"></div>
+                        </div>
+                        <div class="mdl-CouponCustom__c__mC__cc__frmSend">
+                          <form action="{{ route('front.applycoupon') }}" class="btn-ok" method="POST">
+                            @csrf
+                            <img src="{{asset('assets/images/coupons/')}}/{{ $arrcoupon2[0]['photo'] }}" alt="" id="cImg-coupon_valid">
+                            <input tabindex="-1" placeholder="phdr-whidipts" type="hidden" width="0" height="0" autocomplete="off" spellcheck="false" f-hidden="aria-hidden" class="non-visvalipt h-alternative-shwnon s-fkeynone-step hdd-control d-non" name="prod_id" id="prod_id" value="{{ $item->id }}">
+                            <input tabindex="-1" placeholder="phdr-whidipts" type="hidden" width="0" height="0" autocomplete="off" spellcheck="false" f-hidden="aria-hidden" class="non-visvalipt h-alternative-shwnon s-fkeynone-step hdd-control d-non" name="coupon_id" id="coupon_id" value="{{ $idcoupon }}">
+                            <button type="submit" class="ipt_hidcouponvalid__cbtn">
+                              <span>APLICAR</span>
+                            </button>
+                          </form>
+                        </div>
+                      </div>                  
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        @endif
+      @endif
+    @endif
+  @endif
 @endif
 
 
 <script type="text/javascript" src="{{ asset('assets/front/js/product-details.js') }}"></script>
-@if($item->stock != "" && $item->stock > 0)
+@if($item->stocktype_id == 1)
   @if(count($applycoupon) > 0)
     @if(count($coupons) > 0)
       @php
@@ -1522,6 +2154,234 @@
           }
           
         </script>
+      @endif
+    @endif
+  @endif
+@elseif($item->stocktype_id == 2)
+  @if($item->stock != "" && $item->stock > 0)
+    @if(count($applycoupon) > 0)
+      @if(count($coupons) > 0)
+        @php
+          $arrcoupon2 = json_decode($coupons, TRUE);
+        @endphp
+        @if($remainingTime <= 0)
+          @if($idcouponapply_user == $user_id && $idcouponapply_prod == $item->id && $idcouponapply_coupon == $item->coupon_id)
+          @else
+          <script type="text/javascript">
+            // -------------- CUENTA REGRESIVA PARA CUPÓN DE DESCUENTO...
+            var expirationTimestamp = {{ $millisecondsExpirationDate }};
+            var imgCouponValid = "{{ asset('assets/images/coupons/') }}/{{ $arrcoupon2[0]['photo'] }}";
+            var expirationTimestamp2 = parseInt(expirationTimestamp);
+            const targetDateTimestamp = expirationTimestamp2;
+            const updateInterval = setInterval(updateElements, 1000);
+
+            function updateElements() {
+              const currentDate = new Date().getTime();
+              const timeRemaining = targetDateTimestamp - currentDate;
+
+              if (timeRemaining <= 0) {
+                // Si el tiempo estimado termina, mostrar un mensaje...
+                document.getElementById('countdown-coupon').innerHTML = 'EL CUPÓN HA EXPIRADO...!';
+                clearInterval(updateInterval);
+                $("#coupons-desc").modal("show");
+              } else {
+                // Calcular días, horas, minutos, y segundos...
+                const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+                $("#coupons-desc").modal("show");
+                // MOSTRAR MENSAJE EN EL MODAL...
+                document.querySelector("#cImg-coupon_valid").setAttribute("src", imgCouponValid);
+                document.getElementById('countdown-coupon').innerHTML = `
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cTitle">Este cupón vence en:</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown">
+                    <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${days}</span>
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Ds</span>
+                    </span>
+                    <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${hours}</span>
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Hr</span>
+                    </span>
+                    <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${minutes}</span>
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Min</span>
+                    </span>
+                    <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${seconds}</span>
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Sec</span>
+                    </span>
+                  </span>`;
+              }
+            }
+            
+          </script>
+          @endif
+        @else
+          @if($idcouponapply_user == $user_id && $idcouponapply_prod == $item->id && $idcouponapply_coupon == $item->coupon_id)
+          @else
+          <script type="text/javascript">
+            // -------------- CUENTA REGRESIVA PARA CUPÓN DE DESCUENTO...
+            var expirationTimestamp = {{ $millisecondsExpirationDate }};
+            var imgCouponValid = "{{ asset('assets/images/coupons/') }}/{{ $arrcoupon2[0]['photo'] }}";
+            var expirationTimestamp2 = parseInt(expirationTimestamp);
+            const targetDateTimestamp = expirationTimestamp2;
+            const updateInterval = setInterval(updateElements, 1000);
+
+            function updateElements() {
+              const currentDate = new Date().getTime();
+              const timeRemaining = targetDateTimestamp - currentDate;
+
+              if (timeRemaining <= 0) {
+                // Si el tiempo estimado termina, mostrar un mensaje...
+                document.getElementById('countdown-coupon').innerHTML = 'EL CUPÓN HA EXPIRADO...!';
+                clearInterval(updateInterval);
+                $("#coupons-desc").modal("show");
+              } else {
+                // Calcular días, horas, minutos, y segundos...
+                const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+                $("#coupons-desc").modal("show");
+                // MOSTRAR MENSAJE EN EL MODAL...
+                document.querySelector("#cImg-coupon_valid").setAttribute("src", imgCouponValid);
+                document.getElementById('countdown-coupon').innerHTML = `
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cTitle">Este cupón vence en:</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown">
+                    <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${days}</span>
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Ds</span>
+                    </span>
+                    <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${hours}</span>
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Hr</span>
+                    </span>
+                    <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${minutes}</span>
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Min</span>
+                    </span>
+                    <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${seconds}</span>
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Sec</span>
+                    </span>
+                  </span>`;
+              }
+            }
+            
+          </script>
+          @endif
+        @endif
+      @endif
+    @else
+      @if(count($coupons) > 0)
+        @php
+          $arrcoupon2 = json_decode($coupons, TRUE);
+        @endphp
+        @if($remainingTime <= 0)
+          <script type="text/javascript">
+            // -------------- CUENTA REGRESIVA PARA CUPÓN DE DESCUENTO...
+            var expirationTimestamp = {{ $millisecondsExpirationDate }};
+            var imgCouponValid = "{{ asset('assets/images/coupons/') }}/{{ $arrcoupon2[0]['photo'] }}";
+            var expirationTimestamp2 = parseInt(expirationTimestamp);
+            const targetDateTimestamp = expirationTimestamp2;
+            const updateInterval = setInterval(updateElements, 1000);
+
+            function updateElements() {
+              const currentDate = new Date().getTime();
+              const timeRemaining = targetDateTimestamp - currentDate;
+
+              if (timeRemaining <= 0) {
+                // Si el tiempo estimado termina, mostrar un mensaje...
+                document.getElementById('countdown-coupon').innerHTML = 'EL CUPÓN HA EXPIRADO...!';
+                clearInterval(updateInterval);
+                $("#coupons-desc").modal("show");
+              } else {
+                // Calcular días, horas, minutos, y segundos...
+                const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+                $("#coupons-desc").modal("show");
+                // MOSTRAR MENSAJE EN EL MODAL...
+                document.querySelector("#cImg-coupon_valid").setAttribute("src", imgCouponValid);
+                document.getElementById('countdown-coupon').innerHTML = `
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cTitle">Este cupón vence en:</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown">
+                    <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${days}</span>
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Ds</span>
+                    </span>
+                    <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${hours}</span>
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Hr</span>
+                    </span>
+                    <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${minutes}</span>
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Min</span>
+                    </span>
+                    <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${seconds}</span>
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Sec</span>
+                    </span>
+                  </span>`;
+              }
+            }
+            
+          </script>
+        @else
+          <script type="text/javascript">
+            // -------------- CUENTA REGRESIVA PARA CUPÓN DE DESCUENTO...
+            var expirationTimestamp = {{ $millisecondsExpirationDate }};
+            var imgCouponValid = "{{ asset('assets/images/coupons/') }}/{{ $arrcoupon2[0]['photo'] }}";
+            var expirationTimestamp2 = parseInt(expirationTimestamp);
+            const targetDateTimestamp = expirationTimestamp2;
+            const updateInterval = setInterval(updateElements, 1000);
+
+            function updateElements() {
+              const currentDate = new Date().getTime();
+              const timeRemaining = targetDateTimestamp - currentDate;
+
+              if (timeRemaining <= 0) {
+                // Si el tiempo estimado termina, mostrar un mensaje...
+                document.getElementById('countdown-coupon').innerHTML = 'EL CUPÓN HA EXPIRADO...!';
+                clearInterval(updateInterval);
+                $("#coupons-desc").modal("show");
+              } else {
+                // Calcular días, horas, minutos, y segundos...
+                const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+                $("#coupons-desc").modal("show");
+                // MOSTRAR MENSAJE EN EL MODAL...
+                document.querySelector("#cImg-coupon_valid").setAttribute("src", imgCouponValid);
+                document.getElementById('countdown-coupon').innerHTML = `
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cTitle">Este cupón vence en:</span>
+                  <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown">
+                    <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${days}</span>
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Ds</span>
+                    </span>
+                    <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${hours}</span>
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Hr</span>
+                    </span>
+                    <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${minutes}</span>
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Min</span>
+                    </span>
+                    <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c">
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__time">${seconds}</span>
+                      <span class="mdl-CouponCustom__c__mC__cc__countdown__c__cCountdown__c__txt">Sec</span>
+                    </span>
+                  </span>`;
+              }
+            }
+            
+          </script>
+        @endif
       @endif
     @endif
   @endif

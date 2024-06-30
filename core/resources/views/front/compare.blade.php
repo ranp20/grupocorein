@@ -48,7 +48,7 @@
                   </td>
                   @foreach ($items as $item)
                   <td>
-                    <div class="comparison-item"><span class="remove-item compare_remove" data-href="{{route('front.compare.remove',$item->id)}}"><i class="icon-x"></i></span><a class="comparison-item-thumb" href="{{route('front.product',$item->slug)}}"><img src="{{asset('assets/images/'.$item->thumbnail)}}" alt="Image"></a><a class="comparison-item-title" href="{{route('front.product',$item->slug)}}">{{$item->name}}</a><a class="btn btn-outline-primary btn-sm add_to_single_cart" href="javascript:;"  data-target="{{$item->id}}" >{{__('Add to Cart')}}</a></div>
+                    <div class="comparison-item"><span class="remove-item compare_remove" data-href="{{route('front.compare.remove',$item->id)}}"><i class="icon-x"></i></span><a class="comparison-item-thumb" href="{{route('front.product',$item->slug)}}"><img src="{{asset('assets/images/items/'.$item->thumbnail)}}" alt="Image"></a><a class="comparison-item-title" href="{{route('front.product',$item->slug)}}">{{$item->name}}</a><a class="btn btn-outline-primary btn-sm add_to_single_cart" href="javascript:;"  data-target="{{$item->id}}" >{{__('Add to Cart')}}</a></div>
                   </td>
                   @endforeach
                 </tr>
@@ -63,8 +63,14 @@
                       @if(in_array($name,json_decode($items[0]->specification_name,true)))
                         @if (isset($sdesc[0][$key]))
                           {{$sdesc[0][$key]}}
+                        @else
+                          <span>-</span>
                         @endif
+                      @else
+                        <span>-</span>
                       @endif
+                    @else
+                      <span>-</span>
                     @endif
                   </td>
                   <td>
@@ -72,8 +78,14 @@
                       @if(in_array($name,json_decode($items[1]->specification_name,true)))
                         @if (isset($sdesc[1][$key]))
                           {{$sdesc[1][$key]}}
+                        @else
+                          <span>-</span>
                         @endif
+                      @else
+                        <span>-</span>
                       @endif
+                    @else
+                      <span>-</span>
                     @endif
                   </td>
                 </tr>
@@ -92,7 +104,7 @@
                         <i class="icon-x"></i>
                       </span>
                       <a class="comparison-item-thumb" href="{{route('front.product',$item->slug)}}">
-                        <img src="{{asset('assets/images/'.$item->thumbnail)}}" alt="Image">
+                        <img src="{{asset('assets/images/items/'.$item->thumbnail)}}" alt="Image">
                       </a>
                       <a class="comparison-item-title" href="{{route('front.product',$item->slug)}}">{{$item->name}}</a>
                       <a class="btn btn-outline-primary btn-sm add_to_single_cart" href="javascript:;"  data-target="{{$item->id}}" >{{__('Add to Cart')}}</a>
@@ -106,12 +118,18 @@
                     <th>{{$name}}</th>
                     <td>
                       @if(in_array($name,json_decode($items[0]->specification_name,true)))
-                        @if (isset($sdesc[0][$key]))
-                        {{$sdesc[0][$key]}}
+                        @if(isset($sdesc[0][$key]) && $sdesc[0][$key] != "")
+                          {{$sdesc[0][$key]}}
+                        @else
+                        <span>-</span>
                         @endif
+                      @else
+                        <span>-</span>
                       @endif
                     </td>
                   </tr>
+                  @else
+                    <span>-</span>
                   @endif
                 @endforeach
               @endif

@@ -129,16 +129,18 @@
         @endif
         <section class="widget widget-categories card rounded p-4">
           <h3 class="widget-title">{{__('Filter by Brand')}}</h3>
-          <div class="custom-control custom-checkbox">
-            <input class="custom-control-input brand-select" type="checkbox" value="" id="all-brand">
-            <label class="custom-control-label" for="all-brand">{{__('All Brands')}}</label>
+          <div class="c-contBrandsFiltersByChcks">
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input brand-select" type="checkbox" value="" id="all-brand">
+              <label class="custom-control-label" for="all-brand">{{__('All Brands')}}</label>
+            </div>
+            @foreach ($brands as $getbrand)
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input brand-select" {{isset($brand) && $brand->id == $getbrand->id ? 'checked' : ''}} type="checkbox" value="{{$getbrand->slug}}" id="{{$getbrand->slug}}">
+              <label class="custom-control-label" for="{{$getbrand->slug}}">{{$getbrand->name}}</label>
+            </div>
+            @endforeach
           </div>
-          @foreach ($brands as $getbrand)
-          <div class="custom-control custom-checkbox">
-            <input class="custom-control-input brand-select" {{isset($brand) && $brand->id == $getbrand->id ? 'checked' : ''}} type="checkbox" value="{{$getbrand->slug}}" id="{{$getbrand->slug}}">
-            <label class="custom-control-label" for="{{$getbrand->slug}}">{{$getbrand->name}}</label>
-          </div>
-          @endforeach
         </section>
       </aside>
     </div>

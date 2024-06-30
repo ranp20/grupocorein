@@ -53,4 +53,5 @@
     @endif
   </div>
 </div>
+<script type="text/javascript" src="{{ asset('assets/front/js/cart.js') }}"></script>
 @endsection
