@@ -60,8 +60,13 @@ class CheckoutController extends Controller{
   }
   /* ---------------- AL HACER CLICK EN EL TAB DE "DATOS PERSONALES" ---------------- */
 	public function ship_address(){
-    if (!Session::has('cart')){
+    if(!Session::has('cart')){
       return redirect(route('front.cart'));
+    }else{
+      if(Session::has('cart') && count(Session::get('cart')) > 0){
+      }else{
+        return redirect(route('front.cart'));
+      }
     }
     $data['user'] = Auth::user() ? Auth::user() : null;
     $cart = Session::get('cart');
@@ -111,7 +116,7 @@ class CheckoutController extends Controller{
           $currentDate = new DateTime();
           $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
           // ----------- Asegurarse que la fecha es válida...
-          if (!$expirationDate) {
+          if(!$expirationDate) {
             die('Invalid date format for countdown.');
           }
           // ----------- Obtener las fechas en milisegundos...
@@ -150,7 +155,7 @@ class CheckoutController extends Controller{
     if(Session::has('coupon')){
       $discount = Session::get('coupon');
     }
-    if (!PriceHelper::Digital()){
+    if(!PriceHelper::Digital()){
       $shipping = null;
     }
     // $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
@@ -195,36 +200,40 @@ class CheckoutController extends Controller{
   }
   /* ---------------- PANTALLA #1 BILLING ---------------- */
   public function billingStore(Request $request){
-    if($request->same_ship_address){
-      Session::put('billing_address',$request->all());
-      if(PriceHelper::CheckDigital()){
-        $shipping = [
-          "ship_first_name" => $request->bill_first_name,
-          "ship_last_name" => $request->bill_last_name,
-          "ship_email" => $request->bill_email,
-          "ship_phone" => $request->bill_phone,
-          "ship_address1" => $request->bill_address1,
-          "ship_address2" => $request->bill_address2,
-        ];
+    if(Session::has('cart') && count(Session::get('cart')) > 0){
+      if($request->same_ship_address){
+        Session::put('billing_address',$request->all());
+        if(PriceHelper::CheckDigital()){
+          $shipping = [
+            "ship_first_name" => $request->bill_first_name,
+            "ship_last_name" => $request->bill_last_name,
+            "ship_email" => $request->bill_email,
+            "ship_phone" => $request->bill_phone,
+            "ship_address1" => $request->bill_address1,
+            "ship_address2" => $request->bill_address2,
+          ];
+        }else{
+          $shipping = [
+            "ship_first_name" => $request->bill_first_name,
+            "ship_last_name" => $request->bill_last_name,
+            "ship_email" => $request->bill_email,
+            "ship_phone" => $request->bill_phone,
+            "ship_address1" => $request->bill_address1,
+            "ship_address2" => $request->bill_address2,
+          ];
+        }
+        Session::put('shipping_address',$shipping);
       }else{
-        $shipping = [
-          "ship_first_name" => $request->bill_first_name,
-          "ship_last_name" => $request->bill_last_name,
-          "ship_email" => $request->bill_email,
-          "ship_phone" => $request->bill_phone,
-          "ship_address1" => $request->bill_address1,
-          "ship_address2" => $request->bill_address2,
-        ];
+        Session::put('billing_address',$request->all());
+        Session::forget('shipping_address');
       }
-      Session::put('shipping_address',$shipping);
+      if(Session::has('shipping_address')){
+        return redirect()->route('front.checkout.payment');
+      }else{
+        return redirect()->route('front.checkout.shipping');
+      }
     }else{
-      Session::put('billing_address',$request->all());
-      Session::forget('shipping_address');
-    }
-    if(Session::has('shipping_address')){
-      return redirect()->route('front.checkout.payment');
-    }else{
-      return redirect()->route('front.checkout.shipping');
+      return redirect(route('front.cart'));
     }
   }
   /* ---------------- AL HACER CLICK EN EL TAB DE "DIRECCIÓN DE ENVÍO" ---------------- */
@@ -236,6 +245,11 @@ class CheckoutController extends Controller{
     */
     if(!Session::has('cart')){
       return redirect(route('front.cart'));
+    }else{
+      if(Session::has('cart') && count(Session::get('cart')) > 0){
+      }else{
+        return redirect(route('front.cart'));
+      }
     }
     $getUserData = Auth::user();
     $getPaisData = json_encode(["id" => 1,"pais_code" => 1,"pais_name" => "PERU"], TRUE);
@@ -297,7 +311,7 @@ class CheckoutController extends Controller{
           $currentDate = new DateTime();
           $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
           // ----------- Asegurarse que la fecha es válida...
-          if (!$expirationDate) {
+          if(!$expirationDate) {
             die('Invalid date format for countdown.');
           }
           // ----------- Obtener las fechas en milisegundos...
@@ -336,7 +350,7 @@ class CheckoutController extends Controller{
     if(Session::has('coupon')){
       $discount = Session::get('coupon');
     }
-    if (!PriceHelper::Digital()){
+    if(!PriceHelper::Digital()){
       $shipping = null;
     }
     // $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
@@ -443,7 +457,7 @@ class CheckoutController extends Controller{
           $currentDate = new DateTime();
           $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
           // ----------- Asegurarse que la fecha es válida...
-          if (!$expirationDate) {
+          if(!$expirationDate) {
             die('Invalid date format for countdown.');
           }
           // ----------- Obtener las fechas en milisegundos...
@@ -482,7 +496,7 @@ class CheckoutController extends Controller{
     if(Session::has('coupon')){
       $discount = Session::get('coupon');
     }
-    if (!PriceHelper::Digital()){
+    if(!PriceHelper::Digital()){
       $shipping = null;
     }
     // $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
@@ -583,7 +597,7 @@ class CheckoutController extends Controller{
           $currentDate = new DateTime();
           $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
           // ----------- Asegurarse que la fecha es válida...
-          if (!$expirationDate) {
+          if(!$expirationDate) {
             die('Invalid date format for countdown.');
           }
           // ----------- Obtener las fechas en milisegundos...
@@ -623,7 +637,7 @@ class CheckoutController extends Controller{
     if(Session::has('coupon')){
       $discount = Session::get('coupon');
     }
-    if (!PriceHelper::Digital()){
+    if(!PriceHelper::Digital()){
       $shipping = null;
     }
     // $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
@@ -690,6 +704,11 @@ class CheckoutController extends Controller{
     }
     if(!Session::has('cart')){
       return redirect(route('front.cart'));
+    }else{
+      if(Session::has('cart') && count(Session::get('cart')) > 0){
+      }else{
+        return redirect(route('front.cart'));
+      }
     }
     $data['user'] = Auth::user();
     $cart = Session::get('cart');
@@ -739,7 +758,7 @@ class CheckoutController extends Controller{
           $currentDate = new DateTime();
           $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
           // ----------- Asegurarse que la fecha es válida...
-          if (!$expirationDate) {
+          if(!$expirationDate) {
             die('Invalid date format for countdown.');
           }
           // ----------- Obtener las fechas en milisegundos...
@@ -778,7 +797,7 @@ class CheckoutController extends Controller{
     if(Session::has('coupon')){
       $discount = Session::get('coupon');
     }
-    if (!PriceHelper::Digital()){
+    if(!PriceHelper::Digital()){
       $shipping = null;
     }
     // $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
@@ -947,6 +966,11 @@ class CheckoutController extends Controller{
     // --------------- ACTUALIZAR DATOS EN SESSION "CART"
     if(!Session::has('cart')){
       return redirect(route('front.cart'));
+    }else{
+      if(Session::has('cart') && count(Session::get('cart')) > 0){
+      }else{
+        return redirect(route('front.cart'));
+      }
     }  
     $data['user'] = Auth::user();
     $cart = Session::get('cart');
@@ -1005,7 +1029,7 @@ class CheckoutController extends Controller{
           $currentDate = new DateTime();
           $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
           // ----------- Asegurarse que la fecha es válida...
-          if (!$expirationDate) {
+          if(!$expirationDate) {
             die('Invalid date format for countdown.');
           }
           // ----------- Obtener las fechas en milisegundos...
@@ -1233,7 +1257,7 @@ class CheckoutController extends Controller{
     //       $currentDate = new DateTime();
     //       $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
     //       // ----------- Asegurarse que la fecha es válida...
-    //       if (!$expirationDate) {
+    //       if(!$expirationDate) {
     //         die('Invalid date format for countdown.');
     //       }
     //       // ----------- Obtener las fechas en milisegundos...
@@ -1534,8 +1558,13 @@ class CheckoutController extends Controller{
     return redirect()->route('front.checkout.billing');
 	}
   public function stateSetUp($state_id){
-    if (!Session::has('cart')){
+    if(!Session::has('cart')){
       return redirect(route('front.cart'));
+    }else{
+      if(Session::has('cart') && count(Session::get('cart')) > 0){
+      }else{
+        return redirect(route('front.cart'));
+      }
     }
     $cart = Session::get('cart');
     $total_tax = 0;
@@ -1582,7 +1611,7 @@ class CheckoutController extends Controller{
           $currentDate = new DateTime();
           $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
           // ----------- Asegurarse que la fecha es válida...
-          if (!$expirationDate) {
+          if(!$expirationDate) {
             die('Invalid date format for countdown.');
           }
           // ----------- Obtener las fechas en milisegundos...

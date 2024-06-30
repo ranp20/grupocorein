@@ -348,6 +348,7 @@ class FrontendController extends Controller{
       $video = explode('=',$item[0]->video);
       $video = end($video);
     }
+    $name_string_count = 38;
     return view('front.catalog.product',[
       'item'          => $itemProd,
       'reviews'       => $item[0]->reviews()->where('status',1)->paginate(3),
@@ -359,7 +360,8 @@ class FrontendController extends Controller{
       'related_items' => $item[0]->category->items()->whereStatus(1)->where('id','!=',$item[0]->id)->take(8)->get(),
       'coupons'       => Coupons::where('id','=',$item[0]->coupon_id)->where("status","!=",0)->take(1)->get(),
       // 'applycoupon'   => json_encode($couponAddToItem, TRUE)
-      'applycoupon'   => $couponAddToItem
+      'applycoupon'   => $couponAddToItem,
+      'name_string_count' => $name_string_count
     ]);
   }
   public function brands(){
@@ -1191,8 +1193,10 @@ class FrontendController extends Controller{
     //   echo "NO EXISTE USUARIO";
     // }
     // exit();
-
-
+    // echo "<pre>";
+    // print_r($request->all());
+    // echo "</pre>";
+    // exit();
     // INFORMACIÓN A UTILIZAR EN EL CÁLCULO...
     $TaxesAll = Tax::get();
     $sumFinalPrice1 = 0;
@@ -1219,48 +1223,46 @@ class FrontendController extends Controller{
           $discount_percentage = $coupon[0]['discount_percentage'] / 100;
 
           if(isset($item[0]['sections_id']) && $item[0]['sections_id'] != 0){
-            if($item[0]['sections_id'] == 1){
-              if($item[0]['on_sale_price'] != 0 && $item[0]['on_sale_price'] != ""){
-                if(isset($item[0]['tax_id']) && $item[0]['tax_id'] == 1){                
-                    $sumFinalPrice1 = $item[0]['on_sale_price'] * $incIGV_format;
-                    $sumFinalPrice2 = $item[0]['on_sale_price'] + $sumFinalPrice1;
-                    $coupon_1 = $sumFinalPrice2 * $discount_percentage;
-                    $coupon_2 = $sumFinalPrice2 - $coupon_1;
-                    // echo number_format($coupon_2, 2)."<br>"; // REDONDEANDO LOS DECIMALES...
-                    $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
-                    // echo $finalprice."<br>";
-                }else{                
-                  $sumFinalPrice1 = $item[0]['on_sale_price'];
-                  $sumFinalPrice2 = $item[0]['on_sale_price'] + $sumFinalPrice1;
-                  $coupon_1 = $sumFinalPrice2 * $discount_percentage;
-                  $coupon_2 = $sumFinalPrice2 - $coupon_1;
-                  $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
-                  // echo $finalprice."<br>";
-                }
+            if($item[0]['sections_id'] == 1 && $item[0]['on_sale_price'] != 0 && $item[0]['on_sale_price'] != ""){
+              if($item[0]['tax_id'] == 1){
+                $sumFinalPrice1 = $item[0]['on_sale_price'] * $incIGV_format;
+                $sumFinalPrice2 = $item[0]['on_sale_price'] + $sumFinalPrice1;
+                $coupon_1 = $sumFinalPrice2 * $discount_percentage;
+                $coupon_2 = $sumFinalPrice2 - $coupon_1;
+                // echo number_format($coupon_2, 2)."<br>"; // REDONDEANDO LOS DECIMALES...
+                $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
+                // echo $finalprice."<br>";
               }else{
-                $discount_price = $item[0]['discount_price'];
-                $coupon_1 = $discount_price * $discount_percentage;
-                $coupon_2 = $discount_price - $coupon_1;
+                $sumFinalPrice2 = $item[0]['on_sale_price'] + $sumFinalPrice1;
+                $coupon_1 = $sumFinalPrice2 * $discount_percentage;
+                $coupon_2 = $sumFinalPrice2 - $coupon_1;
+                $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
+                // echo $finalprice."<br>";
+              }
+            }else if($item[0]['sections_id'] == 2 && $item[0]['special_offer_price'] != 0 && $item[0]['special_offer_price'] != ""){
+              if($item[0]['tax_id'] == 1){
+                $sumFinalPrice1 = $item[0]['special_offer_price'] * $incIGV_format;
+                $sumFinalPrice2 = $item[0]['special_offer_price'] + $sumFinalPrice1;
+                $coupon_1 = $sumFinalPrice2 * $discount_percentage;
+                $coupon_2 = $sumFinalPrice2 - $coupon_1;
+                $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
+                // echo $finalprice."<br>";
+              }else{
+                $sumFinalPrice2 = $item[0]['special_offer_price'] + $sumFinalPrice1;
+                $coupon_1 = $sumFinalPrice2 * $discount_percentage;
+                $coupon_2 = $sumFinalPrice2 - $coupon_1;
                 $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
                 // echo $finalprice."<br>";
               }
             }else{
-              if($item[0]['special_offer_price'] != 0 && $item[0]['special_offer_price'] != ""){
-                if(isset($item[0]['tax_id']) && $item[0]['tax_id'] == 1){
-                  $sumFinalPrice1 = $item[0]['special_offer_price'] * $incIGV_format;
-                  $sumFinalPrice2 = $item[0]['special_offer_price'] + $sumFinalPrice1;
-                  $coupon_1 = $sumFinalPrice2 * $discount_percentage;
-                  $coupon_2 = $sumFinalPrice2 - $coupon_1;
-                  $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
-                  // echo $finalprice."<br>";
-                }else{                
-                  $sumFinalPrice1 = $item[0]['special_offer_price'];
-                  $sumFinalPrice2 = $item[0]['special_offer_price'] + $sumFinalPrice1;
-                  $coupon_1 = $sumFinalPrice2 * $discount_percentage;
-                  $coupon_2 = $sumFinalPrice2 - $coupon_1;
-                  $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
-                  // echo $finalprice."<br>";
-                }
+              if($item[0]['tax_id'] == 1){
+                $sumFinalPrice1 = $item[0]['discount_price'] * $incIGV_format;
+                $sumFinalPrice2 = $item[0]['discount_price'] + $sumFinalPrice1;
+                $coupon_1 = $sumFinalPrice2 * $discount_percentage;
+                $coupon_2 = $sumFinalPrice2 - $coupon_1;
+                // echo number_format($coupon_2, 2)."<br>"; // REDONDEANDO LOS DECIMALES...
+                $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
+                // echo $finalprice."<br>";
               }else{
                 $discount_price = $item[0]['discount_price'];
                 $coupon_1 = $discount_price * $discount_percentage;
@@ -1270,11 +1272,21 @@ class FrontendController extends Controller{
               }
             }
           }else{
-            $discount_price = $item[0]['discount_price'];
-            $coupon_1 = $discount_price * $discount_percentage;
-            $coupon_2 = $discount_price - $coupon_1;
-            $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
-            // echo $finalprice."<br>";
+            if($item[0]['tax_id'] == 1){
+              $sumFinalPrice1 = $item[0]['discount_price'] * $incIGV_format;
+              $sumFinalPrice2 = $item[0]['discount_price'] + $sumFinalPrice1;
+              $coupon_1 = $sumFinalPrice2 * $discount_percentage;
+              $coupon_2 = $sumFinalPrice2 - $coupon_1;
+              // echo number_format($coupon_2, 2)."<br>"; // REDONDEANDO LOS DECIMALES...
+              $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
+              // echo $finalprice."<br>";
+            }else{
+              $discount_price = $item[0]['discount_price'];
+              $coupon_1 = $discount_price * $discount_percentage;
+              $coupon_2 = $discount_price - $coupon_1;
+              $finalprice = $this->restrictDecimals($coupon_2, 2); // SIN REDONDEAR LOS DECIMALES...
+              // echo $finalprice."<br>";
+            }
           }
 
           // $user = User::findOrFail($user->id);
