@@ -49,6 +49,7 @@ class CreateItemsTable extends Migration{
       $table->text('affiliate_link')->nullable();
       $table->text('sap_code')->nullable();
       $table->text('adj_doc')->nullable();
+      $table->integer('stocktype_id')->default(1)->nullable();
       $table->timestamps();
     });
   }
