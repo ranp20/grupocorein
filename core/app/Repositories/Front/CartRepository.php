@@ -20,7 +20,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class CartRepository{
-  public function store($request){
+  // -------------- AGREGAR AL CARRITO DE COMPRAS
+  public function store($request){    
     $msg = '';
     $qty_check = 0;
     $qty_check_coupon = 0;
@@ -32,15 +33,13 @@ class CartRepository{
     // -------------- CANTIDAD DE PRODUCTOS AÑADIDOS CON EL PRECIO ORIGINAL (SIN CUPÓN)
     $qty = isset($input['quantity']) ? $input['quantity'] : 1;
     $qty = is_numeric($qty) ? $qty : 1;
-    // -------------- CANTIDAD DE PRODUCTOS AÑADIDOS CON EL PRECIO DE CUPÓN (CON CUPÓN)
-    // $qty = isset($input['quantity']) ? $input['quantity'] : 1;
-    // $qty = is_numeric($qty) ? $qty : 1;
     $cart = Session::get('cart');
-    $item = Item::where('id',$input['item_id'])->select('id','tax_id','sections_id','name','photo','discount_price','previous_price','on_sale_price','special_offer_price','brand_id','coupon_id','unidad_raiz','atributo_raiz','atributoraiz_collection','slug','sku','is_type','item_type','license_name','license_key')->first();
+    $item = Item::where('id',$input['item_id'])->select('id','tax_id','sections_id','name','photo','discount_price','previous_price','on_sale_price','special_offer_price','stock','brand_id','coupon_id','unidad_raiz','atributo_raiz','atributoraiz_collection','slug','sku','is_type','item_type','license_name','license_key','stocktype_id')->first();
     // -------------- REDIRIGIR HACIA LA PÁGINA DE ERROR 404, EN CASO DE NO ENCONTRAR EL PRODUCTO...
     if(!$item){
       abort(404);
     }
+
     // -------------- VALIDAR SI EL PRODUCTO ES "digital" o "físico" y si ya está añadido en el carrito...
     $single = isset($request->type) ? ($request->type == '1' ? 1 : 0 ) : 0;
     if(Session::has('cart')){
@@ -112,7 +111,6 @@ class CartRepository{
     }
 
     $attribute['option_price'] = $input['option_price'];
-    $cart = Session::get('cart');
     $tempCart = Session::get('cart');
     $qtyProdinCart = $qty;
     $date = date('Y-m-d H:i:s');
@@ -159,8 +157,8 @@ class CartRepository{
     $user_id = (isset($input['user_id']) && $input['user_id'] != "") ? $input['user_id'] : 0;
     $item_id = (isset($input['item_id']) && $input['item_id'] != "") ? $input['item_id'] : 0;
     $coupon_id = (isset($input['coupon_id']) && $input['coupon_id'] != "") ? $input['coupon_id'] : 0;
+    $submit_type = (isset($input['submit_type']) && $input['submit_type'] != "") ? $input['submit_type'] : "from_otherpage";
 
-    // echo "input coupon_id: ".$input['coupon_id']."<br>";
     // echo "user_id: ".$user_id."<br>";
     // echo "item_id: ".$item_id."<br>";
     // echo "coupon_id: ".$coupon_id."<br>";
@@ -183,6 +181,13 @@ class CartRepository{
       $couponvalidexist = $applycoupon;
     }
 
+    // $quantity_oftempcart = TempCart::where("user_id", "=", $user_id)->where("item_id", "=", $item_id)->select('quantity')->take(1)->get()->toArray();
+    // echo $quantity_oftempcart[0]['quantity']."<br>";
+    // echo "<pre>";
+    // print_r($couponvalidexist);
+    // echo "</pre>";
+    // echo (count($couponvalidexist) != 0) ? "CUPÓN APLICADO" : "CUPÓN NO APLICADO AÚN";
+    // exit();
     // $applycoupon = ApplyCoupon::where('id_user','=',$user_id)->where('id_prod','=',$item_id)->where('id_coupon',"=",$coupon_id)->select()->take(1)->get();
     $couponinfo = Coupons::where('id',"=",$coupon_id)->select('discount_percentage','time_end','status')->take(1)->get();
     // (1) -------------- VALIDAR SI EXISTE UN CUPÓN ASIGNADO AL PRODUCTO, OBTENER EL NUEVO PRECIO...
@@ -192,7 +197,7 @@ class CartRepository{
       $applycoupon_idcoupon = $arrApplyCoupon[0]['id_coupon']; // ID DEL CUPÓN
       // echo "PRECIO CUPÓN: ".$applycoupon_totalprice."<br>";
       // echo "ID CUPÓN: ".$applycoupon_idcoupon."<br>";
-      // exit();
+      // echo "Este cupón existen tanto en 'tbl_applycoupons' como en 'tbl_coupons'";
       if(count($couponinfo) != 0){
         $couponjsontoarray = json_decode($couponinfo, TRUE);
         $couponget_timeend = $couponjsontoarray[0]['time_end'];
@@ -212,7 +217,1093 @@ class CartRepository{
           if(!$cart || !isset($cart[$item->id.'-'.$cart_item_key])){
             // echo "recién agregado";
             $license_name = json_decode($item->license_name,true);
-            $license_key = json_decode($item->license_name,true);
+            $license_key = json_decode($item->license_name,true);            
+            // -------------- Validar el tipo de stock del producto (1 = Ilimitado y 2 = En stock/con cantidad)
+            if($item->stocktype_id != "" && $item->stocktype_id == 2){
+              $cart[$item->id.'-'.$cart_item_key] = [
+                'options_id' => $option_id,
+                'attribute' => $attribute,
+                'attribute_price' => $option_price,
+                "attribute_collection" => json_encode($colorCollection),
+                "name" => $item->name,
+                "slug" => $item->slug,
+                "sku" => $item->sku,
+                "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
+                "brand_name" => (isset($brand->name) && $brand->name != "") ? $brand->name : "",
+                "rootunit_id" => (isset($rootunit->id) && $rootunit->id != "") ? $rootunit->id : "",
+                "rootunit_name" => (isset($rootunit->name) && $rootunit->name != "") ? $rootunit->name : "",
+                "qty" => $qty,
+                "price" => PriceHelper::grandPrice($item),
+                "main_price" => $item->discount_price,
+                "photo" => $item->photo,
+                "type" => $item->item_type,
+                "item_type" => $item->item_type,
+                "coupon_id" => "0",
+                "coupon_price" => "0",
+                "quantity_withoutcoupon" => "0",
+                "coupon_valid" => 'not_available',
+                'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
+                'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
+              ];
+              Session::put('cart', $cart);
+              if(Auth::check() && Auth::user()->role !== 'admin'){
+                if(!empty(auth()->user()) || auth()->user() != ""){
+                  $tempCart = [
+                    "user_id" => $user_id,
+                    "item_id" => $item->id,
+                    "attribute_collection" => json_encode($colorCollection),
+                    "name" => $item->name,
+                    "slug" => $item->slug,
+                    "sku" => $item->sku,
+                    "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
+                    "quantity" => $qty,
+                    "price" => PriceHelper::grandPrice($item),
+                    "main_price" => $item->discount_price,
+                    "photo" => $item->photo,
+                    "is_type" => $item->is_type,
+                    "item_type" => $item->item_type,
+                    "coupon_id" => "0",
+                    "coupon_price" => "0",
+                    "quantity_withoutcoupon" => "0",
+                    "coupon_valid" => 'not_available',
+                    "created_at" => $date,
+                    "updated_at" => $date,
+                  ];
+                  TempCart::insert($tempCart);
+                }
+              }
+              $dataResponseOutput = ["type" => "success", "msg" => 'Producto agregado. El cupón ya NO es válido'];
+            }else{
+              $cart[$item->id.'-'.$cart_item_key] = [
+                'options_id' => $option_id,
+                'attribute' => $attribute,
+                'attribute_price' => $option_price,
+                "attribute_collection" => json_encode($colorCollection),
+                "name" => $item->name,
+                "slug" => $item->slug,
+                "sku" => $item->sku,
+                "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
+                "brand_name" => (isset($brand->name) && $brand->name != "") ? $brand->name : "",
+                "rootunit_id" => (isset($rootunit->id) && $rootunit->id != "") ? $rootunit->id : "",
+                "rootunit_name" => (isset($rootunit->name) && $rootunit->name != "") ? $rootunit->name : "",
+                "qty" => $qty,
+                "price" => PriceHelper::grandPrice($item),
+                "main_price" => $item->discount_price,
+                "photo" => $item->photo,
+                "type" => $item->item_type,
+                "item_type" => $item->item_type,
+                "coupon_id" => "0",
+                "coupon_price" => "0",
+                "quantity_withoutcoupon" => "0",
+                "coupon_valid" => 'not_available',
+                'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
+                'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
+              ];
+              Session::put('cart', $cart);
+              if(Auth::check() && Auth::user()->role !== 'admin'){
+                if(!empty(auth()->user()) || auth()->user() != ""){
+                  $tempCart = [
+                    "user_id" => $user_id,
+                    "item_id" => $item->id,
+                    "attribute_collection" => json_encode($colorCollection),
+                    "name" => $item->name,
+                    "slug" => $item->slug,
+                    "sku" => $item->sku,
+                    "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
+                    "quantity" => $qty,
+                    "price" => PriceHelper::grandPrice($item),
+                    "main_price" => $item->discount_price,
+                    "photo" => $item->photo,
+                    "is_type" => $item->is_type,
+                    "item_type" => $item->item_type,
+                    "coupon_id" => "0",
+                    "coupon_price" => "0",
+                    "quantity_withoutcoupon" => "0",
+                    "coupon_valid" => 'not_available',
+                    "created_at" => $date,
+                    "updated_at" => $date,
+                  ];
+                  TempCart::insert($tempCart);
+                }
+              }
+              $dataResponseOutput = ["type" => "success", "msg" => 'Producto agregado. El cupón ya NO es válido'];
+            }
+            // return __('Producto agregado. El cupón ya NO es válido (C)');
+            // return __('Producto agregado. El cupón ya NO es válido');
+            return $dataResponseOutput;
+          }
+          // -------------- Si el carrito NO está vacío, verifique si este producto existe y luego incremente la cantidad.
+          if(isset($cart[$item->id.'-'.$cart_item_key])){
+            // $cart = Session::get('cart');
+            $qtyProdinCart = $cart[$item->id.'-'.$cart_item_key]['qty'];
+            // -------------- VARIABLES PARA VALIDAR LA CANTIDAD EN CARRITO Y LA CANTIDAD RECIENTEMENTE AGREGADA + SUMA DE LAS ANTERIORES MENCIONADAS...
+            $quantity_incart = $cart[$item->id.'-'.$cart_item_key]['qty'];
+            $quantity_newadd = $qty;
+            $sum_typesofquantities = $quantity_incart + $quantity_newadd;
+            // -------------- Validar el tipo de stock del producto (1 = Ilimitado y 2 = En stock/con cantidad)
+            if($item->stocktype_id != "" && $item->stocktype_id == 2){
+              if($qty_check == 1){
+                if($submit_type == "from_cartlisting"){
+                  if($cart[$item->id.'-'.$cart_item_key]['qty'] > $item->stock){
+                    // $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                    $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] = 'not_available';
+                    // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                    // $qtyProdinCart = $qty;
+                    $qtyProdinCart = $item->stock;
+                    $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                    $tempCart = [
+                      "user_id" => $user_id,
+                      "item_id" => $item->id,
+                      "attribute_collection" => json_encode($colorCollection),
+                      "coupon_id" => "0",
+                      "coupon_price" => "0",
+                      "quantity_withoutcoupon" => "0",
+                      "coupon_valid" => 'not_available',
+                      "updated_at" => $date
+                    ];
+                    $dataResponseOutput = ["type" => "danger", "msg" => 'Cantidad máxima de productos es: '.$qtyProdinCart];
+                  }else{
+                    $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                    $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] = 'not_available';
+                    // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                    $qtyProdinCart += $qty;
+                    $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                    $tempCart = [
+                      "user_id" => $user_id,
+                      "item_id" => $item->id,
+                      "attribute_collection" => json_encode($colorCollection),
+                      "quantity" => $qtyProdinCart,
+                      "coupon_id" => "0",
+                      "coupon_price" => "0",
+                      "quantity_withoutcoupon" => "0",
+                      "coupon_valid" => 'not_available',
+                      "updated_at" => $date
+                    ];
+                    $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. El cupón ya NO es válido'];
+                  }
+                }else{
+                  if($sum_typesofquantities > $item->stock){
+                    // $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                    $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] = 'not_available';
+                    // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                    // $qtyProdinCart = $qty;
+                    $qtyProdinCart = $item->stock;
+                    $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                    $tempCart = [
+                      "user_id" => $user_id,
+                      "item_id" => $item->id,
+                      "attribute_collection" => json_encode($colorCollection),
+                      "coupon_id" => "0",
+                      "coupon_price" => "0",
+                      "quantity_withoutcoupon" => "0",
+                      "coupon_valid" => 'not_available',
+                      "updated_at" => $date
+                    ];
+                    $dataResponseOutput = ["type" => "danger", "msg" => 'Cantidad máxima de productos es: '.$qtyProdinCart];
+                  }else{
+                    $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                    $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] = 'not_available';
+                    // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                    $qtyProdinCart += $qty;
+                    $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                    $tempCart = [
+                      "user_id" => $user_id,
+                      "item_id" => $item->id,
+                      "attribute_collection" => json_encode($colorCollection),
+                      "quantity" => $qtyProdinCart,
+                      "coupon_id" => "0",
+                      "coupon_price" => "0",
+                      "quantity_withoutcoupon" => "0",
+                      "coupon_valid" => 'not_available',
+                      "updated_at" => $date
+                    ];
+                    $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. El cupón ya NO es válido'];
+                  }
+                }
+              }else{
+                if($submit_type == "from_cartlisting"){
+                  if($cart[$item->id.'-'.$cart_item_key]['qty'] > $item->stock){
+                    // $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                    $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] = 'not_available';
+                    // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                    // $qtyProdinCart += $qty;
+                    $qtyProdinCart = $item->stock;
+                    $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                    $tempCart = [
+                      "user_id" => $user_id,
+                      "item_id" => $item->id,
+                      "attribute_collection" => json_encode($colorCollection),
+                      "coupon_id" => "0",
+                      "coupon_price" => "0",
+                      "quantity_withoutcoupon" => "0",
+                      "coupon_valid" => 'not_available',
+                      "updated_at" => $date
+                    ];
+                    $dataResponseOutput = ["type" => "danger", "msg" => 'Cantidad máxima de productos es: '.$qtyProdinCart];
+                  }else{
+                    $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                    $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] = 'not_available';
+                    // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                    $qtyProdinCart += $qty;
+                    $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                    $tempCart = [
+                      "user_id" => $user_id,
+                      "item_id" => $item->id,
+                      "attribute_collection" => json_encode($colorCollection),
+                      "quantity" => $qtyProdinCart,
+                      "coupon_id" => "0",
+                      "coupon_price" => "0",
+                      "quantity_withoutcoupon" => "0",
+                      "coupon_valid" => 'not_available',
+                      "updated_at" => $date
+                    ];
+                    $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. El cupón ya NO es válido'];
+                  }
+                }else{
+                  if($sum_typesofquantities > $item->stock){
+                    // $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                    $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] = 'not_available';
+                    // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                    // $qtyProdinCart += $qty;
+                    $qtyProdinCart = $item->stock;
+                    $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                    $tempCart = [
+                      "user_id" => $user_id,
+                      "item_id" => $item->id,
+                      "attribute_collection" => json_encode($colorCollection),
+                      "coupon_id" => "0",
+                      "coupon_price" => "0",
+                      "quantity_withoutcoupon" => "0",
+                      "coupon_valid" => 'not_available',
+                      "updated_at" => $date
+                    ];
+                    $dataResponseOutput = ["type" => "danger", "msg" => 'Cantidad máxima de productos es: '.$qtyProdinCart];
+                  }else{
+                    $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                    $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] = 'not_available';
+                    // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                    $qtyProdinCart += $qty;
+                    $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                    $tempCart = [
+                      "user_id" => $user_id,
+                      "item_id" => $item->id,
+                      "attribute_collection" => json_encode($colorCollection),
+                      "quantity" => $qtyProdinCart,
+                      "coupon_id" => "0",
+                      "coupon_price" => "0",
+                      "quantity_withoutcoupon" => "0",
+                      "coupon_valid" => 'not_available',
+                      "updated_at" => $date
+                    ];
+                    $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. El cupón ya NO es válido'];
+                  }
+                }
+              }
+              Session::put('cart', $cart);
+              if(Auth::check() && Auth::user()->role !== 'admin'){
+                if(!empty(auth()->user()) || auth()->user() != ""){
+                  if(isset($tempCart['quantity'])){
+                    TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price'], 'coupon_valid' => $tempCart['coupon_valid']]);
+                  }
+                }
+              }
+            }else{
+              if($qty_check == 1){
+                $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] = 'not_available';
+                // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                $qtyProdinCart = $qty;
+                $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                $tempCart = [
+                  "user_id" => $user_id,
+                  "item_id" => $item->id,
+                  "attribute_collection" => json_encode($colorCollection),
+                  "quantity" => $qtyProdinCart,
+                  "coupon_id" => "0",
+                  "coupon_price" => "0",
+                  "quantity_withoutcoupon" => "0",
+                  "coupon_valid" => 'not_available',
+                  "updated_at" => $date
+                ];
+                $dataResponseOutput = ["type" => "success", "msg" => 'Producto agregado. El cupón ya NO es válido'];
+              }else{
+                $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] = 'not_available';
+                // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                $qtyProdinCart += $qty;
+                $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                $tempCart = [
+                  "user_id" => $user_id,
+                  "item_id" => $item->id,
+                  "attribute_collection" => json_encode($colorCollection),
+                  "quantity" => $qtyProdinCart,
+                  "coupon_id" => "0",
+                  "coupon_price" => "0",
+                  "quantity_withoutcoupon" => "0",
+                  "coupon_valid" => 'not_available',
+                  "updated_at" => $date
+                ];
+                $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. El cupón ya NO es válido'];
+              }
+              Session::put('cart', $cart);
+              if(Auth::check() && Auth::user()->role !== 'admin'){
+                if(!empty(auth()->user()) || auth()->user() != ""){
+                  TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price'], 'coupon_valid' => $tempCart['coupon_valid']]);
+                }
+              }
+            }
+            $qty_check = 0;
+            // return $mgs;
+            return $dataResponseOutput;
+          }
+        }else{
+          // (3) -------------- VALIDAR EL ESTADO DEL CUPÓN EN ESTE PRODUCTO...
+          if($couponget_status != 0){
+            // echo $couponget_timeend."<br>";
+            // echo "El cupón todavía está activo (B)";
+            // -------------- Si el carrito ESTÁ vacío.
+            if(!$cart || !isset($cart[$item->id.'-'.$cart_item_key])){
+              // echo "recién agregado";
+              $license_name = json_decode($item->license_name,true);
+              $license_key = json_decode($item->license_name,true);
+              // -------------- Validar el tipo de stock del producto (1 = Ilimitado y 2 = En stock/con cantidad)
+              if($item->stocktype_id != "" && $item->stocktype_id == 2){
+                $cart[$item->id.'-'.$cart_item_key] = [
+                  'options_id' => $option_id,
+                  'attribute' => $attribute,
+                  'attribute_price' => $option_price,
+                  "attribute_collection" => json_encode($colorCollection),
+                  "name" => $item->name,
+                  "slug" => $item->slug,
+                  "sku" => $item->sku,
+                  "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
+                  "brand_name" => (isset($brand->name) && $brand->name != "") ? $brand->name : "",
+                  "rootunit_id" => (isset($rootunit->id) && $rootunit->id != "") ? $rootunit->id : "",
+                  "rootunit_name" => (isset($rootunit->name) && $rootunit->name != "") ? $rootunit->name : "",
+                  "qty" => $qty,
+                  "price" => PriceHelper::grandPrice($item),
+                  "main_price" => $item->discount_price,
+                  "photo" => $item->photo,
+                  "type" => $item->item_type,
+                  "item_type" => $item->item_type,
+                  "coupon_id" => $item->coupon_id,
+                  "coupon_price" => $applycoupon_totalprice,
+                  "quantity_withoutcoupon" => "0",
+                  "coupon_valid" => 'available',
+                  'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
+                  'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
+                ];              
+                Session::put('cart', $cart);
+                if(Auth::check() && Auth::user()->role !== 'admin'){
+                  if(!empty(auth()->user()) || auth()->user() != ""){
+                    $tempCart = [
+                      "user_id" => $user_id,
+                      "item_id" => $item->id,
+                      "attribute_collection" => json_encode($colorCollection),
+                      "name" => $item->name,
+                      "slug" => $item->slug,
+                      "sku" => $item->sku,
+                      "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
+                      "quantity" => $qty,
+                      "price" => PriceHelper::grandPrice($item),
+                      "main_price" => $item->discount_price,
+                      "photo" => $item->photo,
+                      "is_type" => $item->is_type,
+                      "item_type" => $item->item_type,
+                      "coupon_id" => $item->coupon_id,
+                      "coupon_price" => $applycoupon_totalprice,
+                      "quantity_withoutcoupon" => "0",
+                      "coupon_valid" => 'available',
+                      "created_at" => $date,
+                      "updated_at" => $date,
+                    ];
+                    TempCart::insert($tempCart);
+                  }
+                }
+                $dataResponseOutput = ["type" => "success", "msg" => 'Producto agregado. El cupón todavía está activo'];
+              }else{
+                $cart[$item->id.'-'.$cart_item_key] = [
+                  'options_id' => $option_id,
+                  'attribute' => $attribute,
+                  'attribute_price' => $option_price,
+                  "attribute_collection" => json_encode($colorCollection),
+                  "name" => $item->name,
+                  "slug" => $item->slug,
+                  "sku" => $item->sku,
+                  "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
+                  "brand_name" => (isset($brand->name) && $brand->name != "") ? $brand->name : "",
+                  "rootunit_id" => (isset($rootunit->id) && $rootunit->id != "") ? $rootunit->id : "",
+                  "rootunit_name" => (isset($rootunit->name) && $rootunit->name != "") ? $rootunit->name : "",
+                  "qty" => $qty,
+                  "price" => PriceHelper::grandPrice($item),
+                  "main_price" => $item->discount_price,
+                  "photo" => $item->photo,
+                  "type" => $item->item_type,
+                  "item_type" => $item->item_type,
+                  "coupon_id" => $item->coupon_id,
+                  "coupon_price" => $applycoupon_totalprice,
+                  "quantity_withoutcoupon" => "0",
+                  "coupon_valid" => 'available',
+                  'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
+                  'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
+                ];              
+                Session::put('cart', $cart);
+                if(Auth::check() && Auth::user()->role !== 'admin'){
+                  if(!empty(auth()->user()) || auth()->user() != ""){
+                    $tempCart = [
+                      "user_id" => $user_id,
+                      "item_id" => $item->id,
+                      "attribute_collection" => json_encode($colorCollection),
+                      "name" => $item->name,
+                      "slug" => $item->slug,
+                      "sku" => $item->sku,
+                      "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
+                      "quantity" => $qty,
+                      "price" => PriceHelper::grandPrice($item),
+                      "main_price" => $item->discount_price,
+                      "photo" => $item->photo,
+                      "is_type" => $item->is_type,
+                      "item_type" => $item->item_type,
+                      "coupon_id" => $item->coupon_id,
+                      "coupon_price" => $applycoupon_totalprice,
+                      "quantity_withoutcoupon" => "0",
+                      "coupon_valid" => 'available',
+                      "created_at" => $date,
+                      "updated_at" => $date,
+                    ];
+                    TempCart::insert($tempCart);
+                  }
+                }
+                $dataResponseOutput = ["type" => "success", "msg" => 'Producto agregado. El cupón todavía está activo'];
+              }              
+              // return __('Producto agregado. El cupón todavía está activo (B)');
+              // return __('Producto agregado. El cupón todavía está activo');
+              return $dataResponseOutput;
+            }
+            // -------------- Si el carrito NO está vacío, verifique si este producto existe y luego incremente la cantidad.
+            // (HOY - 14/03/2024) : Comprobar si el nuevo precio aplicado con cupón se está respetando...
+            if(isset($cart[$item->id.'-'.$cart_item_key])){
+              // $cart = Session::get('cart');
+              $qtyProdinCart = $cart[$item->id.'-'.$cart_item_key]['qty'];
+              // -------------- VARIABLES PARA VALIDAR LA CANTIDAD EN CARRITO Y LA CANTIDAD RECIENTEMENTE AGREGADA + SUMA DE LAS ANTERIORES MENCIONADAS...
+              $quantity_incart = $cart[$item->id.'-'.$cart_item_key]['qty'];
+              $quantity_newadd = $qty;
+              $sum_typesofquantities = $quantity_incart + $quantity_newadd;
+              // echo "- TIPO DE STOCK: ".$item->stocktype_id."<br>";
+              // echo "- CHECK DE CANTIDAD: ".$qty_check."<br>";
+              // echo "- Tipo de agregación: ".$submit_type."<br>";
+              // echo "- Cantidad en carrito: ".$quantity_incart."<br>";
+              // echo "- Cantidad recién agregada: ".$quantity_newadd."<br>";
+              // echo "- Suma de cantidades: ".$sum_typesofquantities."<br>";
+              // // NOTA (10/06/2024): El problema está al validar la cantidad agregada desde el detalle del producto y compararlo con el stock
+              // // real del producto, se ha comprobado que cuando no se activa el cupón en un producto este ya funciona con la configuración
+              // // actual, pero ahora no resulta ser ese el caso
+              // // echo "VALIDAR DESDE LA BASE DE DATOS DE LA TABLA tbl_temp_carts(), DESDE ESTA LÍNEA...";
+              // exit();
+              // -------------- Validar el tipo de stock del producto (1 = Ilimitado y 2 = En stock/con cantidad)
+              if($item->stocktype_id != "" && $item->stocktype_id == 2){
+                if($cart[$item->id.'-'.$cart_item_key]['coupon_id'] != 0 && isset($cart[$item->id.'-'.$cart_item_key]['coupon_price']) && $cart[$item->id.'-'.$cart_item_key]['coupon_price'] != "" && $cart[$item->id.'-'.$cart_item_key]['coupon_price'] != "0"){
+                  // echo "Si ya tiene estos atributos, mantener la última cantidad antes de la activación del cupón...";
+                }else{
+                  // echo "Primer producto con este cupón";
+                  $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'] = $cart[$item->id.'-'.$cart_item_key]['qty'];
+                  $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
+                }
+                if($qty_check == 1){
+                  if($submit_type == "from_cartlisting"){
+                    if($cart[$item->id.'-'.$cart_item_key]['qty'] > $item->stock){
+                      // $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                      // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                      $qtyProdinCart = $item->stock;
+                      $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_id'] = $applycoupon_idcoupon;
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_price'] = $applycoupon_totalprice;
+                      $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] =  'available';
+                      $tempCart = [
+                        "user_id" => $user_id,
+                        "item_id" => $item->id,
+                        "attribute_collection" => json_encode($colorCollection),
+                        "coupon_id" => $applycoupon_idcoupon,
+                        "coupon_price" => $applycoupon_totalprice,
+                        "quantity_withoutcoupon" => $quantity_withoutcoupon,
+                        "coupon_valid" => 'available',
+                        "updated_at" => $date
+                      ];
+                      $dataResponseOutput = ["type" => "danger", "msg" => 'Cantidad máxima de productos es: '.$qtyProdinCart];
+                    }else{
+                      $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                      // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                      $qtyProdinCart += $qty;
+                      $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_id'] = $applycoupon_idcoupon;
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_price'] = $applycoupon_totalprice;
+                      $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] =  'available';
+                      $tempCart = [
+                        "user_id" => $user_id,
+                        "item_id" => $item->id,
+                        "attribute_collection" => json_encode($colorCollection),
+                        "quantity" => $qtyProdinCart,
+                        "coupon_id" => $applycoupon_idcoupon,
+                        "coupon_price" => $applycoupon_totalprice,
+                        "quantity_withoutcoupon" => $quantity_withoutcoupon,
+                        "coupon_valid" => 'available',
+                        "updated_at" => $date
+                      ];
+                      $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. El cupón todavía está activo'];
+                    }
+                  }else{
+                    if($cart[$item->id.'-'.$cart_item_key]['qty'] > $item->stock || $quantity_newadd > $item->stock || $sum_typesofquantities > $item->stock){
+                      // $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                      // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                      $qtyProdinCart = $item->stock;
+                      $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_id'] = $applycoupon_idcoupon;
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_price'] = $applycoupon_totalprice;
+                      $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] =  'available';
+                      $tempCart = [
+                        "user_id" => $user_id,
+                        "item_id" => $item->id,
+                        "attribute_collection" => json_encode($colorCollection),
+                        "coupon_id" => $applycoupon_idcoupon,
+                        "coupon_price" => $applycoupon_totalprice,
+                        "quantity_withoutcoupon" => $quantity_withoutcoupon,
+                        "coupon_valid" => 'available',
+                        "updated_at" => $date
+                      ];
+                      $dataResponseOutput = ["type" => "danger", "msg" => 'Cantidad máxima de productos es: '.$qtyProdinCart];
+                    }else{
+                      $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                      // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                      $qtyProdinCart += $qty;
+                      $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_id'] = $applycoupon_idcoupon;
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_price'] = $applycoupon_totalprice;
+                      $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] =  'available';
+                      $tempCart = [
+                        "user_id" => $user_id,
+                        "item_id" => $item->id,
+                        "attribute_collection" => json_encode($colorCollection),
+                        "quantity" => $qtyProdinCart,
+                        "coupon_id" => $applycoupon_idcoupon,
+                        "coupon_price" => $applycoupon_totalprice,
+                        "quantity_withoutcoupon" => $quantity_withoutcoupon,
+                        "coupon_valid" => 'available',
+                        "updated_at" => $date
+                      ];
+                      $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. El cupón todavía está activo'];
+                    }                    
+                  }
+                }else{
+                  if($submit_type == "from_cartlisting"){
+                    if($cart[$item->id.'-'.$cart_item_key]['qty'] > $item->stock){
+                      // $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                      // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                      // $qtyProdinCart += $qty;
+                      $qtyProdinCart = $item->stock;
+                      $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_id'] = $applycoupon_idcoupon;
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_price'] = $applycoupon_totalprice;
+                      $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] =  'available';
+                      $tempCart = [
+                        "user_id" => $user_id,
+                        "item_id" => $item->id,
+                        "attribute_collection" => json_encode($colorCollection),
+                        "coupon_id" => $applycoupon_idcoupon,
+                        "coupon_price" => $applycoupon_totalprice,
+                        "quantity_withoutcoupon" => $quantity_withoutcoupon,
+                        "coupon_valid" => 'available',
+                        "updated_at" => $date
+                      ];
+                      $dataResponseOutput = ["type" => "danger", "msg" => 'Cantidad máxima de productos es: '.$qtyProdinCart];
+                    }else{
+                      $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                      // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                      $qtyProdinCart += $qty;
+                      $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_id'] = $applycoupon_idcoupon;
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_price'] = $applycoupon_totalprice;
+                      $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] =  'available';
+                      $tempCart = [
+                        "user_id" => $user_id,
+                        "item_id" => $item->id,
+                        "attribute_collection" => json_encode($colorCollection),
+                        "quantity" => $qtyProdinCart,
+                        "coupon_id" => $applycoupon_idcoupon,
+                        "coupon_price" => $applycoupon_totalprice,
+                        "quantity_withoutcoupon" => $quantity_withoutcoupon,
+                        "coupon_valid" => 'available',
+                        "updated_at" => $date
+                      ];
+                      $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. El cupón todavía está activo'];
+                    }
+                  }else{
+                    if($cart[$item->id.'-'.$cart_item_key]['qty'] > $item->stock || $quantity_newadd > $item->stock || $sum_typesofquantities > $item->stock){
+                      // $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                      // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                      $qtyProdinCart = $item->stock;
+                      $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_id'] = $applycoupon_idcoupon;
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_price'] = $applycoupon_totalprice;
+                      $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] =  'available';
+                      $tempCart = [
+                        "user_id" => $user_id,
+                        "item_id" => $item->id,
+                        "attribute_collection" => json_encode($colorCollection),
+                        "coupon_id" => $applycoupon_idcoupon,
+                        "coupon_price" => $applycoupon_totalprice,
+                        "quantity_withoutcoupon" => $quantity_withoutcoupon,
+                        "coupon_valid" => 'available',
+                        "updated_at" => $date
+                      ];
+                      $dataResponseOutput = ["type" => "danger", "msg" => 'Cantidad máxima de productos es: '.$qtyProdinCart];
+                    }else{
+                      $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                      // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                      $qtyProdinCart += $qty;
+                      $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_id'] = $applycoupon_idcoupon;
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_price'] = $applycoupon_totalprice;
+                      $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
+                      $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] =  'available';
+                      $tempCart = [
+                        "user_id" => $user_id,
+                        "item_id" => $item->id,
+                        "attribute_collection" => json_encode($colorCollection),
+                        "quantity" => $qtyProdinCart,
+                        "coupon_id" => $applycoupon_idcoupon,
+                        "coupon_price" => $applycoupon_totalprice,
+                        "quantity_withoutcoupon" => $quantity_withoutcoupon,
+                        "coupon_valid" => 'available',
+                        "updated_at" => $date
+                      ];
+                      $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. El cupón todavía está activo'];
+                    }
+                  }
+                }
+                Session::put('cart', $cart);
+                if(Auth::check() && Auth::user()->role !== 'admin'){
+                  if(!empty(auth()->user()) || auth()->user() != ""){
+                    if(isset($tempCart['quantity'])){
+                      TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price'], 'quantity_withoutcoupon' => $tempCart['quantity_withoutcoupon'], 'coupon_valid' => $tempCart['coupon_valid']]);
+                    }
+                  }
+                }
+              }else{
+                if($cart[$item->id.'-'.$cart_item_key]['coupon_id'] != 0 && isset($cart[$item->id.'-'.$cart_item_key]['coupon_price']) && $cart[$item->id.'-'.$cart_item_key]['coupon_price'] != "" && $cart[$item->id.'-'.$cart_item_key]['coupon_price'] != "0"){
+                  // echo "Si ya tiene estos atributos, mantener la última cantidad antes de la activación del cupón...";
+                }else{
+                  // echo "Primer producto con este cupón";
+                  $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'] = $cart[$item->id.'-'.$cart_item_key]['qty'];
+                  $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
+                }
+                if($qty_check == 1){
+                  $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                  // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                  $qtyProdinCart = $qty;
+                  $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                  $cart[$item->id.'-'.$cart_item_key]['coupon_id'] = $applycoupon_idcoupon;
+                  $cart[$item->id.'-'.$cart_item_key]['coupon_price'] = $applycoupon_totalprice;
+                  $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
+                  $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] =  'available';
+                  $tempCart = [
+                    "user_id" => $user_id,
+                    "item_id" => $item->id,
+                    "attribute_collection" => json_encode($colorCollection),
+                    "quantity" => $qtyProdinCart,
+                    "coupon_id" => $applycoupon_idcoupon,
+                    "coupon_price" => $applycoupon_totalprice,
+                    "quantity_withoutcoupon" => $quantity_withoutcoupon,
+                    "coupon_valid" => 'available',
+                    "updated_at" => $date
+                  ];
+                  $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. El cupón todavía está activo'];
+                }else{
+                  $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                  // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                  $qtyProdinCart += $qty;
+                  $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                  $cart[$item->id.'-'.$cart_item_key]['coupon_id'] = $applycoupon_idcoupon;
+                  $cart[$item->id.'-'.$cart_item_key]['coupon_price'] = $applycoupon_totalprice;
+                  $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
+                  $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] =  'available';
+                  $tempCart = [
+                    "user_id" => $user_id,
+                    "item_id" => $item->id,
+                    "attribute_collection" => json_encode($colorCollection),
+                    "quantity" => $qtyProdinCart,
+                    "coupon_id" => $applycoupon_idcoupon,
+                    "coupon_price" => $applycoupon_totalprice,
+                    "quantity_withoutcoupon" => $quantity_withoutcoupon,
+                    "coupon_valid" => 'available',
+                    "updated_at" => $date
+                  ];
+                  $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. El cupón todavía está activo'];
+                }
+                Session::put('cart', $cart);
+                if(Auth::check() && Auth::user()->role !== 'admin'){
+                  if(!empty(auth()->user()) || auth()->user() != ""){
+                    if(isset($tempCart['quantity'])){
+                      TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price'], 'quantity_withoutcoupon' => $tempCart['quantity_withoutcoupon'], 'coupon_valid' => $tempCart['coupon_valid']]);
+                    }
+                  }
+                }
+              }
+              $qty_check = 0;
+              // return $mgs;
+              return $dataResponseOutput;
+            }
+          }else{
+            // echo "El cupón ya NO está activo (H)";
+            // -------------- Si el carrito ESTÁ vacío.
+            if(!$cart || !isset($cart[$item->id.'-'.$cart_item_key])){
+              // echo "recién agregado";
+              $license_name = json_decode($item->license_name,true);
+              $license_key = json_decode($item->license_name,true);
+              // -------------- Validar el tipo de stock del producto (1 = Ilimitado y 2 = En stock/con cantidad)
+              if($item->stocktype_id != "" && $item->stocktype_id == 2){
+                $cart[$item->id.'-'.$cart_item_key] = [
+                  'options_id' => $option_id,
+                  'attribute' => $attribute,
+                  'attribute_price' => $option_price,
+                  "attribute_collection" => json_encode($colorCollection),
+                  "name" => $item->name,
+                  "slug" => $item->slug,
+                  "sku" => $item->sku,
+                  "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
+                  "brand_name" => (isset($brand->name) && $brand->name != "") ? $brand->name : "",
+                  "rootunit_id" => (isset($rootunit->id) && $rootunit->id != "") ? $rootunit->id : "",
+                  "rootunit_name" => (isset($rootunit->name) && $rootunit->name != "") ? $rootunit->name : "",
+                  "qty" => $qty,
+                  "price" => PriceHelper::grandPrice($item),
+                  "main_price" => $item->discount_price,
+                  "photo" => $item->photo,
+                  "type" => $item->item_type,
+                  "item_type" => $item->item_type,
+                  "coupon_id" => "0",
+                  "coupon_price" => "0",
+                  "quantity_withoutcoupon" => "0",
+                  "coupon_valid" => 'not_available',
+                  'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
+                  'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
+                ];
+                Session::put('cart', $cart);
+                if(Auth::check() && Auth::user()->role !== 'admin'){
+                  if(!empty(auth()->user()) || auth()->user() != ""){
+                    $tempCart = [
+                      "user_id" => $user_id,
+                      "item_id" => $item->id,
+                      "attribute_collection" => json_encode($colorCollection),
+                      "name" => $item->name,
+                      "slug" => $item->slug,
+                      "sku" => $item->sku,
+                      "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
+                      "quantity" => $qty,
+                      "price" => PriceHelper::grandPrice($item),
+                      "main_price" => $item->discount_price,
+                      "photo" => $item->photo,
+                      "is_type" => $item->is_type,
+                      "item_type" => $item->item_type,
+                      "coupon_id" => "0",
+                      "coupon_price" => "0",
+                      "quantity_withoutcoupon" => "0",
+                      "coupon_valid" => 'not_available',
+                      "created_at" => $date,
+                      "updated_at" => $date,
+                    ];
+                    TempCart::insert($tempCart);
+                  }
+                }
+                $dataResponseOutput = ["type" => "success", "msg" => 'Producto agregado. El cupón ya NO está activo'];
+              }else{
+                $cart[$item->id.'-'.$cart_item_key] = [
+                  'options_id' => $option_id,
+                  'attribute' => $attribute,
+                  'attribute_price' => $option_price,
+                  "attribute_collection" => json_encode($colorCollection),
+                  "name" => $item->name,
+                  "slug" => $item->slug,
+                  "sku" => $item->sku,
+                  "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
+                  "brand_name" => (isset($brand->name) && $brand->name != "") ? $brand->name : "",
+                  "rootunit_id" => (isset($rootunit->id) && $rootunit->id != "") ? $rootunit->id : "",
+                  "rootunit_name" => (isset($rootunit->name) && $rootunit->name != "") ? $rootunit->name : "",
+                  "qty" => $qty,
+                  "price" => PriceHelper::grandPrice($item),
+                  "main_price" => $item->discount_price,
+                  "photo" => $item->photo,
+                  "type" => $item->item_type,
+                  "item_type" => $item->item_type,
+                  "coupon_id" => "0",
+                  "coupon_price" => "0",
+                  "quantity_withoutcoupon" => "0",
+                  "coupon_valid" => 'not_available',
+                  'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
+                  'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
+                ];
+                Session::put('cart', $cart);
+                if(Auth::check() && Auth::user()->role !== 'admin'){
+                  if(!empty(auth()->user()) || auth()->user() != ""){
+                    $tempCart = [
+                      "user_id" => $user_id,
+                      "item_id" => $item->id,
+                      "attribute_collection" => json_encode($colorCollection),
+                      "name" => $item->name,
+                      "slug" => $item->slug,
+                      "sku" => $item->sku,
+                      "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
+                      "quantity" => $qty,
+                      "price" => PriceHelper::grandPrice($item),
+                      "main_price" => $item->discount_price,
+                      "photo" => $item->photo,
+                      "is_type" => $item->is_type,
+                      "item_type" => $item->item_type,
+                      "coupon_id" => "0",
+                      "coupon_price" => "0",
+                      "quantity_withoutcoupon" => "0",
+                      "coupon_valid" => 'not_available',
+                      "created_at" => $date,
+                      "updated_at" => $date,
+                    ];
+                    TempCart::insert($tempCart);
+                  }
+                }
+                $dataResponseOutput = ["type" => "success", "msg" => 'Producto agregado. El cupón ya NO está activo'];
+              }
+              // return __('Producto agregado. El cupón ya NO está activo (H)');
+              // return __('Producto agregado. El cupón ya NO está activo');
+              return $dataResponseOutput;
+            }
+            // -------------- Si el carrito NO está vacío, verifique si este producto existe y luego incremente la cantidad.
+            if(isset($cart[$item->id.'-'.$cart_item_key])){
+              // $cart = Session::get('cart');
+              $qtyProdinCart = $cart[$item->id.'-'.$cart_item_key]['qty'];
+              // -------------- VARIABLES PARA VALIDAR LA CANTIDAD EN CARRITO Y LA CANTIDAD RECIENTEMENTE AGREGADA + SUMA DE LAS ANTERIORES MENCIONADAS...
+              $quantity_incart = $cart[$item->id.'-'.$cart_item_key]['qty'];
+              $quantity_newadd = $qty;
+              $sum_typesofquantities = $quantity_incart + $quantity_newadd;
+              // -------------- Validar el tipo de stock del producto (1 = Ilimitado y 2 = En stock/con cantidad)
+              if($item->stocktype_id != "" && $item->stocktype_id == 2){
+                if($qty_check == 1){
+                  if($submit_type == "from_cartlisting"){
+                    if($cart[$item->id.'-'.$cart_item_key]['qty'] > $item->stock){
+                      // $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                      // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                      $qtyProdinCart = $item->stock;
+                      $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                      $tempCart = [
+                        "user_id" => $user_id,
+                        "item_id" => $item->id,
+                        "attribute_collection" => json_encode($colorCollection),
+                        "coupon_id" => "0",
+                        "coupon_price" => "0",
+                        "quantity_withoutcoupon" => "0",
+                        "coupon_valid" => 'not_available',
+                        "updated_at" => $date
+                      ];
+                      $dataResponseOutput = ["type" => "danger", "msg" => 'Cantidad máxima de productos es: '.$qtyProdinCart];
+                    }else{
+                      $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                      // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                      $qtyProdinCart += $qty;
+                      $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                      $tempCart = [
+                        "user_id" => $user_id,
+                        "item_id" => $item->id,
+                        "attribute_collection" => json_encode($colorCollection),
+                        "quantity" => $qtyProdinCart,
+                        "coupon_id" => "0",
+                        "coupon_price" => "0",
+                        "quantity_withoutcoupon" => "0",
+                        "coupon_valid" => 'not_available',
+                        "updated_at" => $date
+                      ];
+                      $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. El cupón ya NO está activo'];
+                    }
+                  }else{
+                    if($sum_typesofquantities > $item->stock){
+                      // $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                      // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                      $qtyProdinCart = $item->stock;
+                      $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                      $tempCart = [
+                        "user_id" => $user_id,
+                        "item_id" => $item->id,
+                        "attribute_collection" => json_encode($colorCollection),
+                        "coupon_id" => "0",
+                        "coupon_price" => "0",
+                        "quantity_withoutcoupon" => "0",
+                        "coupon_valid" => 'not_available',
+                        "updated_at" => $date
+                      ];
+                      $dataResponseOutput = ["type" => "danger", "msg" => 'Cantidad máxima de productos es: '.$qtyProdinCart];
+                    }else{
+                      $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                      // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                      $qtyProdinCart += $qty;
+                      $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                      $tempCart = [
+                        "user_id" => $user_id,
+                        "item_id" => $item->id,
+                        "attribute_collection" => json_encode($colorCollection),
+                        "quantity" => $qtyProdinCart,
+                        "coupon_id" => "0",
+                        "coupon_price" => "0",
+                        "quantity_withoutcoupon" => "0",
+                        "coupon_valid" => 'not_available',
+                        "updated_at" => $date
+                      ];
+                      $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. El cupón ya NO está activo'];
+                    }
+                  }
+                }else{
+                  if($submit_type == "from_cartlisting"){
+                    if($cart[$item->id.'-'.$cart_item_key]['qty'] > $item->stock){
+                      // $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                      // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                      // $qtyProdinCart += $qty;
+                      $qtyProdinCart = $item->stock;
+                      $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                      $tempCart = [
+                        "user_id" => $user_id,
+                        "item_id" => $item->id,
+                        "attribute_collection" => json_encode($colorCollection),
+                        "coupon_id" => "0",
+                        "coupon_price" => "0",
+                        "quantity_withoutcoupon" => "0",
+                        "coupon_valid" => 'not_available',
+                        "updated_at" => $date
+                      ];
+                      $dataResponseOutput = ["type" => "danger", "msg" => 'Cantidad máxima de productos es: '.$qtyProdinCart];
+                    }else{
+                      $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                      // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                      $qtyProdinCart += $qty;
+                      $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                      $tempCart = [
+                        "user_id" => $user_id,
+                        "item_id" => $item->id,
+                        "attribute_collection" => json_encode($colorCollection),
+                        "quantity" => $qtyProdinCart,
+                        "coupon_id" => "0",
+                        "coupon_price" => "0",
+                        "quantity_withoutcoupon" => "0",
+                        "coupon_valid" => 'not_available',
+                        "updated_at" => $date
+                      ];
+                      $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. El cupón ya NO está activo'];
+                    }
+                  }else{
+                    if($sum_typesofquantities > $item->stock){
+                      // $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                      // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                      // $qtyProdinCart += $qty;
+                      $qtyProdinCart = $item->stock;
+                      $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                      $tempCart = [
+                        "user_id" => $user_id,
+                        "item_id" => $item->id,
+                        "attribute_collection" => json_encode($colorCollection),
+                        "coupon_id" => "0",
+                        "coupon_price" => "0",
+                        "quantity_withoutcoupon" => "0",
+                        "coupon_valid" => 'not_available',
+                        "updated_at" => $date
+                      ];
+                      $dataResponseOutput = ["type" => "danger", "msg" => 'Cantidad máxima de productos es: '.$qtyProdinCart];
+                    }else{
+                      $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                      // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                      $qtyProdinCart += $qty;
+                      $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                      $tempCart = [
+                        "user_id" => $user_id,
+                        "item_id" => $item->id,
+                        "attribute_collection" => json_encode($colorCollection),
+                        "quantity" => $qtyProdinCart,
+                        "coupon_id" => "0",
+                        "coupon_price" => "0",
+                        "quantity_withoutcoupon" => "0",
+                        "coupon_valid" => 'not_available',
+                        "updated_at" => $date
+                      ];
+                      $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. El cupón ya NO está activo'];
+                    }
+                  }
+                }
+                Session::put('cart', $cart);
+                if(Auth::check() && Auth::user()->role !== 'admin'){
+                  if(!empty(auth()->user()) || auth()->user() != ""){
+                    if(isset($tempCart['quantity'])){
+                      TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price'], 'coupon_valid' => $tempCart['coupon_valid']]);
+                    }
+                  }
+                }
+              }else{
+                if($qty_check == 1){
+                  $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                  // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                  $qtyProdinCart = $qty;
+                  $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                  $tempCart = [
+                    "user_id" => $user_id,
+                    "item_id" => $item->id,
+                    "attribute_collection" => json_encode($colorCollection),
+                    "quantity" => $qtyProdinCart,
+                    "coupon_id" => "0",
+                    "coupon_price" => "0",
+                    "quantity_withoutcoupon" => "0",
+                    "coupon_valid" => 'not_available',
+                    "updated_at" => $date
+                  ];
+                  $dataResponseOutput = ["type" => "success", "msg" => 'Producto agregado. El cupón ya NO está activo'];
+                }else{
+                  $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                  // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                  $qtyProdinCart += $qty;
+                  $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                  $tempCart = [
+                    "user_id" => $user_id,
+                    "item_id" => $item->id,
+                    "attribute_collection" => json_encode($colorCollection),
+                    "quantity" => $qtyProdinCart,
+                    "coupon_id" => "0",
+                    "coupon_price" => "0",
+                    "quantity_withoutcoupon" => "0",
+                    "coupon_valid" => 'not_available',
+                    "updated_at" => $date
+                  ];
+                  $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. El cupón ya NO está activo'];
+                }
+                Session::put('cart', $cart);
+                if(Auth::check() && Auth::user()->role !== 'admin'){
+                  if(!empty(auth()->user()) || auth()->user() != ""){
+                    TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price'], 'coupon_valid' => $tempCart['coupon_valid']]);
+                  }
+                }
+              }
+              $qty_check = 0;
+              // return $mgs;
+              return $dataResponseOutput;
+            }
+          }
+        }
+      }else{
+        // echo "No existe este cupón en tbl_applycoupons (A)";
+        // -------------- Si el carrito ESTÁ vacío.
+        if(!$cart || !isset($cart[$item->id.'-'.$cart_item_key])){
+          // echo "recién agregado";
+          $license_name = json_decode($item->license_name,true);
+          $license_key = json_decode($item->license_name,true);
+
+          // -------------- Validar el tipo de stock del producto (1 = Ilimitado y 2 = En stock/con cantidad)
+          if($item->stocktype_id != "" && $item->stocktype_id == 2){
             $cart[$item->id.'-'.$cart_item_key] = [
               'options_id' => $option_id,
               'attribute' => $attribute,
@@ -242,7 +1333,7 @@ class CartRepository{
             if(Auth::check() && Auth::user()->role !== 'admin'){
               if(!empty(auth()->user()) || auth()->user() != ""){
                 $tempCart = [
-                  "user_id" => $input['user_id'],
+                  "user_id" => $user_id,
                   "item_id" => $item->id,
                   "attribute_collection" => json_encode($colorCollection),
                   "name" => $item->name,
@@ -265,21 +1356,239 @@ class CartRepository{
                 TempCart::insert($tempCart);
               }
             }
-            // return __('Producto agregado. El cupón ya NO es válido (C)');
-            return __('Producto agregado. El cupón ya NO es válido');
-          }
-          // -------------- Si el carrito NO está vacío, verifique si este producto existe y luego incremente la cantidad.
-          if(isset($cart[$item->id.'-'.$cart_item_key])){
-            $cart = Session::get('cart');
-            $qtyProdinCart = $cart[$item->id.'-'.$cart_item_key]['qty'];
+            $dataResponseOutput = ["type" => "success", "msg" => 'Producto agregado. No existe este cupón'];
+          }else{
+            $cart[$item->id.'-'.$cart_item_key] = [
+              'options_id' => $option_id,
+              'attribute' => $attribute,
+              'attribute_price' => $option_price,
+              "attribute_collection" => json_encode($colorCollection),
+              "name" => $item->name,
+              "slug" => $item->slug,
+              "sku" => $item->sku,
+              "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
+              "brand_name" => (isset($brand->name) && $brand->name != "") ? $brand->name : "",
+              "rootunit_id" => (isset($rootunit->id) && $rootunit->id != "") ? $rootunit->id : "",
+              "rootunit_name" => (isset($rootunit->name) && $rootunit->name != "") ? $rootunit->name : "",
+              "qty" => $qty,
+              "price" => PriceHelper::grandPrice($item),
+              "main_price" => $item->discount_price,
+              "photo" => $item->photo,
+              "type" => $item->item_type,
+              "item_type" => $item->item_type,
+              "coupon_id" => "0",
+              "coupon_price" => "0",
+              "quantity_withoutcoupon" => "0",
+              "coupon_valid" => 'not_available',
+              'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
+              'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
+            ];  
+            Session::put('cart', $cart);
+            if(Auth::check() && Auth::user()->role !== 'admin'){
+              if(!empty(auth()->user()) || auth()->user() != ""){
+                $tempCart = [
+                  "user_id" => $user_id,
+                  "item_id" => $item->id,
+                  "attribute_collection" => json_encode($colorCollection),
+                  "name" => $item->name,
+                  "slug" => $item->slug,
+                  "sku" => $item->sku,
+                  "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
+                  "quantity" => $qty,
+                  "price" => PriceHelper::grandPrice($item),
+                  "main_price" => $item->discount_price,
+                  "photo" => $item->photo,
+                  "is_type" => $item->is_type,
+                  "item_type" => $item->item_type,
+                  "coupon_id" => "0",
+                  "coupon_price" => "0",
+                  "quantity_withoutcoupon" => "0",
+                  "coupon_valid" => 'not_available',
+                  "created_at" => $date,
+                  "updated_at" => $date,
+                ];
+                TempCart::insert($tempCart);
+              }
+            }
+            $dataResponseOutput = ["type" => "success", "msg" => 'Producto agregado. No existe este cupón'];
+          }          
+          // return __('Producto agregado. No existe este cupón (A)');
+          // return __('Producto agregado. No existe este cupón');
+          return $dataResponseOutput;
+        }
+        // -------------- Si el carrito NO está vacío, verifique si este producto existe y luego incremente la cantidad.
+        if(isset($cart[$item->id.'-'.$cart_item_key])){
+          // $cart = Session::get('cart');
+          $qtyProdinCart = $cart[$item->id.'-'.$cart_item_key]['qty'];
+          // -------------- VARIABLES PARA VALIDAR LA CANTIDAD EN CARRITO Y LA CANTIDAD RECIENTEMENTE AGREGADA + SUMA DE LAS ANTERIORES MENCIONADAS...
+          $quantity_incart = $cart[$item->id.'-'.$cart_item_key]['qty'];
+          $quantity_newadd = $qty;
+          $sum_typesofquantities = $quantity_incart + $quantity_newadd;
+          // -------------- Validar el tipo de stock del producto (1 = Ilimitado y 2 = En stock/con cantidad)
+          if($item->stocktype_id != "" && $item->stocktype_id == 2){
             if($qty_check == 1){
-              $cart[$item->id.'-'.$cart_item_key]['qty'] =  $qty;
-              $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] =  'not_available';
+              if($submit_type == "from_cartlisting"){
+                if($cart[$item->id.'-'.$cart_item_key]['qty'] > $item->stock){
+                  // $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                  // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                  $qtyProdinCart = $item->stock;
+                  $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                  $tempCart = [
+                    "user_id" => $user_id,
+                    "item_id" => $item->id,
+                    "attribute_collection" => json_encode($colorCollection),
+                    "coupon_id" => "0",
+                    "coupon_price" => "0",
+                    "quantity_withoutcoupon" => "0",
+                    "coupon_valid" => 'not_available',
+                    "updated_at" => $date
+                  ];
+                  $dataResponseOutput = ["type" => "danger", "msg" => 'Cantidad máxima de productos es: '.$qtyProdinCart];
+                }else{
+                  $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                  // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                  $qtyProdinCart += $qty;
+                  $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                  $tempCart = [
+                    "user_id" => $user_id,
+                    "item_id" => $item->id,
+                    "attribute_collection" => json_encode($colorCollection),
+                    "quantity" => $qtyProdinCart,
+                    "coupon_id" => "0",
+                    "coupon_price" => "0",
+                    "quantity_withoutcoupon" => "0",
+                    "coupon_valid" => 'not_available',
+                    "updated_at" => $date
+                  ];
+                  $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. No existe este cupón'];
+                }
+              }else{
+                if($sum_typesofquantities > $item->stock){
+                  // $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                  // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                  $qtyProdinCart = $item->stock;
+                  $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                  $tempCart = [
+                    "user_id" => $user_id,
+                    "item_id" => $item->id,
+                    "attribute_collection" => json_encode($colorCollection),
+                    "coupon_id" => "0",
+                    "coupon_price" => "0",
+                    "quantity_withoutcoupon" => "0",
+                    "coupon_valid" => 'not_available',
+                    "updated_at" => $date
+                  ];
+                  $dataResponseOutput = ["type" => "danger", "msg" => 'Cantidad máxima de productos es: '.$qtyProdinCart];
+                }else{
+                  $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                  // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                  $qtyProdinCart += $qty;
+                  $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                  $tempCart = [
+                    "user_id" => $user_id,
+                    "item_id" => $item->id,
+                    "attribute_collection" => json_encode($colorCollection),
+                    "quantity" => $qtyProdinCart,
+                    "coupon_id" => "0",
+                    "coupon_price" => "0",
+                    "quantity_withoutcoupon" => "0",
+                    "coupon_valid" => 'not_available',
+                    "updated_at" => $date
+                  ];
+                  $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. No existe este cupón'];
+                }
+              }              
+            }else{
+              if($submit_type == "from_cartlisting"){
+                if($cart[$item->id.'-'.$cart_item_key]['qty'] > $item->stock){
+                  // $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                  // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                  // $qtyProdinCart += $qty;
+                  $qtyProdinCart = $item->stock;
+                  $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                  $tempCart = [
+                    "user_id" => $user_id,
+                    "item_id" => $item->id,
+                    "attribute_collection" => json_encode($colorCollection),
+                    "coupon_id" => "0",
+                    "coupon_price" => "0",
+                    "quantity_withoutcoupon" => "0",
+                    "coupon_valid" => 'not_available',
+                    "updated_at" => $date
+                  ];
+                  $dataResponseOutput = ["type" => "danger", "msg" => 'Cantidad máxima de productos es: '.$qtyProdinCart];
+                }else{
+                  $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                  // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                  $qtyProdinCart += $qty;
+                  $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                  $tempCart = [
+                    "user_id" => $user_id,
+                    "item_id" => $item->id,
+                    "attribute_collection" => json_encode($colorCollection),
+                    "quantity" => $qtyProdinCart,
+                    "coupon_id" => "0",
+                    "coupon_price" => "0",
+                    "quantity_withoutcoupon" => "0",
+                    "coupon_valid" => 'not_available',
+                    "updated_at" => $date
+                  ];
+                  $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. No existe este cupón'];
+                }
+              }else{
+                if($sum_typesofquantities > $item->stock){
+                  // $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                  // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                  // $qtyProdinCart += $qty;
+                  $qtyProdinCart = $item->stock;
+                  $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                  $tempCart = [
+                    "user_id" => $user_id,
+                    "item_id" => $item->id,
+                    "attribute_collection" => json_encode($colorCollection),
+                    "coupon_id" => "0",
+                    "coupon_price" => "0",
+                    "quantity_withoutcoupon" => "0",
+                    "coupon_valid" => 'not_available',
+                    "updated_at" => $date
+                  ];
+                  $dataResponseOutput = ["type" => "danger", "msg" => 'Cantidad máxima de productos es: '.$qtyProdinCart];
+                }else{
+                  $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                  // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                  $qtyProdinCart += $qty;
+                  $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                  $tempCart = [
+                    "user_id" => $user_id,
+                    "item_id" => $item->id,
+                    "attribute_collection" => json_encode($colorCollection),
+                    "quantity" => $qtyProdinCart,
+                    "coupon_id" => "0",
+                    "coupon_price" => "0",
+                    "quantity_withoutcoupon" => "0",
+                    "coupon_valid" => 'not_available',
+                    "updated_at" => $date
+                  ];
+                  $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. No existe este cupón'];
+                }
+              }
+            }
+            Session::put('cart', $cart);
+            if(Auth::check() && Auth::user()->role !== 'admin'){
+              if(!empty(auth()->user()) || auth()->user() != ""){
+                if(isset($tempCart['quantity'])){
+                  TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price'], 'coupon_valid' => $tempCart['coupon_valid']]);
+                }
+              }
+            }
+          }else{
+            if($qty_check == 1){
+              $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
               // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
               $qtyProdinCart = $qty;
               $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
               $tempCart = [
-                "user_id" => $input['user_id'],
+                "user_id" => $user_id,
                 "item_id" => $item->id,
                 "attribute_collection" => json_encode($colorCollection),
                 "quantity" => $qtyProdinCart,
@@ -289,14 +1598,14 @@ class CartRepository{
                 "coupon_valid" => 'not_available',
                 "updated_at" => $date
               ];
+              $dataResponseOutput = ["type" => "success", "msg" => 'Producto agregado. No existe este cupón'];
             }else{
-              $cart[$item->id.'-'.$cart_item_key]['qty'] +=  $qty;
-              $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] =  'not_available';
+              $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
               // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
               $qtyProdinCart += $qty;
               $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
               $tempCart = [
-                "user_id" => $input['user_id'],
+                "user_id" => $user_id,
                 "item_id" => $item->id,
                 "attribute_collection" => json_encode($colorCollection),
                 "quantity" => $qtyProdinCart,
@@ -306,6 +1615,7 @@ class CartRepository{
                 "coupon_valid" => 'not_available',
                 "updated_at" => $date
               ];
+              $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado. No existe este cupón'];
             }
             Session::put('cart', $cart);
             if(Auth::check() && Auth::user()->role !== 'admin'){
@@ -313,281 +1623,21 @@ class CartRepository{
                 TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price'], 'coupon_valid' => $tempCart['coupon_valid']]);
               }
             }
-
-            if($qty_check == 1){
-              // $mgs = __('Producto agregado. El cupón ya NO es válido (C)');
-              $mgs = __('Producto agregado. El cupón ya NO es válido');
-            }else{
-              // $mgs = __('Producto actualizado. El cupón ya NO es válido (C)');
-              $mgs = __('Producto actualizado. El cupón ya NO es válido');
-            }
-
-            $qty_check = 0;
-            return $mgs;
           }
-        }else{
-          // (3) -------------- VALIDAR EL ESTADO DEL CUPÓN EN ESTE PRODUCTO...
-          if($couponget_status != 0){
-            // echo $couponget_timeend."<br>";
-            // echo "El cupón todavía está activo (B)";
-            // -------------- Si el carrito ESTÁ vacío.
-            if(!$cart || !isset($cart[$item->id.'-'.$cart_item_key])){
-              // echo "recién agregado";
-              $license_name = json_decode($item->license_name,true);
-              $license_key = json_decode($item->license_name,true);
-              $cart[$item->id.'-'.$cart_item_key] = [
-                'options_id' => $option_id,
-                'attribute' => $attribute,
-                'attribute_price' => $option_price,
-                "attribute_collection" => json_encode($colorCollection),
-                "name" => $item->name,
-                "slug" => $item->slug,
-                "sku" => $item->sku,
-                "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
-                "brand_name" => (isset($brand->name) && $brand->name != "") ? $brand->name : "",
-                "rootunit_id" => (isset($rootunit->id) && $rootunit->id != "") ? $rootunit->id : "",
-                "rootunit_name" => (isset($rootunit->name) && $rootunit->name != "") ? $rootunit->name : "",
-                "qty" => $qty,
-                "price" => PriceHelper::grandPrice($item),
-                "main_price" => $item->discount_price,
-                "photo" => $item->photo,
-                "type" => $item->item_type,
-                "item_type" => $item->item_type,
-                "coupon_id" => $item->coupon_id,
-                "coupon_price" => $applycoupon_totalprice,
-                "quantity_withoutcoupon" => "0",
-                "coupon_valid" => 'available',
-                'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
-                'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
-              ];              
-              Session::put('cart', $cart);
-              if(Auth::check() && Auth::user()->role !== 'admin'){
-                if(!empty(auth()->user()) || auth()->user() != ""){
-                  $tempCart = [
-                    "user_id" => $input['user_id'],
-                    "item_id" => $item->id,
-                    "attribute_collection" => json_encode($colorCollection),
-                    "name" => $item->name,
-                    "slug" => $item->slug,
-                    "sku" => $item->sku,
-                    "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
-                    "quantity" => $qty,
-                    "price" => PriceHelper::grandPrice($item),
-                    "main_price" => $item->discount_price,
-                    "photo" => $item->photo,
-                    "is_type" => $item->is_type,
-                    "item_type" => $item->item_type,
-                    "coupon_id" => $item->coupon_id,
-                    "coupon_price" => $applycoupon_totalprice,
-                    "quantity_withoutcoupon" => "0",
-                    "coupon_valid" => 'available',
-                    "created_at" => $date,
-                    "updated_at" => $date,
-                  ];
-                  TempCart::insert($tempCart);
-                }
-              }
-              // return __('Producto agregado. El cupón todavía está activo (B)');
-              return __('Producto agregado. El cupón todavía está activo');
-            }
-            // -------------- Si el carrito NO está vacío, verifique si este producto existe y luego incremente la cantidad.
-            // (HOY - 14/03/2024) : Comprobar si el nuevo precio aplicado con cupón se está respetando...
-            if(isset($cart[$item->id.'-'.$cart_item_key])){
-              $cart = Session::get('cart');
-              $qtyProdinCart = $cart[$item->id.'-'.$cart_item_key]['qty'];
-              if($cart[$item->id.'-'.$cart_item_key]['coupon_id'] != 0 && isset($cart[$item->id.'-'.$cart_item_key]['coupon_price']) && $cart[$item->id.'-'.$cart_item_key]['coupon_price'] != "" && $cart[$item->id.'-'.$cart_item_key]['coupon_price'] != "0"){
-                // echo "Si ya tiene estos atributos, mantener la última cantidad antes de la activación del cupón...";
-              }else{
-                // echo "Primer producto con este cupón";
-                $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'] = $cart[$item->id.'-'.$cart_item_key]['qty'];
-                $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
-              }
-              if($qty_check == 1){
-                $cart[$item->id.'-'.$cart_item_key]['qty'] =  $qty;
-                // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
-                $qtyProdinCart = $qty;
-                $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
-                $cart[$item->id.'-'.$cart_item_key]['coupon_id'] = $applycoupon_idcoupon;
-                $cart[$item->id.'-'.$cart_item_key]['coupon_price'] = $applycoupon_totalprice;
-                $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
-                $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] =  'available';
-                $tempCart = [
-                  "user_id" => $input['user_id'],
-                  "item_id" => $item->id,
-                  "attribute_collection" => json_encode($colorCollection),
-                  "quantity" => $qtyProdinCart,
-                  "coupon_id" => $applycoupon_idcoupon,
-                  "coupon_price" => $applycoupon_totalprice,
-                  "quantity_withoutcoupon" => $quantity_withoutcoupon,
-                  "coupon_valid" => 'available',
-                  "updated_at" => $date
-                ];
-              }else{
-                $cart[$item->id.'-'.$cart_item_key]['qty'] +=  $qty;
-                // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
-                $qtyProdinCart += $qty;
-                $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
-                $cart[$item->id.'-'.$cart_item_key]['coupon_id'] = $applycoupon_idcoupon;
-                $cart[$item->id.'-'.$cart_item_key]['coupon_price'] = $applycoupon_totalprice;
-                $quantity_withoutcoupon = $cart[$item->id.'-'.$cart_item_key]['quantity_withoutcoupon'];
-                $cart[$item->id.'-'.$cart_item_key]['coupon_valid'] =  'available';
-                $tempCart = [
-                  "user_id" => $input['user_id'],
-                  "item_id" => $item->id,
-                  "attribute_collection" => json_encode($colorCollection),
-                  "quantity" => $qtyProdinCart,
-                  "coupon_id" => $applycoupon_idcoupon,
-                  "coupon_price" => $applycoupon_totalprice,
-                  "quantity_withoutcoupon" => $quantity_withoutcoupon,
-                  "coupon_valid" => 'available',
-                  "updated_at" => $date
-                ];
-              }
-              Session::put('cart', $cart);
-              if(Auth::check() && Auth::user()->role !== 'admin'){
-                if(!empty(auth()->user()) || auth()->user() != ""){
-                  TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price'], 'quantity_withoutcoupon' => $tempCart['quantity_withoutcoupon'], 'coupon_valid' => $tempCart['coupon_valid']]);
-                }
-              }
-
-              if($qty_check == 1){
-                // $mgs = __('Producto agregado. El cupón todavía está activo (B)');
-                $mgs = __('Producto agregado. El cupón todavía está activo');
-              }else{
-                // $mgs = __('Producto actualizado. El cupón todavía está activo (B)');
-                $mgs = __('Producto actualizado. El cupón todavía está activo');
-              }
-
-              $qty_check = 0;
-              return $mgs;
-            }
-          }else{
-            // echo "El cupón ya NO está activo (H)";
-            // -------------- Si el carrito ESTÁ vacío.
-            if(!$cart || !isset($cart[$item->id.'-'.$cart_item_key])){
-              // echo "recién agregado";
-              $license_name = json_decode($item->license_name,true);
-              $license_key = json_decode($item->license_name,true);
-              $cart[$item->id.'-'.$cart_item_key] = [
-                'options_id' => $option_id,
-                'attribute' => $attribute,
-                'attribute_price' => $option_price,
-                "attribute_collection" => json_encode($colorCollection),
-                "name" => $item->name,
-                "slug" => $item->slug,
-                "sku" => $item->sku,
-                "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
-                "brand_name" => (isset($brand->name) && $brand->name != "") ? $brand->name : "",
-                "rootunit_id" => (isset($rootunit->id) && $rootunit->id != "") ? $rootunit->id : "",
-                "rootunit_name" => (isset($rootunit->name) && $rootunit->name != "") ? $rootunit->name : "",
-                "qty" => $qty,
-                "price" => PriceHelper::grandPrice($item),
-                "main_price" => $item->discount_price,
-                "photo" => $item->photo,
-                "type" => $item->item_type,
-                "item_type" => $item->item_type,
-                "coupon_id" => "0",
-                "coupon_price" => "0",
-                "quantity_withoutcoupon" => "0",
-                "coupon_valid" => 'not_available',
-                'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
-                'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
-              ];    
-              
-              Session::put('cart', $cart);
-              if(Auth::check() && Auth::user()->role !== 'admin'){
-                if(!empty(auth()->user()) || auth()->user() != ""){
-                  $tempCart = [
-                    "user_id" => $input['user_id'],
-                    "item_id" => $item->id,
-                    "attribute_collection" => json_encode($colorCollection),
-                    "name" => $item->name,
-                    "slug" => $item->slug,
-                    "sku" => $item->sku,
-                    "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
-                    "quantity" => $qty,
-                    "price" => PriceHelper::grandPrice($item),
-                    "main_price" => $item->discount_price,
-                    "photo" => $item->photo,
-                    "is_type" => $item->is_type,
-                    "item_type" => $item->item_type,
-                    "coupon_id" => "0",
-                    "coupon_price" => "0",
-                    "quantity_withoutcoupon" => "0",
-                    "coupon_valid" => 'not_available',
-                    "created_at" => $date,
-                    "updated_at" => $date,
-                  ];
-                  TempCart::insert($tempCart);
-                }
-              }
-              // return __('Producto agregado. El cupón ya NO está activo (H)');
-              return __('Producto agregado. El cupón ya NO está activo');
-            }
-            // -------------- Si el carrito NO está vacío, verifique si este producto existe y luego incremente la cantidad.
-            if(isset($cart[$item->id.'-'.$cart_item_key])){
-              $cart = Session::get('cart');
-              $qtyProdinCart = $cart[$item->id.'-'.$cart_item_key]['qty'];
-              if($qty_check == 1){
-                $cart[$item->id.'-'.$cart_item_key]['qty'] =  $qty;
-                // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
-                $qtyProdinCart = $qty;
-                $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
-                $tempCart = [
-                  "user_id" => $input['user_id'],
-                  "item_id" => $item->id,
-                  "attribute_collection" => json_encode($colorCollection),
-                  "quantity" => $qtyProdinCart,
-                  "coupon_id" => "0",
-                  "coupon_price" => "0",
-                  "quantity_withoutcoupon" => "0",
-                  "coupon_valid" => 'not_available',
-                  "updated_at" => $date
-                ];
-              }else{
-                $cart[$item->id.'-'.$cart_item_key]['qty'] +=  $qty;
-                // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
-                $qtyProdinCart += $qty;
-                $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
-                $tempCart = [
-                  "user_id" => $input['user_id'],
-                  "item_id" => $item->id,
-                  "attribute_collection" => json_encode($colorCollection),
-                  "quantity" => $qtyProdinCart,
-                  "coupon_id" => "0",
-                  "coupon_price" => "0",
-                  "quantity_withoutcoupon" => "0",
-                  "coupon_valid" => 'not_available',
-                  "updated_at" => $date
-                ];
-              }
-              Session::put('cart', $cart);
-              if(Auth::check() && Auth::user()->role !== 'admin'){
-                if(!empty(auth()->user()) || auth()->user() != ""){
-                  TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price'], 'coupon_valid' => $tempCart['coupon_valid']]);
-                }
-              }
-
-              if($qty_check == 1){
-                // $mgs = __('Producto agregado. El cupón ya NO está activo (H)');
-                $mgs = __('Producto agregado. El cupón ya NO está activo');
-              }else{
-                // $mgs = __('Producto actualizado. El cupón ya NO está activo (H)');
-                $mgs = __('Producto actualizado. El cupón ya NO está activo');
-              }
-
-              $qty_check = 0;
-              return $mgs;
-            }
-          }
+          $qty_check = 0;
+          // return $mgs;
+          return $dataResponseOutput;
         }
-      }else{
-        // echo "No existe este cupón (A)";
-        // -------------- Si el carrito ESTÁ vacío.
-        if(!$cart || !isset($cart[$item->id.'-'.$cart_item_key])){
-          // echo "recién agregado";
-          $license_name = json_decode($item->license_name,true);
-          $license_key = json_decode($item->license_name,true);
+      }
+    }else{
+      // echo "No hay un cupón activado para este producto (AF)";
+      // -------------- Si el carrito ESTÁ vacío.
+      if(!$cart || !isset($cart[$item->id.'-'.$cart_item_key])){
+        // echo "recién agregado";
+        $license_name = json_decode($item->license_name,true);
+        $license_key = json_decode($item->license_name,true);
+        // -------------- Validar el tipo de stock del producto (1 = Ilimitado y 2 = En stock/con cantidad)
+        if($item->stocktype_id != "" && $item->stocktype_id == 2){
           $cart[$item->id.'-'.$cart_item_key] = [
             'options_id' => $option_id,
             'attribute' => $attribute,
@@ -612,13 +1662,12 @@ class CartRepository{
             "coupon_valid" => 'not_available',
             'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
             'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
-          ];    
-          
+          ];
           Session::put('cart', $cart);
           if(Auth::check() && Auth::user()->role !== 'admin'){
             if(!empty(auth()->user()) || auth()->user() != ""){
               $tempCart = [
-                "user_id" => $input['user_id'],
+                "user_id" => $user_id,
                 "item_id" => $item->id,
                 "attribute_collection" => json_encode($colorCollection),
                 "name" => $item->name,
@@ -641,20 +1690,254 @@ class CartRepository{
               TempCart::insert($tempCart);
             }
           }
-          // return __('Producto agregado. No existe este cupón (A)');
-          return __('Producto agregado. No existe este cupón');
+          $dataResponseOutput = ["type" => "success", "msg" => 'Producto agregado'];
+        }else{
+          $cart[$item->id.'-'.$cart_item_key] = [
+            'options_id' => $option_id,
+            'attribute' => $attribute,
+            'attribute_price' => $option_price,
+            "attribute_collection" => json_encode($colorCollection),
+            "name" => $item->name,
+            "slug" => $item->slug,
+            "sku" => $item->sku,
+            "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
+            "brand_name" => (isset($brand->name) && $brand->name != "") ? $brand->name : "",
+            "rootunit_id" => (isset($rootunit->id) && $rootunit->id != "") ? $rootunit->id : "",
+            "rootunit_name" => (isset($rootunit->name) && $rootunit->name != "") ? $rootunit->name : "",
+            "qty" => $qty,
+            "price" => PriceHelper::grandPrice($item),
+            "main_price" => $item->discount_price,
+            "photo" => $item->photo,
+            "type" => $item->item_type,
+            "item_type" => $item->item_type,
+            "coupon_id" => "0",
+            "coupon_price" => "0",
+            "quantity_withoutcoupon" => "0",
+            "coupon_valid" => 'not_available',
+            'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
+            'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
+          ];
+          Session::put('cart', $cart);
+          if(Auth::check() && Auth::user()->role !== 'admin'){
+            if(!empty(auth()->user()) || auth()->user() != ""){
+              $tempCart = [
+                "user_id" => $user_id,
+                "item_id" => $item->id,
+                "attribute_collection" => json_encode($colorCollection),
+                "name" => $item->name,
+                "slug" => $item->slug,
+                "sku" => $item->sku,
+                "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
+                "quantity" => $qty,
+                "price" => PriceHelper::grandPrice($item),
+                "main_price" => $item->discount_price,
+                "photo" => $item->photo,
+                "is_type" => $item->is_type,
+                "item_type" => $item->item_type,
+                "coupon_id" => "0",
+                "coupon_price" => "0",
+                "quantity_withoutcoupon" => "0",
+                "coupon_valid" => 'not_available',
+                "created_at" => $date,
+                "updated_at" => $date,
+              ];
+              TempCart::insert($tempCart);
+            }
+          }
+          $dataResponseOutput = ["type" => "success", "msg" => 'Producto agregado'];
         }
-        // -------------- Si el carrito NO está vacío, verifique si este producto existe y luego incremente la cantidad.
-        if(isset($cart[$item->id.'-'.$cart_item_key])){
-          $cart = Session::get('cart');
-          $qtyProdinCart = $cart[$item->id.'-'.$cart_item_key]['qty'];
+        // return __('Producto agregado');
+        return $dataResponseOutput;
+      }
+      // -------------- Si el carrito NO está vacío, verifique si este producto existe y luego incremente la cantidad.
+      if(isset($cart[$item->id.'-'.$cart_item_key])){
+        // $cart = Session::get('cart');
+        $qtyProdinCart = $cart[$item->id.'-'.$cart_item_key]['qty'];
+        // -------------- VARIABLES PARA VALIDAR LA CANTIDAD EN CARRITO Y LA CANTIDAD RECIENTEMENTE AGREGADA + SUMA DE LAS ANTERIORES MENCIONADAS...
+        $quantity_incart = $cart[$item->id.'-'.$cart_item_key]['qty'];
+        $quantity_newadd = $qty;
+        $sum_typesofquantities = $quantity_incart + $quantity_newadd;
+        // echo "- TIPO DE STOCK: ".$item->stocktype_id."<br>";
+        // echo "- CHECK DE CANTIDAD: ".$qty_check."<br>";
+        // echo "- Tipo de agregación: ".$submit_type."<br>";
+        // echo "- Cantidad en carrito: ".$quantity_incart."<br>";
+        // echo "- Cantidad recién agregada: ".$quantity_newadd."<br>";
+        // echo "- Suma de cantidades: ".$sum_typesofquantities."<br>";
+        // -------------- Validar el tipo de stock del producto (1 = Ilimitado y 2 = En stock/con cantidad)
+        if($item->stocktype_id != "" && $item->stocktype_id == 2){
           if($qty_check == 1){
-            $cart[$item->id.'-'.$cart_item_key]['qty'] =  $qty;
+            if($submit_type == "from_cartlisting"){
+              if($cart[$item->id.'-'.$cart_item_key]['qty'] > $item->stock){
+                // $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                // $qtyProdinCart = $qty;
+                $qtyProdinCart = $item->stock;
+                $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                $tempCart = [
+                  "user_id" => $user_id,
+                  "item_id" => $item->id,
+                  "attribute_collection" => json_encode($colorCollection),
+                  "coupon_id" => "0",
+                  "coupon_price" => "0",
+                  "quantity_withoutcoupon" => "0",
+                  "coupon_valid" => 'not_available',
+                  "updated_at" => $date
+                ];
+                // $mgs = __('Cantidad máxima de productos es: '.$qtyProdinCart);
+                $dataResponseOutput = ["type" => "danger", "msg" => 'Cantidad máxima de productos es: '.$qtyProdinCart];
+              }else{
+                $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                $qtyProdinCart += $qty;
+                $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                $tempCart = [
+                  "user_id" => $user_id,
+                  "item_id" => $item->id,
+                  "attribute_collection" => json_encode($colorCollection),
+                  "quantity" => $qtyProdinCart,
+                  "coupon_id" => "0",
+                  "coupon_price" => "0",
+                  "quantity_withoutcoupon" => "0",
+                  "coupon_valid" => 'not_available',
+                  "updated_at" => $date
+                ];
+                $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado'];
+                // $mgs = __('Producto agregado');
+              }
+            }else{
+              if($sum_typesofquantities > $item->stock){
+                // $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                // $qtyProdinCart = $qty;
+                $qtyProdinCart = $item->stock;
+                $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                $tempCart = [
+                  "user_id" => $user_id,
+                  "item_id" => $item->id,
+                  "attribute_collection" => json_encode($colorCollection),
+                  "coupon_id" => "0",
+                  "coupon_price" => "0",
+                  "quantity_withoutcoupon" => "0",
+                  "coupon_valid" => 'not_available',
+                  "updated_at" => $date
+                ];
+                // $mgs = __('Cantidad máxima de productos es: '.$qtyProdinCart);
+                $dataResponseOutput = ["type" => "danger", "msg" => 'Cantidad máxima de productos es: '.$qtyProdinCart];
+              }else{
+                $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
+                // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                $qtyProdinCart += $qty;
+                $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                $tempCart = [
+                  "user_id" => $user_id,
+                  "item_id" => $item->id,
+                  "attribute_collection" => json_encode($colorCollection),
+                  "quantity" => $qtyProdinCart,
+                  "coupon_id" => "0",
+                  "coupon_price" => "0",
+                  "quantity_withoutcoupon" => "0",
+                  "coupon_valid" => 'not_available',
+                  "updated_at" => $date
+                ];
+                $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado'];
+                // $mgs = __('Producto agregado');
+              }
+            }
+          }else{
+            if($submit_type == "from_cartlisting"){
+              if($cart[$item->id.'-'.$cart_item_key]['qty'] > $item->stock){
+                // $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                // $qtyProdinCart += $qty;
+                $qtyProdinCart = $item->stock;
+                $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                $tempCart = [
+                  "user_id" => $user_id,
+                  "item_id" => $item->id,
+                  "attribute_collection" => json_encode($colorCollection),
+                  "coupon_id" => "0",
+                  "coupon_price" => "0",
+                  "quantity_withoutcoupon" => "0",
+                  "coupon_valid" => 'not_available',
+                  "updated_at" => $date
+                ];
+                // $mgs = __('Cantidad máxima de productos es: '.$qtyProdinCart);
+                $dataResponseOutput = ["type" => "danger", "msg" => 'Cantidad máxima de productos es: '.$qtyProdinCart];
+              }else{
+                $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                $qtyProdinCart += $qty;
+                $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                $tempCart = [
+                  "user_id" => $user_id,
+                  "item_id" => $item->id,
+                  "attribute_collection" => json_encode($colorCollection),
+                  "quantity" => $qtyProdinCart,
+                  "coupon_id" => "0",
+                  "coupon_price" => "0",
+                  "quantity_withoutcoupon" => "0",
+                  "coupon_valid" => 'not_available',
+                  "updated_at" => $date
+                ];
+                // $mgs = __('Producto actualizado');
+                $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado'];
+              }
+            }else{
+              if($sum_typesofquantities > $item->stock){
+                // $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                // $qtyProdinCart += $qty;
+                $qtyProdinCart = $item->stock;
+                $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                $tempCart = [
+                  "user_id" => $user_id,
+                  "item_id" => $item->id,
+                  "attribute_collection" => json_encode($colorCollection),
+                  "coupon_id" => "0",
+                  "coupon_price" => "0",
+                  "quantity_withoutcoupon" => "0",
+                  "coupon_valid" => 'not_available',
+                  "updated_at" => $date
+                ];
+                // $mgs = __('Cantidad máxima de productos es: '.$qtyProdinCart);
+                $dataResponseOutput = ["type" => "danger", "msg" => 'Cantidad máxima de productos es: '.$qtyProdinCart];
+              }else{
+                $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
+                // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
+                $qtyProdinCart += $qty;
+                $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
+                $tempCart = [
+                  "user_id" => $user_id,
+                  "item_id" => $item->id,
+                  "attribute_collection" => json_encode($colorCollection),
+                  "quantity" => $qtyProdinCart,
+                  "coupon_id" => "0",
+                  "coupon_price" => "0",
+                  "quantity_withoutcoupon" => "0",
+                  "coupon_valid" => 'not_available',
+                  "updated_at" => $date
+                ];
+                // $mgs = __('Producto actualizado');
+                $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado'];
+              }
+            }
+          }
+          Session::put('cart', $cart);
+          if(Auth::check() && Auth::user()->role !== 'admin'){
+            if(!empty(auth()->user()) || auth()->user() != ""){
+              if(isset($tempCart['quantity'])){
+                TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price'], 'coupon_valid' => $tempCart['coupon_valid']]);
+              }
+            }
+          }
+        }else{
+          if($qty_check == 1){
+            $cart[$item->id.'-'.$cart_item_key]['qty'] = $qty;
             // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
             $qtyProdinCart = $qty;
             $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
             $tempCart = [
-              "user_id" => $input['user_id'],
+              "user_id" => $user_id,
               "item_id" => $item->id,
               "attribute_collection" => json_encode($colorCollection),
               "quantity" => $qtyProdinCart,
@@ -664,13 +1947,15 @@ class CartRepository{
               "coupon_valid" => 'not_available',
               "updated_at" => $date
             ];
+            // $mgs = __('Producto agregado');
+            $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado'];
           }else{
-            $cart[$item->id.'-'.$cart_item_key]['qty'] +=  $qty;
+            $cart[$item->id.'-'.$cart_item_key]['qty'] += $qty;
             // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
             $qtyProdinCart += $qty;
             $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
             $tempCart = [
-              "user_id" => $input['user_id'],
+              "user_id" => $user_id,
               "item_id" => $item->id,
               "attribute_collection" => json_encode($colorCollection),
               "quantity" => $qtyProdinCart,
@@ -680,6 +1965,8 @@ class CartRepository{
               "coupon_valid" => 'not_available',
               "updated_at" => $date
             ];
+            // $mgs = __('Producto actualizado');
+            $dataResponseOutput = ["type" => "success", "msg" => 'Producto actualizado'];
           }
           Session::put('cart', $cart);
           if(Auth::check() && Auth::user()->role !== 'admin'){
@@ -687,131 +1974,14 @@ class CartRepository{
               TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price'], 'coupon_valid' => $tempCart['coupon_valid']]);
             }
           }
-
-          if($qty_check == 1){
-            // $mgs = __('Producto agregado. No existe este cupón (A)');
-            $mgs = __('Producto agregado. No existe este cupón');
-          }else{
-            // $mgs = __('Producto actualizado. No existe este cupón (A)');
-            $mgs = __('Producto actualizado. No existe este cupón');
-          }
-
-          $qty_check = 0;
-          return $mgs;
-        }
-      }
-    }else{
-      // echo "No hay un cupón activado para este producto (AF)";
-      // -------------- Si el carrito ESTÁ vacío.
-      if(!$cart || !isset($cart[$item->id.'-'.$cart_item_key])){
-        // echo "recién agregado";
-        $license_name = json_decode($item->license_name,true);
-        $license_key = json_decode($item->license_name,true);
-        $cart[$item->id.'-'.$cart_item_key] = [
-          'options_id' => $option_id,
-          'attribute' => $attribute,
-          'attribute_price' => $option_price,
-          "attribute_collection" => json_encode($colorCollection),
-          "name" => $item->name,
-          "slug" => $item->slug,
-          "sku" => $item->sku,
-          "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
-          "brand_name" => (isset($brand->name) && $brand->name != "") ? $brand->name : "",
-          "rootunit_id" => (isset($rootunit->id) && $rootunit->id != "") ? $rootunit->id : "",
-          "rootunit_name" => (isset($rootunit->name) && $rootunit->name != "") ? $rootunit->name : "",
-          "qty" => $qty,
-          "price" => PriceHelper::grandPrice($item),
-          "main_price" => $item->discount_price,
-          "photo" => $item->photo,
-          "type" => $item->item_type,
-          "item_type" => $item->item_type,
-          "coupon_id" => "0",
-          "coupon_price" => "0",
-          "quantity_withoutcoupon" => "0",
-          "coupon_valid" => 'not_available',
-          'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
-          'item_l_k' => $item->item_type == 'license' ? end($license_key) : null,
-        ];    
-        
-        Session::put('cart', $cart);
-        if(Auth::check() && Auth::user()->role !== 'admin'){
-          if(!empty(auth()->user()) || auth()->user() != ""){
-            $tempCart = [
-              "user_id" => $input['user_id'],
-              "item_id" => $item->id,
-              "attribute_collection" => json_encode($colorCollection),
-              "name" => $item->name,
-              "slug" => $item->slug,
-              "sku" => $item->sku,
-              "brand_id" => (isset($brand->id) && $brand->id != 0) ? $brand->id : "",
-              "quantity" => $qty,
-              "price" => PriceHelper::grandPrice($item),
-              "main_price" => $item->discount_price,
-              "photo" => $item->photo,
-              "is_type" => $item->is_type,
-              "item_type" => $item->item_type,
-              "coupon_id" => "0",
-              "coupon_price" => "0",
-              "quantity_withoutcoupon" => "0",
-              "coupon_valid" => 'not_available',
-              "created_at" => $date,
-              "updated_at" => $date,
-            ];
-            TempCart::insert($tempCart);
-          }
-        }
-        return __('Producto agregado');
-      }
-      // -------------- Si el carrito NO está vacío, verifique si este producto existe y luego incremente la cantidad.
-      if(isset($cart[$item->id.'-'.$cart_item_key])){
-        $cart = Session::get('cart');
-        $qtyProdinCart = $cart[$item->id.'-'.$cart_item_key]['qty'];
-        if($qty_check == 1){
-          $cart[$item->id.'-'.$cart_item_key]['qty'] =  $qty;
-          // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
-          $qtyProdinCart = $qty;
-          $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
-          $tempCart = [
-            "user_id" => $input['user_id'],
-            "item_id" => $item->id,
-            "attribute_collection" => json_encode($colorCollection),
-            "quantity" => $qtyProdinCart,
-            "coupon_id" => "0",
-            "coupon_price" => "0",
-            "quantity_withoutcoupon" => "0",
-            "coupon_valid" => 'not_available',
-            "updated_at" => $date
-          ];
-          $mgs = __('Producto agregado');
-        }else{
-          $cart[$item->id.'-'.$cart_item_key]['qty'] +=  $qty;
-          // $cart[$item->id.'-'.$cart_item_key]['subtotal'] = ($cart[$item->id.'-'.$cart_item_key]['price'] * $qty);
-          $qtyProdinCart += $qty;
-          $cart[$item->id.'-'.$cart_item_key]['attribute_collection'] = json_encode($colorCollection);
-          $tempCart = [
-            "user_id" => $input['user_id'],
-            "item_id" => $item->id,
-            "attribute_collection" => json_encode($colorCollection),
-            "quantity" => $qtyProdinCart,
-            "coupon_id" => "0",
-            "coupon_price" => "0",
-            "quantity_withoutcoupon" => "0",
-            "coupon_valid" => 'not_available',
-            "updated_at" => $date
-          ];
-          $mgs = __('Producto actualizado');
-        }
-        Session::put('cart', $cart);
-        if(Auth::check() && Auth::user()->role !== 'admin'){
-          if(!empty(auth()->user()) || auth()->user() != ""){
-            TempCart::where("user_id", "=", $tempCart['user_id'])->where("item_id", "=", $tempCart['item_id'])->update(['attribute_collection' => $tempCart['attribute_collection'], 'quantity' => $tempCart['quantity'], 'coupon_price' => $tempCart['coupon_price'], 'coupon_valid' => $tempCart['coupon_valid']]);
-          }
         }
         $qty_check = 0;
-        return $mgs;
+        // return $mgs;
+        return $dataResponseOutput;
       }
     }
   }
+  // -------------- VALIDAR SI EL PRODUCTO TIENE CÓDIGO DE PROMOCIÓN (PROMOCIÓN)
 	public function promoStore($request){
     $input = $request->all();
     $promo_code = PromoCode::where('status', 1)->whereCodeName($input['code'])->where('no_of_times', '>', 0)->first();
@@ -824,7 +1994,6 @@ class CartRepository{
         'code'  => $promo_code
       ];
       Session::put('coupon',$coupon);
-
       return [
         'status'  => true,
         'message' => __('¡Código promocional encontrado!')
@@ -836,10 +2005,12 @@ class CartRepository{
       ];
     }
   }
+  // -------------- OBTENER LA INFORMACIÓN DEL CARRITO
 	public function getCart(){
     $cart = Session::has('cart') ? Session::get('cart') : null;
     return $cart;
   }
+  // -------------- OBTENER EL DESCUENTO DEL PRODUCTO (PROMOCIÓN)
   public function getDiscount($discount,$type,$price){
     if($type == 'amount'){
       $sub = $discount;
@@ -849,7 +2020,6 @@ class CartRepository{
       $sub = $val * $discount;
       $total = $price - $sub;
     }
-
     return [
       'sub' => $sub,
       'total' => $total
