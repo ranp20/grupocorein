@@ -11,10 +11,20 @@ class SettingRepository{
     $image_files = ['logo','favicon','loader','feature_image','announcement','footer_gateway_img','maintainance_image'];
     $social_fields = ['facebook_check','google_check'];
     foreach($image_files as $image_file){
-      if ($file = $request->file($image_file)) {
-        $input[$image_file] = ImageHelper::handleUpdatedUploadedImage($file,'/assets/images',$data,'/assets/images/',$image_file);
+      echo $image_file."<br>";
+      if($file = $request->file($image_file)){
+        if($image_file == "announcement"){
+          $input[$image_file] = ImageHelper::handleUpdatedUploadedImage($file,'/assets/images/announcements',$data,'/assets/images/announcements/',$image_file);
+        }else{
+          $input[$image_file] = ImageHelper::handleUpdatedUploadedImage($file,'/assets/images',$data,'/assets/images/',$image_file);
+        }
       }
+      
+      // if ($file = $request->file($image_file)) {
+      //   $input[$image_file] = ImageHelper::handleUpdatedUploadedImage($file,'/assets/images',$data,'/assets/images/',$image_file);
+      // }
     }
+    // exit();
     if($request->social_icons && $request->social_links){
       $links = [
         'icons'=>$request->social_icons,

@@ -116,6 +116,9 @@ class ItemRepository{
       }
     }
     $input['is_type'] = 'undefine';
+    if($request->has('stocktype_id')){
+      $input['stocktype_id'] = $request->stocktype_id;
+    }
     /*-- NUEVO CONTENIDO (INICIO) --*/
     if($request->hasFile('adj_doc')){
       if($request->file('adj_doc')->isValid()){
