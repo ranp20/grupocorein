@@ -41,7 +41,8 @@
 .btn,
 .footer-social-links a,
 .a2a_kit a,
-.brand-list::-webkit-scrollbar-thumb
+.brand-list::-webkit-scrollbar-thumb,
+.c-contBrandsFiltersByChcks::-webkit-scrollbar-thumb
 {
     background : <?php echo $color?>  !important;
 }

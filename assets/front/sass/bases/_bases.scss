@@ -121,7 +121,7 @@ input[f-hidden="aria-hidden"]{
 	display: none;
 	background-color: #fff;
 	border: none;
-	line-height: unset;	
+	line-height: unset;
 }
 .d-non{
 	display: none !important;
@@ -149,6 +149,15 @@ input[f-hidden="aria-hidden"]{
 	margin: 0;
 	padding: 0;
 }
+// ------------ CLASES PARA INPUTS OCULTOS PERO CON FUNCIONALIDAD DINÁMICA(INICIO)
+.d-non_yipt{display: none !important;opacity: 0 !important;width: 0 !important;height: 0 !important;visibility: hidden !important;margin: 0 !important;padding: 0 !important;}
+.hdd-control_yipt{display: none;opacity: 0;width: 0;height: 0;visibility: hidden;margin: 0;padding: 0;}
+.non-visvalipt_yipt{width: 0 !important;height: 0 !important;display: none !important;opacity: 0 !important;visibility: hidden !important;display: none !important;background-color: #fff !important;border: none !important;line-height: unset !important;}
+.h-alternative-shwnon_yipt{width: 0;height: 0;display: none;opacity: 0;visibility: hidden;display: none;background-color: #fff;border: none;line-height: unset;}
+.s-fkeynone-step_yipt{width: 0;height: 0;display: none;opacity: 0;visibility: hidden;display: none;background-color: #fff;border: none;line-height: unset;}
+input[f-hidden="aria-hidden_yipt"]{width: 0;height: 0;display: none;opacity: 0;visibility: hidden;background-color: #fff;border: none;line-height: unset;}
+// ------------ CLASES PARA INPUTS OCULTOS PERO CON FUNCIONALIDAD DINÁMICA(FIN)
+
 .w-50px{width: 50px;}
 .h-50px{height: 50px;}
 .w-100{width: 100%;}
@@ -1233,6 +1242,7 @@ img{
 }
 .table-responsive.shopping-cart{
 	margin-bottom: 0;
+	position: relative;
 }
 .site-header .toolbar .toolbar-item{
 	& > a{
@@ -1774,4 +1784,269 @@ a[data-zoom-id] img, .mz-thumb img{
 .mz-thumb:not(.mz-thumb-selected):hover img,
 .mz-thumb.mz-thumb-selected img{
 	border: thin solid rgb(180, 180, 180) !important;
+}
+// ----------------- BANDERILLAS PARA LOS PRODUCTOS
+.product-flag{
+	position: relative;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	&__c{
+		position: absolute;
+		bottom: 1px;
+		&.pos-r{
+			position: relative;
+			width: auto;
+			left: -8px;
+			margin-bottom: 8px;
+			overflow: hidden;
+		}
+		&.pos-rleft0{
+			position: relative;
+			width: auto;
+			left: 0;
+			margin-bottom: 8px;
+			overflow: hidden;
+		}
+		&__cType{
+			$bg_flag__onsale: blue;
+			$bg_flag__specialoffer: green;
+			$bg_flag__applycoupon: red;
+			&.bg__applycoupon{
+				position: relative;
+				background-color: $bg_flag__applycoupon;
+				padding: 2px 7px 3px 6px;
+				&:after{
+					content: "";
+					width: 10px;
+					height: 26px;
+					border-right: 10px solid transparent;
+					border-top: 26px solid $bg_flag__applycoupon;
+					-moz-box-sizing: border-box;
+					-webkit-box-sizing: border-box;
+					box-sizing: border-box;
+					position: absolute;
+					top: 0;
+					right: -10px;
+				}
+			}
+			&.bg__onsale{
+				position: relative;
+				background-color: $bg_flag__onsale;
+				padding: 2px 5px 3px 5px;
+				&:after{
+					content: "";
+					width: 10px;
+					height: 26px;
+					border-right: 10px solid transparent;
+					border-top: 26px solid $bg_flag__onsale;
+					-moz-box-sizing: border-box;
+					-webkit-box-sizing: border-box;
+					box-sizing: border-box;
+					position: absolute;
+					top: 0;
+					right: -10px;
+				}
+			}
+			&.bg__specialoffer{
+				position: relative;
+				background-color: $bg_flag__specialoffer;
+				padding: 2px 5px 3px 5px;
+				&:after{
+					content: "";
+					width: 10px;
+					height: 26px;
+					border-right: 10px solid transparent;
+					border-top: 26px solid $bg_flag__specialoffer;
+					-moz-box-sizing: border-box;
+					-webkit-box-sizing: border-box;
+					box-sizing: border-box;
+					position: absolute;
+					top: 0;
+					right: -10px;
+				}
+			}
+			&__spn{
+				font-size: 14px;
+				color: #fff;
+			}
+		}
+	}
+}
+.productincartlist-flag{
+	position: relative;
+	&__c{
+		position: absolute;
+		bottom: 1px;
+		&.pos-r{
+			position: relative;
+			width: auto;
+			left: 0;
+			margin-bottom: 0px;
+			overflow: hidden;
+			display: flex;
+		}
+		&.pos-rleft0{
+			position: relative;
+			width: auto;
+			left: 0;
+			margin-bottom: 0px;
+			overflow: hidden;
+			display: flex;
+		}
+		&__cType{
+			$bg_flag__onsale: blue;
+			$bg_flag__specialoffer: green;
+			$bg_flag__applycoupon: red;
+			border-radius: 4px;
+			&.bg__applycoupon{
+				position: relative;
+				background-color: $bg_flag__applycoupon;
+				padding: 2px 7px 3px 6px;
+				// &:after{
+				// 	content: "";
+				// 	width: 10px;
+				// 	height: 26px;
+				// 	border-right: 10px solid transparent;
+				// 	border-top: 26px solid $bg_flag__applycoupon;
+				// 	-moz-box-sizing: border-box;
+				// 	-webkit-box-sizing: border-box;
+				// 	box-sizing: border-box;
+				// 	position: absolute;
+				// 	top: 0;
+				// 	right: -10px;
+				// }
+			}
+			&.bg__onsale{
+				position: relative;
+				background-color: $bg_flag__onsale;
+				padding: 2px 5px 3px 5px;
+				// &:after{
+				// 	content: "";
+				// 	width: 10px;
+				// 	height: 26px;
+				// 	border-right: 10px solid transparent;
+				// 	border-top: 26px solid $bg_flag__onsale;
+				// 	-moz-box-sizing: border-box;
+				// 	-webkit-box-sizing: border-box;
+				// 	box-sizing: border-box;
+				// 	position: absolute;
+				// 	top: 0;
+				// 	right: -10px;
+				// }
+			}
+			&.bg__specialoffer{
+				position: relative;
+				background-color: $bg_flag__specialoffer;
+				padding: 2px 5px 3px 5px;
+				// &:after{
+				// 	content: "";
+				// 	width: 10px;
+				// 	height: 26px;
+				// 	border-right: 10px solid transparent;
+				// 	border-top: 26px solid $bg_flag__specialoffer;
+				// 	-moz-box-sizing: border-box;
+				// 	-webkit-box-sizing: border-box;
+				// 	box-sizing: border-box;
+				// 	position: absolute;
+				// 	top: 0;
+				// 	right: -10px;
+				// }
+			}
+			&__spn{
+				font-size: 14px;
+				color: #fff;
+			}
+		}
+	}
+}
+// ----------------- BANDERILLAS PARA LOS PRODUCTOS
+.product-avaicoupon{
+	position: relative;
+	user-select: none;
+	&.post-abs{
+		position: absolute;
+		top: 5px;
+    left: 4px;
+	}
+	&__c{
+		position: absolute;
+		bottom: 1px;
+		&.pos-r{
+			position: relative;
+			width: auto;
+			margin-bottom: 8px;
+		}
+		&__cType{
+			position: relative;
+			padding: 6px;
+			width: 42px;
+			height: 42px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+			border-radius: 50%;
+			background-color: red;
+			box-shadow: 0px 0px 0px 2px #fff;
+			&.bg__avaicoupon{
+				&--10{
+					background-color: red;
+				}
+				&--20{
+					background-color: #caca25;
+				}
+				&--30{
+					background-color: orange;
+				}
+				&--50{
+					background-color: red;
+				}
+				&--70{
+					background-color: #572364;
+				}
+				&--100{
+					background-color: #52cf5a;
+				}
+			}
+			&__spn{
+				color: #fff;
+				position: relative;
+				&__txtTitle{
+					font-size: 9px;
+					font-family: sans-serif !important;
+					font-weight: 500;
+					position: relative;
+					top: 2px;
+				}
+				&__txtNumb{
+					font-weight: bold;
+					font-size: 15px;
+					position: relative;
+					top: -7px;
+				}
+			}
+		}
+	}
+}
+/* --------- ESTILOS PERSONALIZADOS PARA NOTIFY.JS */
+.col-10.col-xs-11.col-sm-4.alert.animated.fadeInDown button.close{
+	position: relative;
+	top: 3px !important;
+	// border: thin solid #f5f5f5;
+	// border: thin solid #efefef;
+	border: thin solid #ddd;
+	border-radius: 50%;
+	width: 28px;
+	height: 28px;
+	font-size: 28px !important;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	padding-left: 2px;
+}
+.col-10.col-xs-11.col-sm-4.alert.animated.fadeInDown button.close:hover{
+	background-color: #ddd;
 }

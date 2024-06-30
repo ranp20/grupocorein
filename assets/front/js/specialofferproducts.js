@@ -1,42 +1,6 @@
 $(() => {
-  function lazy(){
-    $(".lazy").Lazy({
-      scrollDirection: 'vertical',
-      effect: "fadeIn",
-      effectTime: 1000,
-      threshold: 0,
-      visibleOnly: false,
-      onError: function (element){
-        console.log('error loading ' + element.data('src'));
-      }
-    });
-  }
   $(document).ready(function (){
-    lazy();
-    function number_format (number, decimals =2, dec_point, thousands_sep){
-      // Strip all characters but numerical ones.
-      number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
-      var n = !isFinite(+number) ? 0 : +number,
-      prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
-      sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
-      dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
-      s = '',
-      toFixedFix = function (n, prec){
-        var k = Math.pow(10, prec);
-        return '' + Math.round(n * k) / k;
-      };
-      // Fix for IE parseFloat(0.55).toFixed(0) = 0;
-      s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
-      if(s[0].length > 3){
-        s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
-      }
-      if((s[1] || '').length < prec){
-        s[1] = s[1] || '';
-        s[1] += new Array(prec - s[1].length + 1).join('0');
-      }
-      return s.join(dec);
-    }
-    // announcement banner magnific popup
+    // -------------- VALIDACIÓN DE POP-UP PARA BANNER DE ANUNCIO
     if(mainbs.is_announcement == 1){
       $('.announcement-banner').magnificPopup({
         type: 'inline',
@@ -52,11 +16,11 @@ $(() => {
         }
       });
     }
-    // Mobile Category
+    // -------------- CATEGORÍA (MÓVIL)
     $('#category_list .has-children .category_search span').on('click', function (e){
       e.preventDefault();
     });
-    // Toggle mobile serch
+    // -------------- BUSCADOR TOOGLE (MÓVIL)
     $('.close-m-serch').on('click', function (){
       $('.topbar .search-box-wrap').toggleClass('d-none');
     });
@@ -220,32 +184,42 @@ $(() => {
       if(current_qty > 1){
         $('.cart-amount').val(current_qty - 1);
       }else{
-        error('Minumum Quantity Must Be 1');
+        dangerNotification('La cantidad mínima debe ser 1');
       }
     });
     // product quintity select js Start
     $(document).on('click', '.addclick', function (){
       let current_stock = parseInt($('#current_stock').val());
       let current_qty = parseInt($('.cart-amount').val());
-      if(current_qty < current_stock){
+      if(current_stock == "unlimited" || current_stock == ""){
         $('.cart-amount').val(current_qty + 1);
       }else{
-        error('Product Quantity Maximum ' + current_stock);
+        if(current_qty < current_stock){
+          $('.cart-amount').val(current_qty + 1);
+        }else{
+          dangerNotification('Cantidad máxima de producto es: '+current_stock);
+        }
       }
     });
     $(document).on('keyup', '.cart-amount', function (){
       let current_stock = parseInt($('#current_stock').val());
       let key_val = parseInt($(this).val());
-      if(key_val > current_stock){
-        error('Product Maximum Quantity ' + current_stock);
-        $('.cart-amount').val(current_stock);
+      if(current_stock == "unlimited" || current_stock == ""){
+      }else{
+        if(key_val > current_stock){
+          dangerNotification('Cantidad máxima de producto es: '+current_stock);
+          $('.cart-amount').val(current_stock);
+        }
       }
       if(key_val <= 0){
         $('.cart-amount').val(1);
-        error('Product Minimum Quantity' + 1);
+        dangerNotification('La cantidad mínima debe ser '+1);
       }
-      if(key_val > 0 && key_val < current_stock){
-        $('.cart-amount').val(key_val);
+      if(current_stock == "unlimited" || current_stock == ""){
+      }else{
+        if(key_val > 0 && key_val < current_stock){
+          $('.cart-amount').val(key_val);
+        }
       }
     });
     $(document).on('click', '.wishlist_store', function (e){
@@ -461,141 +435,7 @@ $(() => {
       });
     });
     // compare script end
-    // cart script start
-    /*
-    $(document).on("change", ".attribute_option", function (){
-      getData();
-    });
-    $(document).on("keyup", ".cart-amount", function (){
-      getData();
-    });
-    $(document).on("click", ".increaseQty", function (){
-      getData();
-    });
-    $(document).on("click", ".increaseQtycart", function (){
-      let item_key = $(this).attr('data-target');
-      let item_id = $(this).attr('data-id');
-      let qty = parseInt($(this).parent().find('input').val()) +1;
-      cartSubmit(item_key,item_id,qty);
-      getData();
-    });
-    $(document).on("click", ".decreaseQty", function (){
-      getData();
-    });
-    $(document).on("click", ".decreaseQtycart", function (){
-      let item_key = $(this).attr('data-target');
-      let item_id = $(this).attr('data-id');
-      let qty = parseInt($(this).parent().find('input').val()) -1;
-      
-      if(qty>0){
-        cartSubmit(item_key,item_id,qty);
-        getData();
-      }
-    });
-    $(document).on("click", "#add_to_cart", function (){
-      getData(1);
-    });
-    $(document).on("click", "#but_to_cart", function (){
-      getData(1, 0, 0, 0, 1);
-    });
-    $(document).on("click", ".add_to_single_cart", function (){
-      getData(1, $(this).attr("data-target"));
-    });
-    function cartSubmit(item_key,item_id,cartQty){
-      getData(1, item_key,item_id, cartQty);
-    };
-    function getData(status = 0, check = 0, item_key = 0, qty = 0, add_type = 0){
-      let itemId;
-      let type;
-      if(check != 0){
-        itemId = check;
-        type = 1;
-      }else{
-        itemId = $("#item_id").val();
-        type = 0;
-      }
 
-
-      let options_prices = optionPrice();
-      let totalOptionPrice = parseFloat(optionPriceSum(options_prices));
-      
-      let attribute_ids = $(".attribute_option :selected")
-        .map(function (i, el){
-          return $(el).attr("data-type");
-        })
-        .get();
-      let options_ids = $(".attribute_option :selected")
-        .map(function (i, el){
-          return $(el).attr("data-href");
-        })
-        .get();
-
-      let quantity;
-      quantity = parseInt(getQuantity());
-      if(isNaN(quantity)){
-        quantity = 1;
-      }
-      if(qty != 0){
-        quantity = qty;
-      }
-
-      let setCurrency = $("#set_currency").val();
-      let currency_direction = $("#currency_direction").val();
-
-      let demoPrice = parseFloat($("#demo_price").val());
-      let subPrice = parseFloat(demoPrice + totalOptionPrice);
-      let mainPrice = subPrice * quantity;
-      mainPrice = number_format(mainPrice,2,decimal_separator,thousand_separator);
-      if(currency_direction == 0){
-        $('#main_price').html(mainPrice + setCurrency);
-      }else{
-        $('#main_price').html(setCurrency + mainPrice);
-      }
-
-      if(status == 1){
-        let addToCartUrl = `${mainurl}/product/add/cart?item_id=${itemId}&options_ids=${options_ids}&attribute_ids=${attribute_ids}&quantity=${quantity}&type=${type}&item_key=${item_key}&add_type=${add_type}`;
-        $.ajax({
-          type: "GET",
-          url: addToCartUrl,
-          success: function (data){
-            $(".cart_count").text(data.qty);
-            $(".cart_view_header").load(
-              $("#header_cart_load").attr("data-target")
-            );
-            if(qty){
-              $("#view_cart_load").load(
-                $("#cart_view_load").attr("data-target")
-              );
-            }
-            if(add_type == 1){
-              location.href = mainurl + '/cart';
-            }else{
-              successNotification(data.message);
-            }
-          },
-        });
-      }
-    }
-    */
-    function optionPrice(){
-      let option_prices = $(".attribute_option :selected")
-      .map(function (i, el){
-          return $(el).attr("data-target");
-      })
-      .get();
-      return option_prices;
-    }
-    function getQuantity(){
-      let quantity = $(".qtyValue").val();
-      return parseInt(quantity);
-    }
-    function optionPriceSum(options_prices){
-      var price = 0;
-      $.each(options_prices, function (i, v){
-        price += parseFloat(v);
-      });
-      return price;
-    }
     // cart script end
     $(document).on("submit", "#coupon_form", function (e){
       e.preventDefault();

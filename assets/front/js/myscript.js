@@ -14,6 +14,16 @@ $(function($){
   }
   $(document).ready(function(){
     lazy();
+    // -------------- VALIDAR SI ES O NO UN OBJETO JSON
+    function esJSON(texto){
+      try{
+        JSON.parse(texto);
+        return true;
+      }catch(error){
+        return false;
+      }
+    }  
+    // -------------- DAR FORMATO A LOS NÚMEROS
     function number_format(number, decimals =2, dec_point, thousands_sep){
       // Strip all characters but numerical ones.
       number =(number + '').replace(/[^0-9+\-Ee.]/g, '');
@@ -37,7 +47,7 @@ $(function($){
       }
       return s.join(dec);
     }
-    // announcement banner magnific popup
+    // -------------- VALIDACIÓN DE POP-UP PARA BANNER DE ANUNCIO
     if(mainbs.is_announcement == 1){
       $('.announcement-banner').magnificPopup({
         type: 'inline',
@@ -57,11 +67,11 @@ $(function($){
         }
       });
     }
-    // Mobile Category
+    // -------------- CATEGORÍA (MÓVIL)
     $('#category_list .has-children .category_search span').on('click', function(e){
       e.preventDefault();
     });
-    // Toggle mobile serch
+    // -------------- BUSCADOR TOOGLE (MÓVIL)
     $('.close-m-serch').on('click', function(){
       $('.topbar .search-box-wrap').toggleClass('d-none');
     });
@@ -99,7 +109,7 @@ $(function($){
             for(var error in data.errors){
               dangerNotification(data.errors[error]);
             }
-          } else{
+          }else{
             if($this.hasClass("subscription-form")){
               $(".close-popup").click();
             }
@@ -212,43 +222,177 @@ $(function($){
         $('.' + view).addClass('d-none');
         if(response.data === undefined){
           $('.' + view + '_not_found').removeClass('d-none');
-        } else{
+        }else{
           $('.' + view + '_not_found').addClass('d-none');
         }
       });
     });
-    // product quintity select js Start
+    // -------------- ELIMINAR PRODUCTO DESDE HEADERCARTLIST
+    $(document).on("click",".remwithsvgofheadercartlist",function(e){
+      e.preventDefault();
+      
+      var csrfTokenFrm = $("#csl-fGv8n09c__sGaYs45").find("input[name='_token']").val();
+      let urlsend = $(this).attr("href");
+      let clistItems = $(this).parent().parent();
+      let requestSent = "";
+      $.ajax({
+        headers: {
+          'X-CSRF-TOKEN': csrfTokenFrm
+        },
+        type: 'GET',
+        url: urlsend,
+        // data: idprod,
+        processData: false,
+        contentType: false,
+        beforeSend: function(){
+          
+        },
+        success: function(e){          
+          let res = JSON.parse(e);
+          if(res.type == "success"){
+            $.notify({
+              // options
+              title: `<strong>${res.mssg}</strong>`,
+              message: '',
+              icon: "fas fa-check-circle",
+            },{
+              // settings
+              element: "body",
+              position: null,
+              type: "success",
+              allow_dismiss: true,
+              newest_on_top: false,
+              showProgressbar: false,
+              placement: {
+                from: "top",
+                align: "right",
+              },
+              offset: 20,
+              spacing: 10,
+              z_index: 1031,
+              delay: 5000,
+              timer: 1000,
+              url_target: "_blank",
+              mouse_over: null,
+              animate: {
+                enter: "animated fadeInDown",
+                exit: "animated fadeOutUp",
+              },
+              onShow: null,
+              onShown: null,
+              onClose: null,
+              onClosed: null,
+              icon_type: "class",
+            });
+            if($("#header_cart_load").length){
+              $(".cart_view_header").load($("#header_cart_load").attr("data-target"));
+              // -------------- HACER UN REFRESH AL CONTENIDO DE LA PÁGINA DE CART...
+              if($("#ccksj934JBjFKScsKjs").length){
+                $("#rnvc_cart").load(location.href + " #ccksj934JBjFKScsKjs");
+              }
+            }
+            return false;
+          }else{
+            $.notify({
+              // options
+              title: `<strong>Hubo un error al eliminar el producto.</strong>`,
+              message: '',
+              icon: 'flaticon-alarm-1',
+            },{
+              // settings
+              element: 'body',
+              position: null,
+              type: "danger",
+              allow_dismiss: true,
+              newest_on_top: false,
+              showProgressbar: false,
+              placement: {
+                from: "top",
+                align: "right"
+              },
+              offset: 20,
+              spacing: 10,
+              z_index: 1031,
+              delay: 5000,
+              timer: 1000,
+              url_target: '_blank',
+              mouse_over: null,
+              animate: {
+                enter: 'animated fadeInDown',
+                exit: 'animated fadeOutUp'
+              },
+              onShow: null,
+              onShown: null,
+              onClose: null,
+              onClosed: null,
+              icon_type: 'class'
+            });
+            return false;
+          }
+        },
+        complete: function(){
+          requestSent = false;
+        }
+      });
+      
+
+    });
+    // -------------- DISMINUIR CANTIDAD DE PRODUCTOS (DETALLE DEL PRODUCTO)
     $(document).on('click', '.subclick', function(){
-      let current_qty = parseInt($('.cart-amount').val());
-      if(current_qty > 1){
-        $('.cart-amount').val(current_qty - 1);
-      } else{
-        error('Minumum Quantity Must Be 1');
+      let stocktoprodvalid = $(this).parent().find(".currentbyprod_stock").val();
+      let current_qty = parseInt($(this).parent().find('.cart-amount').val());
+      if(stocktoprodvalid == "unlimited" || stocktoprodvalid == ""){
+        console.log("El stock es ilimitado");
+        if(current_qty > 1){
+          $(this).parent().find('.cart-amount').val(current_qty - 1);
+        }else{
+          dangerNotification('La cantidad mínima debe ser 1');
+        }
+      }else{
+        if(current_qty > 1){
+          $(this).parent().find('.cart-amount').val(current_qty - 1);
+        }else{
+          dangerNotification('La cantidad mínima debe ser 1');
+        }
       }
     });
-    // product quintity select js Start
+    // -------------- AÑADIR CANTIDAD DE PRODUCTOS (DETALLE DEL PRODUCTO)
     $(document).on('click', '.addclick', function(){
-      let current_stock = parseInt($('#current_stock').val());
-      let current_qty = parseInt($('.cart-amount').val());
-      if(current_qty < current_stock){
-        $('.cart-amount').val(current_qty + 1);
-      } else{
-        error('Product Quantity Maximum ' + current_stock);
+      let stocktoprodvalid = $(this).parent().find(".currentbyprod_stock").val();
+      let current_qty = parseInt($(this).parent().find('.cart-amount').val());
+      if(stocktoprodvalid == "unlimited" || stocktoprodvalid == ""){
+        $(this).parent().find('.cart-amount').val(current_qty + 1);
+      }else{
+        let stocktoprodvalid_format = parseInt(stocktoprodvalid);
+        if(current_qty < stocktoprodvalid_format){
+          $(this).parent().find('.cart-amount').val(current_qty + 1);
+        }else{
+          dangerNotification('Cantidad máxima de producto es: '+stocktoprodvalid_format);
+        }
       }
     });
+    // -------------- INPUT DE CANTIDAD DE PRODUCTOS (DETALLE DEL PRODUCTO)
     $(document).on('keyup', '.cart-amount', function(){
-      let current_stock = parseInt($('#current_stock').val());
+      let stocktoprodvalid = $(this).parent().find(".currentbyprod_stock").val();
       let key_val = parseInt($(this).val());
-      if(key_val > current_stock){
-        error('Product Maximum Quantity ' + current_stock);
-        $('.cart-amount').val(current_stock);
+      if(stocktoprodvalid == "unlimited" || stocktoprodvalid == ""){
+      }else{
+        let stocktoprodvalid_format = parseInt(stocktoprodvalid);
+        if(key_val > stocktoprodvalid_format){
+          dangerNotification('Cantidad máxima de producto es: '+stocktoprodvalid_format);
+          $('.cart-amount').val(stocktoprodvalid_format);
+        }
       }
       if(key_val <= 0){
         $('.cart-amount').val(1);
-        error('Product Minimum Quantity' + 1);
+        dangerNotification('La cantidad mínima debe ser '+1);
       }
-      if(key_val > 0 && key_val < current_stock){
-        $('.cart-amount').val(key_val);
+      if(stocktoprodvalid == "unlimited" || stocktoprodvalid == ""){
+      }else{
+        let stocktoprodvalid_format = parseInt(stocktoprodvalid);
+        if(key_val > 0 && key_val < stocktoprodvalid_format){
+          $('.cart-amount').val(key_val);
+        }
       }
     });
     $(document).on('click', '.wishlist_store', function(e){
@@ -257,9 +401,9 @@ $(function($){
       $.get(wishlist_url, function(response){
         if(response.status == 0){
           location.href = response.link;
-        } else if(response.status == 2){
+        }else if(response.status == 2){
           dangerNotification(response.message);
-        } else{
+        }else{
           $('.wishlist1').addClass('d-none');
           $('.wishlist2').removeClass('d-none');
           $('.wishlist_count').text(response.count)
@@ -296,7 +440,7 @@ $(function($){
         filter_prices = filter_prices.split(",");
         $("#search_form #minPrice").val(filter_prices[0]);
         $("#search_form #maxPrice").val(filter_prices[1]);
-      } else{
+      }else{
         $("#search_form #minPrice").val('');
         $("#search_form #maxPrice").val('');
       }
@@ -314,7 +458,7 @@ $(function($){
       $(this).parent().addClass('active');
       if($(this).attr('data-href')){
         filter = $(this).attr('data-href');
-      } else{
+      }else{
         filter = $(this).attr('data-href');
       }
       $("#search_form #quick_filter").val(filter);
@@ -324,7 +468,7 @@ $(function($){
     function removePage(){
       $("#search_form #page").val('');
     }
-    // ---------- SEARCH PRODUCTO IN DESKTOP
+    // -------------- SEARCH PRODUCTO IN DESKTOP
     $(document).on('keyup', '#__product__search', function(e){
       let search = $(this).val();
       let category = '';
@@ -342,11 +486,11 @@ $(function($){
             $('.serch-result').html(response);
           });
         }
-      } else{
+      }else{
         $('.serch-result').addClass('d-none');
       }
     });
-    // ---------- SEARCH PRODUCTO IN MOBILE
+    // -------------- SEARCH PRODUCTO IN MOBILE
     $(document).on('keyup', '#__product__search-mob', function(e){
       let search = $(this).val();
       let category = '';
@@ -364,11 +508,11 @@ $(function($){
             $('.serch-result').html(response);
           });
         }
-      } else{
+      }else{
         $('.serch-result').addClass('d-none');
       }
     });
-    // ----------------------- NUEVO CONTENIDO(INICIO)
+    // -------------- NUEVO CONTENIDO(INICIO)
     function handleKeyPress(event){
       const inputField = document.getElementById('__product__search');
       const inputField2 = document.getElementById('__product__search-mob');
@@ -396,7 +540,7 @@ $(function($){
           inputField2.value = textContent.trim();
           nextOption.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
-      } else if(event.key === 'ArrowUp'){
+      }else if(event.key === 'ArrowUp'){
         event.preventDefault();
         if(selectedOptionIndex > 0){
           if(highlightedOption){
@@ -408,14 +552,14 @@ $(function($){
           inputField.value = textContent.trim();
           inputField2.value = textContent.trim();
           previousOption.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        } else if(selectedOptionIndex === 0){
+        }else if(selectedOptionIndex === 0){
           inputField.value = '';
           inputField.focus();
           inputField2.value = '';
           inputField2.focus();
           highlightedOption.classList.remove('highlighted');
         }
-      } else if(event.key === 'Enter' && highlightedOption){
+      }else if(event.key === 'Enter' && highlightedOption){
         highlightedOption.click();
         $('.serch-result').addClass('d-none');
       }      
@@ -430,7 +574,7 @@ $(function($){
       alert("Producto: "+prod_name+"\n"+"Precio: "+prod_price);
       */
     });
-    // ----------------------- NUEVO CONTENIDO(FIN)
+    // -------------- NUEVO CONTENIDO(FIN)
     $(document).on('click', '#view_all_search_', function(){
       $('#header_search_form').submit();
       $('#header_search_form-mob').submit();
@@ -441,7 +585,7 @@ $(function($){
       $(this).parent().addClass('active');
       if($(this).attr('data-href')){
         category = $(this).attr('data-href');
-      } else{
+      }else{
         category = $(this).attr('data-href');
       }
       removePage();
@@ -456,7 +600,7 @@ $(function($){
       $(this).parent().addClass('active');
       if($(this).attr('data-href')){
         category = $(this).attr('data-href');
-      } else{
+      }else{
         category = $(this).attr('data-href');
       }
       $("#search_form #childcategory").val('');
@@ -469,7 +613,7 @@ $(function($){
       $(this).parent().addClass('active');
       if($(this).attr('data-href')){
         childcategory = $(this).attr('data-href');
-      } else{
+      }else{
         childcategory = $(this).attr('data-href');
       }
       removePage();
@@ -544,7 +688,7 @@ $(function($){
             for(var error in data.errors){
               dangerNotification(data.errors[error]);
             }
-          } else{
+          }else{
             successNotification(data);
             $this.find("textarea").val("");
           }
@@ -561,7 +705,7 @@ $(function($){
       $.get(compare_url, function(data){
         if(data.status == 1){
           successNotification(data.message);
-        } else{
+        }else{
           dangerNotification(data.message);
         }
         $(".compare_count").text(data.compare_count);
@@ -584,24 +728,8 @@ $(function($){
     $(document).on("click", ".increaseQty", function(){
       getData();
     });
-    $(document).on("click", ".increaseQtycart", function(){
-      let item_key = $(this).attr('data-target');
-      let item_id = $(this).attr('data-id');
-      let qty = parseInt($(this).parent().find('input').val()) +1;
-      cartSubmit(item_key,item_id,qty);
-      getData();
-    });
     $(document).on("click", ".decreaseQty", function(){
       getData();
-    });
-    $(document).on("click", ".decreaseQtycart", function(){
-      let item_key = $(this).attr('data-target');
-      let item_id = $(this).attr('data-id');
-      let qty = parseInt($(this).parent().find('input').val()) -1;      
-      if(qty>0){
-        cartSubmit(item_key,item_id,qty);
-        getData();
-      }
     });
     $(document).on("click", "#add_to_cart", function(){
       getData(1);
@@ -628,7 +756,7 @@ $(function($){
       if(check != 0){
         itemId = check;
         type = 1;
-      } else{
+      }else{
         itemId = $("#item_id").val();
         type = 0;
       }
@@ -662,7 +790,7 @@ $(function($){
       mainPrice = number_format(mainPrice,2,decimal_separator,thousand_separator);
       if(currency_direction == 0){
         $('#main_price').html(mainPrice + setCurrency);
-      } else{
+      }else{
         $('#main_price').html(setCurrency + mainPrice);
       }
 
@@ -674,31 +802,84 @@ $(function($){
       };
 
       let coupon_id = ($("#setcurr_couponid") && $("#setcurr_couponid").length > 0) ? $("#setcurr_couponid").val() : "0";
-
+      let headercartListLoaded = false;
+      let cartListLoaded = false;
       if(status == 1){
         let addToCartUrl = `${mainurl}/product/add/cart?item_id=${itemId}&options_ids=${options_ids}&attribute_ids=${attribute_ids}&quantity=${quantity}&type=${type}&coupon_id=${coupon_id}&item_key=${item_key}&add_type=${add_type}&attr_color_code=${colorAttrCollection['color_code']}&attr_color_name=${colorAttrCollection['color_name']}`;
         $.ajax({
           type: "GET",
           url: addToCartUrl,
+          contentType: false,
+          cache: false,
+          processData: false,
           success: function(data){
-            // console.log(data);
-            // console.log(item_key);
             if($(`.add_to_single_cart[data-id=${item_key}]`).length){
               $(`.add_to_single_cart[data-id=${item_key}]`).attr('data-qty', parseInt(qty));
             }
             $(".cart_count").text(data.qty);
-            // Hacer un refresh del carrito de compras flotante en el header...
-            $(".cart_view_header").load( $("#header_cart_load").attr("data-target") );
-            if(qty){
-              if($("#view_cart_load").length){
-                $("#view_cart_load").load($("#cart_view_load").attr("data-target"));
+            if(data.res.type == "success"){
+              if(add_type == 1){
+                location.href = mainurl + '/cart';
+              }else{
+                // -------------- HACER UN REFRESH DEL CARTHEADER...
+                if(!headercartListLoaded){
+                  $(".cart_view_header").load($("#header_cart_load").attr("data-target"), function(){
+                    headercartListLoaded = true;
+                  });
+                }
+                // -------------- HACER UN REFRESH DEL CART...
+                if(data.qty){
+                  if($("#view_cart_load").length){
+                    if(!cartListLoaded){
+                      $("#view_cart_load").load($("#cart_view_load").attr("data-target"), function(){
+                        cartListLoaded = true;
+                      });
+                    }
+                  }
+                }
+                successNotification(data.res.msg);
               }
-            }
-            if(add_type == 1){
-              location.href = mainurl + '/cart';
-            } else{
-              successNotification(data.message);
-            }
+            }else if(data.res.type == "danger"){
+              if(add_type == 1){
+                location.href = mainurl + '/cart';
+              }else{
+                // -------------- HACER UN REFRESH DEL CARTHEADER...
+                if(!headercartListLoaded){
+                  $(".cart_view_header").load($("#header_cart_load").attr("data-target"), function(){
+                    headercartListLoaded = true;
+                  });
+                }
+                // -------------- HACER UN REFRESH DEL CART...
+                if(data.qty){
+                  if($("#view_cart_load").length){
+                    if(!cartListLoaded){
+                      $("#view_cart_load").load($("#cart_view_load").attr("data-target"), function(){
+                        cartListLoaded = true;
+                      });
+                    }
+                  }
+                }
+                dangerNotification(data.res.msg);
+              }
+            }else{
+              // -------------- HACER UN REFRESH DEL CARTHEADER...
+              if(!headercartListLoaded){
+                $(".cart_view_header").load($("#header_cart_load").attr("data-target"), function(){
+                  headercartListLoaded = true;
+                });
+              }
+              // -------------- HACER UN REFRESH DEL CART...
+              if(data.qty){
+                if($("#view_cart_load").length){
+                  if(!cartListLoaded){
+                    $("#view_cart_load").load($("#cart_view_load").attr("data-target"), function(){
+                      cartListLoaded = true;
+                    });
+                  }
+                }
+              }
+              dangerNotification('Error al procesar la información.');
+            }            
           },
         });
       }
@@ -737,7 +918,7 @@ $(function($){
             $("#view_cart_load").load(
               $("#cart_view_load").attr("data-target")
             );
-          } else{
+          }else{
             dangerNotification(data.message);
           }
         },
@@ -777,7 +958,7 @@ $(document).on('click', '#trams__condition', function(){
   if($(this).is(':checked')){
     $('#continue__button').attr('type', 'submit');
     $('#continue__button').prop('disabled', false);
-  } else{
+  }else{
     $('#continue__button').attr('type', 'button');
     $('#continue__button').prop('disabled', true);
   }
@@ -801,7 +982,7 @@ $(window).on('load', function(event){
       groups.forEach(group => {
         if (group.id === letter) {
           group.style.display = 'block';
-        } else {
+        }else {
           group.style.display = 'none';
         }
       });
@@ -862,78 +1043,5 @@ $(window).on('load', function(event){
     }
   });
 
-  
-
-
-  /*
-  // ----------- HACER HOVER EN UN ELEMENTO CON DROPDOWN
-  var namehoverAll = document.querySelectorAll("*[data-dropdown-custommenu]");
-  let linkParent = $("*[data-dropdown-custommenu]").parent();
-  var backdropHome = document.querySelector("#backdrop");
-  let ctopbar = document.querySelector(".topbar");
-  let cmtoparea = document.querySelector(".menu-top-area");
-  let cnavbarmenu = document.querySelector(".navbar.theme-total");
-  namehoverAll.forEach(function(i,e){
-    var namehover = i;
-    ctopbar.addEventListener("mouseenter", function(f){
-      namehoverAll.forEach(function(i,e){
-        var namehover = i;
-        if(namehover.classList.contains("active")){
-          backdropHome.classList.add("hide");
-          namehover.classList.remove('active');
-          namehover.nextElementSibling.classList.remove('active');
-        }
-      });
-    });
-    cmtoparea.addEventListener("mouseenter", function(f){
-      namehoverAll.forEach(function(i,e){
-        var namehover = i;
-        if(namehover.classList.contains("active")){
-          backdropHome.classList.add("hide");
-          namehover.classList.remove('active');
-          namehover.nextElementSibling.classList.remove('active');
-        }
-      });
-    });
-    namehover.addEventListener("mouseenter",function(e, i){
-      var attrnamehov = this.getAttribute("data-dropdown-custommenu");      
-      let t = $(this);
-      let items = $(this).parent();
-      // items.add(find("a")).nextElementSibling().removeClass("active").parent().siblings().removeClass("active")
-      // console.log(items.find("a"));
-      // console.log(items);
-      // console.log($(this).parent().index());
-      let ind = $(this).parent().index();
-      // t.parent().add(linkParent.eq(ind).find("a[data-dropdown-custommenu]").add(find("a[data-dropdown-custommenu]").next())).addClass("active").siblings().removeClass("active");
-      if(attrnamehov.value === ''){
-        console.log('No es un menu hover');
-      }else{
-        // linkParent.eq(ind).find("a[data-dropdown-custommenu]").addClass("active"); // Activar el menú de este link...
-        // linkParent.eq(ind).find("a[data-dropdown-custommenu]").next().addClass("active"); // Activar el sub-menú de este link...
-        // linkParent.eq(ind).siblings().find("a[data-dropdown-custommenu]").removeClass("active"); // Activar el menú de este link...
-        // linkParent.eq(ind).siblings().find("a[data-dropdown-custommenu]").next().removeClass("active"); // Activar el sub-menú de este link...
-        $("#backdrop").removeClass('hide');
-        // $(this).addClass('active');
-        // $(this).next().addClass('active');
-        if($(this).hasClass('active')){
-          linkParent.eq(ind).siblings().find("a[data-dropdown-custommenu]").removeClass("active"); // Activar el menú de este link...
-          linkParent.eq(ind).siblings().find("a[data-dropdown-custommenu]").next().removeClass("active"); // Activar el sub-menú de este link...
-        }
-      }
-    });
-    
-  });
-  // ----------- REMOVER ELEMENTO DROPDOWN AL HACER HOVER EN EL BACKDROP
-  backdropHome.addEventListener("mouseenter", function(){
-    namehoverAll.forEach(function(i,e){
-      var namehover = i;
-      if(namehover.classList.contains("active")){
-        backdropHome.classList.add("hide");
-        namehover.classList.remove('active');
-        namehover.nextElementSibling.classList.remove('active');
-      }
-    });
-  });
-  */
 
 });
