@@ -9,6 +9,7 @@ class Kernel extends ConsoleKernel{
     protected $commands = [
         Commands\CrudGenerator::class,
         Commands\ClearSessions::class,
+        Commands\ClearAllOrdersAndCart::class,
     ];
     protected function schedule(Schedule $schedule){
         // $schedule->command('inspire')
