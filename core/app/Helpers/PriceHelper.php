@@ -430,23 +430,25 @@ class PriceHelper{
     foreach($cart as $key => $item){
       $main_item = Item::findOrFail($key);
       if($main_item->item_type == 'normal'){
-        $current = $main_item->stock - $item['qty'];
-        if($current <= 0){
-          $main_item->stock = 0;
-        }else{
-          $main_item->stock = $current;
-        }
-        $main_item->update();
-        foreach($item['options_id'] as $id){
-          $option = AttributeOption::findOrFail($id);
-          if($option->stock != 'unlimited'){
-            $new_stock = (int)$option->stock - $item['qty'];
-            if($new_stock <=0){
-              $option->stock = '0';
-            }else{
-              $option->stock = (string)$new_stock;
+        if($main_item->stocktype_id == 2){
+          $current = $main_item->stock - $item['qty'];
+          if($current <= 0){
+            $main_item->stock = 0;
+          }else{
+            $main_item->stock = $current;
+          }
+          $main_item->update();
+          foreach($item['options_id'] as $id){
+            $option = AttributeOption::findOrFail($id);
+            if($option->stock != 'unlimited'){
+              $new_stock = (int)$option->stock - $item['qty'];
+              if($new_stock <=0){
+                $option->stock = '0';
+              }else{
+                $option->stock = (string)$new_stock;
+              }
+              $option->save();
             }
-            $option->save();
           }
         }
       }
