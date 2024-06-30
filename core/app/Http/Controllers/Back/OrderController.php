@@ -13,6 +13,7 @@ use App\Models\Notification;
 use App\Models\Setting;
 use App\Models\User;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use PDF;
@@ -42,9 +43,15 @@ class OrderController extends Controller{
     return view('back.order.index',compact('datas'));
   }
   public function invoice($id){
-    $order = Order::findOrfail($id);
-    $cart = json_decode($order->cart, true);
-    return view('back.order.invoice',compact('order','cart'));
+    $ordervalid = Order::where("id","=",$id)->get();
+    if(count($ordervalid) > 0){
+      $order = Order::findOrFail($id);
+      $cart = json_decode($order->cart, true);
+      return view('back.order.invoice',compact('order','cart'));
+    }else{
+      $datas = Order::latest('id')->get();
+      return view('back.order.index',compact('datas'));
+    }
   }
   public function printOrder($id){
     $order = Order::findOrfail($id);
@@ -279,8 +286,9 @@ class OrderController extends Controller{
       // MONTO DE DELIVERY
       $ammountDeliveryShipping = (isset($get_ShippingAddress['ship_amountaddress']) && !empty($get_ShippingAddress['ship_amountaddress'])) ? $get_ShippingAddress['ship_amountaddress'] : 0;
 
+      config(['app.timezone' => 'America/Lima']);
       date_default_timezone_set('America/Lima');
-      $newDateOrder = date("Y/m/d H:i:s", strtotime($order['created_at']));
+      $newDateOrder = date("Y/m/d h:i:s A", strtotime($order['created_at']));
 
       $get_SessionUserInfo = [
         'date' => $newDateOrder,

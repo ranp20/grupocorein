@@ -226,6 +226,13 @@ class ItemController extends Controller{
     $data = $taxes;
     return response()->json(['data'=>$data]);
   }
+  public function getAllSpecialPricesByIdProd($idprod){
+    if($idprod != 0){
+      $specialPrices = Item::where('id','=',$idprod)->select('on_sale_price','special_offer_price')->take(1)->get()->toArray();
+      $data = $specialPrices;
+    }
+    return response()->json(['data'=>$data]);
+  }
   public function getProductName(Request $request){
     // print_r(urldecode($request->productname));
     // print_r(urldecode($request->input['productname']));
