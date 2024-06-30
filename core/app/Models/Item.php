@@ -46,7 +46,8 @@ class Item extends Model{
     'thumbnail',
     'affiliate_link',
     'sap_code',
-    'adj_doc'
+    'adj_doc',
+    'stocktype_id'
   ];
   public function category(){
     return $this->belongsTo('App\Models\Category')->withDefault();
