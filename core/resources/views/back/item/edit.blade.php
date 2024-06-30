@@ -29,6 +29,7 @@
   <form class="admin-form" action="{{ route('back.item.update',$item->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
+    <input type="hidden" id="id_prodedit" value="{{ $item->id }}">
     <div class="row">
       <div class="col-lg-8">
         <div class="card">
@@ -527,19 +528,72 @@
         </div>
         <div class="card">
           <div class="card-body">
-            <div class="form-group">
-              <label for="stock">{{ __('Total in stock') }} *</label>
-              <div class="input-group mb-3">
-                <input type="number" id="stock" name="stock" class="form-control" placeholder="{{ __('Total in stock') }}" value="{{$item->stock}}">
+            <div id="cDis_StockConfigQuantity">
+              <div class="form-group">
+                <label for="">{{ __('Seleccionar Tipo de Stock') }} *</label>
+                <div class="border-list-switchs">
+                  <div class="form-check pb-0">
+                    <section class="c-sRadioBtn__c--cDesign-1">
+                      <div class="c-sRadioBtn__c--cDesign-1__c">
+                      <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="stocktype_id" value="1" {{$item->stocktype_id == 1 ? 'checked' : ''}} data-anchor="secStockType_1" id="indefinido"/>
+                        <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
+                      </div>
+                      <label for="indefinido" style="cursor:pointer;">Indefinido</label>
+                    </section>
+                    <section class="c-sRadioBtn__c--cDesign-1">
+                      <div class="c-sRadioBtn__c--cDesign-1__c">
+                      <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="stocktype_id" value="2" {{$item->stocktype_id == 2 ? 'checked' : ''}} data-anchor="secStockType_2" id="Con cantidad"/>
+                        <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
+                      </div>
+                      <label for="Con cantidad" style="cursor:pointer;">Con cantidad</label>
+                    </section>
+                  </div>
+                </div>
               </div>
+            </div>
+            <div id="cTentr-adisstock1829__p-adm">
+              @if($item->stocktype_id == 1)
+              <div class="cSecProdsGroupList__c__i active" id="secStockType_1"></div>
+              <div class="cSecProdsGroupList__c__i" id="secStockType_2">
+                <div class="form-group">
+                  <label for="stock">{{ __('Total in stock') }} *</label>
+                  <div class="input-group mb-3">
+                    <input type="number" id="stock" name="stock" class="form-control" placeholder="{{ __('Total in stock') }}" value="{{$item->stock}}">
+                  </div>
+                </div>
+              </div>
+              @elseif($item->stocktype_id == 2)
+              <div class="cSecProdsGroupList__c__i" id="secStockType_1"></div>
+              <div class="cSecProdsGroupList__c__i active" id="secStockType_2">
+                <div class="form-group">
+                  <label for="stock">{{ __('Total in stock') }} *</label>
+                  <div class="input-group mb-3">
+                    <input type="number" id="stock" name="stock" class="form-control" placeholder="{{ __('Total in stock') }}" value="{{$item->stock}}">
+                  </div>
+                </div>
+              </div>
+              @else
+              <div class="cSecProdsGroupList__c__i" id="secStockType_1"></div>
+              <div class="cSecProdsGroupList__c__i" id="secStockType_2">
+                <div class="form-group">
+                  <label for="stock">{{ __('Total in stock') }} *</label>
+                  <div class="input-group mb-3">
+                    <input type="number" id="stock" name="stock" class="form-control" placeholder="{{ __('Total in stock') }}" value="{{$item->stock}}">
+                  </div>
+                </div>
+              </div>
+              @endif              
             </div>
             <div class="form-group">
               <label for="tax_id">{{ __('Select Tax') }} *</label>
               <select name="tax_id" id="tax_id" class="form-control">
-                <option value="">{{__('Select One')}}</option>
+                {{--
+                <!-- <option value="">{{__('Select One')}}</option>
                 @foreach(DB::table('taxes')->whereStatus(1)->get() as $tax)
                 <option value="{{ $tax->id }}" {{$item->tax_id == $tax->id ? 'selected' : ''}} >{{ $tax->name }}</option>
-                @endforeach
+                @endforeach -->
+                --}}
+                <option value="2">Inc. IGV</option>
               </select>
             </div>
             <div class="form-group">
@@ -549,10 +603,10 @@
                   @if($item->sections_id != 0)
                     <section class="c-sRadioBtn__c--cDesign-1">
                       <div class="c-sRadioBtn__c--cDesign-1__c">
-                      <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="0" id="0"/>
+                      <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="0" data-anchor="secLink_0" id="Ninguna"/>
                         <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
                       </div>
-                      <label for="0" style="cursor:pointer;">Ninguna</label>
+                      <label for="Ninguna" style="cursor:pointer;">Ninguna</label>
                     </section>
                     @foreach(DB::table('tbl_sections')->get() as $section)
                       @php
@@ -567,7 +621,7 @@
                       @endphp
                       <section class="c-sRadioBtn__c--cDesign-1">
                         <div class="c-sRadioBtn__c--cDesign-1__c">
-                        <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="{{ $section->id }}" {{$item->sections_id == $section->id ? 'checked' : ''}} id="{{ $onSection }}"/>
+                        <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="{{ $section->id }}" {{$item->sections_id == $section->id ? 'checked' : ''}} data-anchor="secLink_{{ $section->id }}" id="{{ $onSection }}"/>
                           <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
                         </div>
                         <label for="{{ $onSection }}" style="cursor:pointer;">{{ $onSection }}</label>
@@ -576,10 +630,10 @@
                   @else
                     <section class="c-sRadioBtn__c--cDesign-1">
                       <div class="c-sRadioBtn__c--cDesign-1__c">
-                      <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" checked value="0" id="0"/>
+                      <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" checked value="0" data-anchor="secLink_0" id="Ninguna"/>
                         <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
                       </div>
-                      <label for="0" style="cursor:pointer;">Ninguna</label>
+                      <label for="Ninguna" style="cursor:pointer;">Ninguna</label>
                     </section>
                     @foreach(DB::table('tbl_sections')->get() as $section)
                       @php
@@ -594,7 +648,7 @@
                       @endphp
                       <section class="c-sRadioBtn__c--cDesign-1">
                         <div class="c-sRadioBtn__c--cDesign-1__c">
-                        <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="{{ $section->id }}" {{$item->sections_id == $section->id ? 'checked' : ''}} id="{{ $onSection }}"/>
+                        <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="{{ $section->id }}" {{$item->sections_id == $section->id ? 'checked' : ''}} data-anchor="secLink_{{ $section->id }}" id="{{ $onSection }}"/>
                           <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
                         </div>
                         <label for="{{ $onSection }}" style="cursor:pointer;">{{ $onSection }}</label>
@@ -613,61 +667,257 @@
               $incIGV_format = $incIGV / 100;
               $sinIGV_format = $sinIGV;
             @endphp
-            @if($item->sections_id != 0 || $item->sections_id != "")
-              <div id="cTentr-af1698__p-adm">
-                @if($item->sections_id == 1)
-                <div class="form-group">
-                  <label for="on-sale-price">En Promoción *</label>
-                  <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">S/.</span>
+            <div id="cTentr-af1698__p-adm">
+              <div class="cSecProdsGroupList__c">
+                @if($item->sections_id != 0 && $item->sections_id != "" && $item->sections_id == 1)
+                <div class="cSecProdsGroupList__c__i" id="secLink_0"></div>
+                <div class="cSecProdsGroupList__c__i active" id="secLink_1">
+                  <div class="form-group">
+                    <label for="on-sale-price">En Promoción *</label>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">S/.</span>
+                      </div>
+                      <input type="text" data-valformat="withcomedecimal" data-archorigv="product" id="on-sale-price" name="on_sale_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="{{$item->on_sale_price}}" required>
                     </div>
-                    <input type="text" data-valformat="withcomedecimal" data-archorigv="product" id="on-sale-price" name="on_sale_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="{{$item->on_sale_price}}" required>
+                  </div>
+                  <div class="c_cPreviewAmmountIGV">
+                    @if($item->on_sale_price != 0 && $item->on_sale_price != "")
+                      @if($item->tax_id != 0 && $item->tax_id == 1)
+                        @php
+                          $sumFinalPriceIGV1 = $incIGV_format * $item->on_sale_price;
+                          $sumFinalPriceIGV2 = $item->on_sale_price + $sumFinalPriceIGV1;
+                        @endphp
+                      @elseif($item->tax_id != 0 && $item->tax_id == 2)
+                        @php
+                          $sumFinalPriceIGV2 = $item->on_sale_price;
+                        @endphp
+                      @else
+                        @php
+                          $sumFinalPriceIGV2 = $item->on_sale_price;
+                        @endphp
+                      @endif
+                      <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+                        <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
+                        <span>Monto Final: </span>
+                        <span class="c-prevammt__igvGs23s">S/. {{ $sumFinalPriceIGV2 }}</span>
+                      </div>
+                    @else
+                      <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+                        <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
+                        <span>Monto Final: </span>
+                        <span class="c-prevammt__igvGs23s">S/. {{ $sumFinalPriceIGV2 }}</span>
+                      </div>
+                    @endif
                   </div>
                 </div>
-                <div class="c_cPreviewAmmountIGV">
-                  @if($item->tax_id != 0 && $item->tax_id == 1)
-                  @php
-                    $sumFinalPriceIGV1 = $incIGV_format * $item->on_sale_price;
-                    $sumFinalPriceIGV2 = $item->on_sale_price + $sumFinalPriceIGV1;
-                  @endphp
-                  <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
-                    <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
-                    <span>Monto Final: </span>
-                    <span id="c-prevammt__igvGs23s">S/. {{ $sumFinalPriceIGV2 }}</span>
-                  </div>
-                  @endif
-                </div>
-                @elseif($item->sections_id == 2)
-                <div class="form-group">
-                  <label for="special-offer-price">Oferta Especial *</label>
-                  <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">S/.</span>
+                <div class="cSecProdsGroupList__c__i" id="secLink_2">
+                  <div class="form-group">
+                    <label for="special-offer-price">Oferta Especial *</label>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">S/.</span>
+                      </div>
+                      <input type="text" data-valformat="withcomedecimal" data-archorigv="product" id="special-offer-price" name="special_offer_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="{{$item->special_offer_price}}" required>
                     </div>
-                    <input type="text" data-valformat="withcomedecimal" data-archorigv="product" id="special-offer-price" name="special_offer_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="{{$item->special_offer_price}}" required>
+                  </div>
+                  <div class="c_cPreviewAmmountIGV">
+                    @if($item->special_offer_price != 0 && $item->special_offer_price != "")
+                      @if($item->tax_id != 0 && $item->tax_id == 1)
+                        @php
+                          $sumFinalPriceIGV1 = $incIGV_format * $item->special_offer_price;
+                          $sumFinalPriceIGV2 = $item->special_offer_price + $sumFinalPriceIGV1;
+                        @endphp
+                      @elseif($item->tax_id != 0 && $item->tax_id == 2)
+                        @php
+                          $sumFinalPriceIGV2 = $item->special_offer_price;
+                        @endphp
+                      @else
+                        @php
+                          $sumFinalPriceIGV2 = $item->special_offer_price;
+                        @endphp
+                      @endif
+                      <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+                        <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
+                        <span>Monto Final: </span>
+                        <span class="c-prevammt__igvGs23s">S/. {{ $sumFinalPriceIGV2 }}</span>
+                      </div>
+                    @else
+                      <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+                        <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
+                        <span>Monto Final: </span>
+                        <span class="c-prevammt__igvGs23s">S/. {{ $sumFinalPriceIGV2 }}</span>
+                      </div>
+                    @endif
                   </div>
                 </div>
-                <div class="c_cPreviewAmmountIGV">
-                  @if($item->tax_id != 0 && $item->tax_id == 1)
-                  @php
-                    $sumFinalPriceIGV1 = $incIGV_format * $item->special_offer_price;
-                    $sumFinalPriceIGV2 = $item->special_offer_price + $sumFinalPriceIGV1;
-                  @endphp
-                  <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
-                    <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
-                    <span>Monto Final: </span>
-                    <span id="c-prevammt__igvGs23s">S/. {{ $sumFinalPriceIGV2 }}</span>
+                @elseif($item->sections_id != 0 && $item->sections_id != "" && $item->sections_id == 2)
+                <div class="cSecProdsGroupList__c__i" id="secLink_0"></div>
+                <div class="cSecProdsGroupList__c__i" id="secLink_1">
+                  <div class="form-group">
+                    <label for="on-sale-price">En Promoción *</label>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">S/.</span>
+                      </div>
+                      <input type="text" data-valformat="withcomedecimal" data-archorigv="product" id="on-sale-price" name="on_sale_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="{{$item->on_sale_price}}" required>
+                    </div>
                   </div>
-                  @endif
+                  <div class="c_cPreviewAmmountIGV">
+                    @if($item->on_sale_price != 0 && $item->on_sale_price != "")
+                      @if($item->tax_id != 0 && $item->tax_id == 1)
+                        @php
+                          $sumFinalPriceIGV1 = $incIGV_format * $item->on_sale_price;
+                          $sumFinalPriceIGV2 = $item->on_sale_price + $sumFinalPriceIGV1;
+                        @endphp
+                      @elseif($item->tax_id != 0 && $item->tax_id == 2)
+                        @php
+                          $sumFinalPriceIGV2 = $item->on_sale_price;
+                        @endphp
+                      @else
+                        @php
+                          $sumFinalPriceIGV2 = $item->on_sale_price;
+                        @endphp
+                      @endif
+                      <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+                        <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
+                        <span>Monto Final: </span>
+                        <span class="c-prevammt__igvGs23s">S/. {{ $sumFinalPriceIGV2 }}</span>
+                      </div>
+                    @else
+                      <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+                        <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
+                        <span>Monto Final: </span>
+                        <span class="c-prevammt__igvGs23s">S/. {{ $sumFinalPriceIGV2 }}</span>
+                      </div>
+                    @endif
+                  </div>
+                </div>
+                <div class="cSecProdsGroupList__c__i active" id="secLink_2">
+                  <div class="form-group">
+                    <label for="special-offer-price">Oferta Especial *</label>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">S/.</span>
+                      </div>
+                      <input type="text" data-valformat="withcomedecimal" data-archorigv="product" id="special-offer-price" name="special_offer_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="{{$item->special_offer_price}}" required>
+                    </div>
+                  </div>
+                  <div class="c_cPreviewAmmountIGV">
+                    @if($item->special_offer_price != 0 && $item->special_offer_price != "")
+                      @if($item->tax_id != 0 && $item->tax_id == 1)
+                        @php
+                          $sumFinalPriceIGV1 = $incIGV_format * $item->special_offer_price;
+                          $sumFinalPriceIGV2 = $item->special_offer_price + $sumFinalPriceIGV1;
+                        @endphp
+                      @elseif($item->tax_id != 0 && $item->tax_id == 2)
+                        @php
+                          $sumFinalPriceIGV2 = $item->special_offer_price;
+                        @endphp
+                      @else
+                        @php
+                          $sumFinalPriceIGV2 = $item->special_offer_price;
+                        @endphp
+                      @endif
+                      <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+                        <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
+                        <span>Monto Final: </span>
+                        <span class="c-prevammt__igvGs23s">S/. {{ $sumFinalPriceIGV2 }}</span>
+                      </div>
+                    @else
+                      <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+                        <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
+                        <span>Monto Final: </span>
+                        <span class="c-prevammt__igvGs23s">S/. {{ $sumFinalPriceIGV2 }}</span>
+                      </div>
+                    @endif
+                  </div>
                 </div>
                 @else
-                <div></div>
+                <div class="cSecProdsGroupList__c__i active" id="secLink_0"></div>
+                <div class="cSecProdsGroupList__c__i" id="secLink_1">
+                  <div class="form-group">
+                    <label for="on-sale-price">En Promoción *</label>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">S/.</span>
+                      </div>
+                      <input type="text" data-valformat="withcomedecimal" data-archorigv="product" id="on-sale-price" name="on_sale_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="{{$item->on_sale_price}}" required>
+                    </div>
+                  </div>
+                  <div class="c_cPreviewAmmountIGV">
+                    @if($item->on_sale_price != 0 && $item->on_sale_price != "")
+                      @if($item->tax_id != 0 && $item->tax_id == 1)
+                        @php
+                          $sumFinalPriceIGV1 = $incIGV_format * $item->on_sale_price;
+                          $sumFinalPriceIGV2 = $item->on_sale_price + $sumFinalPriceIGV1;
+                        @endphp
+                      @elseif($item->tax_id != 0 && $item->tax_id == 2)
+                        @php
+                          $sumFinalPriceIGV2 = $item->on_sale_price;
+                        @endphp
+                      @else
+                        @php
+                          $sumFinalPriceIGV2 = $item->on_sale_price;
+                        @endphp
+                      @endif
+                      <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+                        <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
+                        <span>Monto Final: </span>
+                        <span class="c-prevammt__igvGs23s">S/. {{ $sumFinalPriceIGV2 }}</span>
+                      </div>
+                    @else
+                      <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+                        <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
+                        <span>Monto Final: </span>
+                        <span class="c-prevammt__igvGs23s">S/. {{ $sumFinalPriceIGV2 }}</span>
+                      </div>
+                    @endif
+                  </div>
+                </div>
+                <div class="cSecProdsGroupList__c__i" id="secLink_2">
+                  <div class="form-group">
+                    <label for="special-offer-price">Oferta Especial *</label>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">S/.</span>
+                      </div>
+                      <input type="text" data-valformat="withcomedecimal" data-archorigv="product" id="special-offer-price" name="special_offer_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="{{$item->special_offer_price}}" required>
+                    </div>
+                  </div>
+                  <div class="c_cPreviewAmmountIGV">
+                    @if($item->special_offer_price != 0 && $item->special_offer_price != "")
+                      @if($item->tax_id != 0 && $item->tax_id == 1)
+                        @php
+                          $sumFinalPriceIGV1 = $incIGV_format * $item->special_offer_price;
+                          $sumFinalPriceIGV2 = $item->special_offer_price + $sumFinalPriceIGV1;
+                        @endphp
+                      @elseif($item->tax_id != 0 && $item->tax_id == 2)
+                        @php
+                          $sumFinalPriceIGV2 = $item->special_offer_price;
+                        @endphp
+                      @else
+                        @php
+                          $sumFinalPriceIGV2 = $item->special_offer_price;
+                        @endphp
+                      @endif
+                      <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+                        <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
+                        <span>Monto Final: </span>
+                        <span class="c-prevammt__igvGs23s">S/. {{ $sumFinalPriceIGV2 }}</span>
+                      </div>
+                    @else
+                      <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+                        <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
+                        <span>Monto Final: </span>
+                        <span class="c-prevammt__igvGs23s">S/. {{ $sumFinalPriceIGV2 }}</span>
+                      </div>
+                    @endif
+                  </div>
+                </div>
                 @endif
               </div>
-            @else
-              <div id="cTentr-af1698__p-adm"></div>
-            @endif
+            </div>
             <?php
             $arrStoresAdd = [];
             $StoresAll = [];

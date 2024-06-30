@@ -263,19 +263,50 @@
         </div>
         <div class="card">
           <div class="card-body">
-            <div class="form-group">
-              <label for="stock">{{ __('Total in stock') }} *</label>
-              <div class="input-group mb-3">
-                <input type="number" id="stock" name="stock" class="form-control" placeholder="{{ __('Total in stock') }}" value="{{ old('stock') }}" required>
+            <div id="cDis_StockConfigQuantity">
+              <div class="form-group">
+                <label for="">{{ __('Seleccionar Tipo de Stock') }} *</label>
+                <div class="border-list-switchs">
+                  <div class="form-check pb-0">
+                    <section class="c-sRadioBtn__c--cDesign-1">
+                      <div class="c-sRadioBtn__c--cDesign-1__c">
+                      <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="stocktype_id" value="1" checked data-anchor="secStockType_1" id="indefinido"/>
+                        <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
+                      </div>
+                      <label for="indefinido" style="cursor:pointer;">Indefinido</label>
+                    </section>
+                    <section class="c-sRadioBtn__c--cDesign-1">
+                      <div class="c-sRadioBtn__c--cDesign-1__c">
+                      <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="stocktype_id" value="2" data-anchor="secStockType_2" id="Con cantidad"/>
+                        <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
+                      </div>
+                      <label for="Con cantidad" style="cursor:pointer;">Con cantidad</label>
+                    </section>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="cTentr-adisstock1829__p-adm">
+              <div class="cSecProdsGroupList__c__i" id="secStockType_1"></div>
+              <div class="cSecProdsGroupList__c__i" id="secStockType_2">
+                <div class="form-group">
+                  <label for="stock">{{ __('Total in stock') }} *</label>
+                  <div class="input-group mb-3">
+                    <input type="number" id="stock" name="stock" class="form-control" placeholder="{{ __('Total in stock') }}" value="{{ old('stock') }}" required>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="form-group">
               <label for="tax_id">{{ __('Select Tax') }} *</label>
               <select name="tax_id" id="tax_id" class="form-control" required>
-                <option value="">{{__('Select One')}}</option>
+                {{--
+                <!-- <option value="">{{__('Select One')}}</option>
                 @foreach(DB::table('taxes')->whereStatus(1)->get() as $tax)
                 <option value="{{ $tax->id }}">{{ $tax->name }}</option>
-                @endforeach
+                @endforeach -->
+                --}}
+                <option value="2">Inc. IGV</option>
               </select>
             </div>
             <div class="form-group">
@@ -284,10 +315,10 @@
                 <div class="form-check pb-0">
                   <section class="c-sRadioBtn__c--cDesign-1">
                     <div class="c-sRadioBtn__c--cDesign-1__c">
-                    <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="0" id="0"/>
+                    <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="0" data-anchor="secLink_0" id="Ninguna"/>
                       <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
                     </div>
-                    <label for="0" style="cursor:pointer;">Ninguna</label>
+                    <label for="Ninguna" style="cursor:pointer;">Ninguna</label>
                   </section>
                   @foreach(DB::table('tbl_sections')->get() as $section)
                     @php
@@ -302,7 +333,7 @@
                     @endphp
                     <section class="c-sRadioBtn__c--cDesign-1">
                       <div class="c-sRadioBtn__c--cDesign-1__c">
-                      <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="{{ $section->id }}" id="{{ $onSection }}"/>
+                      <input type="radio" class="c-sRadioBtn__c--cDesign-1__c__input" name="sections_id" value="{{ $section->id }}" data-anchor="secLink_{{ $section->id }}" id="{{ $onSection }}"/>
                         <label class="c-sRadioBtn__c--cDesign-1__c__label"></label>
                       </div>
                       <label for="{{ $onSection }}" style="cursor:pointer;">{{ $onSection }}</label>
@@ -331,7 +362,45 @@
               -->
               --}}
             </div>
-            <div id="cTentr-af1698__p-adm"></div>
+            <div id="cTentr-af1698__p-adm">
+              <div class="cSecProdsGroupList__c__i" id="secLink_0"></div>
+              <div class="cSecProdsGroupList__c__i" id="secLink_1">
+                <div class="form-group">
+                  <label for="on-sale-price">En Promoción *</label>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">S/.</span>
+                    </div>
+                    <input type="text" data-valformat="withcomedecimal" data-archorigv="product" id="on-sale-price" name="on_sale_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="" required>
+                  </div>
+                </div>
+                <div class="c_cPreviewAmmountIGV">
+                  <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+                    <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
+                    <span>Monto Final: </span>
+                    <span class="c-prevammt__igvGs23s">S/. {{ 0.00 }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="cSecProdsGroupList__c__i" id="secLink_2">
+                <div class="form-group">
+                  <label for="special-offer-price">Oferta Especial *</label>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">S/.</span>
+                    </div>
+                    <input type="text" data-valformat="withcomedecimal" data-archorigv="product" id="special-offer-price" name="special_offer_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="" required>
+                  </div>
+                </div>
+                <div class="c_cPreviewAmmountIGV">
+                  <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+                    <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
+                    <span>Monto Final: </span>
+                    <span class="c-prevammt__igvGs23s">S/. {{ 0.00 }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="form-group">
               <label for="">{{ __('Seleccionar Tiendas') }} *</label>
               <div class="border-list-switchs">
