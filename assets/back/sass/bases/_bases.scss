@@ -580,3 +580,19 @@ label.color-picker > span > input[type=color]::-webkit-color-swatch {
 	}
 	img{}
 }
+.cSecProdsGroupList{
+	&__c{
+		&__i{
+			display: none;
+			visibility: hidden;
+			opacity: 0;
+			user-select: none;
+			&.active{
+				display: block;
+				visibility: visible;
+				opacity: 1;
+				user-select: auto;
+			}
+		}
+	}
+}

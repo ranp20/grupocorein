@@ -8,9 +8,9 @@ $(() => {
                           locationGETArray[3]+'/'+
                           locationGETArray[4]+'/'+
                           locationGETArray[5];
-  var csrfTokenFrm = $("#iptc-A3gs4FS_token").find("input[name='_token']").val();
+  var csrfTokenFrm = $("#iptc-A3gs4FS_token").find("input[name='_token']").val();  
+  // --------------- OBTENER TODOS LOS VALORES DE IMPUESTOS
   var taxesObj = [];
-  
   getAllTaxes();
   function getAllTaxes(){
     // e.preventDefault();
@@ -34,6 +34,36 @@ $(() => {
       }
     });
   }
+  // --------------- OBTENER TODOS LOS VALORES DE PRECIOS ESPECIALES POR ID DEL PRODUCTO
+  // let id_prodedit = 0;
+  // var specialPricesObj = [];
+  // if($("#id_prodedit").length > 0){
+  //   // console.log("El input existe");
+  //   id_prodedit = $("#id_prodedit").val();
+  // }
+  // getAllSpecialPricesByIdProd(id_prodedit);
+  // function getAllSpecialPricesByIdProd(id_prodedit){
+  //   // e.preventDefault();
+  //   $.ajax({
+  //     headers: {
+  //       'X-CSRF-TOKEN': csrfTokenFrm
+  //     },
+  //     url: locationGETFormat+`/getspecialprices/${id_prodedit}`,
+  //     type: "GET",
+  //     dataType: "JSON",
+  //     success: function(e){
+  //       if(e.length != "undefined" || e != ""){
+  //         var r = e.data;
+  //         var tmpFor = ``;
+  //         $.each(r, function(i,e){
+  //           specialPricesObj.push(e.value);
+  //         });
+  //       }else{
+  //         console.log("Lo sentimos, hubo un error al obtener la información");
+  //       }
+  //     }
+  //   });
+  // }
   // --------------- KEYUP INPUTS NAME = ITEM-NAME - TEXT
   $(document).on("change","#atributoraiz",function(e){
     e.preventDefault();
@@ -188,15 +218,24 @@ $(() => {
     let val_formatNumber = val.toString().replace(/[^\d.]/g, "").replace(/^(\d*\.)(.*)\.(.*)$/, '$1$2$3').replace(/\.(\d{2})\d+/, '.$1').replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     let val_formatNumberWithoutCome = val_formatNumber.replace(/,/g,"");
     $(this).val(val_formatNumber);
+    let taxIdSelect = $("#tax_id").val();
     let incIGV = (typeof taxesObj[0] != 'undefined') ? taxesObj[0] : cautionIncIGV;
     let sincIGV = (typeof taxesObj[1] != 'undefined') ? taxesObj[1] : cautionSinIGV;
     let incIGVFormat = incIGV / 100;
     let sincIGVFormat = sincIGV;
-    let incIGVFormatOpe = parseFloat(val_formatNumberWithoutCome);
-    let incIGVFormatOpeMoreIGV = incIGVFormatOpe * incIGVFormat;
-    let incIGVFormatOpeMoreIGVCalc = incIGVFormatOpe + incIGVFormatOpeMoreIGV;
-    let val_formatNumberWithIGV = incIGVFormatOpeMoreIGVCalc.toString().replace(/[^\d.]/g, "").replace(/^(\d*\.)(.*)\.(.*)$/, '$1$2$3').replace(/\.(\d{2})\d+/, '.$1').replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    $("#c-prevammt__igvGs23s").text('S/. '+val_formatNumberWithIGV);
+    let EnteredNumFormatFloating = parseFloat(val_formatNumberWithoutCome);
+    let sumTotalFinalPrice = 0;
+    if(taxIdSelect == 1){
+      let sumTotalPriceWithIGVVal = EnteredNumFormatFloating * incIGVFormat;
+      sumTotalFinalPrice = EnteredNumFormatFloating + sumTotalPriceWithIGVVal;
+    }else if(taxIdSelect == 2){
+      sumTotalFinalPrice = EnteredNumFormatFloating;
+    }else{
+      sumTotalFinalPrice = EnteredNumFormatFloating;
+    }
+    let val_formatNumberWithIGV = sumTotalFinalPrice.toString().replace(/[^\d.]/g, "").replace(/^(\d*\.)(.*)\.(.*)$/, '$1$2$3').replace(/\.(\d{2})\d+/, '.$1').replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    $(this).parent().parent().parent().find(".c-prevammt__igvGs23s").text('S/. '+val_formatNumberWithIGV);
+    // $(".c-prevammt__igvGs23s").text('S/. '+val_formatNumberWithIGV);
   });
   function addIGVintoTag(elementOrTag){
     let cautionIncIGV = $("#e_hY-596kjkJN79").val();
@@ -205,11 +244,20 @@ $(() => {
     if(elementOrTag != ""){
       let val_formatNumberWithoutCome = elementOrTag.replace(/,/g,"");
       let incIGV = (typeof taxesObj[0] != 'undefined') ? taxesObj[0] : cautionIncIGV;
+      let sincIGV = (typeof taxesObj[1] != 'undefined') ? taxesObj[1] : cautionSinIGV;
       let incIGVFormat = incIGV / 100;
-      let incIGVFormatOpe = parseFloat(val_formatNumberWithoutCome);
-      let incIGVFormatOpeMoreIGV = incIGVFormatOpe * incIGVFormat;
-      let incIGVFormatOpeMoreIGVCalc = incIGVFormatOpe + incIGVFormatOpeMoreIGV;
-      val_formatNumberWithIGV = incIGVFormatOpeMoreIGVCalc.toString().replace(/[^\d.]/g, "").replace(/^(\d*\.)(.*)\.(.*)$/, '$1$2$3').replace(/\.(\d{2})\d+/, '.$1').replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      let sincIGVFormat = sincIGV;
+      let EnteredNumFormatFloating = parseFloat(val_formatNumberWithoutCome);
+      let sumTotalFinalPrice = 0;
+      if(taxIdSelect == 1){
+        let sumTotalPriceWithIGVVal = EnteredNumFormatFloating * incIGVFormat;
+        sumTotalFinalPrice = EnteredNumFormatFloating + sumTotalPriceWithIGVVal;
+      }else if(taxIdSelect == 2){
+        sumTotalFinalPrice = EnteredNumFormatFloating;
+      }else{
+        sumTotalFinalPrice = EnteredNumFormatFloating;
+      }
+      val_formatNumberWithIGV = sumTotalFinalPrice.toString().replace(/[^\d.]/g, "").replace(/^(\d*\.)(.*)\.(.*)$/, '$1$2$3').replace(/\.(\d{2})\d+/, '.$1').replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
     return val_formatNumberWithIGV;
   }
@@ -222,7 +270,15 @@ $(() => {
         <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
           <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
           <span>Monto Final: </span>
-          <span id="c-prevammt__igvGs23s">S/. ${addIGVintoTag($("input[data-archorigv='product']").val())}</span>
+          <span class="c-prevammt__igvGs23s">S/. ${addIGVintoTag($("input[data-archorigv='product']").val())}</span>
+        </div>
+        `);
+      }else if(tId != "" && tId != 0 && tId == 2){
+        $(".c_cPreviewAmmountIGV").html(`
+        <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
+          <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
+          <span>Monto Final: </span>
+          <span class="c-prevammt__igvGs23s">S/. ${addIGVintoTag($("input[data-archorigv='product']").val())}</span>
         </div>
         `);
       }else{
@@ -230,51 +286,13 @@ $(() => {
       }
     }
   });
+  // --------------- TOGGLE SECTION_ID
   $(document).on("click","input[name=sections_id]",function(){
-    let tId = $(this).val();
-    if(tId == 1){
-      var tmpSelSection = `
-      <div class="form-group pb-0">
-        <label for="on-sale-price">En Promoción *</label>
-        <div class="input-group mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text">S/.</span>
-          </div>
-          <input type="text" data-valformat="withcomedecimal" data-archorigv="product" id="on-sale-price" name="on_sale_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="" required>
-        </div>
-      </div>
-      <div class="c_cPreviewAmmountIGV">
-        <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
-          <span style="display:block;"><strong>INCLUYE IGV: </strong></span>
-          <span>Monto Final: </span>
-          <span id="c-prevammt__igvGs23s">S/. 0.00</span>
-        </div>
-      </div>
-      `;
-      $("#cTentr-af1698__p-adm").html(tmpSelSection);
-    }else if(tId == 2){
-      var tmpSelSection = `
-      <div class="form-group pb-0">
-        <label for="special-offer-price">Oferta Especial *</label>
-        <div class="input-group mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text">S/.</span>
-          </div>
-          <input type="text" data-valformat="withcomedecimal" data-archorigv="product" id="special-offer-price" name="special_offer_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="" required>
-        </div>
-      </div>
-      <div class="c_cPreviewAmmountIGV">
-        <div class="py-0 pt-0 form-group cPreviewAmmountIGV">
-          <span style="display:block;"><strong>INCLUYE IGV: </strong></span>  
-          <span>Monto Final: </span>
-          <span id="c-prevammt__igvGs23s">S/. 0.00</span>
-        </div>
-      </div>
-      `;
-      $("#cTentr-af1698__p-adm").html(tmpSelSection);
-    }else{
-      $("#cTentr-af1698__p-adm").html("");
-    }
+    $('#' + $(this).attr('data-anchor')).toggleClass('active').siblings().removeClass('active'); // TOGGLE TABS
+  });
+  // --------------- TOGGLE STOCKTYPE_ID
+  $(document).on("click","input[name=stocktype_id]",function(){
+    $('#' + $(this).attr('data-anchor')).toggleClass('active').siblings().removeClass('active'); // TOGGLE TABS
   });
   // --------------- MOSTRAR/OCULTAR LAS ESPECIFICACIONES
   $(document).on("click","input[name='is_specification']",function(){
