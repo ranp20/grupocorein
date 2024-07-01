@@ -186,23 +186,32 @@
           <?php if(!empty($popular_category_items) && count($popular_category_items) > 0): ?>
           <div class="col-lg-12">
             <div class="popular-category-slider owl-carousel">
-              <?php $__currentLoopData = $popular_category_items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $popular_category_item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+              <?php $__currentLoopData = $popular_category_items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $popularcateg_item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <?php
                   $TaxesAll = DB::table('taxes')->get();
-                  $sumFinalPrice1 = 0;
-                  $sumFinalPrice2 = 0;
-                  $sumTotalPriceFinal_popularcategitem = 0;
-                  $couponInfo_totalprice = 0;
                   $incIGV = $TaxesAll[0]->value;
                   $sinIGV = $TaxesAll[1]->value;
                   $incIGV_format = $incIGV / 100;
                   $sinIGV_format = $sinIGV;
+                  $sumFinalPrice1 = 0;
+                  $sumFinalPrice2 = 0;
+                  $coupinf_discount_percentage = 0;
+                  $coupinf_discount_percentage_nonapply = 0;
+                  $couponInfo_totalprice = 0;
                   $getAllCouponInfo = [];
                   $getAllDataCouponById = [];
+                  $getAllDataCouponById_nonapply = [];
+                  $allCouponDataConvertById = [];
+                  $allCouponDataConvertById_nonapply = [];
+                  $sumTotalPriceFinal = 0;
+                  $sumTotalDiscountPriceFinalPrevious = 0;
+                  $txtFlagToProduct = "";
+                  $txtFlagAvaiCouponToProduct = "";
                   // --------------- VALIDAR SI YA SE ACTIVÓ UN CUPÓN EN EL PRODUCTO ('tbl_applycoupons')
-                  if(!empty($popular_category_item->coupon_id) && $popular_category_item->coupon_id != "" && $popular_category_item->coupon_id != null && $popular_category_item->coupon_id != 0){
-                    $getAllCouponInfo = DB::table('tbl_applycoupons')->where("id_user","=",$user_id)->where("id_prod","=",$popular_category_item->id)->where("id_coupon","=",$popular_category_item->coupon_id)->where("status","!=",0)->select('id_user', 'id_prod', 'id_coupon', 'totalprice')->take(1)->get();
+                  if(!empty($popularcateg_item->coupon_id) && $popularcateg_item->coupon_id != "" && $popularcateg_item->coupon_id != null && $popularcateg_item->coupon_id != 0){
+                    $getAllCouponInfo = DB::table('tbl_applycoupons')->where("id_user","=",$user_id)->where("id_prod","=",$popularcateg_item->id)->where("id_coupon","=",$popularcateg_item->coupon_id)->where("status","!=",0)->select('id_user', 'id_prod', 'id_coupon', 'totalprice')->take(1)->get();
                     if(count($getAllCouponInfo) > 0){
+                      $txtFlagAvaiCouponToProduct = "txt-yesapply";
                       $allDataConvert = json_decode($getAllCouponInfo, TRUE);
                       $getAllDataCouponById = DB::table('tbl_coupons')->where("id","=",$allDataConvert[0]['id_coupon'])->where("status","!=",0)->select('name', 'discount_percentage')->take(1)->get();
                       if(count($getAllDataCouponById) > 0){
@@ -210,139 +219,234 @@
                         $coupinf_discount_percentage = $allCouponDataConvertById[0]['discount_percentage'];
                         $couponInfo_totalprice = $allDataConvert[0]['totalprice']; // SETEAR LA VARIABLE DE PRECIO TOTAL PARA CUPÓN ACTIVADO
                       }
+                    }else{
+                      $txtFlagAvaiCouponToProduct = "txt-nonapply";
+                      $getAllDataCouponById_nonapply = DB::table('tbl_coupons')->where("id","=",$popularcateg_item->coupon_id)->where("status","!=",0)->select('name', 'discount_percentage')->take(1)->get();
+                      if(count($getAllDataCouponById_nonapply) > 0){
+                        $allCouponDataConvertById_nonapply = json_decode($getAllDataCouponById_nonapply, TRUE);
+                        $coupinf_discount_percentage_nonapply = $allCouponDataConvertById_nonapply[0]['discount_percentage'];
+                      }
                     }
                   }
-
-                  if($popular_category_item->sections_id != 0){
-                    if($popular_category_item->sections_id == 1 && $popular_category_item->on_sale_price != 0 && $popular_category_item->on_sale_price != ""){
-                      if($popular_category_item->tax_id == 1){
-                        $sumFinalPrice1 = $popular_category_item->on_sale_price * $incIGV_format;
-                        $sumFinalPrice2 = $popular_category_item->on_sale_price + $sumFinalPrice1;
-                        // if(count($getAllCouponInfo) > 0){
-                        //   $sumTotalPriceFinal_popularcategitem = $couponInfo_totalprice;
-                        // }else{
-                        //   $sumTotalPriceFinal_popularcategitem = $sumFinalPrice2;
-                        // }
+        
+                  if($popularcateg_item->sections_id != 0){
+                    if($popularcateg_item->sections_id == 1 && $popularcateg_item->on_sale_price != 0 && $popularcateg_item->on_sale_price != ""){
+                      if($popularcateg_item->tax_id == 1){
+                        $sumFinalPrice1 = $popularcateg_item->on_sale_price * $incIGV_format;
+                        $sumFinalPrice2 = $popularcateg_item->on_sale_price + $sumFinalPrice1;
                         if(count($getAllDataCouponById) > 0){
-                          $sumTotalPriceFinal_popularcategitem = $couponInfo_totalprice;
+                          $txtFlagToProduct = "txt-applycoupon";
+                          $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (on_sale_price)
+                          $sumTotalPriceFinal = $couponInfo_totalprice;
                         }else{
-                          $sumTotalPriceFinal_popularcategitem = $sumFinalPrice2;
+                          $txtFlagToProduct = "txt-on_sale";
+                          $sumTotalDiscountPriceFinalPrevious = $popularcateg_item->discount_price; // PRECIO ACTUAL (discount_price)
+                          $sumTotalPriceFinal = $sumFinalPrice2;
                         }
                       }else{
-                        $sumFinalPrice1 = $popular_category_item->on_sale_price;
-                        $sumFinalPrice2 = $popular_category_item->on_sale_price + $sumFinalPrice1;
-                        // if(count($getAllCouponInfo) > 0){
-                        //   $sumTotalPriceFinal_popularcategitem = $couponInfo_totalprice;
-                        // }else{
-                        //   $sumTotalPriceFinal_popularcategitem = $sumFinalPrice2;
-                        // }
+                        $sumFinalPrice2 = $popularcateg_item->on_sale_price;
                         if(count($getAllDataCouponById) > 0){
-                          $sumTotalPriceFinal_popularcategitem = $couponInfo_totalprice;
+                          $txtFlagToProduct = "txt-applycoupon";
+                          $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (on_sale_price)
+                          $sumTotalPriceFinal = $couponInfo_totalprice;
                         }else{
-                          $sumTotalPriceFinal_popularcategitem = $sumFinalPrice2;
+                          $txtFlagToProduct = "txt-on_sale";
+                          $sumTotalDiscountPriceFinalPrevious = $popularcateg_item->discount_price; // PRECIO ACTUAL (discount_price)
+                          $sumTotalPriceFinal = $sumFinalPrice2;
                         }
-                      }                    
-                    }else if($popular_category_item->sections_id == 2 && $popular_category_item->special_offer_price != 0 && $popular_category_item->special_offer_price != ""){
-                      if($popular_category_item->tax_id == 1){
-                        $sumFinalPrice1 = $popular_category_item->special_offer_price * $incIGV_format;
-                        $sumFinalPrice2 = $popular_category_item->special_offer_price + $sumFinalPrice1;
-                        // if(count($getAllCouponInfo) > 0){
-                        //   $sumTotalPriceFinal_popularcategitem = $couponInfo_totalprice;
-                        // }else{
-                        //   $sumTotalPriceFinal_popularcategitem = $sumFinalPrice2;
-                        // }
+                      }
+                    }else if($popularcateg_item->sections_id == 2 && $popularcateg_item->special_offer_price != 0 && $popularcateg_item->special_offer_price != ""){
+                      if($popularcateg_item->tax_id == 1){
+                        $sumFinalPrice1 = $popularcateg_item->special_offer_price * $incIGV_format;
+                        $sumFinalPrice2 = $popularcateg_item->special_offer_price + $sumFinalPrice1;
                         if(count($getAllDataCouponById) > 0){
-                          $sumTotalPriceFinal_popularcategitem = $couponInfo_totalprice;
+                          $txtFlagToProduct = "txt-applycoupon";
+                          $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (special_offer_price)
+                          $sumTotalPriceFinal = $couponInfo_totalprice;
                         }else{
-                          $sumTotalPriceFinal_popularcategitem = $sumFinalPrice2;
+                          $txtFlagToProduct = "txt-special_offer";
+                          $sumTotalDiscountPriceFinalPrevious = $popularcateg_item->discount_price; // PRECIO ACTUAL (discount_price)
+                          $sumTotalPriceFinal = $sumFinalPrice2;
                         }
                       }else{
-                        $sumFinalPrice1 = $popular_category_item->special_offer_price;
-                        $sumFinalPrice2 = $popular_category_item->special_offer_price + $sumFinalPrice1;
-                        // if(count($getAllCouponInfo) > 0){
-                        //   $sumTotalPriceFinal_popularcategitem = $couponInfo_totalprice;
-                        // }else{
-                        //   $sumTotalPriceFinal_popularcategitem = $sumFinalPrice2;
-                        // }
+                        $sumFinalPrice2 = $popularcateg_item->special_offer_price;
                         if(count($getAllDataCouponById) > 0){
-                          $sumTotalPriceFinal_popularcategitem = $couponInfo_totalprice;
+                          $txtFlagToProduct = "txt-applycoupon";
+                          $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (NO_SECTION)
+                          $sumTotalPriceFinal = $couponInfo_totalprice;
                         }else{
-                          $sumTotalPriceFinal_popularcategitem = $sumFinalPrice2;
+                          $txtFlagToProduct = "txt-special_offer";
+                          $sumTotalDiscountPriceFinalPrevious = $popularcateg_item->discount_price; // PRECIO DE LA SECCIÓN (discount_price)
+                          $sumTotalPriceFinal = $sumFinalPrice2;
                         }
                       }
                     }else{
-                      if($popular_category_item->tax_id == 1){                
-                        $sumFinalPrice1 = $popular_category_item->special_offer_price * $incIGV_format;
-                        $sumFinalPrice2 = $popular_category_item->special_offer_price + $sumFinalPrice1;
-                        // if(count($getAllCouponInfo) > 0){
-                        //   $sumTotalPriceFinal_popularcategitem = $couponInfo_totalprice;
-                        // }else{
-                        //   $sumTotalPriceFinal_popularcategitem = $sumFinalPrice2;
-                        // }
+                      if($popularcateg_item->tax_id == 1){                
+                        $sumFinalPrice1 = $popularcateg_item->discount_price * $incIGV_format;
+                        $sumFinalPrice2 = $popularcateg_item->discount_price + $sumFinalPrice1;
                         if(count($getAllDataCouponById) > 0){
-                          $sumTotalPriceFinal_popularcategitem = $couponInfo_totalprice;
+                          $txtFlagToProduct = "txt-applycoupon";
+                          $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (NO_SECTION)
+                          $sumTotalPriceFinal = $couponInfo_totalprice;
                         }else{
-                          $sumTotalPriceFinal_popularcategitem = $sumFinalPrice2;
+                          $txtFlagToProduct = "";
+                          $sumTotalDiscountPriceFinalPrevious = $popularcateg_item->discount_price; // PRECIO DE LA SECCIÓN (discount_price)
+                          $sumTotalPriceFinal = $sumFinalPrice2;
                         }
                       }else{
-                        $sumFinalPrice1 = $popular_category_item->special_offer_price;
-                        $sumFinalPrice2 = $popular_category_item->special_offer_price + $sumFinalPrice1; 
-                        // if(count($getAllCouponInfo) > 0){
-                        //   $sumTotalPriceFinal_popularcategitem = $couponInfo_totalprice;
-                        // }else{
-                        //   $sumTotalPriceFinal_popularcategitem = $sumFinalPrice2;
-                        // }
+                        $sumFinalPrice2 = $popularcateg_item->discount_price;
                         if(count($getAllDataCouponById) > 0){
-                          $sumTotalPriceFinal_popularcategitem = $couponInfo_totalprice;
+                          $txtFlagToProduct = "txt-applycoupon";
+                          $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (NO_SECTION)
+                          $sumTotalPriceFinal = $couponInfo_totalprice;
                         }else{
-                          $sumTotalPriceFinal_popularcategitem = $sumFinalPrice2;
+                          $txtFlagToProduct = "";
+                          $sumTotalDiscountPriceFinalPrevious = $popularcateg_item->previous_price; // PRECIO DE LA SECCIÓN (discount_price)
+                          $sumTotalPriceFinal = $sumFinalPrice2;
                         }
                       }
                     }
                   }else{
-                    // if(count($getAllCouponInfo) > 0){
-                    //   $sumTotalPriceFinal_popularcategitem = $couponInfo_totalprice;
-                    // }else{
-                    //   $sumTotalPriceFinal_popularcategitem = $popular_category_item->discount_price;
-                    // }
                     if(count($getAllDataCouponById) > 0){
-                      $sumTotalPriceFinal_popularcategitem = $couponInfo_totalprice;
+                      $txtFlagToProduct = "txt-applycoupon";
+                      $sumTotalDiscountPriceFinalPrevious = $popularcateg_item->discount_price; // PRECIO DE LA SECCIÓN (discount_price)
+                      $sumTotalPriceFinal = $couponInfo_totalprice;
                     }else{
-                      $sumTotalPriceFinal_popularcategitem = $popular_category_item->discount_price;
+                      $txtFlagToProduct = "";
+                      $sumTotalDiscountPriceFinalPrevious = $popularcateg_item->previous_price; // PRECIO DE LA SECCIÓN (discount_price)
+                      $sumTotalPriceFinal = $popularcateg_item->discount_price;
                     }
                   }
                 ?>
                 <div class="slider-item">
                   <div class="product-card">
                     <div class="product-thumb">
-                      <?php if(!$popular_category_item->is_stock()): ?>
-                        <div class="product-badge bg-secondary border-default text-body"><?php echo e(__('out of stock')); ?></div>
+                      <?php if($popularcateg_item->stocktype_id == 1): ?>
+                      <?php elseif($popularcateg_item->stocktype_id == 2): ?>
+                        <?php if(!$popularcateg_item->is_stock()): ?>
+                          <div class="product-badge bg-secondary border-default text-body"><?php echo e(__('out of stock')); ?></div>
+                        <?php endif; ?>
                       <?php endif; ?>
-                      <?php if($popular_category_item->previous_price && $popular_category_item->previous_price !=0): ?>
-                      <div class="product-badge product-badge2 bg-info"> -<?php echo e(PriceHelper::DiscountPercentage($popular_category_item)); ?></div>
+                      <?php if($popularcateg_item->previous_price && $popularcateg_item->previous_price !=0): ?>
+                      <div class="product-badge product-badge2 bg-info"> -<?php echo e(PriceHelper::DiscountPercentage($popularcateg_item)); ?></div>
                       <?php endif; ?>
-                      <a href="<?php echo e(route('front.product',$popular_category_item->slug)); ?>" class="d-flex align-items-center justify-content-center">
-                        <img class="lazy" data-src="<?php echo e(asset('assets/images/items/'.$popular_category_item->thumbnail)); ?>" alt="Product">
+                      <a href="<?php echo e(route('front.product',$popularcateg_item->slug)); ?>" class="d-flex align-items-center justify-content-center">
+                        <img class="lazy" data-src="<?php echo e(asset('assets/images/items/'.$popularcateg_item->thumbnail)); ?>" alt="Product">
                       </a>
                       <div class="product-button-group">
-                        <a class="product-button wishlist_store" href="<?php echo e(route('user.wishlist.store',$popular_category_item->id)); ?>" title="<?php echo e(__('Wishlist')); ?>"><i class="icon-heart"></i></a>
-                        <a data-target="<?php echo e(route('fornt.compare.product',$popular_category_item->id)); ?>" class="product-button product_compare" href="javascript:;" title="<?php echo e(__('Compare')); ?>"><i class="icon-repeat"></i></a>
-                        <?php echo $__env->make('includes.item_footer',['sitem'=>$popular_category_item], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                        <a class="product-button wishlist_store" href="<?php echo e(route('user.wishlist.store',$popularcateg_item->id)); ?>" title="<?php echo e(__('Wishlist')); ?>"><i class="icon-heart"></i></a>
+                        <a data-target="<?php echo e(route('fornt.compare.product',$popularcateg_item->id)); ?>" class="product-button product_compare" href="javascript:;" title="<?php echo e(__('Compare')); ?>"><i class="icon-repeat"></i></a>
+                        <?php echo $__env->make('includes.item_footer',['sitem'=>$popularcateg_item], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                       </div>
+                      <?php if($popularcateg_item->stocktype_id == 1): ?>
+                        <?php if($txtFlagAvaiCouponToProduct != ""): ?>
+                          <?php if($txtFlagAvaiCouponToProduct == "txt-nonapply"): ?>
+                            <?php
+                              $colorPercentageVal = "";
+                              $coupinf_discount_percentage_nonapplyFormatInt = (int) $coupinf_discount_percentage_nonapply;
+                              $coupinf_discount_percentage_nonapplyFormatFloat = floatval($coupinf_discount_percentage_nonapply);
+                              // if($coupinf_discount_percentage_nonapplyFormatInt > 0 && $coupinf_discount_percentage_nonapplyFormatInt <= 29){
+                              //   $colorPercentageVal = "bg__avaicoupon--20";
+                              // }else if($coupinf_discount_percentage_nonapplyFormatInt <= 30 && $coupinf_discount_percentage_nonapplyFormatInt <= 49){
+                              //   $colorPercentageVal = "bg__avaicoupon--30";
+                              // }else if($coupinf_discount_percentage_nonapplyFormatInt <= 50 && $coupinf_discount_percentage_nonapplyFormatInt <= 69){
+                              //   $colorPercentageVal = "bg__avaicoupon--50";
+                              // }else if($coupinf_discount_percentage_nonapplyFormatInt <= 70 && $coupinf_discount_percentage_nonapplyFormatInt <= 99){
+                              //   $colorPercentageVal = "bg__avaicoupon--70";
+                              // }else if($coupinf_discount_percentage_nonapplyFormatInt == 100){
+                              //   $colorPercentageVal = "bg__avaicoupon--100";
+                              // }else{
+                              //   $colorPercentageVal = "bg__avaicoupon--10";
+                              // }
+                            ?>
+                            <div class="product-avaicoupon post-abs">
+                              <div class="product-avaicoupon__c pos-r">
+                                <span class="product-avaicoupon__c__cType">
+                                  <span class="product-avaicoupon__c__cType__spn">
+                                    <span class="product-avaicoupon__c__cType__spn__txtTitle">CUPÓN</span>  
+                                    <span class="product-avaicoupon__c__cType__spn__txtNumb"><?php echo e($coupinf_discount_percentage_nonapplyFormatFloat); ?>%</span>  
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                          <?php endif; ?>
+                        <?php endif; ?>
+                      <?php elseif($popularcateg_item->stocktype_id == 2): ?>
+                        <?php if($popularcateg_item->is_stock()): ?>
+                          <?php if($txtFlagAvaiCouponToProduct != ""): ?>
+                            <?php if($txtFlagAvaiCouponToProduct == "txt-nonapply"): ?>
+                              <?php
+                                $colorPercentageVal = "";
+                                $coupinf_discount_percentage_nonapplyFormatInt = (int) $coupinf_discount_percentage_nonapply;
+                                $coupinf_discount_percentage_nonapplyFormatFloat = floatval($coupinf_discount_percentage_nonapply);
+                                // if($coupinf_discount_percentage_nonapplyFormatInt > 0 && $coupinf_discount_percentage_nonapplyFormatInt <= 29){
+                                //   $colorPercentageVal = "bg__avaicoupon--20";
+                                // }else if($coupinf_discount_percentage_nonapplyFormatInt <= 30 && $coupinf_discount_percentage_nonapplyFormatInt <= 49){
+                                //   $colorPercentageVal = "bg__avaicoupon--30";
+                                // }else if($coupinf_discount_percentage_nonapplyFormatInt <= 50 && $coupinf_discount_percentage_nonapplyFormatInt <= 69){
+                                //   $colorPercentageVal = "bg__avaicoupon--50";
+                                // }else if($coupinf_discount_percentage_nonapplyFormatInt <= 70 && $coupinf_discount_percentage_nonapplyFormatInt <= 99){
+                                //   $colorPercentageVal = "bg__avaicoupon--70";
+                                // }else if($coupinf_discount_percentage_nonapplyFormatInt == 100){
+                                //   $colorPercentageVal = "bg__avaicoupon--100";
+                                // }else{
+                                //   $colorPercentageVal = "bg__avaicoupon--10";
+                                // }
+                              ?>
+                              <div class="product-avaicoupon post-abs">
+                                <div class="product-avaicoupon__c pos-r">
+                                  <span class="product-avaicoupon__c__cType">
+                                    <span class="product-avaicoupon__c__cType__spn">
+                                      <span class="product-avaicoupon__c__cType__spn__txtTitle">CUPÓN</span>  
+                                      <span class="product-avaicoupon__c__cType__spn__txtNumb"><?php echo e($coupinf_discount_percentage_nonapplyFormatFloat); ?>%</span>  
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                            <?php endif; ?>
+                          <?php endif; ?>
+                        <?php endif; ?>
+                      <?php endif; ?>
                     </div>
                     <div class="product-card-body">
+                      <?php if($txtFlagToProduct != ""): ?>
+                        <?php if($txtFlagToProduct == "txt-applycoupon"): ?>
+                        <div class="product-flag">
+                          <div class="product-flag__c pos-r">
+                            <span class="product-flag__c__cType bg__applycoupon">
+                              <span class="product-flag__c__cType__spn">Cupón Activado</span>
+                            </span>
+                          </div>
+                        </div>
+                        <?php elseif($txtFlagToProduct == "txt-on_sale"): ?>
+                        <div class="product-flag">
+                          <div class="product-flag__c pos-r">
+                            <span class="product-flag__c__cType bg__onsale">
+                              <span class="product-flag__c__cType__spn">En Promoción</span>
+                            </span>
+                          </div>
+                        </div>
+                        <?php elseif($txtFlagToProduct == "txt-special_offer"): ?>
+                        <div class="product-flag">
+                          <div class="product-flag__c pos-r">
+                            <span class="product-flag__c__cType bg__specialoffer">
+                              <span class="product-flag__c__cType__spn">Oferta Especial</span>
+                            </span>
+                          </div>
+                        </div>
+                        <?php else: ?>
+                        <?php endif; ?>
+                      <?php endif; ?>
                       <div class="product-category">
-                        <a href="<?php echo e(route('front.catalog').'?category='.$popular_category_item->category->slug); ?>"><?php echo e($popular_category_item->category->name); ?></a>
+                        <a href="<?php echo e(route('front.catalog').'?category='.$popularcateg_item->category->slug); ?>"><?php echo e($popularcateg_item->category->name); ?></a>
                       </div>
                       <h3 class="product-title text-bold">
-                        <a class="text-bold" href="<?php echo e(route('front.product',$popular_category_item->slug)); ?>"><?php echo e(strlen(strip_tags($popular_category_item->name)) > 35 ? substr(strip_tags($popular_category_item->name), 0, 35) : strip_tags($popular_category_item->name)); ?></a>
+                        <a class="text-bold" href="<?php echo e(route('front.product',$popularcateg_item->slug)); ?>"><?php echo e(strlen(strip_tags($popularcateg_item->name)) > 35 ? substr(strip_tags($popularcateg_item->name), 0, 35) : strip_tags($popularcateg_item->name)); ?></a>
                       </h3>
-                      <p class="product-sku__2">SKU: <?php echo e(strlen(strip_tags($popular_category_item->sku)) > 35 ? substr(strip_tags($popular_category_item->sku), 0, 35) : strip_tags($popular_category_item->sku)); ?></p>
+                      <p class="product-sku__2">SKU: <?php echo e(strlen(strip_tags($popularcateg_item->sku)) > 35 ? substr(strip_tags($popularcateg_item->sku), 0, 35) : strip_tags($popularcateg_item->sku)); ?></p>
                       <h4 class="product-price">
-                        <?php if($popular_category_item->previous_price != 0): ?>
-                        <del><?php echo e(PriceHelper::setPreviousPrice($popular_category_item->previous_price)); ?></del>
-                        <?php endif; ?>
-                        <span><?php echo e(PriceHelper::setCurrencyPrice($sumTotalPriceFinal_popularcategitem)); ?></span>
+                        <del><?php echo e(PriceHelper::setPreviousPrice($sumTotalDiscountPriceFinalPrevious)); ?></del>
+                        <span><?php echo e(PriceHelper::setCurrencyPrice($sumTotalPriceFinal)); ?></span>
                       </h4>
                       <div class="cWtspBtnCtc">
                         <a title="Solicitar información" href="javascript:void(0);" target="_blank" class="cWtspBtnCtc__pLink">
@@ -426,23 +530,32 @@
           <?php if(!empty($feature_category_items) && count($feature_category_items) > 0): ?>
           <div class="col-lg-12">
             <div class="feature-category-slider  owl-carousel">
-              <?php $__currentLoopData = $feature_category_items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $feature_category_item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+              <?php $__currentLoopData = $feature_category_items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $featurecateg_item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <?php
                   $TaxesAll = DB::table('taxes')->get();
-                  $sumFinalPrice1 = 0;
-                  $sumFinalPrice2 = 0;
-                  $sumTotalPriceFinal_featurecategitem = 0;
-                  $couponInfo_totalprice = 0;
                   $incIGV = $TaxesAll[0]->value;
                   $sinIGV = $TaxesAll[1]->value;
                   $incIGV_format = $incIGV / 100;
                   $sinIGV_format = $sinIGV;
+                  $sumFinalPrice1 = 0;
+                  $sumFinalPrice2 = 0;
+                  $coupinf_discount_percentage = 0;
+                  $coupinf_discount_percentage_nonapply = 0;
+                  $couponInfo_totalprice = 0;
                   $getAllCouponInfo = [];
                   $getAllDataCouponById = [];
+                  $getAllDataCouponById_nonapply = [];
+                  $allCouponDataConvertById = [];
+                  $allCouponDataConvertById_nonapply = [];
+                  $sumTotalPriceFinal = 0;
+                  $sumTotalDiscountPriceFinalPrevious = 0;
+                  $txtFlagToProduct = "";
+                  $txtFlagAvaiCouponToProduct = "";
                   // --------------- VALIDAR SI YA SE ACTIVÓ UN CUPÓN EN EL PRODUCTO ('tbl_applycoupons')
-                  if(!empty($feature_category_item->coupon_id) && $feature_category_item->coupon_id != "" && $feature_category_item->coupon_id != null && $feature_category_item->coupon_id != 0){
-                    $getAllCouponInfo = DB::table('tbl_applycoupons')->where("id_user","=",$user_id)->where("id_prod","=",$feature_category_item->id)->where("id_coupon","=",$feature_category_item->coupon_id)->where("status","!=",0)->select('id_user', 'id_prod', 'id_coupon', 'totalprice')->take(1)->get();
+                  if(!empty($featurecateg_item->coupon_id) && $featurecateg_item->coupon_id != "" && $featurecateg_item->coupon_id != null && $featurecateg_item->coupon_id != 0){
+                    $getAllCouponInfo = DB::table('tbl_applycoupons')->where("id_user","=",$user_id)->where("id_prod","=",$featurecateg_item->id)->where("id_coupon","=",$featurecateg_item->coupon_id)->where("status","!=",0)->select('id_user', 'id_prod', 'id_coupon', 'totalprice')->take(1)->get();
                     if(count($getAllCouponInfo) > 0){
+                      $txtFlagAvaiCouponToProduct = "txt-yesapply";
                       $allDataConvert = json_decode($getAllCouponInfo, TRUE);
                       $getAllDataCouponById = DB::table('tbl_coupons')->where("id","=",$allDataConvert[0]['id_coupon'])->where("status","!=",0)->select('name', 'discount_percentage')->take(1)->get();
                       if(count($getAllDataCouponById) > 0){
@@ -450,139 +563,234 @@
                         $coupinf_discount_percentage = $allCouponDataConvertById[0]['discount_percentage'];
                         $couponInfo_totalprice = $allDataConvert[0]['totalprice']; // SETEAR LA VARIABLE DE PRECIO TOTAL PARA CUPÓN ACTIVADO
                       }
+                    }else{
+                      $txtFlagAvaiCouponToProduct = "txt-nonapply";
+                      $getAllDataCouponById_nonapply = DB::table('tbl_coupons')->where("id","=",$featurecateg_item->coupon_id)->where("status","!=",0)->select('name', 'discount_percentage')->take(1)->get();
+                      if(count($getAllDataCouponById_nonapply) > 0){
+                        $allCouponDataConvertById_nonapply = json_decode($getAllDataCouponById_nonapply, TRUE);
+                        $coupinf_discount_percentage_nonapply = $allCouponDataConvertById_nonapply[0]['discount_percentage'];
+                      }
                     }
                   }
-
-                  if($feature_category_item->sections_id != 0){
-                    if($feature_category_item->sections_id == 1 && $feature_category_item->on_sale_price != 0 && $feature_category_item->on_sale_price != ""){
-                      if($feature_category_item->tax_id == 1){
-                        $sumFinalPrice1 = $feature_category_item->on_sale_price * $incIGV_format;
-                        $sumFinalPrice2 = $feature_category_item->on_sale_price + $sumFinalPrice1;
-                        // if(count($getAllCouponInfo) > 0){
-                        //   $sumTotalPriceFinal_featurecategitem = $couponInfo_totalprice;
-                        // }else{
-                        //   $sumTotalPriceFinal_featurecategitem = $sumFinalPrice2;
-                        // }
+        
+                  if($featurecateg_item->sections_id != 0){
+                    if($featurecateg_item->sections_id == 1 && $featurecateg_item->on_sale_price != 0 && $featurecateg_item->on_sale_price != ""){
+                      if($featurecateg_item->tax_id == 1){
+                        $sumFinalPrice1 = $featurecateg_item->on_sale_price * $incIGV_format;
+                        $sumFinalPrice2 = $featurecateg_item->on_sale_price + $sumFinalPrice1;
                         if(count($getAllDataCouponById) > 0){
-                          $sumTotalPriceFinal_featurecategitem = $couponInfo_totalprice;
+                          $txtFlagToProduct = "txt-applycoupon";
+                          $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (on_sale_price)
+                          $sumTotalPriceFinal = $couponInfo_totalprice;
                         }else{
-                          $sumTotalPriceFinal_featurecategitem = $sumFinalPrice2;
+                          $txtFlagToProduct = "txt-on_sale";
+                          $sumTotalDiscountPriceFinalPrevious = $featurecateg_item->discount_price; // PRECIO ACTUAL (discount_price)
+                          $sumTotalPriceFinal = $sumFinalPrice2;
                         }
                       }else{
-                        $sumFinalPrice1 = $feature_category_item->on_sale_price;
-                        $sumFinalPrice2 = $feature_category_item->on_sale_price + $sumFinalPrice1;
-                        // if(count($getAllCouponInfo) > 0){
-                        //   $sumTotalPriceFinal_featurecategitem = $couponInfo_totalprice;
-                        // }else{
-                        //   $sumTotalPriceFinal_featurecategitem = $sumFinalPrice2;
-                        // }
+                        $sumFinalPrice2 = $featurecateg_item->on_sale_price;
                         if(count($getAllDataCouponById) > 0){
-                          $sumTotalPriceFinal_featurecategitem = $couponInfo_totalprice;
+                          $txtFlagToProduct = "txt-applycoupon";
+                          $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (on_sale_price)
+                          $sumTotalPriceFinal = $couponInfo_totalprice;
                         }else{
-                          $sumTotalPriceFinal_featurecategitem = $sumFinalPrice2;
+                          $txtFlagToProduct = "txt-on_sale";
+                          $sumTotalDiscountPriceFinalPrevious = $featurecateg_item->discount_price; // PRECIO ACTUAL (discount_price)
+                          $sumTotalPriceFinal = $sumFinalPrice2;
                         }
-                      }                    
-                    }else if($feature_category_item->sections_id == 2 && $feature_category_item->special_offer_price != 0 && $feature_category_item->special_offer_price != ""){
-                      if($feature_category_item->tax_id == 1){
-                        $sumFinalPrice1 = $feature_category_item->special_offer_price * $incIGV_format;
-                        $sumFinalPrice2 = $feature_category_item->special_offer_price + $sumFinalPrice1;
-                        // if(count($getAllCouponInfo) > 0){
-                        //   $sumTotalPriceFinal_featurecategitem = $couponInfo_totalprice;
-                        // }else{
-                        //   $sumTotalPriceFinal_featurecategitem = $sumFinalPrice2;
-                        // }
+                      }
+                    }else if($featurecateg_item->sections_id == 2 && $featurecateg_item->special_offer_price != 0 && $featurecateg_item->special_offer_price != ""){
+                      if($featurecateg_item->tax_id == 1){
+                        $sumFinalPrice1 = $featurecateg_item->special_offer_price * $incIGV_format;
+                        $sumFinalPrice2 = $featurecateg_item->special_offer_price + $sumFinalPrice1;
                         if(count($getAllDataCouponById) > 0){
-                          $sumTotalPriceFinal_featurecategitem = $couponInfo_totalprice;
+                          $txtFlagToProduct = "txt-applycoupon";
+                          $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (special_offer_price)
+                          $sumTotalPriceFinal = $couponInfo_totalprice;
                         }else{
-                          $sumTotalPriceFinal_featurecategitem = $sumFinalPrice2;
+                          $txtFlagToProduct = "txt-special_offer";
+                          $sumTotalDiscountPriceFinalPrevious = $featurecateg_item->discount_price; // PRECIO ACTUAL (discount_price)
+                          $sumTotalPriceFinal = $sumFinalPrice2;
                         }
                       }else{
-                        $sumFinalPrice1 = $feature_category_item->special_offer_price;
-                        $sumFinalPrice2 = $feature_category_item->special_offer_price + $sumFinalPrice1;
-                        // if(count($getAllCouponInfo) > 0){
-                        //   $sumTotalPriceFinal_featurecategitem = $couponInfo_totalprice;
-                        // }else{
-                        //   $sumTotalPriceFinal_featurecategitem = $sumFinalPrice2;
-                        // }
+                        $sumFinalPrice2 = $featurecateg_item->special_offer_price;
                         if(count($getAllDataCouponById) > 0){
-                          $sumTotalPriceFinal_featurecategitem = $couponInfo_totalprice;
+                          $txtFlagToProduct = "txt-applycoupon";
+                          $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (NO_SECTION)
+                          $sumTotalPriceFinal = $couponInfo_totalprice;
                         }else{
-                          $sumTotalPriceFinal_featurecategitem = $sumFinalPrice2;
+                          $txtFlagToProduct = "txt-special_offer";
+                          $sumTotalDiscountPriceFinalPrevious = $featurecateg_item->discount_price; // PRECIO DE LA SECCIÓN (discount_price)
+                          $sumTotalPriceFinal = $sumFinalPrice2;
                         }
                       }
                     }else{
-                      if($feature_category_item->tax_id == 1){                
-                        $sumFinalPrice1 = $feature_category_item->special_offer_price * $incIGV_format;
-                        $sumFinalPrice2 = $feature_category_item->special_offer_price + $sumFinalPrice1;
-                        // if(count($getAllCouponInfo) > 0){
-                        //   $sumTotalPriceFinal_featurecategitem = $couponInfo_totalprice;
-                        // }else{
-                        //   $sumTotalPriceFinal_featurecategitem = $sumFinalPrice2;
-                        // }
+                      if($featurecateg_item->tax_id == 1){                
+                        $sumFinalPrice1 = $featurecateg_item->discount_price * $incIGV_format;
+                        $sumFinalPrice2 = $featurecateg_item->discount_price + $sumFinalPrice1;
                         if(count($getAllDataCouponById) > 0){
-                          $sumTotalPriceFinal_featurecategitem = $couponInfo_totalprice;
+                          $txtFlagToProduct = "txt-applycoupon";
+                          $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (NO_SECTION)
+                          $sumTotalPriceFinal = $couponInfo_totalprice;
                         }else{
-                          $sumTotalPriceFinal_featurecategitem = $sumFinalPrice2;
+                          $txtFlagToProduct = "";
+                          $sumTotalDiscountPriceFinalPrevious = $featurecateg_item->discount_price; // PRECIO DE LA SECCIÓN (discount_price)
+                          $sumTotalPriceFinal = $sumFinalPrice2;
                         }
                       }else{
-                        $sumFinalPrice1 = $feature_category_item->special_offer_price;
-                        $sumFinalPrice2 = $feature_category_item->special_offer_price + $sumFinalPrice1; 
-                        // if(count($getAllCouponInfo) > 0){
-                        //   $sumTotalPriceFinal_featurecategitem = $couponInfo_totalprice;
-                        // }else{
-                        //   $sumTotalPriceFinal_featurecategitem = $sumFinalPrice2;
-                        // }
+                        $sumFinalPrice2 = $featurecateg_item->discount_price;
                         if(count($getAllDataCouponById) > 0){
-                          $sumTotalPriceFinal_featurecategitem = $couponInfo_totalprice;
+                          $txtFlagToProduct = "txt-applycoupon";
+                          $sumTotalDiscountPriceFinalPrevious = $sumFinalPrice2; // PRECIO DE LA SECCIÓN (NO_SECTION)
+                          $sumTotalPriceFinal = $couponInfo_totalprice;
                         }else{
-                          $sumTotalPriceFinal_featurecategitem = $sumFinalPrice2;
+                          $txtFlagToProduct = "";
+                          $sumTotalDiscountPriceFinalPrevious = $featurecateg_item->previous_price; // PRECIO DE LA SECCIÓN (discount_price)
+                          $sumTotalPriceFinal = $sumFinalPrice2;
                         }
                       }
                     }
                   }else{
-                    // if(count($getAllCouponInfo) > 0){
-                    //   $sumTotalPriceFinal_featurecategitem = $couponInfo_totalprice;
-                    // }else{
-                    //   $sumTotalPriceFinal_featurecategitem = $feature_category_item->discount_price;
-                    // }
                     if(count($getAllDataCouponById) > 0){
-                      $sumTotalPriceFinal_featurecategitem = $couponInfo_totalprice;
+                      $txtFlagToProduct = "txt-applycoupon";
+                      $sumTotalDiscountPriceFinalPrevious = $featurecateg_item->discount_price; // PRECIO DE LA SECCIÓN (discount_price)
+                      $sumTotalPriceFinal = $couponInfo_totalprice;
                     }else{
-                      $sumTotalPriceFinal_featurecategitem = $feature_category_item->discount_price;
+                      $txtFlagToProduct = "";
+                      $sumTotalDiscountPriceFinalPrevious = $featurecateg_item->previous_price; // PRECIO DE LA SECCIÓN (discount_price)
+                      $sumTotalPriceFinal = $featurecateg_item->discount_price;
                     }
                   }
                 ?>
                 <div class="slider-item">
                   <div class="product-card">
                     <div class="product-thumb" >
-                      <?php if(!$feature_category_item->is_stock()): ?>
-                        <div class="product-badge bg-secondary border-default text-body"><?php echo e(__('out of stock')); ?></div>
+                      <?php if($featurecateg_item->stocktype_id == 1): ?>
+                      <?php elseif($featurecateg_item->stocktype_id == 2): ?>
+                        <?php if(!$featurecateg_item->is_stock()): ?>
+                          <div class="product-badge bg-secondary border-default text-body"><?php echo e(__('out of stock')); ?></div>
+                        <?php endif; ?>
                       <?php endif; ?>
-                      <?php if($feature_category_item->previous_price && $feature_category_item->previous_price !=0): ?>
-                      <div class="product-badge product-badge2 bg-info"> -<?php echo e(PriceHelper::DiscountPercentage($feature_category_item)); ?></div>
+                      <?php if($featurecateg_item->previous_price && $featurecateg_item->previous_price !=0): ?>
+                      <div class="product-badge product-badge2 bg-info"> -<?php echo e(PriceHelper::DiscountPercentage($featurecateg_item)); ?></div>
                       <?php endif; ?>                                
-                      <a href="<?php echo e(route('front.product',$feature_category_item->slug)); ?>" class="d-flex align-items-center justify-content-center">
-                        <img class="lazy" data-src="<?php echo e(asset('assets/images/items/'.$feature_category_item->thumbnail)); ?>" alt="Product">
+                      <a href="<?php echo e(route('front.product',$featurecateg_item->slug)); ?>" class="d-flex align-items-center justify-content-center">
+                        <img class="lazy" data-src="<?php echo e(asset('assets/images/items/'.$featurecateg_item->thumbnail)); ?>" alt="Product">
                       </a>
-                      <div class="product-button-group"><a class="product-button wishlist_store" href="<?php echo e(route('user.wishlist.store',$feature_category_item->id)); ?>" title="<?php echo e(__('Wishlist')); ?>"><i class="icon-heart"></i></a>
-                        <a data-target="<?php echo e(route('fornt.compare.product',$feature_category_item->id)); ?>" class="product-button product_compare" href="javascript:;" title="<?php echo e(__('Compare')); ?>"><i class="icon-repeat"></i></a>
-                        <?php echo $__env->make('includes.item_footer',['sitem'=>$feature_category_item], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                      <div class="product-button-group"><a class="product-button wishlist_store" href="<?php echo e(route('user.wishlist.store',$featurecateg_item->id)); ?>" title="<?php echo e(__('Wishlist')); ?>"><i class="icon-heart"></i></a>
+                        <a data-target="<?php echo e(route('fornt.compare.product',$featurecateg_item->id)); ?>" class="product-button product_compare" href="javascript:;" title="<?php echo e(__('Compare')); ?>"><i class="icon-repeat"></i></a>
+                        <?php echo $__env->make('includes.item_footer',['sitem'=>$featurecateg_item], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                       </div>
+                      <?php if($featurecateg_item->stocktype_id == 1): ?>
+                        <?php if($txtFlagAvaiCouponToProduct != ""): ?>
+                          <?php if($txtFlagAvaiCouponToProduct == "txt-nonapply"): ?>
+                            <?php
+                              $colorPercentageVal = "";
+                              $coupinf_discount_percentage_nonapplyFormatInt = (int) $coupinf_discount_percentage_nonapply;
+                              $coupinf_discount_percentage_nonapplyFormatFloat = floatval($coupinf_discount_percentage_nonapply);
+                              // if($coupinf_discount_percentage_nonapplyFormatInt > 0 && $coupinf_discount_percentage_nonapplyFormatInt <= 29){
+                              //   $colorPercentageVal = "bg__avaicoupon--20";
+                              // }else if($coupinf_discount_percentage_nonapplyFormatInt <= 30 && $coupinf_discount_percentage_nonapplyFormatInt <= 49){
+                              //   $colorPercentageVal = "bg__avaicoupon--30";
+                              // }else if($coupinf_discount_percentage_nonapplyFormatInt <= 50 && $coupinf_discount_percentage_nonapplyFormatInt <= 69){
+                              //   $colorPercentageVal = "bg__avaicoupon--50";
+                              // }else if($coupinf_discount_percentage_nonapplyFormatInt <= 70 && $coupinf_discount_percentage_nonapplyFormatInt <= 99){
+                              //   $colorPercentageVal = "bg__avaicoupon--70";
+                              // }else if($coupinf_discount_percentage_nonapplyFormatInt == 100){
+                              //   $colorPercentageVal = "bg__avaicoupon--100";
+                              // }else{
+                              //   $colorPercentageVal = "bg__avaicoupon--10";
+                              // }
+                            ?>
+                            <div class="product-avaicoupon post-abs">
+                              <div class="product-avaicoupon__c pos-r">
+                                <span class="product-avaicoupon__c__cType">
+                                  <span class="product-avaicoupon__c__cType__spn">
+                                    <span class="product-avaicoupon__c__cType__spn__txtTitle">CUPÓN</span>  
+                                    <span class="product-avaicoupon__c__cType__spn__txtNumb"><?php echo e($coupinf_discount_percentage_nonapplyFormatFloat); ?>%</span>  
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                          <?php endif; ?>
+                        <?php endif; ?>
+                      <?php elseif($featurecateg_item->stocktype_id == 2): ?>
+                        <?php if($featurecateg_item->is_stock()): ?>
+                          <?php if($txtFlagAvaiCouponToProduct != ""): ?>
+                            <?php if($txtFlagAvaiCouponToProduct == "txt-nonapply"): ?>
+                              <?php
+                                $colorPercentageVal = "";
+                                $coupinf_discount_percentage_nonapplyFormatInt = (int) $coupinf_discount_percentage_nonapply;
+                                $coupinf_discount_percentage_nonapplyFormatFloat = floatval($coupinf_discount_percentage_nonapply);
+                                // if($coupinf_discount_percentage_nonapplyFormatInt > 0 && $coupinf_discount_percentage_nonapplyFormatInt <= 29){
+                                //   $colorPercentageVal = "bg__avaicoupon--20";
+                                // }else if($coupinf_discount_percentage_nonapplyFormatInt <= 30 && $coupinf_discount_percentage_nonapplyFormatInt <= 49){
+                                //   $colorPercentageVal = "bg__avaicoupon--30";
+                                // }else if($coupinf_discount_percentage_nonapplyFormatInt <= 50 && $coupinf_discount_percentage_nonapplyFormatInt <= 69){
+                                //   $colorPercentageVal = "bg__avaicoupon--50";
+                                // }else if($coupinf_discount_percentage_nonapplyFormatInt <= 70 && $coupinf_discount_percentage_nonapplyFormatInt <= 99){
+                                //   $colorPercentageVal = "bg__avaicoupon--70";
+                                // }else if($coupinf_discount_percentage_nonapplyFormatInt == 100){
+                                //   $colorPercentageVal = "bg__avaicoupon--100";
+                                // }else{
+                                //   $colorPercentageVal = "bg__avaicoupon--10";
+                                // }
+                              ?>
+                              <div class="product-avaicoupon post-abs">
+                                <div class="product-avaicoupon__c pos-r">
+                                  <span class="product-avaicoupon__c__cType">
+                                    <span class="product-avaicoupon__c__cType__spn">
+                                      <span class="product-avaicoupon__c__cType__spn__txtTitle">CUPÓN</span>  
+                                      <span class="product-avaicoupon__c__cType__spn__txtNumb"><?php echo e($coupinf_discount_percentage_nonapplyFormatFloat); ?>%</span>  
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                            <?php endif; ?>
+                          <?php endif; ?>
+                        <?php endif; ?>
+                      <?php endif; ?>
                     </div>
                     <div class="product-card-body">
-                      <div class="product-category"><a href="<?php echo e(route('front.catalog').'?category='.$feature_category_item->category->slug); ?>"><?php echo e($feature_category_item->category->name); ?></a></div>
+                      <?php if($txtFlagToProduct != ""): ?>
+                        <?php if($txtFlagToProduct == "txt-applycoupon"): ?>
+                        <div class="product-flag">
+                          <div class="product-flag__c pos-r">
+                            <span class="product-flag__c__cType bg__applycoupon">
+                              <span class="product-flag__c__cType__spn">Cupón Activado</span>
+                            </span>
+                          </div>
+                        </div>
+                        <?php elseif($txtFlagToProduct == "txt-on_sale"): ?>
+                        <div class="product-flag">
+                          <div class="product-flag__c pos-r">
+                            <span class="product-flag__c__cType bg__onsale">
+                              <span class="product-flag__c__cType__spn">En Promoción</span>
+                            </span>
+                          </div>
+                        </div>
+                        <?php elseif($txtFlagToProduct == "txt-special_offer"): ?>
+                        <div class="product-flag">
+                          <div class="product-flag__c pos-r">
+                            <span class="product-flag__c__cType bg__specialoffer">
+                              <span class="product-flag__c__cType__spn">Oferta Especial</span>
+                            </span>
+                          </div>
+                        </div>
+                        <?php else: ?>
+                        <?php endif; ?>
+                      <?php endif; ?>
+                      <div class="product-category"><a href="<?php echo e(route('front.catalog').'?category='.$featurecateg_item->category->slug); ?>"><?php echo e($featurecateg_item->category->name); ?></a></div>
                       <h3 class="product-title">
-                        <a href="<?php echo e(route('front.product',$feature_category_item->slug)); ?>">
-                          <?php echo e(strlen(strip_tags($feature_category_item->name)) > 35 ? substr(strip_tags($feature_category_item->name), 0, 35) : strip_tags($feature_category_item->name)); ?>
+                        <a class="text-bold" href="<?php echo e(route('front.product',$featurecateg_item->slug)); ?>">
+                          <?php echo e(strlen(strip_tags($featurecateg_item->name)) > 35 ? substr(strip_tags($featurecateg_item->name), 0, 35) : strip_tags($featurecateg_item->name)); ?>
 
                         </a>
                       </h3>
-                      <p class="product-sku__2">SKU: <?php echo e(strlen(strip_tags($feature_category_item->sku)) > 35 ? substr(strip_tags($feature_category_item->sku), 0, 35) : strip_tags($feature_category_item->sku)); ?></p>
+                      <p class="product-sku__2">SKU: <?php echo e(strlen(strip_tags($featurecateg_item->sku)) > 35 ? substr(strip_tags($featurecateg_item->sku), 0, 35) : strip_tags($featurecateg_item->sku)); ?></p>
                       <h4 class="product-price">
-                        <?php if($feature_category_item->previous_price != 0): ?>
-                        <del><?php echo e(PriceHelper::setPreviousPrice($feature_category_item->previous_price)); ?></del>
-                        <?php endif; ?>
-                        <span><?php echo e(PriceHelper::setCurrencyPrice($sumTotalPriceFinal_featurecategitem)); ?></span>
+                        <del><?php echo e(PriceHelper::setPreviousPrice($sumTotalDiscountPriceFinalPrevious)); ?></del>
+                        <span><?php echo e(PriceHelper::setCurrencyPrice($sumTotalPriceFinal)); ?></span>
                       </h4>
                       <div class="cWtspBtnCtc">
                         <a title="Solicitar información" href="javascript:void(0);" target="_blank" class="cWtspBtnCtc__pLink">

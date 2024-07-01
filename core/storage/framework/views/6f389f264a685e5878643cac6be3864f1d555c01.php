@@ -9,9 +9,14 @@
   // echo "<pre>";
   // print_r($cart);
   // echo "</pre>";
-  // exit();
+  // // exit();
+  // if(count(Session::get('cart')) > 0){
+  //   echo "Hay productos";
+  // }else{
+  //   echo "Vacío";
+  // }
 ?>
-<?php if(Session::has('cart')): ?>
+<?php if(Session::has('cart') && count(Session::get('cart')) > 0): ?>
   <?php $__currentLoopData = $cart; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
   <?php
     $totalwithoutcoupon = 0;
@@ -111,7 +116,7 @@
       <?php endif; ?>
     </div>
     <div class="entry-delete">
-      <a href="<?php echo e(route('front.cart.destroy',$key)); ?>"><i class="icon-x"></i></a>
+      <a class="remove-from-headercartlist remwithsvgofheadercartlist" href="<?php echo e(route('front.cart.destroy',$key)); ?>"><i class="icon-x"></i></a>
     </div>
   </div>
   <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

@@ -214,8 +214,10 @@ function maxcharacters($string, $maxletters){
                             <div class="toolbar-item"><a href="<?php echo e(route('front.cart')); ?>">
                                 <div><span class="cart-icon"><i class="icon-shopping-cart"></i><span class="count-label cart_count"><?php echo e(Session::has('cart') ? count(Session::get('cart')) : '0'); ?> </span></span><span class="text-label"><?php echo e(__('Cart')); ?></span></div>
                                 </a>
-                                <div class="toolbar-dropdown cart-dropdown widget-cart  cart_view_header" id="header_cart_load" data-target="<?php echo e(route('front.header.cart')); ?>">
-                                <?php echo $__env->make('includes.header_cart', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                                <div class="toolbar-dropdown cart-dropdown">
+                                    <div class="widget-cart cartviewheader__c cart_view_header" id="header_cart_load" data-target="<?php echo e(route('front.header.cart')); ?>">
+                                    <?php echo $__env->make('includes.header_cart', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -480,7 +482,7 @@ function maxcharacters($string, $maxletters){
     <?php if($setting->announcement_type == 'newletter'): ?>
     <div class="announcement-with-content">
         <div class="left-area">
-            <img src="<?php echo e(asset('assets/images/'.$setting->announcement)); ?>" alt="">
+            <img src="<?php echo e(asset('assets/images/announcements/'.$setting->announcement)); ?>" alt="">
         </div>
         <div class="right-area">
             <h3 class=""><?php echo e($setting->announcement_title); ?></h3>
@@ -501,7 +503,7 @@ function maxcharacters($string, $maxletters){
     </div>
     <?php else: ?>
     <a href="<?php echo e($setting->announcement_link); ?>">
-        <img src="<?php echo e(asset('assets/images/'.$setting->announcement)); ?>" alt="">
+        <img src="<?php echo e(asset('assets/images/announcements/'.$setting->announcement)); ?>" alt="">
     </a>
     <?php endif; ?>
 </div>
