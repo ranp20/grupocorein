@@ -14,7 +14,7 @@
 		$newDate = date("Y/m/d H:i:s", strtotime($originalDate));
 		return $newDate;
 	}
-	function maxcharacters($string, $maxletters){
+	function maxcharactersinthisfile($string, $maxletters){
 		$output_strg = "";
 		if(strlen($string) > $maxletters){
 			$output_strg = substr($string, 0, $maxletters) . "...";
@@ -257,13 +257,13 @@
               <tr>
                 <td>
                   <div class="d-block w-100 txt-center">
-                    <img src="{{ $urlPhoto }}" class="m-auto w-50px h-50px" alt="{{ maxcharacters($item['name'], 42) }}" width="55px" height="55px">
+                    <img src="{{ $urlPhoto }}" class="m-auto w-50px h-50px" alt="{{ maxcharactersinthisfile($item['name'], 42) }}" width="55px" height="55px">
                   </div>
                 </td>
                 <td><span>{{ $item['sku'] }}</span></td>
                 {{--
                 <!-- <td class="">
-                  <span>{{ maxcharacters($item['name'], 42) }}</span>
+                  <span>{{ maxcharactersinthisfile($item['name'], 42) }}</span>
                   <p>
                     @if($main_item)
                     @if ($item['item_type'] == 'digital')
@@ -290,7 +290,7 @@
                   </p>
                 </td> -->
                 --}}
-                <td><span>{{ maxcharacters($main_item->sort_details, 42) }}</span></td>
+                <td><span>{{ maxcharactersinthisfile($main_item->sort_details, 42) }}</span></td>
                 <td class="px-0">{{ $item['brand_name'] }}</td>
                 <td class="px-0 text-center">{{ $item['qty'] }}</td>
                 <td class="px-0">{{ $item['rootunit_name'] }}</td>
