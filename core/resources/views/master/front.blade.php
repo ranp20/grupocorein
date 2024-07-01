@@ -214,8 +214,10 @@ function maxcharacters($string, $maxletters){
                             <div class="toolbar-item"><a href="{{route('front.cart')}}">
                                 <div><span class="cart-icon"><i class="icon-shopping-cart"></i><span class="count-label cart_count">{{Session::has('cart') ? count(Session::get('cart')) : '0'}} </span></span><span class="text-label">{{ __('Cart') }}</span></div>
                                 </a>
-                                <div class="toolbar-dropdown cart-dropdown widget-cart  cart_view_header" id="header_cart_load" data-target="{{route('front.header.cart')}}">
-                                @include('includes.header_cart')
+                                <div class="toolbar-dropdown cart-dropdown">
+                                    <div class="widget-cart cartviewheader__c cart_view_header" id="header_cart_load" data-target="{{route('front.header.cart')}}">
+                                    @include('includes.header_cart')
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -513,7 +515,7 @@ function maxcharacters($string, $maxletters){
     @if ($setting->announcement_type == 'newletter')
     <div class="announcement-with-content">
         <div class="left-area">
-            <img src="{{ asset('assets/images/'.$setting->announcement) }}" alt="">
+            <img src="{{ asset('assets/images/announcements/'.$setting->announcement) }}" alt="">
         </div>
         <div class="right-area">
             <h3 class="">{{  $setting->announcement_title }}</h3>
@@ -534,7 +536,7 @@ function maxcharacters($string, $maxletters){
     </div>
     @else
     <a href="{{ $setting->announcement_link }}">
-        <img src="{{ asset('assets/images/'.$setting->announcement) }}" alt="">
+        <img src="{{ asset('assets/images/announcements/'.$setting->announcement) }}" alt="">
     </a>
     @endif
 </div>
