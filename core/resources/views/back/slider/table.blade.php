@@ -6,18 +6,40 @@
     </a>
   </td>
   <td>
-    @if ($data->home_page != 'theme4')
+    @if($data->home_page == "theme4")
     {{ $data->title }}
     @else
-    --
+      @if($data->content_info != "")
+        @php
+          $content_infoFormat = json_decode($data->content_info, TRUE);
+        @endphp
+        {{ $content_infoFormat['content_title'] }}
+      @else
+        @if($data->title != "")
+          {{ $data->title }}
+        @else
+          {{ 'No especificado' }}
+        @endif
+      @endif
     @endif
   </td>
   <td>{{strtoupper($data->home_page)}}</td>
   <td>
-    @if ($data->home_page != 'theme4')
+    @if($data->home_page == "theme4")
     {{ strlen(strip_tags($data->details)) > 250 ? substr(strip_tags($data->details),0,250).'...' : strip_tags($data->details) }}
     @else
-    --
+      @if($data->content_info != "")
+        @php
+          $content_infoFormat = json_decode($data->content_info, TRUE);
+        @endphp
+        {{ $content_infoFormat['content_description'] }}
+      @else
+        @if($data->details != "")
+          {{ strlen(strip_tags($data->details)) > 250 ? substr(strip_tags($data->details),0,250).'...' : strip_tags($data->details) }}
+        @else
+          {{ 'No especificado' }}
+        @endif
+      @endif
     @endif
   </td>
   <td>

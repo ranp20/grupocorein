@@ -2,12 +2,23 @@ $(() => {
   // alert("asdasd");
   var locationsGET = window.location.href;
   var locationGETArray = locationsGET.split("/");
+  // --------------- URL BASE - LOCALHOST
+  /*
   var locationGETFormat = locationGETArray[0]+
                           locationGETArray[1]+'//'+
                           locationGETArray[2]+'/'+
                           locationGETArray[3]+'/'+
                           locationGETArray[4]+'/'+
                           locationGETArray[5];
+  */
+  // --------------- URL BASE - SERVER
+  /*
+  var locationGETFormat = locationGETArray[0]+
+                          locationGETArray[1]+'//'+
+                          locationGETArray[2]+'/'+
+                          locationGETArray[3]+'/'+
+                          locationGETArray[4];
+  */
   var csrfTokenFrm = $("#iptc-A3gs4FS_token").find("input[name='_token']").val();  
   // --------------- OBTENER TODOS LOS VALORES DE IMPUESTOS
   var taxesObj = [];

@@ -253,7 +253,10 @@ img{
 	top: 4px;
 	margin-left: 6px;
 }
-
+.non-border-list-switchs{
+	border: none;
+	border-radius: unset;
+}
 .border-list-switchs{
 	border: thin solid #ededed;
 	border-radius: 4px;
@@ -328,19 +331,66 @@ img{
 		}
 	}
 }
-.c-sRadioBtn__c--cDesign-1{
-	&__c{
-		position: relative;
-  	display: inline-block;
-		top: 2px;
-		label{
-			
+.c-sRadioBtn__c--cDesign{
+	&-1{
+		&__c{
+			position: relative;
+			display: inline-block;
+			top: 2px;
+			label{
+				
+			}			
+			&__label{
+				
+			}
 		}
-		&__label{
-			
+	}
+	&-2{
+		label{
+			border: 2px solid #dbdbdb;
+		}
+		&:first-child{
+			label{
+				border-radius: 6px 0 0 6px;
+				border-right: 2px solid transparent;
+			}
+		}
+		&:last-child{
+			label{
+				border-radius: 0 6px 6px 0;
+				border-left: 2px solid transparent;
+			}
+		}
+		&__c{
+			position: relative;
+			display: inline-block;
+			label{
+				cursor: pointer;
+				margin-bottom: 0 !important;
+				padding: 8px 15px;
+				// box-shadow: 0 1px 4px 0px rgba(0, 0, 0, .2);
+				box-shadow: 0 2px 5px 0px rgba(0,0,0,.1);
+			}
+			input{
+				display: none;
+			}
+			input:checked + label{
+				background-color: #eeeeee;
+				// border: 2px solid #a0a0a1 !important;
+				border: 2px solid #2879a2 !important;
+				color: #2879a2 !important;
+			}
+			&__label{
+				
+			}
 		}
 	}
 }
+// .c-sRadioBtn__c--cDesign-2__c input[type=radio]:checked + label {
+// 	background: #CB8306;
+// 	color: #FAFAFA;
+// }
+
 .cPreviewAmmountIGV{
 	span{
 		&:first-child{

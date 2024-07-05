@@ -157,13 +157,27 @@ input[f-hidden="aria-hidden"]{
 .s-fkeynone-step_yipt{width: 0;height: 0;display: none;opacity: 0;visibility: hidden;display: none;background-color: #fff;border: none;line-height: unset;}
 input[f-hidden="aria-hidden_yipt"]{width: 0;height: 0;display: none;opacity: 0;visibility: hidden;background-color: #fff;border: none;line-height: unset;}
 // ------------ CLASES PARA INPUTS OCULTOS PERO CON FUNCIONALIDAD DINÁMICA(FIN)
-
 .w-50px{width: 50px;}
 .h-50px{height: 50px;}
 .w-100{width: 100%;}
 .text-center{text-align: center;}
 .text-left{text-align: left;}
 .text-right{text-align: right;}
+.c-alignment{
+	&--left{
+		text-align: left;
+		margin-right: auto;
+	}
+	&--center{
+		text-align: center;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	&--right{
+		text-align: right;
+		margin-left: auto;
+	}
+}
 #spn-fgTchkMdl23_transaction{
 	color: red;
 	display: block;
