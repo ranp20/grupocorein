@@ -310,7 +310,7 @@
               </select>
             </div>
             <div class="form-group">
-              <label for="">{{ __('Seleccionar sección') }} *</label>
+              <label for="">{{ __('Select section') }} *</label>
               <div class="border-list-switchs">
                 <div class="form-check pb-0">
                   <section class="c-sRadioBtn__c--cDesign-1">
@@ -324,9 +324,9 @@
                     @php
                     $onSection = "";
                     if($section->name == "on_sale"){
-                      $onSection = "En promoción";
+                      $onSection = __('On sale');
                     }else if($section->name == "special_offer"){
-                      $onSection = "Oferta Especial";
+                      $onSection = __('Special offer');
                     }else{
                       $onSection = $section->name;
                     }
@@ -366,7 +366,7 @@
               <div class="cSecProdsGroupList__c__i" id="secLink_0"></div>
               <div class="cSecProdsGroupList__c__i" id="secLink_1">
                 <div class="form-group">
-                  <label for="on-sale-price">En Promoción *</label>
+                  <label for="on-sale-price">{{ __('On sale') }} *</label>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text">S/.</span>
@@ -384,7 +384,7 @@
               </div>
               <div class="cSecProdsGroupList__c__i" id="secLink_2">
                 <div class="form-group">
-                  <label for="special-offer-price">Oferta Especial *</label>
+                  <label for="special-offer-price">{{ __('Special offer') }} *</label>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text">S/.</span>
@@ -427,7 +427,7 @@
             </div>
             <!-- NUEVO CONTENIDO (INICIO) -->
             <div class="form-group">
-              <label for="sku">{{ __('Código SAP') }} *</label>
+              <label for="sku">{{ __('SAP code') }} *</label>
               <input type="text" name="sap_code" class="form-control" id="sap_code" placeholder="{{ __('Enter SAP code') }}" value="{{Str::random(10)}}" >
             </div>
             <div>
