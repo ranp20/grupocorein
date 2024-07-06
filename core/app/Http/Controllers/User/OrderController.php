@@ -177,7 +177,7 @@ class OrderController extends Controller{
 
       config(['app.timezone' => 'America/Lima']);
       date_default_timezone_set('America/Lima');
-      $newDateOrder = date("Y/m/d h:i:s A", strtotime($order['created_at']));
+      $newDateOrder = date("Y/m/d - h:i:s A", strtotime($order['created_at']));
 
       $get_SessionUserInfo = [
         'date' => $newDateOrder,
