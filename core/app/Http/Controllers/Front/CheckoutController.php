@@ -1870,7 +1870,7 @@ class CheckoutController extends Controller{
     date_default_timezone_set('America/Lima');
 
     $get_SessionUserInfo = [
-      'date' => date('Y/m/d - h:i:s A'),
+      'date' => date('Y/m/d h:i:s A'),
       'client' => $reg_razonsocialFinal,
       'name' => Auth::user()->first_name . " " . Auth::user()->last_name,
       'ruc' => (isset(Auth::user()->reg_ruc) && !empty(Auth::user()->reg_ruc))? Auth::user()->reg_ruc : 'No especificado',
