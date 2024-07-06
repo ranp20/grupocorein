@@ -3,14 +3,14 @@ $(() => {
   var locationsGET = window.location.href;
   var locationGETArray = locationsGET.split("/");
   // --------------- URL BASE - LOCALHOST
-  /*
+  
   var locationGETFormat = locationGETArray[0]+
                           locationGETArray[1]+'//'+
                           locationGETArray[2]+'/'+
                           locationGETArray[3]+'/'+
                           locationGETArray[4]+'/'+
                           locationGETArray[5];
-  */
+  
   // --------------- URL BASE - SERVER
   /*
   var locationGETFormat = locationGETArray[0]+
@@ -300,10 +300,27 @@ $(() => {
   // --------------- TOGGLE SECTION_ID
   $(document).on("click","input[name=sections_id]",function(){
     $('#' + $(this).attr('data-anchor')).toggleClass('active').siblings().removeClass('active'); // TOGGLE TABS
+    // --------------- VALIDAR LA APARICIÓN Y REQUERIMIENTO DE CAMPOS SIN APARECER SI EL USUARIO NO SELECCIONA ALGUNA OPCIÓN
+    let showAnchor = $(this).attr("data-anchor");
+    if($(this).is(":checked")){
+      $('#' + showAnchor).find("input").prop('required', true);
+      $('#' + showAnchor).siblings().find("input").prop('required', false);
+    }else{
+      $('#' + showAnchor).find("input").prop('required', false);
+    }
   });
   // --------------- TOGGLE STOCKTYPE_ID
   $(document).on("click","input[name=stocktype_id]",function(){
     $('#' + $(this).attr('data-anchor')).toggleClass('active').siblings().removeClass('active'); // TOGGLE TABS
+    // --------------- VALIDAR LA APARICIÓN Y REQUERIMIENTO DE CAMPOS SIN APARECER SI EL USUARIO NO SELECCIONA ALGUNA OPCIÓN
+    let showAnchor = $(this).attr("data-anchor");
+    // console.log(showAnchor);
+    if($(this).is(":checked")){
+      $('#' + showAnchor).find("input").prop('required', true);
+      $('#' + showAnchor).siblings().find("input").prop('required', false);
+    }else{
+      $('#' + showAnchor).find("input").prop('required', false);
+    }
   });
   // --------------- MOSTRAR/OCULTAR LAS ESPECIFICACIONES
   $(document).on("click","input[name='is_specification']",function(){

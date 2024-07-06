@@ -292,7 +292,7 @@
                 <div class="form-group">
                   <label for="stock">{{ __('Total in stock') }} *</label>
                   <div class="input-group mb-3">
-                    <input type="number" id="stock" name="stock" class="form-control" placeholder="{{ __('Total in stock') }}" value="{{ old('stock') }}" required>
+                    <input type="number" id="stock" name="stock" class="form-control" placeholder="{{ __('Total in stock') }}" value="{{ old('stock') }}">
                   </div>
                 </div>
               </div>
@@ -371,7 +371,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text">S/.</span>
                     </div>
-                    <input type="text" data-valformat="withcomedecimal" data-archorigv="product" id="on-sale-price" name="on_sale_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="" required>
+                    <input type="text" data-valformat="withcomedecimal" data-archorigv="product" id="on-sale-price" name="on_sale_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="">
                   </div>
                 </div>
                 <div class="c_cPreviewAmmountIGV">
@@ -389,7 +389,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text">S/.</span>
                     </div>
-                    <input type="text" data-valformat="withcomedecimal" data-archorigv="product" id="special-offer-price" name="special_offer_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="" required>
+                    <input type="text" data-valformat="withcomedecimal" data-archorigv="product" id="special-offer-price" name="special_offer_price" class="form-control" placeholder="Ingrese el precio" min="1" step="0.1" value="">
                   </div>
                 </div>
                 <div class="c_cPreviewAmmountIGV">

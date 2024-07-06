@@ -43,7 +43,7 @@ class ItemRequest extends FormRequest{
         'sort_details'    => 'required',
         'discount_price'  => 'required|max:50',
         'previous_price'  => 'max:50',
-        'stock'           => 'numeric|max:9999999999',
+        // 'stock'           => 'numeric|max:9999999999',
         'tax_id'          => 'required',
         'photo'           => $required, 'mimes:jpeg,jpg,png,svg'
       ];
@@ -60,8 +60,8 @@ class ItemRequest extends FormRequest{
         'slug.unique'              =>  __('Esta bala ya ha sido tomada.'),
         'sort_details.required'    =>  __('El campo Descripción de clasificación es obligatorio.'),
         'discount_price.required'  =>  __('El campo Precio actual es obligatorio.'),
-        'stock.required'           =>  __('El campo de Stock debe ser numérico mayor a 0.'),
-        'stock.required'           =>  __('El campo de existencias es obligatorio.'),
+        // 'stock.required'           =>  __('El campo de Stock debe ser numérico mayor a 0.'),
+        // 'stock.required'           =>  __('El campo de existencias es obligatorio.'),
         'photo.required'           =>  __('El campo de la imagen es obligatorio.'),
         'photo.mimes'              =>  __('El tipo de imagen debe ser jpg, jpeg, png, svg.')
       ];
