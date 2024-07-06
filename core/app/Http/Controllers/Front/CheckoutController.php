@@ -1779,7 +1779,7 @@ class CheckoutController extends Controller{
         }
       }
       $newSubtotalAllProds += $newSubtotalProdsFormat;
-      $itemPhoto = (isset($v['photo']) && !empty($v['photo'])) ? $v['photo'] : '';
+      $itemPhoto = (isset($v['photo']) && !empty($v['photo'])) ? str_replace(" ", "%20", $v['photo']) : '';
       $urlPhoto = asset('assets/images/items/'.$itemPhoto);
       $couponDataInfo_format = "0.00";
       if(isset($v['coupon_id']) && !empty($v['coupon_id']) && $v['coupon_id'] != 0 && $v['coupon_id'] != "0"){
