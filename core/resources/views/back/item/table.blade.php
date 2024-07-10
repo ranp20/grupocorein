@@ -10,6 +10,9 @@
     {{ $data->name }}
   </td>
   <td>
+    {{ $data->sku }}
+  </td>
+  <td>
     @php
     $newPrice = 0;
     @endphp
