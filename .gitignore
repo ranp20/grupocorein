@@ -1,0 +1,13 @@
+assets
+node_modules
+public/hot
+public/storage
+storage/*.key
+core/vendor
+core/.env
+core/.env.backup
+core/.phpunit.result.cache
+core/Homestead.json
+core/Homestead.yaml
+core/npm-debug.log
+core/yarn-error.log
