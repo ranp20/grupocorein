@@ -21,12 +21,13 @@ function renderStarRating($rating, $maxRating = 5){
     @foreach ($items as $item)
     <div class="product-card lSearchM__m__l p-col py-0 mb-0">
       <a class="product-thumb" href="{{route('front.product',$item->slug)}}">
-        <img class="lazy" alt="Product" src="{{asset('assets/images/'.$item->thumbnail)}}" style="">
+        <img class="lazy" alt="Product" src="{{asset('assets/images/items/'.$item->thumbnail)}}" style="">
       </a>
       <div class="product-card-body">
         <h3 class="product-title">
           <a href="{{route('front.product',$item->slug)}}">
-            {{ strlen(strip_tags($item->name)) > 35 ? substr(strip_tags($item->name), 0, 35) : strip_tags($item->name) }}
+            {{-- <!-- <span>{{ strlen(strip_tags($item->name)) > 35 ? substr(strip_tags($item->name), 0, 35) : strip_tags($item->name) }}</span> --> --}}
+            <span>{{ $item->name }}</span>
           </a>
         </h3>
         {{--

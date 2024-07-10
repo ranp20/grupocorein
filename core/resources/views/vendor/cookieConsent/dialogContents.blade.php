@@ -5,7 +5,7 @@
       {{ $setting->cookie_text }}
       </span>
       <button class="btn btn-info js-cookie-consent-agree cookie-consent__agree">
-        Aceptar Cookies
+        <span>Aceptar Cookies</span>
       </button>
     </div>
   </div>
