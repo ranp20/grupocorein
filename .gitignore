@@ -1,4 +1,8 @@
-assets
+assets/files
+assets/images
+assets/pdf
+assets/sitemaps
+assets/temp_files
 node_modules
 public/hot
 public/storage

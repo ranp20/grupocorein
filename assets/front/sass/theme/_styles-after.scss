@@ -11541,3 +11541,52 @@ button.scroll-btn{
         }
     }
 }
+/* ------------------ ESTILOS PARA LOS RESULTADOS DE BÚSQUEDA EN EL BUSCADOR GENERAL DEL SITIO ------------------ */
+.lSearchM{
+    &__m{
+        &__l{
+            & > a.product-thumb{
+
+            }
+        }
+        &__link{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            color: #232323;
+            .product-thumb{
+                margin-right: 12px;
+                img{
+                    max-width: 60px;
+                    width: 60px;
+                    height: auto;
+                }
+            }
+            .product-card-body{
+                padding: 5px 8px 5px;
+                display: flex;
+                align-items: flex-start;
+                justify-content: flex-start;
+                flex-flow: row wrap;
+            }
+            .product-title{
+                font-size: 1rem;
+                display: block;
+            }
+            .product-price{
+                font-size: 1rem;
+                font-weight: bold;
+            }
+        }
+        .product-thumb{
+            img{
+                max-width: 60px;
+                width: 60px;
+                height: auto;
+            }
+        }
+    }
+}
