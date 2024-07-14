@@ -582,9 +582,11 @@ function maxcharacters($string, $maxletters){
         </div>
     </div>
 </section>
-<footer class="site-footer">
+
+{{--
+<!-- <footer class="site-footer">
     <div class="container">
-      <div class="row">
+        <div class="row">
         <div class="col-lg-4 col-md-6">
           <section class="widget widget-light-skin">
             <h3 class="widget-title">{{__('Get In Touch')}}</h3>
@@ -658,10 +660,214 @@ function maxcharacters($string, $maxletters){
                 </div>
             </section>
           </div>
-      </div>
-      <p class="footer-copyright"> {{$setting->copy_right}}</p>
+        </div>
+        <p class="footer-copyright"> {{$setting->copy_right}}</p>
+    </div>
+</footer> -->
+--}}
+<?php
+    $pagesListOfDB = DB::table('pages')->wherePos(2)->orwhere('pos',1)->get();
+    $links = json_decode($setting->social_link,true)['links'];
+    $icons = json_decode($setting->social_link,true)['icons'];
+    $message_subject = "Información sobre GRUPOCOREIN S.A.C.";
+    $l_break = "%0D%0A";
+    $message_body = "Hola, mucho gusto.{$l_break}Desearía más información sobre la plataforma GRUPOCOREIN S.A.C.";
+    function formatNumberPhoneSettings($phone){
+		$output_phone = "";
+		$output_phone = preg_replace('/(\d{1,3})(?=(\d{3})+$)/', '$1 ', $phone);
+		return $output_phone;
+	}
+?>
+<footer class="cFootCus--v1">
+    <div class="cFootCus--v1__c">
+        <div class="cFootCus--v1__c__cFTop">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6">
+                        <section class="widget widget-light-skin">
+                            <div class="cFootCus--v1__c__cFTop__cLogo">
+                                <div class="cFootCus--v1__c__cFTop__cLogo__cIcon">
+                                    <a class="align-self-center" href="{{route('front.index')}}" target="_self">
+                                        {{-- <!-- <img src="{{ asset('assets/logotype__white.png') }}" alt="logotypesystem_white"> --> --}}
+                                        <img src="{{asset('assets/images/'.$setting->logo)}}" alt="{{$setting->title}}" width="100" height="100">
+                                    </a>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <section class="widget widget-links widget-light-skin">
+                            <h3 class="widget-title">INFORMACIÓN PARA EL CLIENTE</h3>
+                            <ul>
+                                @foreach($pagesListOfDB as $page)
+                                    @if($page->title != 'Nosotros' && $page->title != 'nosotros' && $page->slug != 'nosotros')
+                                    <li>
+                                        <a href="{{route('front.page',$page->slug)}}" target="_self" title="{{$page->title}}">
+                                            <span>{{$page->title}}</span>
+                                        </a>
+                                    </li>
+                                    @endif
+                                @endforeach
+                            </ul>
+                        </section>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <section class="widget widget-links widget-light-skin">
+                            <h3 class="widget-title">NUESTRA EMPRESA</h3>
+                            <ul>
+                                @if($setting->is_contact == 1)
+                                <li class="{{ request()->routeIs('front.contact') ? 'active' : '' }}">
+                                    <a href="{{route('front.contact')}}" target="_self" title="{{__('Contact')}}">
+                                        <span>{{__('Contact')}}</span>
+                                    </a>
+                                </li>
+                                @endif
+                                @foreach($pagesListOfDB as $page)
+                                    @if($page->title == 'Nosotros' || $page->title == 'nosotros' || $page->slug == 'nosotros')
+                                    <li>
+                                        <a href="{{route('front.page',$page->slug)}}" target="_self" title="{{$page->title}}">
+                                            <span>{{$page->title}}</span>
+                                        </a>
+                                    </li>
+                                    @endif
+                                @endforeach
+                            </ul>
+                        </section>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <section class="widget widget-links widget-light-skin">
+                            <h3 class="widget-title">CLIENTES</h3>
+                            <?php
+                            $linkBySessionInitUser_dashboard = "";
+                            $linkBySessionInitUser_compare = "";
+                            $linkBySessionInitUser_whishlist = "";
+                            $linkBySessionInitUser_cartlist = "";
+                            if(Auth::check() && Auth::user()->role !== 'admin'){
+                                if(!empty(auth()->user()) || auth()->user() != ""){
+                                    $linkBySessionInitUser_dashboard = route('user.profile');
+                                    $linkBySessionInitUser_compare = route('fornt.compare.index');
+                                    $linkBySessionInitUser_whishlist = route('user.wishlist.index');
+                                    $linkBySessionInitUser_cartlist = route('front.cart');
+                                }else{
+                                    $linkBySessionInitUser_dashboard = route('user.login');
+                                    $linkBySessionInitUser_compare = route('fornt.compare.index');
+                                    $linkBySessionInitUser_whishlist = route('user.login');
+                                    $linkBySessionInitUser_cartlist = route('front.cart');
+                                }
+                            }else{
+                                $linkBySessionInitUser_dashboard = route('user.login');
+                                $linkBySessionInitUser_compare = route('fornt.compare.index');
+                                $linkBySessionInitUser_whishlist = route('user.login');
+                                $linkBySessionInitUser_cartlist = route('front.cart');
+                            }
+                            ?>
+                            <ul>
+                                <li>
+                                    <a href="{{ $linkBySessionInitUser_dashboard }}" target="_self" title="Mi cuenta">
+                                        <span>Mi cuenta</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ $linkBySessionInitUser_dashboard }}" target="_self" title="Registrarme">
+                                        <span>Registrarme</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ $linkBySessionInitUser_dashboard }}" target="_self" title="Actualizar datos">
+                                        <span>Actualizar datos</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ $linkBySessionInitUser_compare }}" target="_self" title="Comparar">
+                                        <span>Comparar</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ $linkBySessionInitUser_whishlist }}" target="_self" title="Lista de deseos">
+                                        <span>Lista de deseos</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ $linkBySessionInitUser_cartlist }}" target="_self" title="Carrito de compras">
+                                        <span>Carrito de compras</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </section>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <section class="widget widget-light-skin">
+                            <h3 class="widget-title">MEDIOS DE PAGO</h3>
+                            <div class="cFootCus--v1__c__cFTop__cMPaymntsList">
+                                <div class="cFootCus--v1__c__cFTop__cMPaymntsList__m">
+                                    <div class="cFootCus--v1__c__cFTop__cMPaymntsList__m__i">
+                                        <img src="{{asset('assets/images/Utilities/mediosdepago.png')}}" alt="{{$setting->title}}" width="100" height="100">
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cFootCus--v1__c__cFBottom">
+            <div class="container hr-themecust-py--15">
+                <div class="row">
+                    <div class="col-lg-8 col-md-8">
+                        <div class="cFootCus--v1__c__cFBottom__c">
+                            <ul class="cFootCus--v1__c__cFBottom__c__mLstLeft">
+                                <li class="cFootCus--v1__c__cFBottom__c__mLstLeft__i">
+                                    <span class="cFootCus--v1__c__cFBottom__c__mLstLeft__i__cIcon mr-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" witdh="20px" height="20px"><path d="M408 120c0 54.6-73.1 151.9-105.2 192c-7.7 9.6-22 9.6-29.6 0C241.1 271.9 168 174.6 168 120C168 53.7 221.7 0 288 0s120 53.7 120 120zm8 80.4c3.5-6.9 6.7-13.8 9.6-20.6c.5-1.2 1-2.5 1.5-3.7l116-46.4C558.9 123.4 576 135 576 152V422.8c0 9.8-6 18.6-15.1 22.3L416 503V200.4zM137.6 138.3c2.4 14.1 7.2 28.3 12.8 41.5c2.9 6.8 6.1 13.7 9.6 20.6V451.8L32.9 502.7C17.1 509 0 497.4 0 480.4V209.6c0-9.8 6-18.6 15.1-22.3l122.6-49zM327.8 332c13.9-17.4 35.7-45.7 56.2-77V504.3L192 449.4V255c20.5 31.3 42.3 59.6 56.2 77c20.5 25.6 59.1 25.6 79.6 0zM288 152a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"/></svg></span>
+                                    <span class="cFootCus--v1__c__cFBottom__c__mLstLeft__i__cTxt mb-1">{{$setting->footer_address}}</span>
+                                </li>
+                                <li class="cFootCus--v1__c__cFBottom__c__mLstLeft__i">
+                                    <span class="cFootCus--v1__c__cFBottom__c__mLstLeft__i__cIcon mr-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" witdh="20px" height="20px"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></svg></span>
+                                    <a class="cFootCus--v1__c__cFBottom__c__mLstLeft__i__cLink mb-3" href="mailto:{{ $setting->footer_email }}?subject={{ $message_subject }}&body={{ $message_body }}">
+                                        <span>{{$setting->footer_email}}</span>
+                                    </a>
+                                </li>
+                                <li class="cFootCus--v1__c__cFBottom__c__mLstLeft__i">
+                                    <span class="cFootCus--v1__c__cFBottom__c__mLstLeft__i__cIcon mr-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" witdh="20px" height="20px"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg></span>
+                                    <a class="cFootCus--v1__c__cFBottom__c__mLstLeft__i__cLink mb-3" href="tel:{{$setting->footer_phone}}">
+                                        <span>{{ formatNumberPhoneSettings($setting->footer_phone) }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="cFootCus--v1__c__cFBottom__c d-flex justify-content-end">
+                            <section class="">
+                                <h3 class="widget-title">SÍGUENOS EN</h3>
+                                <div class="footer-social-links">
+                                    @foreach($links as $link_key => $link)
+                                    <a href="{{$link}}" target="_blank">
+                                        <span><i class="{{$icons[$link_key]}}"></i></span>
+                                    </a>
+                                    @endforeach
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cFootCus--v1__c__cFFixBottom hr-themecust-py--0">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                        <section class="cFootCus--v1__c__cFFixBottom__c">
+                            <div class="cFootCus--v1__c__cFFixBottom__c__cSc">
+                                <span>{{$setting->copy_right}} <?php echo date("Y"); ?>.</span>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </footer>
+
 <div class="dark-backdrop hide" id="backdrop"></div>
 <a class="scroll-to-top-btn" href="javascript:void(0);">
     <i class="icon-chevron-up"></i>
