@@ -25,7 +25,7 @@
                 </li>
                 @endforeach
             </ul>
-          </li>
+        </li>
         @endforeach
     </ul>
 </div>
