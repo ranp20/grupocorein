@@ -27,7 +27,9 @@
 ?>
 <tr>
   <td>
-    <img src="{{ $data->photo ? asset('assets/images/coupons/'.$data->photo) : asset('assets/images/placeholder.png') }}" alt="{{ $data->photo ? $data->name : 'Image Not Found' }}">
+    <a class="link_viewTargetBlankImg" href="{{ $data->photo ? asset('assets/images/coupons/'.$data->photo) : asset('assets/images/placeholder.png') }}" target="_blank">
+      <img src="{{ $data->photo ? asset('assets/images/coupons/'.$data->photo) : asset('assets/images/placeholder.png') }}" alt="{{ $data->photo ? $data->name : 'Image Not Found' }}">
+    </a>
   </td>
   <td>{{ $data->name }}</td>
   <td>
