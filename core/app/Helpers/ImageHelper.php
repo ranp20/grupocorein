@@ -121,6 +121,86 @@ class ImageHelper{
     }
     return [$photo,$thum];
   }
+  // ------------------- GUARDAR IMÁGEN PRINCIPAL DE LA CATEGORÍA ($path)
+  public static function ItemhandleUploadedImagePrincipalCategory($file,$path,$delete=null){
+    if($file){
+      if($delete){
+        if(file_exists(base_path('../').$path.'/'.$delete)){
+          unlink(base_path('../').$path.'/'.$delete);
+        }
+      }
+      $photo_name = $file->getClientOriginalName();
+      $photo_ext = $file->getClientOriginalExtension();
+      $photo_newname = Str::random(15).'.'.$photo_ext;
+      $image = \Image::make($file);
+      $image->resize(500, 500, function ($constraint) {
+        $constraint->aspectRatio(); // Mantener la proporción original
+        $constraint->upsize(); // No ampliar la imagen si es más pequeña que el widthxheight especificado
+      });
+      $image->save(base_path('../').$path.'/'.$photo_newname);
+      // $file->move($path,$photo);
+      return [$photo_newname,$photo_newname];
+    }
+  }
+  // ------------------- EDITAR IMÁGEN PRINCIPAL DE LA CATEGORÍA EN SU RESPECTIVO DIRECTORIO ($path)
+  public static function ItemhandleUpdatedUploadedImagePrincipalCategory($file,$path,$data,$delete_path,$field){
+    $photo_name = $file->getClientOriginalName();
+    $photo_ext = $file->getClientOriginalExtension();
+    $photo_newname = Str::random(15).'.'.$photo_ext;
+    $image = \Image::make($file);
+    $image->resize(500, 500, function ($constraint) {
+      $constraint->aspectRatio(); // Mantener la proporción original
+      $constraint->upsize(); // No ampliar la imagen si es más pequeña que el widthxheight especificado
+    });
+    $image->save(base_path('..').$path.'/'.$photo_newname);
+    $file->move(base_path('..').$path,$photo_newname);
+    if($data[$field] != null){
+      if(file_exists(base_path('../').$delete_path.$data[$field])){
+        unlink(base_path('../').$delete_path.$data[$field]);
+      }
+    }
+    return [$photo_newname,$photo_newname];
+  }
+  // ------------------- GUARDAR IMÁGEN PRINCIPAL DE LA MARCA ($path)
+  public static function ItemhandleUploadedImagePrincipalBrand($file,$path,$delete=null){
+    if($file){
+      if($delete){
+        if(file_exists(base_path('../').$path.'/'.$delete)){
+          unlink(base_path('../').$path.'/'.$delete);
+        }
+      }
+      $photo_name = $file->getClientOriginalName();
+      $photo_ext = $file->getClientOriginalExtension();
+      $photo_newname = Str::random(15).'.'.$photo_ext;
+      $image = \Image::make($file);
+      $image->resize(500, 500, function ($constraint) {
+        $constraint->aspectRatio(); // Mantener la proporción original
+        $constraint->upsize(); // No ampliar la imagen si es más pequeña que el widthxheight especificado
+      });
+      $image->save(base_path('../').$path.'/'.$photo_newname);
+      // $file->move($path,$photo);
+      return [$photo_newname,$photo_newname];
+    }
+  }
+  // ------------------- EDITAR IMÁGEN PRINCIPAL DE LA MARCA EN SU RESPECTIVO DIRECTORIO ($path)
+  public static function ItemhandleUpdatedUploadedImagePrincipalBrand($file,$path,$data,$delete_path,$field){
+    $photo_name = $file->getClientOriginalName();
+    $photo_ext = $file->getClientOriginalExtension();
+    $photo_newname = Str::random(15).'.'.$photo_ext;
+    $image = \Image::make($file);
+    $image->resize(500, 500, function ($constraint) {
+      $constraint->aspectRatio(); // Mantener la proporción original
+      $constraint->upsize(); // No ampliar la imagen si es más pequeña que el widthxheight especificado
+    });
+    $image->save(base_path('..').$path.'/'.$photo_newname);
+    $file->move(base_path('..').$path,$photo_newname);
+    if($data[$field] != null){
+      if(file_exists(base_path('../').$delete_path.$data[$field])){
+        unlink(base_path('../').$delete_path.$data[$field]);
+      }
+    }
+    return [$photo_newname,$photo_newname];
+  }
   // ------------------- GUARDAR Y EDITAR GALLERÍA DE IMÁGENES DE PRODUCTOS EN SU RESPECTIVO DIRECTORIO ($path)
   public static function handleUploadedImageGallery($file,$path,$delete=null){
     if($file){

@@ -8,13 +8,17 @@ use App\Models\HomeCutomize;
 class CategoryRepository{
   public function store($request){
     $input = $request->all();
-    $input['photo'] = ImageHelper::handleUploadedImage($request->file('photo'),'assets/images/categories');
+    if($request->file('photo')){
+      $images_name = ImageHelper::ItemhandleUploadedImagePrincipalCategory($request->file('photo'),'assets/images/categories');
+      $input['photo'] = $images_name[0];
+    }
     Category::create($input);
   }
   public function update($category, $request){
     $input = $request->all();
     if($file = $request->file('photo')){
-      $input['photo'] = ImageHelper::handleUpdatedUploadedImage($file,'/assets/images/categories/',$category,'/assets/images/categories/','photo');
+      $images_name = ImageHelper::ItemhandleUpdatedUploadedImagePrincipalCategory($request->photo,'/assets/images/categories/',$category,'/assets/images/categories/','photo');
+      $input['photo'] = $images_name[0];
     }
     $category->update($input);
   }
