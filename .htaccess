@@ -23,6 +23,10 @@ RewriteRule ^(.*)$ https://prelecgroup.com/$1 [R,L]
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^ index.php [L]
+
+  # Configuración de MIME types
+  AddType image/webp .webp
+  AddType image/gif .gif
 </IfModule>
 
 
