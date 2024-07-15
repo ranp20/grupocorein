@@ -287,7 +287,8 @@ small{
 .toolbar-dropdown{
     display: none;
     position: absolute;
-    top: 80%;
+    // top: 80%;
+    top: auto;
     left: 0;
     width: 200px;
     padding: 10px 0;
@@ -296,7 +297,7 @@ small{
     border-bottom-left-radius: 5px;
     background-color: #fff;
     line-height: 1.5;
-    box-shadow: 0 7px 22px -5px rgba(0, 0, 0, .2)
+    box-shadow: 0 7px 22px -5px rgba(0, 0, 0, .2);
 }
 .fic:hover{
   opacity: 0.6;
@@ -9951,7 +9952,15 @@ screen and (-ms-high-contrast:none){
     text-decoration: none;
     text-align: center;
 }
-
+.link-a-menu-login{
+    height: 100%;
+}
+.link-a-menu-login .main-link{
+    justify-content: space-between;
+    height: 100%;
+    margin-top: 1px;
+    padding-top: 5px;
+}
 .link-a-menu-login .t-h-dropdown-menu a{
     text-align: left;
 }
@@ -9963,7 +9972,9 @@ screen and (-ms-high-contrast:none){
 .link-a-menu-login .main-link .text-label{
     font-size: 12px;
     position: relative;
-    top: 7px;
+    // top: 7px;
+    // top: 6px;
+    top: 0;
     // border: thin solid red;
 }
 .t-h-dropdown .t-h-dropdown-menu{
@@ -9991,22 +10002,35 @@ screen and (-ms-high-contrast:none){
     text-align: left;
     display: block;
     z-index: 999;
+    max-width: 175px;
     // width: 148px;
-    width: 150px;
+    width: 170px;
     // padding: 10px 15px 10px;
+    // margin: 17px 0 0 0;
+    margin: 0;
+    // transform: translateY(16px);
     padding: 0;
-    border-top: 2px solid #377dff;
+    // border-top: 2px solid #377dff;
+    border-top: unset !important;
+    border: thin solid #ded6cd;
     box-shadow: 2px 2px 10px 0 rgba(0, 0, 0, .2);
     visibility: hidden;
     opacity: 0;
     transition: all .3s linear;
 }
 .link-a-menu-login .t-h-dropdown-menu > a{
-    padding: 6px 11px 2px 11px;
-    border-bottom: thin solid #dddd;
+    // padding: 6px 11px 2px 11px;
+    padding: 10px 15px;
+    // border-bottom: thin solid #dddd;
 }
 .link-a-menu-login .t-h-dropdown-menu > a:hover{
     background-color: #e6e8e9;
+}
+.link-a-menu-login .t-h-dropdown-menu > a .cIcon-profile i,
+.link-a-menu-login .t-h-dropdown-menu > a .cIcon-profile svg{
+    max-width: 25px;
+    width: 25px;
+    height: auto;
 }
 .widget-light-skin .widget-title{
     border-color: #e5e5e5;

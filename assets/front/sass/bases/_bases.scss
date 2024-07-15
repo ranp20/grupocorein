@@ -1281,6 +1281,9 @@ img{
 			&:before{
 				display: block;
 			}
+			& .text-label{
+				text-decoration: underline;
+			}
 		}
 	}
 }
@@ -1300,6 +1303,9 @@ img{
 	&:hover{
 		&:before{
 			display: block;
+		}
+		& .text-label{
+			text-decoration: underline;
 		}
 	}
 }

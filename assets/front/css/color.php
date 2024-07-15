@@ -122,7 +122,9 @@ a.list-group-item:focus, a.list-group-item:active,
 .txt-theme,
 .product-sku,
 .titulo-as,
-.lSearchM__m__link .product-price
+.lSearchM__m__link .product-price,
+.link-a-menu-login .t-h-dropdown-menu > a .cIcon-profile i,
+.link-a-menu-login .t-h-dropdown-menu > a .cIcon-profile svg
 {
     color : <?php echo $color?> !important;
 }

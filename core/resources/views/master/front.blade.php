@@ -68,9 +68,9 @@ function maxcharacters($string, $maxletters){
     return $output_strg;
 }
 ?>
-@if ($setting->is_loader == 1)
+@if($setting->is_loader == 1)
 <div id="preloader">
-    <img src="{{ asset('assets/images/'.$setting->loader) }}" alt="{{ __('Loading...') }}" width="100" height="100" decoding="sync">
+    <img src="{{ asset('assets/images/'.$setting->loader) }}" class="img-fluid" alt="{{ __('Loading...') }}" width="100" height="100" decoding="sync">
 </div>
 @endif
 <link rel="preload" href="{{asset('assets/front/css/styles.min.css')}}" as="style">
@@ -180,16 +180,22 @@ function maxcharacters($string, $maxletters){
                                         <i class="icon-user pr-2"></i> <span class="text-label">{{ maxcharacters(Auth::user()->first_name, 11) }}</span>
                                     </div>
                                     <div class="t-h-dropdown-menu">
-                                        <a href="{{route('user.dashboard')}}">
-                                            <i class="icon-command"></i>
-                                            <span>{{ __('Dashboard') }}</span>
-                                        </a>
                                         <a href="{{route('user.order.index')}}">
-                                            <i class="icon-shopping-bag"></i>
-                                            <span>{{ __('Orders') }}</span>
+                                            <span class="cIcon-profile">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" viewBox="0 0 32 32"><path fill="currentColor" d="M4 16h12v2H4zm-2-5h10v2H2z"/><path fill="currentColor" d="m29.919 16.606l-3-7A1 1 0 0 0 26 9h-3V7a1 1 0 0 0-1-1H6v2h15v12.556A4 4 0 0 0 19.142 23h-6.284a4 4 0 1 0 0 2h6.284a3.98 3.98 0 0 0 7.716 0H29a1 1 0 0 0 1-1v-7a1 1 0 0 0-.081-.394M9 26a2 2 0 1 1 2-2a2 2 0 0 1-2 2m14-15h2.34l2.144 5H23Zm0 15a2 2 0 1 1 2-2a2 2 0 0 1-2 2m5-3h-1.142A3.995 3.995 0 0 0 23 20v-2h5Z"/></svg>
+                                            </span>
+                                            <span>{{ __('My orders') }}</span>
+                                        </a>
+                                        <a href="{{route('user.dashboard')}}">
+                                            <span class="cIcon-profile">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" viewBox="0 0 256 256"><path fill="currentColor" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24M74.08 197.5a64 64 0 0 1 107.84 0a87.83 87.83 0 0 1-107.84 0M96 120a32 32 0 1 1 32 32a32 32 0 0 1-32-32m97.76 66.41a79.66 79.66 0 0 0-36.06-28.75a48 48 0 1 0-59.4 0a79.66 79.66 0 0 0-36.06 28.75a88 88 0 1 1 131.52 0"/></svg>
+                                            </span>
+                                            <span>{{ __('My account') }}</span>
                                         </a>
                                         <a href="{{route('user.logout')}}">
-                                            <i class="icon-log-out"></i>
+                                            <span class="cIcon-profile">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h7v2H5v14h7v2zm11-4l-1.375-1.45l2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5z"/></svg>
+                                            </span>
                                             <span>{{ __('Logout') }}</span>
                                         </a>
                                     </div>
