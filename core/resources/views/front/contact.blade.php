@@ -50,7 +50,7 @@ function formatPhone($phone){
           @endphp
           <div>
             @foreach ($links as $link_key => $link)
-            <a class="social-button shape-circle sb-facebook" href="{{$link}}" data-toggle="tooltip" data-placement="top"><i class="{{$icons[$link_key]}}"></i></a>
+              <a class="social-button shape-circle sb-facebook" href="{{$link}}" data-toggle="tooltip" data-placement="top"><i class="{{$icons[$link_key]}}"></i></a>
             @endforeach
           </div>
         </section>
@@ -99,22 +99,26 @@ function formatPhone($phone){
             <div class="col-12  ">
               <div class="form-group">
                 <label for="message-text">{{__('Message')}}</label>
-                <textarea class="form-control form-control-rounded" rows="9" name="message" id="message-text" placeholder="{{__('Write your message here...')}}"></textarea>
+                <textarea class="form-control form-control-rounded" rows="9" maxlength="350" name="message" id="message-text" placeholder="{{__('Write your message here...')}}"></textarea>
+                <div class="text-right" id="c-charCount">
+                  <span id="charCount">0</span>
+                  <span>/350</span>
+                </div>
                 @error('message')
-                <p class="text-danger">{{$message}}</p>
+                <p class="text-danger">{{ __('The message may not be greater than 250 characters.') }}</p>
                 @enderror
               </div>
             </div>
             @if ($setting->recaptcha == 1)
             <div class="col-lg-12 mb-4">
-                {!! NoCaptcha::renderJs() !!}
-                {!! NoCaptcha::display() !!}
-                @if ($errors->has('g-recaptcha-response'))
-                @php
-                    $errmsg = $errors->first('g-recaptcha-response');
-                @endphp
-                <p class="text-danger mb-0">{{__("$errmsg")}}</p>
-                @endif
+              {!! NoCaptcha::renderJs() !!}
+              {!! NoCaptcha::display() !!}
+              @if ($errors->has('g-recaptcha-response'))
+              @php
+                $errmsg = $errors->first('g-recaptcha-response');
+              @endphp
+              <p class="text-danger mb-0">{{__("$errmsg")}}</p>
+              @endif
             </div>
             @endif
             <div class="col-12 text-right">
@@ -125,7 +129,7 @@ function formatPhone($phone){
       </div>
     </div>
   </div>  
- <div class="page-title">
+  <div class="page-title">
     <div class="container">
       <div class="row">
         <div class="col-lg-12"> 
@@ -136,11 +140,11 @@ function formatPhone($phone){
                   <p class = "text"></p>
                   <div class="tab">
                     <button class="tablinks" onclick="openTab(event, 'coding', 'arrow1')" id="defaultOpen">
-                      <img src="https://grupopdg.com/web/assets/images/1669243349tienda.png">  Av. Guillermo  Dansey N°401 C.Plaza ferretero  2do  psj C  Piso Tda 2026 - Lima.
+                      <img src="{{ asset('assets/images/1669243349tienda.png') }}">  Av. Guillermo  Dansey N°401 C.Plaza ferretero  2do  psj C  Piso Tda 2026 - Lima.
                       <span id="arrow1" class="arrow fas fa-caret-right"></span>
                     </button>
                     <button class="tablinks" onclick="openTab(event, 'wordPress', 'arrow2')">
-                      <img src="https://grupopdg.com/web/assets/images/1669243349tienda.png">  AV. Guillermo Dansey n° 454 C. Comercial Nicolini Psj 5 Stand BB-9A - Lima.
+                      <img src="{{ asset('assets/images/1669243349tienda.png') }}">  AV. Guillermo Dansey n° 454 C. Comercial Nicolini Psj 5 Stand BB-9A - Lima.
                       <span id="arrow1" class="arrow fas fa-caret-right"></span>
                     </button>
                   </div>

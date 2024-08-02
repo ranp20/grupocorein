@@ -283,6 +283,12 @@
       <p>{{ __('Customer List') }}</p>
     </a>
   </li>
+  <li class="nav-item">
+    <a href="{{ route('back.complaintsbook.index') }}">
+      <i class="fas fa-book-open"></i>
+      <p>{{ __('Complaints book') }}</p>
+    </a>
+  </li>
   {{--
   <!--
   <li class="nav-item">

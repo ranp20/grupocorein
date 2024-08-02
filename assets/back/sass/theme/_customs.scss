@@ -10,19 +10,19 @@
   filter: alpha(opacity=0);
   opacity: 0;
 }
-#admin-table_previous {
-  display: none;
-}
-#admin-table_next{
-  display: none;
-}
-#admin-table_info {
-  display: none;
-}
-#admin-table_length {
-  display: block;
-  // display: none;
-}
+// #admin-table_previous {
+//   display: none;
+// }
+// #admin-table_next{
+//   display: none;
+// }
+// #admin-table_info {
+//   display: none;
+// }
+// #admin-table_length {
+//   display: block;
+//   // display: none;
+// }
 .fic:hover {
   opacity: 0.6;
 }
@@ -347,4 +347,14 @@ span.cookie-consent__message p {
   opacity: 0;
   visibility: hidden;
   user-select: none;
+}
+.d-sorting_none{
+  &:before,
+  &:after{
+    content: "";
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+    user-select: none;
+  }
 }

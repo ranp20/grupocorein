@@ -74,6 +74,46 @@ img{
     font-weight: 600;
 	}
 }
+.readonly{
+	background: #e8e8e8 !important;
+	border-color: #e8e8e8 !important;
+	opacity: .6 !important;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	cursor: not-allowed;
+}
+.disabled{
+	background: #e8e8e8 !important;
+	border-color: #e8e8e8 !important;
+	opacity: .6 !important;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	cursor: not-allowed;
+}
+input[disabled]{
+	background: #e8e8e8 !important;
+	border-color: #e8e8e8 !important;
+	opacity: .6 !important;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	cursor: not-allowed;
+}
+input[d-non-changes="y-block"]{
+	background: #e8e8e8 !important;
+	border-color: #e8e8e8 !important;
+	opacity: .6 !important;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	cursor: not-allowed;
+}
 /* PAYMENT */
 .c-frmpayment_dmss{
 	display: flex;

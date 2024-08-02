@@ -50,13 +50,13 @@
     @if($data->sections_id != 0)
       @php
         if($data->sections_id == 1){
-          $nameSection = "En promoción";
+          $nameSection = __('On sale');
           $nameSectionClassSpan = "sptxt_prod-prom";
         }else if($data->sections_id == 2){
-          $nameSection = "Oferta Especial";
+          $nameSection = __('Special offer');
           $nameSectionClassSpan = "sptxt_prod-offspecial";
         }else{
-          $nameSection = "Normal";
+          $nameSection = __('Normal');
           $nameSectionClassSpan = "sptxt_prod-normal";
         }
       @endphp
@@ -67,6 +67,16 @@
       @endphp
     @endif
     <span class="{{$nameSectionClassSpan}}">{{ $nameSection }}</span>
+  </td>
+  <td>
+    <?php
+      config(['app.timezone' => 'America/Lima']);
+      date_default_timezone_set('America/Lima');
+      $lastDateUpdatedDate = date("Y/m/d", strtotime($data->updated_at));
+      $lastDateUpdatedHour = date("h:i:s A", strtotime($data->updated_at));
+      $lastDateUpdatedFormat = __('Last modification').' '.$lastDateUpdatedDate.' '.__('at').' '.$lastDateUpdatedHour;
+    ?>
+    <span>{{ $lastDateUpdatedFormat }}</span>
   </td>
   <td>
     <div class="dropdown">
@@ -100,9 +110,11 @@
   </td>
   -->
   --}}
-  <td class="d-tr_none">
-    {{$data->sap_code}} 
-  </td>
+  {{--
+  <!-- <td class="d-tr_none">
+    <span>{{$data->sap_code}}</span>
+  </td> -->
+  --}}
   <td>
     <div class="dropdown">
       <button class="btn btn-secondary btn-sm  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

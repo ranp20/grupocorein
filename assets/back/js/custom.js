@@ -186,8 +186,24 @@
     // Datatable
     if($('#admin-table').length > 0){
       $('#admin-table').DataTable({
+        orderCellsTop: true,
+        fixedHeader: true,
         responsive: true,
-        ordering: false
+        ordering: true,
+        // scrollY: "400px",
+        // scrollX: true,
+        scrollCollapse: true,
+        paging: true,
+        columnDefs:[{
+          targets: "_all",
+          sortable: true,
+          searchable: true
+        }],
+        fixedColumns:   {
+          leftColumns: 3
+        },
+        lengthChange: true,
+        searching: true,
       });
     }
     // Set icon in edit
@@ -195,17 +211,17 @@
       $("input[name=icon]").val($('#icon-value').val());
     }
     // Tagify
-    if( $('.tags').length > 0 ){
+    if($('.tags').length > 0 ){
       $('.tags').tagify();
     }
     // Magnific Popup
-    if( $('.popup-link').length > 0 ){
+    if($('.popup-link').length > 0 ){
       $('.popup-link').magnificPopup({
         type: 'image'
       });
     }
     // Sorting Section
-    if( $('#section-list').length > 0 ){
+    if($('#section-list').length > 0 ){
       var el = document.getElementById('section-list');
       Sortable.create(el, {
       animation: 100,
@@ -214,6 +230,7 @@
       handle: '.draggable-item',
       sort: true,
       filter: '.sortable-disabled',
+      // filter: '.sorting',
       chosenClass: 'active'
       });
     }

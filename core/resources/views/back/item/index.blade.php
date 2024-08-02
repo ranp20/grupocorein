@@ -49,7 +49,7 @@
             <div class="col-lg-3 col-md-4 col-sm-6" >
               <div class="form-group px-0">
                 <select class="form-control" name="is_type">
-                  <option  disabled>{{__('Select Type')}}</option>
+                  <option disabled>{{__('Select Type')}}</option>
                   <option value="">{{__('All Type')}}</option>
                   <option value="undefine" {{request()->input('is_type') == 'undefine' ? 'selected' : ''}}>{{__('Undefine Product')}}</option>
                   <option value="new" {{request()->input('is_type') == 'new' ? 'selected' : ''}}>{{__('New Arrival')}}</option>
@@ -94,12 +94,12 @@
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group px-0">
-                <input type="text" class="form-control" name="sku" id="sku" maxlength="200" placeholder="Código de producto">
+                <input type="text" class="form-control" name="sku" id="sku" maxlength="200" placeholder="{{ __('Product code') }}">
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group px-0">
-                <input type="text" class="form-control" name="sap_code" id="sap_code" maxlength="200" placeholder="Código SAP">
+                <input type="text" class="form-control" name="sap_code" id="sap_code" maxlength="200" placeholder="{{ __('SAP Code') }}">
               </div>
             </div>
             <!-- NUEVO CONTENIDO (FIN) -->
@@ -116,18 +116,19 @@
 				<table class="table table-bordered table-striped" id="admin-table" width="100%" cellspacing="0">
 					<thead>
 						<tr>
-							<th> <input type="checkbox" data-target="product-bulk-delete" class="form-control bulk_all_delete"> </th>
+							<th class="d-sorting_none"><input type="checkbox" data-target="product-bulk-delete" class="form-control bulk_all_delete"></th>
 							<th>{{ __('Image') }}</th>
               <th width="30%">{{ __('Name') }}</th>
               <th>{{ __('SKU') }}</th>
               <th>{{ __('Price') }}</th>
-              <th>{{ __('Marca') }}</th>
-              <th>{{ __('Sección') }}</th>
+              <th>{{ __('Brand') }}</th>
+              <th>{{ __('Section') }}</th>
+              <th>{{ __('Date') }}</th>
 							<th>{{ __('Status') }}</th>
 							<!-- <th>{{ __('Type') }}</th> -->
 							<!-- <th>{{ __('Item Type') }}</th> -->
 							<!-- NUEVO CONTENIDO (INICIO) -->
-							<th class="d-tr_none">{{ __('SAP Code') }}</th>
+							{{-- <!-- <th class="d-tr_none">{{ __('SAP Code') }}</th> --> --}}
 							<!-- NUEVO CONTENIDO (FIN) -->
 							<th>{{ __('Actions') }}</th>
 						</tr>

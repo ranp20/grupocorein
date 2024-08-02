@@ -36,8 +36,5 @@
 		</div>
 	</div>
 </div>
-<script type="text/javascript" src="{{asset('assets/back/js/core/jquery.3.6.0.min.js')}}"></script>
-<script type="text/javascript" src="{{asset('assets/back/js/plugin/datatables/datatables.min.js')}}"></script>
-<script type="text/javascript" src="{{asset('assets/back/js/plugin/datatables/dataTables.bootstrap5.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('assets/back/js/quotation.js')}}"></script>
 @endsection

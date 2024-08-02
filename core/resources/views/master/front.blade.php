@@ -714,6 +714,11 @@ function maxcharacters($string, $maxletters){
                                     </li>
                                     @endif
                                 @endforeach
+                                <li>
+                                    <a href="{{route('front.complaintsbook')}}" target="_self" title="{{ __('Complaints book') }}">
+                                        <span>{{ __('Complaints book') }}</span>
+                                    </a>
+                                </li>
                             </ul>
                         </section>
                     </div>

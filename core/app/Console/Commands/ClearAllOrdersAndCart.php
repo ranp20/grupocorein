@@ -21,7 +21,9 @@ class ClearAllOrdersAndCart extends Command{
             'track_orders',
             'transactions',
             'wishlists',
-            'tbl_applycoupons'
+            'tbl_applycoupons',
+            'notifications',
+            'tbl_complaints_books'
         ];
 
         // Iterar sobre cada tabla para truncar y restablecer autoincrement.

@@ -124,7 +124,8 @@ a.list-group-item:focus, a.list-group-item:active,
 .titulo-as,
 .lSearchM__m__link .product-price,
 .link-a-menu-login .t-h-dropdown-menu > a .cIcon-profile i,
-.link-a-menu-login .t-h-dropdown-menu > a .cIcon-profile svg
+.link-a-menu-login .t-h-dropdown-menu > a .cIcon-profile svg,
+.wt-custm--sbtitle
 {
     color : <?php echo $color?> !important;
 }

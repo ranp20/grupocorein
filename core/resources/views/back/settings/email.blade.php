@@ -24,9 +24,11 @@
                           <li class="nav-item">
                             <a class="nav-link active" data-toggle="pill" href="#conf">{{ __('Configuration') }}</a>
                           </li>
-                          <li class="nav-item">
+                          {{--
+                          <!-- <li class="nav-item">
                             <a class="nav-link" data-toggle="pill" href="#template">{{ __('Templates') }}</a>
-                          </li>
+                          </li> -->
+                          --}}
                         </ul>
                         <div class="tab-content">
                           <div id="conf" class="container tab-pane active"><br>
@@ -50,36 +52,36 @@
                                   <div class="radio-show {{ $setting->smtp_check == 0 ? 'd-none' : '' }}">
                                     <div class="form-group ">
                                       <label for="email_host">{{ __('SMTP Host') }}</label>
-                                      <input type="text" class="form-control " id="email_host" name="email_host" placeholder="{{ __('Enter SMTP Host') }}" value="{{ $setting->email_host }}" ="">
+                                      <input type="text" class="form-control disabled readonly" disabled readonly d-non-changes="y-block" id="email_host" name="email_host" placeholder="{{ __('Enter SMTP Host') }}" value="{{ $setting->email_host }}" ="">
                                     </div>
                                     <div class="form-group ">
                                       <label for="email_port">{{ __('SMTP Port') }}</label>
-                                      <input type="text" class="form-control " id="email_port" name="email_port" placeholder="{{ __('Enter SMTP Port') }}" value="{{ $setting->email_port }}" ="">
+                                      <input type="text" class="form-control disabled readonly" disabled readonly d-non-changes="y-block" id="email_port" name="email_port" placeholder="{{ __('Enter SMTP Port') }}" value="{{ $setting->email_port }}" ="">
                                     </div>
                                     <div class="form-group ">
                                       <label for="email_encryption">{{ __('SMTP Encryption') }}</label>
-                                      <input type="text" class="form-control " id="email_encryption" name="email_encryption" placeholder="{{ __('Enter SMTP Encryption') }}" value="{{ $setting->email_encryption }}" ="">
+                                      <input type="text" class="form-control disabled readonly" disabled readonly d-non-changes="y-block" id="email_encryption" name="email_encryption" placeholder="{{ __('Enter SMTP Encryption') }}" value="{{ $setting->email_encryption }}" ="">
                                     </div>
                                     <div class="form-group ">
                                       <label for="email_user">{{ __('SMTP Username') }}</label>
-                                      <input type="text" class="form-control " id="email_user" name="email_user" placeholder="{{ __('Enter SMTP Username') }}" value="{{ $setting->email_user }}" ="">
+                                      <input type="text" class="form-control disabled readonly" disabled readonly d-non-changes="y-block" id="email_user" name="email_user" placeholder="{{ __('Enter SMTP Username') }}" value="{{ $setting->email_user }}" ="">
                                     </div>
                                     <div class="form-group ">
                                       <label for="email_pass">{{ __('SMTP Password') }}</label>
-                                      <input type="text" class="form-control " id="email_pass" name="email_pass" placeholder="{{ __('Enter SMTP Password') }}" value="{{ $setting->email_pass }}" ="">
+                                      <input type="text" class="form-control disabled readonly" disabled readonly d-non-changes="y-block" id="email_pass" name="email_pass" placeholder="{{ __('Enter SMTP Password') }}" value="{{ $setting->email_pass }}" ="">
                                     </div>
                                   </div>
                                   <div class="form-group ">
                                     <label for="email_from">{{ __('Email From') }}</label>
-                                    <input type="text" class="form-control " id="email_from" name="email_from" placeholder="{{ __('Enter Email From') }}" value="{{ $setting->email_from }}" ="">
+                                    <input type="text" class="form-control" id="email_from" name="email_from" placeholder="{{ __('Enter Email From') }}" value="{{ $setting->email_from }}" ="">
                                   </div>
                                   <div class="form-group ">
                                     <label for="email_from_name">{{ __('Email From Name') }}</label>
-                                    <input type="text" class="form-control " id="email_from_name" name="email_from_name" placeholder="{{ __('Enter Email From Name') }}" value="{{ $setting->email_from_name }}" ="">
+                                    <input type="text" class="form-control" id="email_from_name" name="email_from_name" placeholder="{{ __('Enter Email From Name') }}" value="{{ $setting->email_from_name }}" ="">
                                   </div>
                                   <div class="form-group ">
                                     <label for="contact_email">{{ __('Contact Email') }}</label>
-                                    <input type="text" class="form-control " id="contact_email" name="contact_email" placeholder="{{ __('Enter Contact Email') }}" value="{{ $setting->contact_email }}" ="">
+                                    <input type="text" class="form-control" id="contact_email" name="contact_email" placeholder="{{ __('Enter Contact Email') }}" value="{{ $setting->contact_email }}" ="">
                                   </div>
                                   <div>
                                     <div class="form-group d-flex justify-content-center">
@@ -90,7 +92,8 @@
                               </div>
                             </div>
                           </div>
-                          <div id="template" class="container tab-pane"><br>
+                          {{--
+                          <!-- <div id="template" class="container tab-pane"><br>
                             <div class="card shadow mb-4">
                               <div class="card-body">
                                 <div class="gd-responsive-table">
@@ -122,7 +125,8 @@
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          </div> -->
+                          --}}
                         </div>
                       </div>
                     </div>

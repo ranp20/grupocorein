@@ -110,6 +110,10 @@ Route::group(['middleware' => 'adminlocalize'], function (){
       //------------ USER ------------
       Route::resource('user', 'Back\UserController', ['as' => 'back', 'except' => ['create', 'store', 'edit']]);
     });
+    Route::group(['middleware' => 'permissions:Customer List'], function (){
+      //------------ COMPLAINTSBOOK ------------
+      Route::resource('complaintsbook', 'Back\ComplaintsBookController', ['as' => 'back', 'except' => ['create', 'store', 'edit']]);
+    });
     Route::group(['middleware' => 'permissions:Ecommerce'], function (){
       //------------ PROMO CODE ------------
       Route::get('code/status/{id}/{status}', 'Back\PromoCodeController@status')->name('back.code.status');
@@ -369,6 +373,11 @@ Route::group(['middleware' => 'maintainance'], function (){
     Route::get('/faq/{slug}', 'Front\FrontendController@show')->name('front.faq.details');
     Route::get('/contact', 'Front\FrontendController@contact')->name('front.contact');
     Route::post('/contact/submit', 'Front\FrontendController@contactEmail')->name('front.contact.submit');
+    Route::get('/complaintsbook', 'Front\FrontendController@complaintsbook')->name('front.complaintsbook');
+    Route::post('/complaintsbook/departamento', 'Front\FrontendController@getCmptbkAllDepartamentos')->name('front.complaintsbook.departamento');
+    Route::get('/complaintsbook/provincia', 'Front\FrontendController@getCmptbkProvinciaByIdDepartamento')->name('front.complaintsbook.provincia');
+    Route::get('/complaintsbook/distrito', 'Front\FrontendController@getCmptbkDistritoByIdProvincia')->name('front.complaintsbook.distrito');
+    Route::post('/complaintsbook/submit', 'Front\FrontendController@complaintsbookSend')->name('front.complaintsbook.submit');
     Route::get('/reviews', 'Front\FrontendController@reviews')->name('front.reviews');
     Route::get('/review/page', 'Front\FrontendController@review_submit')->name('front.rev.page');
     Route::get('/review/sub', 'Front\FrontendController@slider_o_update')->name('front.rev.subbmit');

@@ -11707,3 +11707,17 @@ button.scroll-btn{
         }
     }
 }
+/* ------------------ ESTILOS PARA EL CONTADOR DE CARACTERES PERMITIDOS ------------------ */
+#c-charCount{
+    color: #555;
+    font-size: 14px;
+}
+#charCount{
+    &.limit-max{
+        color: #e64538;
+        // color: #b01815;
+    }
+}
+.mssg-focus{
+    border: thin solid #e64538;
+}

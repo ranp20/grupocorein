@@ -44,6 +44,8 @@ use App\Models\Tax;
 use App\Models\TempCart;
 use App\Models\User;
 use App\Models\ApplyCoupon;
+use App\Models\ComplaintsBook;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 use Redirect;
 use Carbon\Carbon;
@@ -453,11 +455,11 @@ class FrontendController extends Controller{
   // ------------------ ENVIAR CORREO DESDE LA PÁGINA DE CONTACTO EN EL LADO DEL USUARIO...
   public function contactEmail(Request $request){
     $request->validate([
-      'first_name' => 'required|max:50',
-      'last_name' => 'required|max:50',
-      'email' => 'required|email|max:50',
+      'first_name' => 'required|max:150',
+      'last_name' => 'required|max:150',
+      'email' => 'required|email|max:150',
       'phone' => 'required|max:50',
-      'message' => 'required|max:250',
+      'message' => 'required|max:1050',
     ]);
     $input = $request->all();
     $setting = Setting::first();
@@ -465,14 +467,26 @@ class FrontendController extends Controller{
     $subject = $name;
     $to = $setting->contact_email;
     $phone = $request->phone;
-    $from = $request->email;
+    // $from = $request->email;
+    $from = "ranppuntos20@gmail.com";
     $msg = "Nombre: ".$name."<br/>Email: ".$from."<br/>Teléfono: ".$phone."<br/>Mensaje: ".$request->message;
     $emailData = [
       'to' => $to,
       'subject' => $subject,
       'body' => $msg,
     ];
-    $mail = new PHPMailer(true);    
+    $website_logo = asset('assets/images/'.$setting->logo);
+
+    // echo "EMAIL_HOST: ".$setting->email_host."<br>";
+    // echo "EMAIL_USER: ".$setting->email_user."<br>";
+    // echo "EMAIL_PASS: ".$setting->email_pass."<br>";
+    // echo "EMAIL_ENCRYPTION: ".$setting->email_encryption."<br>";
+    // echo "EMAIL_PORT: ".$setting->email_port."<br>";
+    // echo "EMAIL_FROM: ".$setting->email_from."<br>";
+    // echo "EMAIL_FROM_NAME: ".$setting->email_from_name."<br>";
+    // exit();
+
+    $mail = new PHPMailer(true);
     try {
       $mail->CharSet = 'UTF-8';
       //Server settings
@@ -545,7 +559,23 @@ class FrontendController extends Controller{
             text-align:left;
           }
           .cMCont__c__cTbl__cC__c__link{
-            text-decoration: none !important;color: #fff !important;background-color: #FD4259;border-radius: 1.5rem;padding: 1rem 2rem;display: inline-block;
+            text-decoration: none !important;color: #fff !important;background-color: #8bc82f !important;border-radius: 1.5rem;padding: 1rem 2rem;display: inline-block;
+          }
+          .cMCont__c__cTbl__cC__c__link::before{
+            position: absolute;
+            content: "";
+            top: 0px;
+            left: 0px;
+            width: 0px;
+            height: 100%;
+            background: #111;
+            transition: all .3s linear;
+          }
+          .cMCont__c__cTbl__cC__c__link span{
+            z-index: 1;
+          }
+          .cMCont__c__cTbl__cC__c__link:hover::before{
+            width: 100%;
           }
         </style>
       </head>
@@ -557,7 +587,7 @@ class FrontendController extends Controller{
                   <td>
                     <tr>
                       <div class="cMCont__c__cTbl__cLogo">
-                        <img src="https://grupocorein/assets/images/1669085546GRUPO-COREIN-LOGOTIPO.png" alt="logo_planverde">
+                        <img src="'.$website_logo.'" alt="logo_grupocoreinsac">
                       </div>
                     </tr>
                     <tr>
@@ -611,6 +641,98 @@ class FrontendController extends Controller{
     // $email->sendCustomMail($emailData);
     // exit();
     Session::flash('success',__('Gracias por contactar con nosotros, nos pondremos en contacto con usted en breve.'));
+    return redirect()->back();
+  }
+  // ------------------ CONTACT ------------------
+	public function complaintsbook(){
+		return view('front.complaintsbook');
+	}
+  /* ------------------- OBTENER TODOS LOS DEPARTAMENTOS ------------------- */
+  public function getCmptbkAllDepartamentos(){
+    $departamentos = Departamento::get()->toArray();
+    $data = $departamentos;
+    return response()->json(['data'=>$data]);
+  }
+  /* ------------------- OBTENER PROVINCIAS POR ID DE DEPARTAMENTO ------------------- */
+  public function getCmptbkProvinciaByIdDepartamento(Request $request){
+    if($request->departamento_code){
+      $provincias = Provincia::where('departamento_code', $request->departamento_code)->get()->toArray();
+      $data = $provincias;
+    }else{
+      $data = [];
+    }
+    return response()->json(['data'=>$data]);
+  }
+  /* ------------------- OBTENER DISTRITOS POR ID DE PROVINCIA ------------------- */
+  public function getCmptbkDistritoByIdProvincia(Request $request){
+    if($request->provincia_code){
+      $distritos = Distrito::where('provincia_code', $request->provincia_code)->get()->toArray();
+      $data = $distritos;
+    }else{
+      $data = [];
+    }
+    return response()->json(['data'=>$data]);
+  }
+  /* ------------------- GENERAR UN ID AUTOGENERADO NO REPETITIVO ------------------- */
+  public function genUltimateContinuousGeneratedCode($idgencodelast){
+    if($idgencodelast){
+      $idgencode = str_replace(['COR-',' '],'',$idgencodelast->cmptbk_codegen);
+      if($idgencode != "" && $idgencode != null){
+        $lastCodeArr = explode('-', $idgencode);
+        $firstGroup = intval($lastCodeArr[0]);
+        $secondGroup = intval($lastCodeArr[1]);
+        if($secondGroup == 9999999){
+          $firstGroup++;
+          $secondGroup = 1;
+        }else{
+          $secondGroup++;
+        }
+      }else{
+        $firstGroup = 1;
+        $secondGroup = 1;
+      }
+    }else{
+      $firstGroup = 1;
+      $secondGroup = 1;
+    }
+    
+    $firstGroupPadded = str_pad($firstGroup, 3, '0', STR_PAD_LEFT);
+    $secondGroupPadded = str_pad($secondGroup, 7, '0', STR_PAD_LEFT);
+    $code = 'COR-'.$firstGroupPadded . '-' . $secondGroupPadded;
+    return $code;
+  }
+  // ------------------ ENVIAR CORREO DESDE LA PÁGINA DE CONTACTO EN EL LADO DEL USUARIO...
+  public function complaintsbookSend(Request $request){
+    $input = $request->all();
+    $ultimateIdGenCode = ComplaintsBook::select('cmptbk_codegen')->orderBy('id', 'desc')->take(1)->first();
+    $nextIdGenCode = $this->genUltimateContinuousGeneratedCode($ultimateIdGenCode);
+    $input['cmptbk_codegen'] = $nextIdGenCode;
+    $input['cmptbk_reclaimedamount'] = str_replace(",","",$request->cmptbk_reclaimedamount);
+    $cmptbk_agecheck = 0;
+    if($request->has('cmptbk_agecheck')){
+      $cmptbk_agecheck = ($request->cmptbk_agecheck != "") ? 1 : 0;
+      $input['cmptbk_agecheck'] = $cmptbk_agecheck;
+    }else{
+      $input['cmptbk_agecheck'] = $cmptbk_agecheck;
+    }
+    $cmptbk_datayounger = [];
+    if($request->has('cmptbk_younger_namesparents') && $request->cmptbk_younger_namesparents != "" && $request->cmptbk_younger_namesparents != null){
+      $cmptbk_datayounger['datayounger']['namesparents'] = $input['cmptbk_younger_namesparents'];
+    }
+    if($request->has('cmptbk_younger_dni_ce') && $request->cmptbk_younger_dni_ce != "" && $request->cmptbk_younger_dni_ce != null){
+      $cmptbk_datayounger['datayounger']['dni_ce'] = $input['cmptbk_younger_dni_ce'];
+    }
+    if($request->has('cmptbk_younger_phone') && $request->cmptbk_younger_phone != "" && $request->cmptbk_younger_phone != null){
+      $cmptbk_datayounger['datayounger']['phone'] = $input['cmptbk_younger_phone'];
+    }
+    if($request->has('cmptbk_younger_email') && $request->cmptbk_younger_email != "" && $request->cmptbk_younger_email != null){
+      $cmptbk_datayounger['datayounger']['email'] = $input['cmptbk_younger_email'];
+    }
+
+    $input['cmptbk_datayounger'] = json_encode($cmptbk_datayounger, TRUE);
+    $complaintsbook = ComplaintsBook::create($input);
+
+    Session::flash('success',__('Thank you for contacting us, we will get back to you as soon as possible.'));
     return redirect()->back();
   }
 

@@ -298,6 +298,10 @@ class ItemRepository{
         $input['adj_doc'] = $namecomplete;
       }
     }
+
+    config(['app.timezone' => 'America/Lima']);
+    date_default_timezone_set('America/Lima');
+    $input['updated_at'] = date('Y/m/d h:i:s');
     /*-- NUEVO CONTENIDO (FIN) --*/
     /*
     echo "<pre>";
