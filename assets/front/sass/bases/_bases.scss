@@ -29,6 +29,15 @@ body{
 	// text-transform: none;
 	// text-decoration: none;
 }
+.c-bgTheme-2{
+	background-color: #fff;
+}
+.brbttm_Theme-1{
+	border-bottom: thin solid #e5e5e5;
+}
+.brbttm_Theme-2{
+	border-bottom: thin solid #ded5d855;
+}
 a{
 	color: #377dff;
 	text-decoration: none;
@@ -67,6 +76,35 @@ input{
 	&[type=number]{ 
 		-moz-appearance:textfield;
 	}
+}
+.accept-liststyle ul,
+.accept-liststyle ol{
+	display: block;
+	list-style-type: disc;
+	margin-block-start: 1em;
+	margin-block-end: 1em;
+	margin-inline-start: 0px;
+	margin-inline-end: 0px;
+	padding-inline-start: 40px;
+	unicode-bidi: isolate;
+}
+.accept-liststyle ul,
+.accept-liststyle li,
+.accept-liststyle ol,
+.accept-liststyle .note-editable ul,
+.accept-liststyle .note-editable ol{
+	list-style: disc !important;
+}
+.d-page-content p,
+.d-page-content span{
+	// font-size: 1rem;
+	line-height: 1.2 !important;
+}
+/* SECCIÓN - SERVICIOS */
+.service-section .container{
+	border: 1px solid #003399;
+	border-radius: 10px;
+	margin-bottom: 25px;
 }
 .input-error{
 	outline: thin solid red !important;

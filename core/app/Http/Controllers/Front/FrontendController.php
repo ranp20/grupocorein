@@ -445,6 +445,10 @@ class FrontendController extends Controller{
       'page' => $this->repository->displayPage($slug)
     ]);
   }
+  // ------------------ STORES ------------------
+	public function stores(){
+		return view('front.stores');
+	}
   // ------------------ CONTACT ------------------
 	public function contact(){
     if(Setting::first()->is_contact == 0){
@@ -730,10 +734,306 @@ class FrontendController extends Controller{
     }
 
     $input['cmptbk_datayounger'] = json_encode($cmptbk_datayounger, TRUE);
+
+    $departamentoAll = Departamento::where('id', $input['cmptbk_departamento_id'])->select('departamento_name')->orderBy('id', 'desc')->take(1)->first()->toArray();
+    $provinciaAll = Provincia::where('id', $input['cmptbk_provincia_id'])->select('provincia_name')->orderBy('id', 'desc')->take(1)->first()->toArray();
+    $distritoAll = Distrito::where('id', $input['cmptbk_distrito_id'])->select('distrito_name')->orderBy('id', 'desc')->take(1)->first()->toArray();
+
+    // echo "<pre>";
+    // print_r($input);
+    // echo "</pre>";
+    $tmpDataYoungerHTML = '';
+    if(count($cmptbk_datayounger) > 0){
+      $tmpDataYoungerHTML = '<tr>
+        <td colspan="1"><span class="titleSec-sub-subtitle">Nombre del padre/madre: </span></td>
+        <td>'.$cmptbk_datayounger['datayounger']['namesparents'].'</td>
+        <td><span class="titleSec-sub-subtitle">DNI/CE</span></td>
+        <td>'.$cmptbk_datayounger['datayounger']['dni_ce'].'</td>
+      </tr>
+      <tr>
+        <td><span class="titleSec-sub-subtitle">Teléfono: </span></td>
+        <td>'.$cmptbk_datayounger['datayounger']['phone'].'</td>
+        <td><span class="titleSec-sub-subtitle">Email: </span></td>
+        <td>'.$cmptbk_datayounger['datayounger']['email'].'</td>
+      </tr>';
+    }
+    
+    // exit();
+    
     $complaintsbook = ComplaintsBook::create($input);
+
+    // ---------------- ENVIAR CORREO ELECTRÓNICO AL RESPONSABLE DE LA EMPRESA...
+    $dataClientToSendMail = [
+      "cmptbk_codegen" => (isset($input['cmptbk_codegen']) && $input['cmptbk_codegen'] != "") ? $input['cmptbk_codegen'] : "<No especificado>",
+      "cmptbk_name" => (isset($input['cmptbk_name']) && $input['cmptbk_name'] != "") ? $input['cmptbk_name'] : "<No especificado>",
+      "cmptbk_departamento_name" => $departamentoAll['departamento_name'],
+      "cmptbk_provincia_name" => $provinciaAll['provincia_name'],
+      "cmptbk_distrito_name" => $distritoAll['distrito_name'],
+      "cmptbk_domicilio" => (isset($input['cmptbk_domicilio']) && $input['cmptbk_domicilio'] != "") ? $input['cmptbk_domicilio'] : "<No especificado>",
+      "cmptbk_dni_ce" => (isset($input['cmptbk_dni_ce']) && $input['cmptbk_dni_ce'] != "") ? $input['cmptbk_dni_ce'] : "<No especificado>",
+      "cmptbk_ruc" => (isset($input['cmptbk_ruc']) && $input['cmptbk_ruc'] != "") ? $input['cmptbk_ruc'] : "<No especificado>",
+      "cmptbk_razonsocial" => (isset($input['cmptbk_razonsocial']) && $input['cmptbk_razonsocial'] != "") ? $input['cmptbk_razonsocial'] : "<No especificado>",
+      "cmptbk_telefono" => (isset($input['cmptbk_telefono']) && $input['cmptbk_telefono'] != "") ? $input['cmptbk_telefono'] : "<No especificado>",
+      "cmptbk_email" => (isset($input['cmptbk_email']) && $input['cmptbk_email'] != "") ? $input['cmptbk_email'] : "<No especificado>",
+      "cmptbk_typeofclaim" => (isset($input['cmptbk_typeofclaim']) && $input['cmptbk_typeofclaim'] != "") ? $input['cmptbk_typeofclaim'] : "<No especificado>",
+      "cmptbk_detail" => (isset($input['cmptbk_detail']) && $input['cmptbk_detail'] != "") ? $input['cmptbk_detail'] : "<No especificado>",
+      "cmptbk_order" => (isset($input['cmptbk_order']) && $input['cmptbk_order'] != "") ? $input['cmptbk_order'] : "<No especificado>",
+      "cmptbk_agecheck" => (isset($input['cmptbk_agecheck']) && $input['cmptbk_agecheck'] != "" && $input['cmptbk_agecheck'] != 0) ? "SI" : "NO",
+      "cmptbk_typeofgod" => (isset($input['cmptbk_typeofgod']) && $input['cmptbk_typeofgod'] != "") ? $input['cmptbk_typeofgod'] : "<No especificado>",
+      "cmptbk_reclaimedamount" => (isset($input['cmptbk_reclaimedamount']) && $input['cmptbk_reclaimedamount'] != "") ? $input['cmptbk_reclaimedamount'] : "<No especificado>",
+      "cmptbk_description" => (isset($input['cmptbk_description']) && $input['cmptbk_description'] != "") ? $input['cmptbk_description'] : "<No especificado>",
+    ];
+    $ageCheckValidShowClass = (isset($input['cmptbk_agecheck']) && $input['cmptbk_agecheck'] != "" && $input['cmptbk_agecheck'] != 0) ? 'text-primary' : 'text-danger';
+    $setting = Setting::first();
+    $website_logo = asset('assets/images/'.$setting->logo);
+    $from = "ranppuntos20@gmail.com";
+    $mail = new PHPMailer(true);
+    try {
+      $mail->CharSet = 'UTF-8';
+      //Server settings
+      $mail->SMTPDebug = 0;
+      $mail->isSMTP();
+      $mail->Host       = $setting->email_host;
+      $mail->SMTPAuth   = true;
+      $mail->Username   = $setting->email_user;
+      $mail->Password   = $setting->email_pass;
+      $mail->SMTPSecure = $setting->email_encryption;
+      $mail->Port       = $setting->email_port; //587;
+      
+      //Recipients
+      $mail->setFrom($setting->email_from, $setting->email_from_name);
+      //foreach($correo as $val){
+      $mail->addAddress($from); // COLOCAR EL EMAIL DE LA EMPRESA, YA QUE, ESTE MENSAJE ES DEDICADO Y/O DIRIGIDO HACIA ELLA...
+      //}
+      // Content
+      $mail->isHTML(true);
+      $mail->Subject = "Hola, " . $dataClientToSendMail['cmptbk_name'];
+      
+      $mail->Body    =  '<!DOCTYPE html>
+      <html lang="es">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style type="text/css">
+          body{
+            display:flex;align-items:center;justify-content:center;background: rgba(0,0,0,.05);padding: 2.2rem 0 2.2rem 0;
+          }
+          tr,td{
+            border: none !important;
+          }
+          .cMCont{
+            width: 85%;margin: auto;border-radius: 20px;background-position: center;background-repeat: no-repeat;background-size: contain;
+          }
+          .cMCont__c{
+            width: 100%;background: rgba(255,255,255,.7);border-radius: 20px;border: #eee;box-shadow: 0 18px 24px 1px rgba(0,0,0,.1);
+          }
+          .cMCont__c__cTbl{
+            width: 100%;background: rgba(255,255,255,.75);border-radius: 20px;margin: auto;
+          }
+          .cMCont__c__cTbl__cLogo{
+            background-color: #003399;
+            display:block;align-items:center;justify-content:center;text-align:center;padding: 1rem 2.8rem 1rem 2.8rem;
+          }
+          .cMCont__c__cTbl__cLogo img{
+            max-width: 260px;min-width: 150px;width: 95%;
+          }
+          .cMCont__c__cTbl__cTitle{
+            color:#3c4858;text-align:center;font-size: 1rem;
+          }
+          .cMCont__c__cTbl__cC{
+            display:block;align-items:center;justify-content:center;text-align:center;padding: .5rem 2.8rem 2.8rem 2.8rem;font-size: .97rem;font-weight: lighter;
+          }
+          .cMCont__c__cTbl__cC__c{
+            margin-bottom:40px;text-align: center;color:#3c4858;
+          }
+          .cMCont__c__cTbl__cC__c__cTitle-1{
+            text-align:left;
+          }
+          .cMCont__c__cTbl__cC__c__cTitle-h3{
+            color:#3c4858;font-weight:bold;
+          }
+          .cMCont__c__cTbl__cC__c__paragraph{
+            text-align:left;
+          }
+          .cMCont__c__cTbl__cC__c__link{
+            text-decoration: none !important;color: #fff !important;background-color: #8bc82f !important;border-radius: 1.5rem;padding: 1rem 2rem;display: inline-block;
+          }
+          .cMCont__c__cTbl__cC__c__link::before{
+            position: absolute;
+            content: "";
+            top: 0px;
+            left: 0px;
+            width: 0px;
+            height: 100%;
+            background: #111;
+            transition: all .3s linear;
+          }
+          .cMCont__c__cTbl__cC__c__link span{
+            z-index: 1;
+          }
+          .cMCont__c__cTbl__cC__c__link:hover::before{
+            width: 100%;
+          }
+          .cMCont__c__cTbl__cBodyMssg table,
+          .cMCont__c__cTbl__cBodyMssg table tbody,
+          .cMCont__c__cTbl__cBodyMssg table tr,
+          .cMCont__c__cTbl__cBodyMssg table td{
+            /*border: thin solid #000;*/
+          }
+          .titleSec-subtitle{
+            position: relative;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e5e5e5;
+            font-size: 17px;
+            font-weight: 600;
+            color: #003399 !important;
+          }
+          .titleSec-subtitle::after {
+            display: block;
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 90px;
+            height: 2px;
+            background-color: #377dff;
+            content: "";
+          }
+          .titleSec-sub-subtitle{
+            color: #000;
+            font-weight: bold;
+          }
+          .cMCont__c__cTbl__cBodyMssg p,.cMCont__c__cTbl__cBodyMssg span,.cMCont__c__cTbl__cBodyMssg strong{
+            color: #000;
+          }
+          .cMCont__c__cTbl__cBodyMssg p.text-primary,.cMCont__c__cTbl__cBodyMssg span.text-primary,.cMCont__c__cTbl__cBodyMssg strong.text-primary{color: #177dff !important;}
+          .cMCont__c__cTbl__cBodyMssg p.text-danger,.cMCont__c__cTbl__cBodyMssg span.text-danger,.cMCont__c__cTbl__cBodyMssg strong.text-danger{color: #f3545d !important;}
+        </style>
+      </head>
+      <body>
+        <div class="cMCont">
+          <div class="cMCont__c">
+            <table class="cMCont__c__cTbl" rules="all">
+                <thead>
+                  <td>
+                    <tr>
+                      <div class="cMCont__c__cTbl__cLogo">
+                        <img src="'.$website_logo.'" alt="logo_grupocoreinsac">
+                      </div>
+                    </tr>
+                    <tr>
+                      <div class="cMCont__c__cTbl__cBodyMssg">
+                        <table>
+                          <tbody>
+                            <tr>
+                              <td colspan="4"><h3 class="titleSec-subtitle">1. Identificación del consumidor reclamante: </h3></td>
+                            </tr>
+                            <tr>
+                              <td><span class="titleSec-sub-subtitle">CÓDIGO: </span></td>
+                              <td colspan="2">'.$dataClientToSendMail['cmptbk_codegen'].'</td>
+                            </tr>
+                            <tr>
+                              <td><span class="titleSec-sub-subtitle">Nombre: </span></td>
+                              <td>'.$dataClientToSendMail['cmptbk_name'].'</td>
+                              <td><span class="titleSec-sub-subtitle">Departamento: </span></td>
+                              <td>'.$dataClientToSendMail['cmptbk_departamento_name'].'</td>
+                            </tr>
+                            <tr>
+                              <td><span class="titleSec-sub-subtitle">Provincia: </span></td>
+                              <td>'.$dataClientToSendMail['cmptbk_provincia_name'].'</td>
+                              <td><span class="titleSec-sub-subtitle">Distrito: </span></td>
+                              <td>'.$dataClientToSendMail['cmptbk_distrito_name'].'</td>
+                            </tr>
+                            <tr>
+                              <td><span class="titleSec-sub-subtitle">Domicilio: </span></td>
+                              <td>'.$dataClientToSendMail['cmptbk_domicilio'].'</td>
+                              <td><span class="titleSec-sub-subtitle">DNI/CE: </span></td>
+                              <td>'.$dataClientToSendMail['cmptbk_dni_ce'].'</td>
+                            </tr>
+                            <tr>
+                              <td><span class="titleSec-sub-subtitle">RUC: </span></td>
+                              <td>'.$dataClientToSendMail['cmptbk_ruc'].'</td>
+                              <td><span class="titleSec-sub-subtitle">Razón Social: </span></td>
+                              <td>'.$dataClientToSendMail['cmptbk_razonsocial'].'</td>
+                            </tr>
+                            <tr>
+                              <td><span class="titleSec-sub-subtitle">Teléfono: </span></td>
+                              <td>'.$dataClientToSendMail['cmptbk_telefono'].'</td>
+                              <td><span class="titleSec-sub-subtitle">Email: </span></td>
+                              <td>'.$dataClientToSendMail['cmptbk_email'].'</td>
+                            </tr>
+                            <tr>
+                              <td colspan="4"><h3 class="titleSec-subtitle">2. Detalle de la reclamación y pedido del consumidor:</h3></td>
+                            </tr>
+                            <tr>
+                              <td colspan="1"><span class="titleSec-sub-subtitle">Tipo de Reclamación: </span></td>
+                              <td>'.$dataClientToSendMail['cmptbk_typeofclaim'].'</td>
+                            </tr>
+                            <tr>
+                              <td><span class="titleSec-sub-subtitle">Detalle: </span></td>
+                              <td colspan="3">'.$dataClientToSendMail['cmptbk_detail'].'</td>
+                            </tr>
+                            <tr>
+                              <td><span class="titleSec-sub-subtitle">Orden: </span></td>
+                              <td colspan="3">'.$dataClientToSendMail['cmptbk_order'].'</td>
+                            </tr>
+                            <tr>
+                              <td colspan="4"><h3 class="titleSec-subtitle">3. Menor de Edad: <span class="'.$ageCheckValidShowClass.'">( '.$dataClientToSendMail['cmptbk_agecheck'].' )</span></h3></td>
+                            </tr>
+                            '.$tmpDataYoungerHTML.'
+                            <tr>
+                              <td colspan="4"><h3 class="titleSec-subtitle">4. Identificación del bien contratado: </h3></td>
+                            </tr>
+                            <tr>
+                              <td><span class="titleSec-sub-subtitle">Tipo de Bien: </span></td>
+                              <td>'.$dataClientToSendMail['cmptbk_typeofgod'].'</td>
+                              <td><span class="titleSec-sub-subtitle">Monto Reclamado: </span></td>
+                              <td>'.$dataClientToSendMail['cmptbk_reclaimedamount'].'</td>
+                            </tr>
+                            <tr>
+                              <td><span class="titleSec-sub-subtitle">Descripción: </span></td>
+                              <td colspan="3">'.$dataClientToSendMail['cmptbk_description'].'</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </tr>
+                    <div class="cMCont__c__cTbl__cC">
+                      <div class="cMCont__c__cTbl__cC__c">
+                        <p class="cMCont__c__cTbl__cC__c__paragraph">Gracias por contactar con nosotros, nos pondremos en contacto con usted en breve.</p>
+                        <a class="cMCont__c__cTbl__cC__c__link" href="https://grupocorein.com/" title="Ir a grupocorein.com">
+                          <span>Ir a Inicio</span>
+                        </a>
+                        <p class="cMCont__c__cTbl__cC__c__paragraph">No responda a este correo electrónico.</p>
+                      </div>
+                      <h3 class="cMCont__c__cTbl__cC__c__cTitle-h3">El equipo de grupocorein.com</h3>
+                      <small class="cMCont__c__cTbl__cC__smallFooter">Mensaje enviado desde LIBRO DE RECLAMACIONES, en https://grupocorein.com</small>
+                    </div>
+                  </td>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </body>
+      </html>';
+      
+      $mail->send();
+      $r = array(
+        'r' => 'true'
+      );
+    }catch(Exception $e){
+      echo "Ocurrio un error al enviar el correo. Error: {$mail->ErrorInfo}";
+      $r = array(
+        'r' => 'false'
+      );
+    }
 
     Session::flash('success',__('Thank you for contacting us, we will get back to you as soon as possible.'));
     return redirect()->back();
+    
   }
 
   // ------------------ REVIEW ------------------

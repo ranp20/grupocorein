@@ -9208,14 +9208,20 @@ screen and (-ms-high-contrast:none){
 
 .single-service.single-service2 .content{
     flex: 1;
-    text-align: left
+    text-align: left;
+    margin-left: 11px;
 }
 
 .single-service.single-service2 .content h6{
     font-weight: 500;
     font-size: 17px;
+    margin-bottom: 0px;
+    font-weight: bold;
 }
-
+.single-service.single-service2 .content a{
+    color:#000;
+    text-decoration: underline !important;
+}
 .section-title.section-title2{
     text-align: center;
     display: block;

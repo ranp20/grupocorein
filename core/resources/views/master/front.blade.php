@@ -546,14 +546,14 @@ function maxcharacters($string, $maxletters){
     </a>
     @endif
 </div>
-<section class="service-section" style="padding: 0px;">
-    <div class="container" style="border: 1px solid #003399;border-radius: 10px;margin-bottom: 25px;">
+<section class="service-section p-0">
+    <div class="container">
         <div class="row">
             <div class="col-lg-3 col-sm-6 text-center">
                 <div class="single-service single-service2">
                     <img src="{{route('front.index')}}/assets/images/1669243396carro.png" alt="Shipping">
-                    <div class="content" style="margin-left: 11px;">
-                        <h6 style="margin-bottom: 0px;color: #003399  !important;font-weight: bold;">Envío a domicilio</h6>
+                    <div class="content">
+                        <h6>Envío a domicilio</h6>
                         <p class="text-sm text-muted mb-0">Recíbelo donde tu quieras</p>
                     </div>
                 </div>
@@ -561,8 +561,8 @@ function maxcharacters($string, $maxletters){
             <div class="col-lg-3 col-sm-6 text-center">
                 <div class="single-service single-service2">
                     <img src="{{route('front.index')}}/assets/images/1669243349tienda.png" alt="Shipping">
-                    <div class="content" style="margin-left: 11px;">
-                        <h6 style="margin-bottom: 0px;color: #003399  !important;font-weight: bold;">Retiro en tienda</h6>
+                    <div class="content">
+                        <h6>Retiro en tienda</h6>
                         <p class="text-sm text-muted mb-0">Compra online y ahorra en el envío</p>
                     </div>
                 </div>
@@ -570,18 +570,18 @@ function maxcharacters($string, $maxletters){
             <div class="col-lg-3 col-sm-6 text-center">
                 <div class="single-service single-service2">
                     <img src="{{route('front.index')}}/assets/images/1669244306mapa.png" alt="Shipping">
-                    <div class="content" style="margin-left: 11px;">
-                        <h6 style="margin-bottom: 0px;color: #003399  !important;font-weight: bold;">Nuestras tiendas</h6>
-                        <p class="text-sm text-muted mb-0">Conoce todas nuestras tiendas</p>
+                    <div class="content">
+                        <h6>Nuestras tiendas</h6>
+                        <p class="text-sm text-muted mb-0"><a href="{{route('front.index')}}/stores" target="_self">Conoce todas nuestras tiendas</a></p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3 col-sm-6 text-center">
                 <div class="single-service single-service2">
                     <img src="{{route('front.index')}}/assets/images/1669243456telefono.png" alt="Shipping">
-                    <div class="content" style="margin-left: 11px;">
-                        <h6 style="margin-bottom: 0px;color: #003399  !important;font-weight: bold;">Servicio al Cliente</h6>
-                        <p class="text-sm text-muted mb-0"><a href="{{route('front.index')}}/contact" style="color:#000;text-decoration: underline !important;">Estamos para atenderte</a></p>
+                    <div class="content">
+                        <h6>Servicio al Cliente</h6>
+                        <p class="text-sm text-muted mb-0"><a href="{{route('front.index')}}/contact" target="_self">Estamos para atenderte</a></p>
                     </div>
                 </div>
             </div>

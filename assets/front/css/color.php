@@ -125,7 +125,8 @@ a.list-group-item:focus, a.list-group-item:active,
 .lSearchM__m__link .product-price,
 .link-a-menu-login .t-h-dropdown-menu > a .cIcon-profile i,
 .link-a-menu-login .t-h-dropdown-menu > a .cIcon-profile svg,
-.wt-custm--sbtitle
+.wt-custm--sbtitle,
+.single-service.single-service2 .content h6
 {
     color : <?php echo $color?> !important;
 }

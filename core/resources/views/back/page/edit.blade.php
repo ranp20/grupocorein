@@ -1,6 +1,6 @@
 @extends('master.back')
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid accept-liststyle">
 	<!-- Page Heading -->
 	<div class="card mb-4">
 		<div class="card-body">

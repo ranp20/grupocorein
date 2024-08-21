@@ -131,6 +131,24 @@ input[d-non-changes="y-block"]{
 		padding: 1rem 0;
 	}
 }
+.accept-liststyle ul,
+.accept-liststyle ol{
+	display: block;
+	list-style-type: disc;
+	margin-block-start: 1em;
+	margin-block-end: 1em;
+	margin-inline-start: 0px;
+	margin-inline-end: 0px;
+	padding-inline-start: 40px;
+	unicode-bidi: isolate;
+}
+.accept-liststyle ul,
+.accept-liststyle li,
+.accept-liststyle ol,
+.accept-liststyle .note-editable ul,
+.accept-liststyle .note-editable ol{
+	list-style: disc !important;
+}
 .swtchStyl--Rock{
 	@include switch-Rocker-style(0.65rem, #222, #367dff, #f3545d);
 }

@@ -22,7 +22,7 @@
       <div class="col-lg-12 mb-4 mt-4">
         <div class="card">
           <div class="card-body px-4 py-5">
-            <div class="d-page-content">
+            <div class="d-page-content accept-liststyle">
               <h4 class="d-block text-center"><b>{{$page->title}}</b></h4>
               {!! $page->details !!}
             </div>

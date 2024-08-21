@@ -371,6 +371,7 @@ Route::group(['middleware' => 'maintainance'], function (){
     Route::get('/blog/{slug}', 'Front\FrontendController@blogDetails')->name('front.blog.details');
     Route::get('/faq', 'Front\FrontendController@faq')->name('front.faq');
     Route::get('/faq/{slug}', 'Front\FrontendController@show')->name('front.faq.details');
+    Route::get('/stores', 'Front\FrontendController@stores')->name('front.stores');
     Route::get('/contact', 'Front\FrontendController@contact')->name('front.contact');
     Route::post('/contact/submit', 'Front\FrontendController@contactEmail')->name('front.contact.submit');
     Route::get('/complaintsbook', 'Front\FrontendController@complaintsbook')->name('front.complaintsbook');
