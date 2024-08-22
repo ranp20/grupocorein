@@ -786,7 +786,8 @@ class FrontendController extends Controller{
     $ageCheckValidShowClass = (isset($input['cmptbk_agecheck']) && $input['cmptbk_agecheck'] != "" && $input['cmptbk_agecheck'] != 0) ? 'text-primary' : 'text-danger';
     $setting = Setting::first();
     $website_logo = asset('assets/images/'.$setting->logo);
-    $from = "ranppuntos20@gmail.com";
+    // $from = "ranppuntos20@gmail.com";
+    $from = $setting->email_from;
     $mail = new PHPMailer(true);
     try {
       $mail->CharSet = 'UTF-8';

@@ -58,7 +58,7 @@ function formatPhone($phone){
         </div>
         <div id="wordPress" class="tabcontent">
           <p>
-            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15607.902710465167!2d-77.0444584!3d-12.0451944!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x4064839cd20cd011!2sCOREIN%20GROUP%20SAC!5e0!3m2!1ses-419!2spe!4v1669765979814!5m2!1ses-419!2spe" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d243.87347497421544!2d-77.04503715083902!3d-12.0451997695408!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c95cf36fb7b3%3A0x795ce3f560c0f791!2sComercial%20Ferretera%20Quintana%20Nicolini!5e0!3m2!1ses!2spe!4v1724344261531!5m2!1ses!2spe" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
           </p>
         </div>
       </div>  
@@ -67,21 +67,23 @@ function formatPhone($phone){
 </div>
 <script type="text/javascript" src="{{asset('assets/front/js/contact.min.js')}}"></script>
 <script>
-function openTab(evt, Services, arrows) {
+function openTab(evt, Services, arrows){
+  console.log(arrows);
+  console.log(Services);
   var i, tabcontent, tablinks, tabArrow;
   tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
+  tabArrow = document.getElementsByClassName("arrow");
+  tablinks = document.getElementsByClassName("tablinks");
+  for(i = 0; i < tabcontent.length; i++){
     tabcontent[i].style.display = "none";
   }
-  tabArrow = document.getElementsByClassName("arrow");
-    for (i = 0; i < tabArrow.length; i++) {
+  for(i = 0; i < tabArrow.length; i++){
     tabArrow[i].style.display = "none";
   }
-  tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
+  for(i = 0; i < tablinks.length; i++){
     tablinks[i].className = tablinks[i].className.replace(" active", "");
   }
-  document.getElementById(arrows).style.display = "block";
+  // document.getElementById(arrows).style.display = "block";
   document.getElementById(Services).style.display = "block";
   evt.currentTarget.className += " active";
 }
