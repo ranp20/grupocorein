@@ -135,18 +135,6 @@ class ItemRepository{
         $input['adj_doc'] = $namecomplete;
       }
     }
-    /*
-    echo "<pre>";
-    print_r($request->all());
-    echo "</pre>";
-    echo "<br>";
-    */
-    /*
-    echo "<pre>";
-    print_r($input);
-    echo "</pre>";
-    exit();
-    */
     /*-- NUEVO CONTENIDO (FIN) --*/
     $item_id = Item::create($input)->id;
     if(isset($input['galleries'])){
@@ -212,10 +200,6 @@ class ItemRepository{
       $input['tags'] = str_replace(["value", "{", "}", "[","]",":","\""], '', $request->tags);
     }
     /*
-    echo "<pre>";
-    print_r($input);
-    echo "<pre>";
-    exit();
     if($request->has('is_specification')){
       if($request->has('specification_name')){}
       $input['specification_name'] = json_encode($input['specification_name']);
@@ -298,20 +282,11 @@ class ItemRepository{
         $input['adj_doc'] = $namecomplete;
       }
     }
-
+    // ------------- AGREGAR ÚLTIMA FECHA DE MODIFICACIÓN DEL PRODUCTO
     config(['app.timezone' => 'America/Lima']);
     date_default_timezone_set('America/Lima');
     $input['updated_at'] = date('Y/m/d h:i:s');
     /*-- NUEVO CONTENIDO (FIN) --*/
-    /*
-    echo "<pre>";
-    print_r($input);
-    echo "<pre>";
-    echo "<pre>";
-    print_r(json_decode($input['atributoraiz_collection'], TRUE));
-    echo "<pre>";
-    exit();
-    */
     $item->update($input);
     if(isset($input['galleries'])){
       $this->galleriesUpdate($request,$item->id);

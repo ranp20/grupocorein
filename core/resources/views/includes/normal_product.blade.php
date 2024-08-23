@@ -151,7 +151,7 @@ if(Auth::check()){
       @endif
       <div class="product-thumb" >
         <a href="{{route('front.product',$item->slug)}}" class="d-flex align-items-center justify-content-center">
-          <img class="lazy" src="{{asset('assets/images/items/'.$item->thumbnail)}}" data-src="{{asset('assets/images/items/'.$item->thumbnail)}}" alt="Product">
+          <img class="lazy" src="{{asset('assets/images/items/'.$item->photo)}}" data-src="{{asset('assets/images/items/'.$item->photo)}}" alt="Product">
         </a>  
         <div class="product-button-group"><a class="product-button wishlist_store" href="{{route('user.wishlist.store',$item->id)}}" title="{{__('Wishlist')}}"><i class="icon-heart"></i></a>
           <a data-target="{{route('fornt.compare.product',$item->id)}}" class="product-button product_compare" href="javascript:;" class="{{__('Compare')}}"><i class="icon-repeat"></i></a>

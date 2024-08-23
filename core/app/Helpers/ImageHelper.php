@@ -105,10 +105,20 @@ class ImageHelper{
   // ------------------- EDITAR IMÁGEN PRINCIPAL DE PRODUCTO EN SU RESPECTIVO DIRECTORIO ($path)
   public static function ItemhandleUpdatedUploadedImagePrincipalItem($file,$path,$data,$delete_path,$field){
     $photo = $file->getClientOriginalName();
-    $thum = $file->getClientOriginalExtension();
-    $image = \Image::make($file)->resize(230,230);
-    $image->save(base_path('..').$path.'/'.$thum);
-    $file->move(base_path('..').$path,$photo);
+    $path_info = pathinfo($photo);
+    $filename = $path_info['filename'];
+    $extension = $path_info['extension'];
+    $ext = $file->getClientOriginalExtension();
+    $uuid = Str::uuid()->toString();
+    $shortUuid = substr($uuid, 0, 22);
+    $fileNameFinal = $shortUuid.'-'.time().'-'.$filename.'.'.$ext;
+    $image = \Image::make($file);
+    $image->resize(230, 230, function ($constraint){
+      $constraint->aspectRatio(); // Mantener la proporción original
+      $constraint->upsize(); // No ampliar la imagen si es más pequeña que el widthxheight especificado
+    });
+    $image->save(base_path('..').$path.'/'.$fileNameFinal);
+    $file->move(base_path('..').$path,$fileNameFinal);
     if($data['thumbnail'] != null){
       if(file_exists(base_path('../').$delete_path.$data['thumbnail'])){
         unlink(base_path('../').$delete_path.$data['thumbnail']);
@@ -119,7 +129,7 @@ class ImageHelper{
         unlink(base_path('../').$delete_path.$data[$field]);
       }
     }
-    return [$photo,$thum];
+    return [$fileNameFinal,$fileNameFinal];
   }
   // ------------------- GUARDAR IMÁGEN PRINCIPAL DE LA CATEGORÍA ($path)
   public static function ItemhandleUploadedImagePrincipalCategory($file,$path,$delete=null){
@@ -214,7 +224,9 @@ class ImageHelper{
       $filename = $path_info['filename'];
       $extension = $path_info['extension'];
       $ext = $file->getClientOriginalExtension();
-      $fileNameFinal = time().'-'.$filename.'.'.$ext;
+      $uuid = Str::uuid()->toString();
+      $shortUuid = substr($uuid, 0, 22);
+      $fileNameFinal = $shortUuid.'-'.time().'-'.$filename.'.'.$ext;
       // $fileNameFinal = $filename.'.'.$ext;
       $image = \Image::make($file);
       $image->resize(700, 700, function ($constraint){

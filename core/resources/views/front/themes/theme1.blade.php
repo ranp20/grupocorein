@@ -366,7 +366,7 @@
                       <div class="product-badge product-badge2 bg-info"> -{{PriceHelper::DiscountPercentage($popularcateg_item)}}</div>
                       @endif
                       <a href="{{route('front.product',$popularcateg_item->slug)}}" class="d-flex align-items-center justify-content-center">
-                        <img class="lazy" data-src="{{asset('assets/images/items/'.$popularcateg_item->thumbnail)}}" alt="Product">
+                        <img class="lazy" data-src="{{asset('assets/images/items/'.$popularcateg_item->photo)}}" alt="Product">
                       </a>
                       <div class="product-button-group">
                         <a class="product-button wishlist_store" href="{{route('user.wishlist.store',$popularcateg_item->id)}}" title="{{__('Wishlist')}}"><i class="icon-heart"></i></a>
@@ -710,7 +710,7 @@
                       <div class="product-badge product-badge2 bg-info"> -{{PriceHelper::DiscountPercentage($featurecateg_item)}}</div>
                       @endif                                
                       <a href="{{route('front.product',$featurecateg_item->slug)}}" class="d-flex align-items-center justify-content-center">
-                        <img class="lazy" data-src="{{asset('assets/images/items/'.$featurecateg_item->thumbnail)}}" alt="Product">
+                        <img class="lazy" data-src="{{asset('assets/images/items/'.$featurecateg_item->photo)}}" alt="Product">
                       </a>
                       <div class="product-button-group"><a class="product-button wishlist_store" href="{{route('user.wishlist.store',$featurecateg_item->id)}}" title="{{__('Wishlist')}}"><i class="icon-heart"></i></a>
                         <a data-target="{{route('fornt.compare.product',$featurecateg_item->id)}}" class="product-button product_compare" href="javascript:;" title="{{__('Compare')}}"><i class="icon-repeat"></i></a>

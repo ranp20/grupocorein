@@ -22,7 +22,7 @@ function renderStarRating($rating, $maxRating = 5){
     <div class="lSearchM__m__l p-col py-0 mb-0">
       <a class="lSearchM__m__link" href="{{route('front.product',$item->slug)}}">
         <span class="product-thumb">
-          <img class="lazy" alt="Product" src="{{asset('assets/images/items/'.$item->thumbnail)}}" width="100" height="100">
+          <img class="lazy" alt="Product" src="{{asset('assets/images/items/'.$item->photo)}}" width="100" height="100">
         </span>
         <span class="product-card-body">
           <span class="product-title">

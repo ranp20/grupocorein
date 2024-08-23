@@ -48,7 +48,7 @@
                   </td>
                   @foreach ($items as $item)
                   <td>
-                    <div class="comparison-item"><span class="remove-item compare_remove" data-href="{{route('front.compare.remove',$item->id)}}"><i class="icon-x"></i></span><a class="comparison-item-thumb" href="{{route('front.product',$item->slug)}}"><img src="{{asset('assets/images/items/'.$item->thumbnail)}}" alt="Image"></a><a class="comparison-item-title" href="{{route('front.product',$item->slug)}}">{{$item->name}}</a><a class="btn btn-outline-primary btn-sm add_to_single_cart" href="javascript:;"  data-target="{{$item->id}}" >{{__('Add to Cart')}}</a></div>
+                    <div class="comparison-item"><span class="remove-item compare_remove" data-href="{{route('front.compare.remove',$item->id)}}"><i class="icon-x"></i></span><a class="comparison-item-thumb" href="{{route('front.product',$item->slug)}}"><img src="{{asset('assets/images/items/'.$item->photo)}}" alt="Image"></a><a class="comparison-item-title" href="{{route('front.product',$item->slug)}}">{{$item->name}}</a><a class="btn btn-outline-primary btn-sm add_to_single_cart" href="javascript:;"  data-target="{{$item->id}}" >{{__('Add to Cart')}}</a></div>
                   </td>
                   @endforeach
                 </tr>
@@ -104,7 +104,7 @@
                         <i class="icon-x"></i>
                       </span>
                       <a class="comparison-item-thumb" href="{{route('front.product',$item->slug)}}">
-                        <img src="{{asset('assets/images/items/'.$item->thumbnail)}}" alt="Image">
+                        <img src="{{asset('assets/images/items/'.$item->photo)}}" alt="Image">
                       </a>
                       <a class="comparison-item-title" href="{{route('front.product',$item->slug)}}">{{$item->name}}</a>
                       <a class="btn btn-outline-primary btn-sm add_to_single_cart" href="javascript:;"  data-target="{{$item->id}}" >{{__('Add to Cart')}}</a>
