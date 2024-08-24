@@ -91,5 +91,6 @@
       </div>
     </div>
   </div>
+</div>
 <script type="text/javascript" src="{{asset('assets/front/js/journals.js')}}"></script>
 @endsection

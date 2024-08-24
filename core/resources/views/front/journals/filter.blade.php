@@ -1,11 +1,4 @@
 <div class="row g-3" id="">
-  <?php
-    
-    // echo "<pre>";
-    // print_r($catalogos);
-    // echo "</pre>";
-    
-  ?>
   @if($catalogos->count() > 0)
     @foreach ($catalogos as $item)
     <div class="col-gd">

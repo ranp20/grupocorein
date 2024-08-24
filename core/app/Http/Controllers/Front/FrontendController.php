@@ -780,14 +780,14 @@ class FrontendController extends Controller{
       "cmptbk_order" => (isset($input['cmptbk_order']) && $input['cmptbk_order'] != "") ? $input['cmptbk_order'] : "<No especificado>",
       "cmptbk_agecheck" => (isset($input['cmptbk_agecheck']) && $input['cmptbk_agecheck'] != "" && $input['cmptbk_agecheck'] != 0) ? "SI" : "NO",
       "cmptbk_typeofgod" => (isset($input['cmptbk_typeofgod']) && $input['cmptbk_typeofgod'] != "") ? $input['cmptbk_typeofgod'] : "<No especificado>",
-      "cmptbk_reclaimedamount" => (isset($input['cmptbk_reclaimedamount']) && $input['cmptbk_reclaimedamount'] != "") ? $input['cmptbk_reclaimedamount'] : "<No especificado>",
+      "cmptbk_reclaimedamount" => (isset($input['cmptbk_reclaimedamount']) && $input['cmptbk_reclaimedamount'] != "") ? PriceHelper::setCurrencyPrice($input['cmptbk_reclaimedamount']) : "<No especificado>",
       "cmptbk_description" => (isset($input['cmptbk_description']) && $input['cmptbk_description'] != "") ? $input['cmptbk_description'] : "<No especificado>",
     ];
     $ageCheckValidShowClass = (isset($input['cmptbk_agecheck']) && $input['cmptbk_agecheck'] != "" && $input['cmptbk_agecheck'] != 0) ? 'text-primary' : 'text-danger';
     $setting = Setting::first();
     $website_logo = asset('assets/images/'.$setting->logo);
-    // $from = "ranppuntos20@gmail.com";
-    $from = $setting->email_from;
+    $from = "ranppuntos20@gmail.com";
+    // $from = $setting->email_from;
     $mail = new PHPMailer(true);
     try {
       $mail->CharSet = 'UTF-8';

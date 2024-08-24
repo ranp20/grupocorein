@@ -182,7 +182,7 @@ function openTab(evt, Services, arrows) {
     for (i = 0; i < tablinks.length; i++) {
     tablinks[i].className = tablinks[i].className.replace(" active", "");
   }
-  document.getElementById(arrows).style.display = "block";
+  // document.getElementById(arrows).style.display = "block";
   document.getElementById(Services).style.display = "block";
   evt.currentTarget.className += " active";
 }

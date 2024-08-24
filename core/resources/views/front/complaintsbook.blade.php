@@ -34,7 +34,7 @@ function formatPhone($phone){
         <h2 class="h3">{{ __('Complaints book') }}</h2>
       </div>
     </div>
-    <form class="row mt-2" method="Post" action="{{route('front.complaintsbook.submit')}}">
+    <form class="row mt-2 pr-0" method="Post" action="{{route('front.complaintsbook.submit')}}">
       @csrf
       <div class="col-lg-6 col-md-6 col-sm-12">
         <section class="widget widget-featured-posts card rounded p-4">
