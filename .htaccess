@@ -1,7 +1,7 @@
 RewriteEngine On
-RewriteCond %{HTTP_HOST} prelecgroup\.pe [NC]
+RewriteCond %{HTTP_HOST} grupocorein\.pe [NC]
 RewriteCond %{SERVER_PORT} 80
-RewriteRule ^(.*)$ https://prelecgroup.com/$1 [R,L]
+RewriteRule ^(.*)$ https://grupocorein.com/$1 [R,L]
 
 <IfModule mod_rewrite.c>
   <IfModule mod_negotiation.c>
