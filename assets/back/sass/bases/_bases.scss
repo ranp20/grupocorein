@@ -251,6 +251,18 @@ input[d-non-changes="y-block"]{
 		}
 	}
 }
+.mssgSpn{
+	&__success-mssg{
+		color: green !important;
+	}
+	&__error-mssg{
+		color: red !important;
+	}
+}
+.cFrmCtrl__cInput--ico{
+	display: block;
+	position: relative;
+}
 .cFrmCtrl__cIcon--R{
 	position: absolute;
 	right: 0;
