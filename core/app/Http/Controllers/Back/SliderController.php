@@ -27,6 +27,7 @@ class SliderController extends Controller{
   public function store(Request $request){
     $request->validate([
       'photo' => 'required|image',
+      'title' => 'required|max:100',
     ]);
     $this->repository->store($request);
     return redirect()->route('back.slider.index')->withSuccess(__('New Slider Added Successfully.'));
@@ -37,6 +38,7 @@ class SliderController extends Controller{
   public function update(ImageUpdateRequest $request, Slider $slider){
     $request->validate([
       'photo' => 'image',
+      'title' => 'required|max:100',
     ]);
     $this->repository->update($slider, $request);
     return redirect()->route('back.slider.index')->withSuccess(__('Slider Updated Successfully.'));

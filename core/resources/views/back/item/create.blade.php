@@ -349,7 +349,7 @@
                   @php
                   $onSection = "";
                   if($section->name == "on_sale"){
-                    $onSection = "En promociÃ³n";
+                    $onSection = "En promoci¨®n";
                   }else if($section->name == "special_offer"){
                     $onSection = "Oferta Especial";
                   }else{

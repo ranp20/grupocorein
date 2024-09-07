@@ -7,20 +7,20 @@ $fk_NameServerAPIREST = "https://api.micuentaweb.pe";
 $fk_Username = "80999186";
 
 // ------ CREDENCIALES DE PRUEBA
-
+/*
 $fk_Password = "testpassword_8UQnGVVZZMZynIEJCmVRH79fIVWQCLQCeQjFqUl3TtXrO";
 $fk_Token = "NTMyOTA3Mjp0ZXN0cGFzc3dvcmRfOFVRbkdWVlpaTVp5bklFSkNtVlJINzlmSVZXUUNMUUNlUWpGcVVsM1R0WHJP";
 $fk_Publickey = "80999186:testpublickey_gNwgQknEJouS9uRgCwoBXfH7Uqg6hhumos3H5KmiLeXlu";
 $fk_SHA_256 = "ehltJw48HfxW3kyL6NZIOo50reCQlEqubeOBVWY6kB5Xk";
-
+*/
 // ------ CREDENCIALES DE PRODUCCIÓN
 // ------- ACTUALIZADO (PRODUCCIÓN) - 24/04/2024
-/*
+
 $fk_Password = "prodpassword_6avYonm3fnb0ATqzG1sOFbaKW8P8ocBE8GpR3jl9QDDXz";
 $fk_Token = "ODA5OTkxODY6cHJvZHBhc3N3b3JkXzZhdllvbm0zZm5iMEFUcXpHMXNPRmJhS1c4UDhvY0JFOEdwUjNqbDlRRERYeg==";
 $fk_Publickey = "80999186:publickey_GsBZDONbG705YAjMd1zdmZoVxpxkFl81x9Qp5KaPEZh7N";
 $fk_SHA_256 = "IPfeyHda7eZSQOs6xs7o9E9AkbgCgkHxj2OAZ8bZdFxJg";
-*/
+
 /*
 $app = require_once 'bootstrap/app.php';
 $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);

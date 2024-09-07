@@ -9851,7 +9851,6 @@ screen and (-ms-high-contrast:none){
 .announcement-with-content .right-area form{
     margin-top: 25px;
 }
-
 .cookie-consent{
     position: fixed;
     background-color: #242424;
@@ -9860,21 +9859,27 @@ screen and (-ms-high-contrast:none){
     padding: 10px 10px;
     z-index: 99;
     color: #fff;
-  }
-  
-  .cookie-container{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    align-self: center;
-  }
-  
-  
-  span.cookie-consent__message{
+}
+.cookie-container{
+display: flex;
+justify-content: space-between;
+align-items: center;
+align-self: center;
+    button{
+        overflow: unset;
+        &.cookie-consent__agree{
+            overflow: unset;
+        }
+    }
+} 
+span.cookie-consent__message{
     background-color: transparent !important;
-  }
-  
-  span.cookie-consent__message p{
+    font-size: 15px;
+    @media (min-width: 768px){
+        font-size: 1rem;
+    }
+}
+span.cookie-consent__message p{
     margin-bottom: 0px;
     color: #fff;
   }

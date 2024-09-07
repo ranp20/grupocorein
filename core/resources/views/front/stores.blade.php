@@ -67,23 +67,21 @@ function formatPhone($phone){
 </div>
 <script type="text/javascript" src="{{asset('assets/front/js/contact.min.js')}}"></script>
 <script>
-function openTab(evt, Services, arrows){
-  console.log(arrows);
-  console.log(Services);
+function openTab(evt, Services, arrows) {
   var i, tabcontent, tablinks, tabArrow;
   tabcontent = document.getElementsByClassName("tabcontent");
-  tabArrow = document.getElementsByClassName("arrow");
-  tablinks = document.getElementsByClassName("tablinks");
-  for(i = 0; i < tabcontent.length; i++){
+    for (i = 0; i < tabcontent.length; i++) {
     tabcontent[i].style.display = "none";
   }
-  for(i = 0; i < tabArrow.length; i++){
+  tabArrow = document.getElementsByClassName("arrow");
+    for (i = 0; i < tabArrow.length; i++) {
     tabArrow[i].style.display = "none";
   }
-  for(i = 0; i < tablinks.length; i++){
+  tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
     tablinks[i].className = tablinks[i].className.replace(" active", "");
   }
-  // document.getElementById(arrows).style.display = "block";
+//   document.getElementById(arrows).style.display = "block";
   document.getElementById(Services).style.display = "block";
   evt.currentTarget.className += " active";
 }

@@ -297,4 +297,28 @@ class ImageHelper{
     // $file->move($path,$photo);
     return $fileNameFinal;
   }
+  // ------------------- ACTUALIZAR ÍCONO/LOGO DE ADMINISTRADOR ($path)
+  public static function handleUpdatedUploadedIconAdmin($file,$path,$data,$delete_path,$field){
+    $photo = $file->getClientOriginalName();
+    $path_info = pathinfo($photo);
+    $filename = $path_info['filename'];
+    $extension = $path_info['extension'];
+    $ext = $file->getClientOriginalExtension();
+    $uuid = Str::uuid()->toString();
+    $shortUuid = substr($uuid, 0, 22);
+    $fileNameFinal = $shortUuid.'-'.time().'-'.$filename.'.'.$ext;
+    $image = \Image::make($file);
+    $image->resize(50, 50, function ($constraint){
+      $constraint->aspectRatio(); // Mantener la proporción original
+      $constraint->upsize(); // No ampliar la imagen si es más pequeña que el widthxheight especificado
+    });
+    $image->save(base_path('..').$path.'/'.$fileNameFinal);
+    $file->move(base_path('..').$path,$fileNameFinal);
+    if($data[$field] != null){
+      if(file_exists(base_path('../').$delete_path.$data[$field])){
+        unlink(base_path('../').$delete_path.$data[$field]);
+      }
+    }
+    return [$fileNameFinal,$fileNameFinal];
+  }
 }

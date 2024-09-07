@@ -10,7 +10,10 @@ class CouponsRepository{
   public function __construct(Coupons $coupons){
     $this->coupons = $coupons;
   }
-  public function store($request){ 
+  public function store($request){
+    $request->validate([
+      'photo' => 'required|file|mimes:jpeg,jpg,png,svg,webp,gif',
+    ]);
     $input = $request->all();
     $timeend = $request->date_end;
     $formattedTime = $timeend . ' ' . $request->time_end;

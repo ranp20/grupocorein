@@ -23,13 +23,15 @@
 									<div class="form-group">
 										<label for="name">{{ __('Current Image') }}</label>
 										<div class="col-lg-12 pb-1">
-											<img class="admin-img" src="{{ $data->photo ? asset('assets/images/'.$data->photo) : asset('assets/images/placeholder.png') }}" alt="No Image Found">
+											<div class="mxwh-50px">
+												<img class="img-fluid" src="{{ $data->photo ? asset('assets/back/images/profile/'.$data->photo) : asset('assets/back/images/profile/placeholder.png') }}" alt="No Image Found" width="100" height="100">
+											</div>
 										</div>
-										<span>{{ __('Image Size Should Be 40 x 40.') }}</span>
+										<span>{{ __('Image Size Should Be 50 x 50.') }}</span>
 									</div>
 									<div class="form-group position-relative text-center">
 										<label class="file">
-											<input type="file"  accept="image/*"  class="upload-photo" name="photo" id="file" aria-label="File browser example">
+											<input type="file" accept="image/*" class="upload-photo" name="photo" id="file" aria-label="File browser example">
 											<span class="file-custom text-left">{{ __('Upload Image...') }}</span>
 										</label>
 									</div>

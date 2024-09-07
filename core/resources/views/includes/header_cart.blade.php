@@ -13,7 +13,7 @@
   // if(count(Session::get('cart')) > 0){
   //   echo "Hay productos";
   // }else{
-  //   echo "Vac铆o";
+  //   echo "Vacío";
   // }
 ?>
 @if(Session::has('cart') && count(Session::get('cart')) > 0)
@@ -39,7 +39,7 @@
         // ----------- Crear un objeto DateTime a partir de la fecha final...
         $currentDate = new DateTime();
         $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
-        // ----------- Asegurarse que la fecha es v谩lida...
+        // ----------- Asegurarse que la fecha es válida...
         if (!$expirationDate) {
           die('Invalid date format for countdown.');
         }
@@ -109,9 +109,9 @@
           @else
             <span class="product-withcoupon">
               {{--
-              <!-- <small>Con cup贸n: <strong>{{ $nameofcouponbyid }}</strong></small> -->
+              <!-- <small>Con cupón: <strong>{{ $nameofcouponbyid }}</strong></small> -->
               --}}
-              <small>CUP脫N: <strong>{{ $discount_percentage_format }} %</strong></small>
+              <small>CUPÓN: <strong>{{ $discount_percentage_format }} %</strong></small>
             </span>
           @endif
         @endif

@@ -955,7 +955,7 @@
                     </div>
                     <label for="{{ $v->name }}" style="cursor:pointer;">{{ $v->name }}</label>
                   </section>
-                </div>
+                </div>                
                 @endforeach                
               </div>
             </div>

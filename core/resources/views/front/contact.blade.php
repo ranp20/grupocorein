@@ -50,7 +50,7 @@ function formatPhone($phone){
           @endphp
           <div>
             @foreach ($links as $link_key => $link)
-              <a class="social-button shape-circle sb-facebook" href="{{$link}}" data-toggle="tooltip" data-placement="top"><i class="{{$icons[$link_key]}}"></i></a>
+                <a class="social-button shape-circle sb-facebook" href="{{$link}}" data-toggle="tooltip" data-placement="top"><i class="{{$icons[$link_key]}}"></i></a>
             @endforeach
           </div>
         </section>
@@ -182,7 +182,7 @@ function openTab(evt, Services, arrows) {
     for (i = 0; i < tablinks.length; i++) {
     tablinks[i].className = tablinks[i].className.replace(" active", "");
   }
-  // document.getElementById(arrows).style.display = "block";
+//   document.getElementById(arrows).style.display = "block";
   document.getElementById(Services).style.display = "block";
   evt.currentTarget.className += " active";
 }

@@ -55,14 +55,14 @@
 						<li class="nav-item dropdown hidden-caret">
 							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="{{route('back.dashboard')}}" aria-expanded="false">
 								<div class="avatar-sm avatar avatar-sm">
-									<img src="{{ Auth::guard('admin')->user()->photo ? asset('assets/images/'.Auth::guard('admin')->user()->photo) : asset('assets/images/noimage.png') }}" alt="..." class="avatar-img rounded-circle" width="100" height="100" decoding="sync">
+									<img src="{{ Auth::guard('admin')->user()->photo ? asset('assets/back/images/profile/'.Auth::guard('admin')->user()->photo) : asset('assets/back/images/profile/placeholder.png') }}" alt="..." class="avatar-img rounded-circle" width="100" height="100" decoding="sync">
 								</div>
 							</a>
 							<ul class="dropdown-menu dropdown-user animated fadeIn">
 								<li>
 									<div class="user-box">
 										<div class="avatar-lg">
-											<img src="{{ Auth::guard('admin')->user()->photo ? asset('assets/images/'.Auth::guard('admin')->user()->photo) : asset('assets/images/noimage.png') }}" alt="image profile" class="avatar-img rounded" width="100" height="100" decoding="sync">
+											<img src="{{ Auth::guard('admin')->user()->photo ? asset('assets/back/images/profile/'.Auth::guard('admin')->user()->photo) : asset('assets/back/images/profile/placeholder.png') }}" alt="image profile" class="avatar-img rounded" width="100" height="100" decoding="sync">
 										</div>
 										<div class="u-text">
 											<h4>{{ Auth::guard('admin')->user()->name }}</h4>
@@ -90,7 +90,7 @@
 				<div class="sidebar-content">
 					<div class="user">
 						<div class="avatar-sm float-left mr-2">
-							<img src="{{ Auth::guard('admin')->user()->photo ? asset('assets/images/'.Auth::guard('admin')->user()->photo) : asset('assets/images/noimage.png') }}" alt="..." class="avatar-img rounded-circle" width="100" height="100" decoding="sync">
+							<img src="{{ Auth::guard('admin')->user()->photo ? asset('assets/back/images/profile/'.Auth::guard('admin')->user()->photo) : asset('assets/back/images/profile/noimage.png') }}" alt="..." class="avatar-img rounded-circle" width="100" height="100" decoding="sync">
 						</div>
 						<div class="info">
 							<a data-toggle="collapse" href="#collapseExample" aria-expanded="true">

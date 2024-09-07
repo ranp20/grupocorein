@@ -127,7 +127,7 @@ main table.summary td,main table.summary th{padding:8px;border-bottom:0}body,foo
 					</td>
 					<td class="width-1 pl-1 txt-center">{{ $countProds }}</td>
 					<td class="width-4">{{ $v['sku'] }}</td>
-					{{-- <!-- <td class="width-18"><span>{{ maxcharacters($v['name'], 42) }}</span></td> --> --}}
+					{{-- <!--<td class="width-18"><span>{{ maxcharacters($v['name'], 42) }}</span></td>--> --}}
 					<td class="width-18"><span>{{ $v['name'] }}</span></td>
 					<td class="width-7">{{ maxcharacters($v['brand_name'], 23) }}</td>
 					<td class="width-2 pl-2 txt-center">{{ $v['qty'] }}</td>
