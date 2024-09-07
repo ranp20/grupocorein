@@ -1,5 +1,12 @@
 @extends('master.back')
 @section('content')
+<?php
+function formatTelNumber($phonenumber){
+	$withoutspaces = str_replace(" ","",$phonenumber);
+	$withoutspacesfinal = preg_replace('/(\d{1,3})(?=(\d{3})+$)/', '$1 ', $withoutspaces);
+	return $withoutspacesfinal;
+}
+?>
 <div class="container-fluid">
   <div class="card mb-4">
     <div class="d-sm-flex align-items-center justify-content-between py-1 px-3">
@@ -22,7 +29,7 @@
 									@include('alerts.alerts')
 									<div class="form-group">
 										<label for="name">{{ __('Current Image') }}</label>
-										<div class="col-lg-12 pb-1">
+										<div class="col-lg-12 pb-1 mb-3">
 											<div class="mxwh-50px">
 												<img class="img-fluid" src="{{ $data->photo ? asset('assets/back/images/profile/'.$data->photo) : asset('assets/back/images/profile/placeholder.png') }}" alt="No Image Found" width="100" height="100">
 											</div>
@@ -45,7 +52,7 @@
 									</div>
 									<div class="form-group">
 										<label for="phone">{{ __('Phone Number') }} *</label>
-										<input type="text" name="phone" class="form-control" id="phone" placeholder="{{ __('Phone Number') }}" value="{{$data->phone}}" >
+										<input type="text" name="phone" class="form-control" id="phone" placeholder="{{ __('Phone Number') }}" value="{{ formatTelNumber($data->phone) }}" minlength="9" maxlength="11" data-valformat="withspacesforthreenumbers">
 									</div>
 									<div class="form-group">
 										<button type="submit" class="btn btn-secondary btn-block">{{ __('Submit') }}</button>
@@ -59,4 +66,5 @@
 		</div>
 	</div>
 </div>
+<script type="text/javascript" src="{{ asset('assets/back/js/profile.js') }}"></script>
 @endsection

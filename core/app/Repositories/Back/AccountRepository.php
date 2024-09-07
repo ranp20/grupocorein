@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Hash;
 class AccountRepository{
   public function updateProfile($request){
     $input = $request->all();
+    $input['phone'] = ($request->has('phone')) ? str_replace(" ","",$request->phone) : "";
     $data = Auth::guard('admin')->user();
     if($file = $request->file('photo')) {
       $images_name = ImageHelper::handleUpdatedUploadedIconAdmin($request->photo,'/assets/back/images/profile',$data,'/assets/back/images/profile/','photo');
