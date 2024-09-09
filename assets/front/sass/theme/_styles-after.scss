@@ -6402,7 +6402,7 @@ video{
 }
 .site-header{
     position: relative;
-    z-index: 1000
+    z-index: 10000;
 }
 .site-header .navbar{
     position: relative;
@@ -9857,7 +9857,7 @@ screen and (-ms-high-contrast:none){
     bottom: 0px;
     width: 100%;
     padding: 10px 10px;
-    z-index: 99;
+    z-index: 9999;
     color: #fff;
 }
 .cookie-container{
@@ -10964,7 +10964,7 @@ span.cookie-consent__message p{
 }
 #WAButton{
     font-family: Arial, Helvetica, sans-serif !important;
-    z-index: 999;
+    z-index: 9999;
     bottom: 90px;
     .floating-wpp-button{
         z-index: 99;

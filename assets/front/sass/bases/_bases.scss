@@ -2170,3 +2170,188 @@ a[data-zoom-id] img, .mz-thumb img{
 	height: 100%;
 	object-fit: cover;
 }
+/****************** CAREGORÍAS DESTACADAS ******************/
+// .s-categoryf{
+// 	&__c{
+// 		&__m{
+// 			display: flex;
+// 			align-items: center;
+// 			justify-content: center;
+// 			flex-flow: row wrap;
+// 			display: grid !important;
+// 			grid-template-columns: repeat(3, minmax(70px, 1fr));
+// 			&--i{
+// 				background-color: #fff;
+// 				height: 133px;
+// 				position: relative;
+// 				text-align: center;
+// 				width: 100%;
+// 				& .inner-content{
+// 					padding-top: 8px;
+// 					color: #737373;
+// 					font-size: 12px;
+// 					font-weight: 600;
+// 					line-height: 15px;
+// 					margin: auto;
+// 					max-width: 80px;
+// 					overflow: hidden;
+// 					overflow-wrap: break-word;
+// 					-webkit-font-smoothing: antialiased;
+// 					-webkit-tap-highlight-color: rgba(167, 167, 167, .4);
+// 				}
+// 			}
+// 			&--link{
+// 				margin-bottom: 0 !important;
+// 			}
+// 		}
+// 	}
+// }
+.categories-f{
+	&__desing-1{
+		& .wrapper{
+			display: grid;
+			width: 100%;
+			grid-gap: 6px;
+			padding: 0;
+			grid-template-columns: repeat(3, minmax(100px, 1fr));
+			@media screen and (max-width: 340px){
+				grid-template-columns: repeat(3, minmax(70px, 1fr));
+			}
+			@media screen and (max-width: 360px){
+				grid-template-columns: repeat(3, minmax(85px, 1fr));
+			}
+			& .shop-card{
+				border-radius: 6px;
+				& > :first-child{
+					border-top-left-radius: 6px;
+    			border-top-right-radius: 6px;
+				}
+				& > :last-child{
+					border-bottom-left-radius: 6px;
+    			border-bottom-right-radius: 6px;
+				}
+				&__content{
+					
+				}
+				&__footer{
+
+				}
+			}
+			& .card-grid-item{
+				background-color: #fff;
+				height: 133px;
+				position: relative;
+				text-align: center;
+				width: 100%;
+				border: 1px solid #eee;
+				box-shadow: none;
+				border-radius: 6px;
+				&__title{
+					color: #737373;
+					font-size: 12px;
+					font-weight: 600;
+					line-height: 15px;
+					margin: auto;
+					max-width: 80px;
+					overflow: hidden;
+					overflow-wrap: break-word;
+					-webkit-font-smoothing: antialiased;
+					-webkit-tap-highlight-color: rgba(167, 167, 167, .4);
+				}
+			}
+			& .card-grid-content-img{
+				background-color: #f5f5f5;
+    		height: 87px;
+				& > img{
+					max-height: 100%;
+					max-width: 100%;
+				}
+			}
+			& .card-grid-footer{
+				padding-top: 8px;
+				border-top: none;
+			}
+		}
+	}
+	&__desing-2{
+		& > .container{
+			padding: 0;
+		}
+		& .wrapper{
+			--bs-gutter-x: 1.5rem;
+			--bs-gutter-y: 0;
+			display: flex;
+			flex-wrap: wrap;
+			margin-top: calc(0 * -1);
+			margin-right: calc(10px * -0.5);
+			margin-left: calc(10px * -0.5);
+			display: flex;
+			max-width: none;
+			& > *{
+				flex-shrink: 0;
+				width: 100%;
+				max-width: 100%;
+				padding-right: calc(10px * .5);
+				padding-left: calc(10px * .5);
+				margin-top: 0;
+			}
+			& .shop-card{
+				border-radius: 6px;
+				transition: none !important;
+				&__content{
+				}
+				&__footer{
+				}
+			}
+			@media (min-width: 768px){
+				& .categoryf-wrapper{
+					margin-bottom: 4px;
+					&.c-md-3{						
+						flex: 0 0 auto;
+						width: 33.33333333%;
+					}
+				}
+			}
+			& .card-grid-item{
+				position: relative;
+				display: block;
+				overflow: hidden;
+				border-radius: 10px;
+				border: 1px solid #fff;
+				transition: all .3s linear;
+				box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .12);
+				margin-bottom: 7px;
+				&__title{
+					display: inline-block;
+					font-size: 15px;
+					line-height: 20px;
+					font-weight: 600;
+					letter-spacing: 1px;
+					margin-bottom: 0px;
+				}
+				&:hover{
+					& .card-grid-item__title{
+						text-decoration: underline;
+					}
+				}
+			}
+			& .card-grid-content-img{
+				background-color: #f5f5f5;
+				width: 100%;
+				& > img{
+					width: 100%;
+					transform: scale(1);
+					transition: all .3s linear;
+				}
+			}
+			& .card-grid-footer{
+				position: absolute;
+				left: 30px;
+				top: 50%;
+				transform: translateY(-50%);
+				width: 50%;
+				border-top: none;
+			}
+		}
+	}
+}

@@ -128,7 +128,8 @@ a.list-group-item:focus, a.list-group-item:active,
 .link-a-menu-login .t-h-dropdown-menu > a .cIcon-profile svg,
 .wt-custm--sbtitle,
 .single-service.single-service2 .content h6,
-.swiper-button-next, .swiper-button-prev
+.swiper-button-next, .swiper-button-prev,
+.categories-f__desing-2 .wrapper .card-grid-item__title
 {
     color : <?php echo $color?> !important;
 }
@@ -170,7 +171,8 @@ a.list-group-item:focus, a.list-group-item:active,
 }
 .product-card:hover,
 .brand-slider .slider-item a:hover,
-.genius-banner:hover
+.genius-banner:hover,
+.categories-f__desing-2 .wrapper .card-grid-item:hover
 {
     border-color: <?php echo $color?>;
 }

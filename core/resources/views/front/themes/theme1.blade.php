@@ -131,35 +131,41 @@
   </div>
   <div class="container" id="contBannSec_1">
     @if($setting->is_three_c_b_first == 1)
-      <div class="bannner-section">
-        <div>
-          <div class="row gx-3">
-            <div class="col-md-4">
-              <a href="{{ route('front.catalog').'?category='.$banner_first['firsturl1'] }}" class="genius-banner" data-href="{{ $banner_first['firsturl1'] }}" title="{{ (isset($banner_first['title1'])) ? $banner_first['title1'] : '' }}">
-                <img src="{{ asset('assets/images/banners/'.$banner_first['img1']) }}" alt="{{ __('Category') }} {{ $banner_first['firsturl1'] }}" width="100" height="100" decoding="sync">
-                <div class="inner-content">
+      <div class="categories-f__desing-2">
+        <div class="container">
+          <div class="wrapper">
+            <div class="categoryf-wrapper c-md-3">
+              <a class="shop-card card-grid-item c-md-3" href="{{ route('front.catalog').'?category='.$banner_first['firsturl1'] }}" data-href="{{ $banner_first['firsturl1'] }}" title="{{ (isset($banner_first['title1'])) ? $banner_first['title1'] : '' }}">
+                <div class="shop-card__content card-grid-content-img">
+                  <img class="img-fluid" decoding="async" src="{{ asset('assets/images/banners/'.$banner_first['img1']) }}" alt="{{ __('Category') }} {{ $banner_first['firsturl1'] }}" width="100" height="100" decoding="sync">
+                </div>
+                <div class="shop-card__footer card-grid-footer">
                   @if(isset($banner_first['title1']))
-                    <h4>{{$banner_first['title1']}}</h4>
+                    <h4 class="card-grid-item__title">{{$banner_first['title1']}}</h4>
                   @endif
                 </div>
               </a>
             </div>
-            <div class="col-md-4">
-              <a href="{{ route('front.catalog').'?category='.$banner_first['firsturl2'] }}" class="genius-banner" data-href="{{ $banner_first['firsturl2'] }}" title="{{ (isset($banner_first['title1'])) ? $banner_first['title2'] : '' }}">
-                <img src="{{ asset('assets/images/banners/'.$banner_first['img2']) }}" alt="{{ __('Category') }} {{ $banner_first['firsturl2'] }}" width="100" height="100" decoding="sync">
-                <div class="inner-content">
+            <div class="categoryf-wrapper c-md-3">
+              <a class="shop-card card-grid-item c-md-3" href="{{ route('front.catalog').'?category='.$banner_first['firsturl2'] }}" data-href="{{ $banner_first['firsturl2'] }}" title="{{ (isset($banner_first['title1'])) ? $banner_first['title2'] : '' }}">
+                <div class="shop-card__content card-grid-content-img">
+                  <img class="img-fluid" decoding="async" src="{{ asset('assets/images/banners/'.$banner_first['img2']) }}" alt="{{ __('Category') }} {{ $banner_first['firsturl2'] }}" width="100" height="100" decoding="sync">
+                </div>
+                <div class="shop-card__footer card-grid-footer">
                   @if(isset($banner_first['title2']))
-                    <h4>{{$banner_first['title2']}}</h4>
+                    <h4 class="card-grid-item__title">{{$banner_first['title2']}}</h4>
                   @endif
                 </div>
               </a>
             </div>
-            <div class="col-md-4">
-              <a href="{{ route('front.catalog').'?category='.$banner_first['firsturl3'] }}" class="genius-banner" data-href="{{ $banner_first['firsturl3'] }}" title="{{ (isset($banner_first['title1'])) ? $banner_first['title3'] : '' }}">
-                <img src="{{ asset('assets/images/banners/'.$banner_first['img3']) }}" alt="{{ __('Category') }} {{ $banner_first['firsturl3'] }}" width="100" height="100" decoding="sync">
-                <div class="inner-content">
+            <div class="categoryf-wrapper c-md-3">
+              <a class="shop-card card-grid-item c-md-3" href="{{ route('front.catalog').'?category='.$banner_first['firsturl3'] }}" data-href="{{ $banner_first['firsturl3'] }}" title="{{ (isset($banner_first['title1'])) ? $banner_first['title3'] : '' }}">
+                <div class="shop-card__content card-grid-content-img">
+                  <img class="img-fluid" decoding="async" src="{{ asset('assets/images/banners/'.$banner_first['img3']) }}" alt="{{ __('Category') }} {{ $banner_first['firsturl3'] }}" width="100" height="100" decoding="sync">
+                </div>
+                <div class="shop-card__footer card-grid-footer">
                   @if(isset($banner_first['title3']))
-                    <h4>{{$banner_first['title3']}}</h4>
+                    <h4 class="card-grid-item__title">{{$banner_first['title3']}}</h4>
                   @endif
                 </div>
               </a>
@@ -169,35 +175,41 @@
       </div>
     @endif
     @if($setting->is_three_c_b_second == 1)
-      <div class="bannner-section mt-20">
-        <div>
-          <div class="row gx-3">
-            <div class="col-md-4">
-              <a href="{{ route('front.catalog').'?category='.$banner_secend['url1'] }}" class="genius-banner" data-href="{{ $banner_secend['url1'] }}" title="{{ (isset($banner_secend['title1'])) ? $banner_secend['title1'] : '' }}">
-                <img class="lazy" data-src="{{ asset('assets/images/banners/'.$banner_secend['img1']) }}" alt="{{ __('Category') }} {{ $banner_secend['url1'] }}" width="100" height="100" decoding="sync">
-                <div class="inner-content">
+      <div class="categories-f__desing-2">
+        <div class="container">
+          <div class="wrapper">
+            <div class="categoryf-wrapper c-md-3">
+              <a class="shop-card card-grid-item c-md-3" href="{{ route('front.catalog').'?category='.$banner_secend['url1'] }}" data-href="{{ $banner_secend['url1'] }}" title="{{ (isset($banner_secend['title1'])) ? $banner_secend['title1'] : '' }}">
+                <div class="shop-card__content card-grid-content-img">  
+                  <img class="lazy" data-src="{{ asset('assets/images/banners/'.$banner_secend['img1']) }}" alt="{{ __('Category') }} {{ $banner_secend['url1'] }}" width="100" height="100" decoding="sync">
+                </div>
+                <div class="shop-card__footer card-grid-footer">
                   @if(isset($banner_secend['title1']))
-                    <h4>{{$banner_secend['title1']}}</h4>
+                    <h4 class="card-grid-item__title">{{$banner_secend['title1']}}</h4>
                   @endif
                 </div>
               </a>
             </div>
-            <div class="col-md-4">
-              <a href="{{ route('front.catalog').'?category='.$banner_secend['url2'] }}" class="genius-banner" data-href="{{ $banner_secend['url2'] }}" title="{{ (isset($banner_secend['title2'])) ? $banner_secend['title2'] : '' }}">
-                <img class="lazy" data-src="{{ asset('assets/images/banners/'.$banner_secend['img2']) }}" alt="{{ __('Category') }} {{ $banner_secend['url2'] }}" width="100" height="100" decoding="sync">
-                <div class="inner-content">
+            <div class="categoryf-wrapper c-md-3">
+              <a class="shop-card card-grid-item c-md-3" href="{{ route('front.catalog').'?category='.$banner_secend['url2'] }}" data-href="{{ $banner_secend['url2'] }}" title="{{ (isset($banner_secend['title2'])) ? $banner_secend['title2'] : '' }}">
+                <div class="shop-card__content card-grid-content-img">
+                  <img class="lazy" data-src="{{ asset('assets/images/banners/'.$banner_secend['img2']) }}" alt="{{ __('Category') }} {{ $banner_secend['url2'] }}" width="100" height="100" decoding="sync">
+                </div>
+                <div class="shop-card__footer card-grid-footer">
                   @if(isset($banner_secend['title2']))
-                    <h4> {{$banner_secend['title2']}}</h4>
+                    <h4 class="card-grid-item__title">{{$banner_secend['title2']}}</h4>
                   @endif
                 </div>
               </a>
             </div>
-            <div class="col-md-4">
-              <a href="{{ route('front.catalog').'?category='.$banner_secend['url3'] }}" class="genius-banner" data-href="{{ $banner_secend['url3'] }}" title="{{ (isset($banner_secend['title3'])) ? $banner_secend['title3'] : '' }}">
-                <img class="lazy" data-src="{{ asset('assets/images/banners/'.$banner_secend['img3']) }}" alt="{{ __('Category') }} {{ $banner_secend['url3'] }}" width="100" height="100" decoding="sync">
-                <div class="inner-content">
+            <div class="categoryf-wrapper c-md-3">
+              <a class="shop-card card-grid-item c-md-3" href="{{ route('front.catalog').'?category='.$banner_secend['url3'] }}" data-href="{{ $banner_secend['url3'] }}" title="{{ (isset($banner_secend['title3'])) ? $banner_secend['title3'] : '' }}">
+                <div class="shop-card__content card-grid-content-img">  
+                  <img class="lazy" data-src="{{ asset('assets/images/banners/'.$banner_secend['img3']) }}" alt="{{ __('Category') }} {{ $banner_secend['url3'] }}" width="100" height="100" decoding="sync">
+                </div>
+                <div class="shop-card__footer card-grid-footer">
                   @if(isset($banner_secend['title3']))
-                    <h4>{{$banner_secend['title3']}}</h4>
+                    <h4 class="card-grid-item__title">{{$banner_secend['title3']}}</h4>
                   @endif
                 </div>
               </a>
