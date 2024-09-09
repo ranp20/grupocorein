@@ -38,6 +38,9 @@ body{
 .brbttm_Theme-2{
 	border-bottom: thin solid #ded5d855;
 }
+.owl-carousel .owl-item {
+	will-change: transform;
+}
 a{
 	color: #377dff;
 	text-decoration: none;
@@ -2147,4 +2150,23 @@ a[data-zoom-id] img, .mz-thumb img{
 }
 .col-10.col-xs-11.col-sm-4.alert.animated.fadeInDown button.close:hover{
 	background-color: #ddd;
+}
+/**************** SWIPERJS - HEROIMAGES ****************/
+.swiper{
+	width: 100%;
+	height: 100%;
+}
+.swiper-slide{
+	text-align: center;
+	font-size: 18px;
+	background: #fff;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.swiper-slide img{
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }

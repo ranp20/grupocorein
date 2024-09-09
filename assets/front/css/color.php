@@ -42,7 +42,8 @@
 .footer-social-links a,
 .a2a_kit a,
 .brand-list::-webkit-scrollbar-thumb,
-.c-contBrandsFiltersByChcks::-webkit-scrollbar-thumb
+.c-contBrandsFiltersByChcks::-webkit-scrollbar-thumb,
+.swiper-pagination-bullet-active
 {
     background : <?php echo $color?>  !important;
 }
@@ -126,7 +127,8 @@ a.list-group-item:focus, a.list-group-item:active,
 .link-a-menu-login .t-h-dropdown-menu > a .cIcon-profile i,
 .link-a-menu-login .t-h-dropdown-menu > a .cIcon-profile svg,
 .wt-custm--sbtitle,
-.single-service.single-service2 .content h6
+.single-service.single-service2 .content h6,
+.swiper-button-next, .swiper-button-prev
 {
     color : <?php echo $color?> !important;
 }

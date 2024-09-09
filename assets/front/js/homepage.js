@@ -1,48 +1,77 @@
 $(() => {
+  // --------------- SWIPERJS - HEROIMAGE
+  // var $topHeroImg = $(".mySwiperHeroImage");
+  var swiper = new Swiper(".mySwiperHeroImage", {
+    loop: true,
+    centeredSlides: true,
+    autoplay: {
+      delay: 3500,
+      disableOnInteraction: false,
+    },
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+  });
   // Flash Deal Area Start
-  var $hero_slider_main = $(".hero-slider-main");
-  $hero_slider_main.owlCarousel({
-    navText: [],
-    nav: true,
-    dots: false,
-    loop: true,
-    autoplay: true,
-    autoplayTimeout: 5000,
-    smartSpeed: 1200,
-    items: 1,
-    thumbs: false,
-  });
+  // var $hero_slider_main = $(".hero-slider-main");
+  // $hero_slider_main.owlCarousel({
+  //   navText: [],
+  //   nav: true,
+  //   dots: false,
+  //   loop: true,
+  //   navSpeed: 100,
+  //   dotsSpeed: 100,
+  //   items: 1,
+  //   thumbs: false,
+  //   responsiveRefreshRate: 0,
+  //   autoplay: true,
+  //   autoplaySpeed: 0,
+  //   autoplayTimeout: 2000,
+  //   mouseDrag: true,
+  //   touchDrag: true,
+  //   pullDrag: true,
+  //   freeDrag: true,
+  //   smartSpeed: 0, 
+  //   dragEndSpeed: 0, 
+  //   animateOut: false,
+  //   animateIn: false,
+  // });
   // heroarea-slider
-  var $testimonialSlider = $('.heroarea-slider');
-  $testimonialSlider.owlCarousel({
-    loop: true,
-    navText: [],
-    nav: true,
-    nav: true,
-    dots: false,
-    autoplay: true,
-    thumbs: false,
-    autoplayTimeout: 5000,
-    smartSpeed: 1200,
-    responsive: {
-      0: {
-        items: 1,
-        nav: false,
-      },
-      576: {
-        items: 1
-      },
-      950: {
-        items: 1
-      },
-      960: {
-        items: 1
-      },
-      1200: {
-        items: 1
-      }
-    }
-  });
+  // var $testimonialSlider = $('.heroarea-slider');
+  // $testimonialSlider.owlCarousel({
+  //   loop: true,
+  //   navText: [],
+  //   nav: true,
+  //   nav: true,
+  //   dots: false,
+  //   autoplay: true,
+  //   thumbs: false,
+  //   autoplayTimeout: 5000,
+  //   smartSpeed: 1200,
+  //   responsive: {
+  //     0: {
+  //       items: 1,
+  //       nav: false,
+  //     },
+  //     576: {
+  //       items: 1
+  //     },
+  //     950: {
+  //       items: 1
+  //     },
+  //     960: {
+  //       items: 1
+  //     },
+  //     1200: {
+  //       items: 1
+  //     }
+  //   }
+  // });
   // popular_category_slider
   var $popular_category_slider = $(".popular-category-slider");
   $popular_category_slider.owlCarousel({

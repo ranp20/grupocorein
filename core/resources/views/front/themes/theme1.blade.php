@@ -4,9 +4,13 @@
   <meta name="description" content="{{ $setting->meta_description }}">
 @endsection
 @section('content')
+  <!-- OWLCAROUSEL -->
   <link rel="stylesheet" href="{{ asset('node_modules/owl-carousel/owl-carousel/owl.carousel.css')}}">
   <link rel="stylesheet" href="{{ asset('node_modules/owl-carousel/owl-carousel/owl.theme.css')}}">
   <script type="text/javascript" src="{{ asset('node_modules/owl-carousel/owl-carousel/owl.carousel.min.js')}}"></script>
+  <!-- SWIPERJS -->
+  <link rel="stylesheet" href="{{ asset('node_modules/swiper/swiper-bundle.min.css') }}">
+  <script type="text/javascript" src="{{ asset('node_modules/swiper/swiper-bundle.min.js') }}"></script>
   @php
     function renderStarRating($rating, $maxRating = 5){
       $fullStar = "<i class = 'far fa-star filled'></i>";
@@ -34,11 +38,12 @@
     }
   @endphp
   @if($extra_settings->is_t3_slider == 1)
-    <div  class="hero-area3" >
+    <div class="hero-area3 swiper mySwiperHeroImage">
       <div class="background"></div>
-      <div class="heroarea-slider owl-carousel">
+      <!-- <div class="heroarea-slider owl-carousel"> -->
+      <div class="heroarea-slider swiper-wrapper">
         @foreach($sliders as $slider)
-        <div class="item cSldcPrd1__m__itm" style="background: url('{{ asset('assets/images/sliders/'.$slider->photo) }}')">
+        <div class="item cSldcPrd1__m__itm swiper-slide" style="background: url('{{ asset('assets/images/sliders/'.$slider->photo) }}')">
           {{--
           <!-- <img src="{{ asset('assets/images/sliders/'.$slider->photo) }}" alt="" width="100" height="100"> -->
           --}}
@@ -94,6 +99,9 @@
         </div>
         @endforeach
       </div>
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
     </div>
   @endif
   <div class="bannner-section mt-30">
@@ -931,7 +939,7 @@
                 <?php
                   //Combiar arrays de Foto principal y fotos de galería
                   $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
-                  $urlBaseDomain = $actual_link . "/grupocorein_exam/"; // LOCAL
+                  $urlBaseDomain = $actual_link . "/grupocorein/"; // LOCAL
                   // $urlBaseDomain = $actual_link . "/"; // SERVIDOR
                   // Directorio donde se encuentra la imagen
                   $imgDirectoryPhoto = $urlBaseDomain . 'assets/images/brands/';

@@ -2,6 +2,7 @@
   "dependencies": {
     "@fancyapps/ui": "^5.0.22",
     "owl-carousel": "^1.0.0",
-    "pdfobject": "^2.2.12"
+    "pdfobject": "^2.2.12",
+    "swiper": "^11.1.12"
   }
 }
