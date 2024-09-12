@@ -43,59 +43,62 @@
       <!-- <div class="heroarea-slider owl-carousel"> -->
       <div class="heroarea-slider swiper-wrapper">
         @foreach($sliders as $slider)
-        <div class="item cSldcPrd1__m__itm swiper-slide" style="background: url('{{ asset('assets/images/sliders/'.$slider->photo) }}')">
-          {{--
-          <!-- <img src="{{ asset('assets/images/sliders/'.$slider->photo) }}" alt="" width="100" height="100"> -->
-          --}}
-          @if($slider->content_check != "false")
-            @if($slider->content_info != "")
-              @php
-                $content_infoFormat = json_decode($slider->content_info, TRUE);
-                $content_alignment = "";
-                if($content_infoFormat['content_alignment'] == '2'){
-                  $content_alignment = "c-alignment--center";
-                }else if($content_infoFormat['content_alignment'] == '3'){
-                  $content_alignment = "c-alignment--right";
-                }else{
-                  $content_alignment = "c-alignment--left";
-                }
-              @endphp
-              <div class="container">
-                <div class="row">
-                  <div class="col-xl-5 col-lg-6 d-flex align-self-center {{ $content_alignment }}">
-                    <div class="left-content color-white">
-                      <div class="content">
-                        <div class="cSldcPrd1__m__itm__c">
-                          <div class="cSldcPrd1__m__itm__c--cTitle">
-                            <h2>{{ $content_infoFormat['content_title'] }}</h2>
+        {{-- <!-- <div class="item cSldcPrd1__m__itm swiper-slide" style="background: url('{{ asset('assets/images/sliders/'.$slider->photo) }}')"> --> --}}
+        <div class="item cSldcPrd1__m__itm swiper-slide">
+          <span class="banner-image">
+            <img class="img-fluid" src="{{ asset('assets/images/sliders/'.$slider->photo) }}" alt="" width="100" height="100">
+          </span>
+          <div class="content-slider">
+            @if($slider->content_check != "false")
+              @if($slider->content_info != "")
+                @php
+                  $content_infoFormat = json_decode($slider->content_info, TRUE);
+                  $content_alignment = "";
+                  if($content_infoFormat['content_alignment'] == '2'){
+                    $content_alignment = "c-alignment--center";
+                  }else if($content_infoFormat['content_alignment'] == '3'){
+                    $content_alignment = "c-alignment--right";
+                  }else{
+                    $content_alignment = "c-alignment--left";
+                  }
+                @endphp
+                <div class="container">
+                  <div class="row">
+                    <div class="col-xl-5 col-lg-6 d-flex align-self-center {{ $content_alignment }}">
+                      <div class="left-content color-white">
+                        <div class="content">
+                          <div class="cSldcPrd1__m__itm__c">
+                            <div class="cSldcPrd1__m__itm__c--cTitle">
+                              <h2>{{ $content_infoFormat['content_title'] }}</h2>
+                            </div>
+                            <div class="cSldcPrd1__m__itm__c--cDesc">
+                              <p>{{ $content_infoFormat['content_description'] }}</p>
+                            </div>
+                            @if($content_infoFormat['content_btncheck'] != "off")
+                            <div class="cSldcPrd1__m__itm__c--cBtnLink">
+                              <a href="{{ $content_infoFormat['content_btn_link'] }}" class="btn btn-primary" title="{{ $content_infoFormat['content_btn_title'] }}">
+                                <span>{{ $content_infoFormat['content_btn_title'] }}</span>
+                              </a>
+                            </div>
+                            @endif
                           </div>
-                          <div class="cSldcPrd1__m__itm__c--cDesc">
-                            <p>{{ $content_infoFormat['content_description'] }}</p>
-                          </div>
-                          @if($content_infoFormat['content_btncheck'] != "off")
-                          <div class="cSldcPrd1__m__itm__c--cBtnLink">
-                            <a href="{{ $content_infoFormat['content_btn_link'] }}" class="btn btn-primary" title="{{ $content_infoFormat['content_btn_title'] }}">
-                              <span>{{ $content_infoFormat['content_btn_title'] }}</span>
-                            </a>
-                          </div>
-                          @endif
                         </div>
                       </div>
                     </div>
-                  </div>
-                  @if(isset($slider->logo) && $slider->logo != "")
-                  <div class="col-xl-7 col-lg-6 order-first order-lg-last">
-                    <div class="layer-4">
-                      <div class="right-img">
-                        <img class="img-fluid full-img" src="{{ asset('assets/images/sliders/'.$slider->logo) }}" alt="{{$slider->logo}}" width="100" height="100" decoding="sync">
+                    @if(isset($slider->logo) && $slider->logo != "")
+                    <div class="col-xl-7 col-lg-6 order-first order-lg-last">
+                      <div class="layer-4">
+                        <div class="right-img">
+                          <img class="img-fluid full-img" src="{{ asset('assets/images/sliders/'.$slider->logo) }}" alt="{{$slider->logo}}" width="100" height="100" decoding="sync">
+                        </div>
                       </div>
                     </div>
+                    @endif
                   </div>
-                  @endif
                 </div>
-              </div>
+              @endif
             @endif
-          @endif
+          </div>
         </div>
         @endforeach
       </div>

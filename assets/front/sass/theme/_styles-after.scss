@@ -10450,15 +10450,15 @@ span.cookie-consent__message p{
 }
 .hero-area3 .item{
     // height: 570px;
-    height: 450px;
+    // height: 450px;
     background-size: cover !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
     display: flex;
     align-items: center;
-    @media (max-width: 576px){
-        height: 250px;
-    }
+    // @media (max-width: 576px){
+    //     height: 250px;
+    // }
 }
 
 .hero-area3.hero-area4 .item{
@@ -11105,6 +11105,10 @@ span.cookie-consent__message p{
                 background-color: rgba(0,0,0,.7);
                 color: #fff;
                 padding: 20px 20px;
+                @media (min-width: 769px){
+                    width: 590px;
+                    padding: 35px 22px 25px 22px;
+                }
                 &--cTitle{
                     font-size: 39px;
                     font-weight: 700 !important;

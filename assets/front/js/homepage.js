@@ -3,6 +3,7 @@ $(() => {
   // var $topHeroImg = $(".mySwiperHeroImage");
   var swiper = new Swiper(".mySwiperHeroImage", {
     loop: true,
+    lazyLoading: true,
     centeredSlides: true,
     autoplay: {
       delay: 3500,

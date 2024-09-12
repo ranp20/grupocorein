@@ -2355,3 +2355,46 @@ a[data-zoom-id] img, .mz-thumb img{
 		}
 	}
 }
+/****************** SWIPER JS ******************/
+.slides{
+  height: auto;
+}
+.swiper-slide .banner-image{
+	// padding-top: 56.25%;
+	// aspect-ratio: 16 / 9;
+	// aspect-ratio: 1 / 1;
+	& img{
+		display: block;
+		width: 100%;
+		transform-style: preserve-3d;
+		object-fit: cover;
+		// object-fit: fill;
+		// object-fit: contain;
+		// object-fit: scale-down;
+		object-position: center;
+		@media (max-width: 480px){
+			height: 450px;
+			object-fit: cover;
+		}
+		@media (min-width: 481px){
+			height: 450px;
+			object-fit: cover;
+		}
+		@media (min-width: 768px){
+			height: 410px;
+			object-fit: cover;
+		}
+		@media (min-width: 1200px){
+			height: 415px;
+			object-fit: fill;
+		}
+	}
+}
+.swiper-slide .content-slider{
+	position: absolute;
+	top: 25%;
+	left: 50px;
+	width: calc(100% - 120px);
+	z-index: 1;
+	color: #fff;
+}
