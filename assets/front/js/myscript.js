@@ -469,102 +469,149 @@ $(function($){
       $("#search_form #page").val('');
     }
     // -------------- SEARCH PRODUCTO IN DESKTOP
-    $(document).on('keyup', '#__product__search', function(e){
-      let search = $(this).val();
-      let category = '';
-      category = $('#search__category').val();
-      if(search){
-        if(e.key == 'ArrowDown' || e.key === 'ArrowUp'){
-          let searchCurrentProd = $(this).val();
-          let url = $(this).attr('data-target');
-          $.get(url + '?search=' + search + '&itemEntrCode=' + searchCurrentProd, function(response){});
-        }else if(e.key === 'Enter'){
-        }else{
-          let url = $(this).attr('data-target');
-          $.get(url + '?search=' + search + '&category=' + category, function(response){
-            $('.serch-result').removeClass('d-none');
-            $('.serch-result').html(response);
+    $(document).ready(function(){
+      let selectedIndex = -1; // Para rastrear el índice del resultado seleccionado
+      const resultsContainer = '.serch-result .lSearchM__m__l';
+      // -------------- Búsqueda de productos en tiempo real (DESKTOP)
+      $('#__product__search').on('keyup', function(e){
+        const search = $(this).val().trim();
+        const category = $('#search__category').val();
+        if(search){
+          if(e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+            handleArrowNavigation(e.key);
+            return;
+          }
+          
+          if(e.key === 'Enter'){
+            if(selectedIndex >= 0){
+              let selectedItemText = $(resultsContainer).eq(selectedIndex).find('.product-title span').text();
+              $('#__product__search').val(selectedItemText);
+            }
+            return;
+          }
+          const url = $(this).attr('data-target');
+          $.get(url + '?search=' + encodeURIComponent(search) + '&category=' + encodeURIComponent(category), function(response){
+            $('.serch-result').removeClass('d-none').html(response);
+            selectedIndex = -1; // Reiniciar el índice al actualizar los resultados
+            highlightSearchResults(search);
           });
+        }else{
+          $('.serch-result').addClass('d-none');
         }
-      }else{
-        $('.serch-result').addClass('d-none');
+      });  
+      // -------------- Maneja la navegación con teclas de flecha arriba y abajo (DESKTOP)
+      function handleArrowNavigation(key){
+        const results = $(resultsContainer + ':visible'); // Solo cuenta los resultados visibles
+        if (results.length === 0) return; // No hacer nada si no hay resultados visibles
+        // Ajustar selectedIndex según la tecla presionada
+        if (key === 'ArrowDown'){
+          if (selectedIndex < results.length - 1){ // Limitar para que no exceda los resultados visibles
+            selectedIndex++;
+          }
+        } else if (key === 'ArrowUp'){
+          if (selectedIndex > -1){ // Limitar para que no baje por debajo de -1
+            selectedIndex--;
+          }
+        }
+        if (selectedIndex === -1){
+          $('#__product__search').val(''); // Borrar el valor del input
+          results.removeClass('highlight'); // Remover cualquier resaltado
+          return;
+        }
+        if (selectedIndex >= 0 && selectedIndex < results.length){
+          const selectedItem = $(results).eq(selectedIndex);
+          const selectedItemText = selectedItem.find('.product-title span').text(); // Asegurarse de encontrar el texto dentro del span
+          if (selectedItemText){
+            $('#__product__search').val(selectedItemText);
+          }
+          results.removeClass('highlight');
+          selectedItem.addClass('highlight');
+        }
+      }
+      // -------------- Resalta las coincidencias en los resultados de búsqueda (DESKTOP)
+      function highlightSearchResults(search){
+        if (!search) return;
+        const resultItems = document.querySelectorAll('.serch-result .product-title span');
+        const regex = new RegExp(`(${search})`, 'gi');
+        resultItems.forEach(function(item){
+          const text = item.innerHTML;
+          const updatedText = text.replace(regex, '<strong>$1</strong>'); // Agregar <strong>
+          item.innerHTML = updatedText;
+        });
       }
     });
     // -------------- SEARCH PRODUCTO IN MOBILE
-    $(document).on('keyup', '#__product__search-mob', function(e){
-      let search = $(this).val();
-      let category = '';
-      category = $('#search__category-mob').val();
-      if(search){
-        if(e.key == 'ArrowDown' || e.key === 'ArrowUp'){
-          let searchCurrentProd = $(this).val();
-          let url = $(this).attr('data-target');
-          $.get(url + '?search=' + search + '&itemEntrCode=' + searchCurrentProd, function(response){});
-        }else if(e.key === 'Enter'){
-        }else{
-          let url = $(this).attr('data-target');
-          $.get(url + '?search=' + search + '&category=' + category, function(response){
-            $('.serch-result').removeClass('d-none');
-            $('.serch-result').html(response);
+    $(document).ready(function(){
+      let selectedIndexInMobile = -1; // Para rastrear el índice del resultado seleccionado
+      const resultsContainerInMobile = '.serch-result .lSearchM__m__l';
+      // -------------- Búsqueda de productos en tiempo real (MOBILE)
+      $('#__product__search-mob').on('keyup', function(e){
+        const search = $(this).val().trim();
+        const category = $('#search__category').val();
+        if(search){
+          if(e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+            handleArrowNavigation(e.key);
+            return;
+          }
+          
+          if(e.key === 'Enter'){
+            if(selectedIndexInMobile >= 0){
+              let selectedItemText = $(resultsContainerInMobile).eq(selectedIndexInMobile).find('.product-title span').text();
+              $('#__product__search-mob').val(selectedItemText);
+            }
+            return;
+          }
+          const url = $(this).attr('data-target');
+          $.get(url + '?search=' + encodeURIComponent(search) + '&category=' + encodeURIComponent(category), function(response){
+            $('.serch-result').removeClass('d-none').html(response);
+            selectedIndexInMobile = -1; // Reiniciar el índice al actualizar los resultados
+            highlightSearchResults(search);
           });
+        }else{
+          $('.serch-result').addClass('d-none');
         }
-      }else{
-        $('.serch-result').addClass('d-none');
+      });  
+      // -------------- Maneja la navegación con teclas de flecha arriba y abajo (MOBILE)
+      function handleArrowNavigation(key){
+        const results = $(resultsContainerInMobile + ':visible'); // Solo cuenta los resultados visibles
+        if (results.length === 0) return; // No hacer nada si no hay resultados visibles
+        // Ajustar selectedIndexInMobile según la tecla presionada
+        if (key === 'ArrowDown'){
+          if (selectedIndexInMobile < results.length - 1){ // Limitar para que no exceda los resultados visibles
+            selectedIndexInMobile++;
+          }
+        } else if (key === 'ArrowUp'){
+          if (selectedIndexInMobile > -1){ // Limitar para que no baje por debajo de -1
+            selectedIndexInMobile--;
+          }
+        }
+        if (selectedIndexInMobile === -1){
+          $('#__product__search-mob').val(''); // Borrar el valor del input
+          results.removeClass('highlight'); // Remover cualquier resaltado
+          return;
+        }
+        if (selectedIndexInMobile >= 0 && selectedIndexInMobile < results.length){
+          const selectedItem = $(results).eq(selectedIndexInMobile);
+          const selectedItemText = selectedItem.find('.product-title span').text(); // Asegurarse de encontrar el texto dentro del span
+          if (selectedItemText){
+            $('#__product__search-mob').val(selectedItemText);
+          }
+          results.removeClass('highlight');
+          selectedItem.addClass('highlight');
+        }
+      }
+      // -------------- Resalta las coincidencias en los resultados de búsqueda (MOBILE)
+      function highlightSearchResults(search){
+        if (!search) return;
+        const resultItems = document.querySelectorAll('.serch-result .product-title span');
+        const regex = new RegExp(`(${search})`, 'gi');
+        resultItems.forEach(function(item){
+          const text = item.innerHTML;
+          const updatedText = text.replace(regex, '<strong>$1</strong>'); // Agregar <strong>
+          item.innerHTML = updatedText;
+        });
       }
     });
-    // -------------- NUEVO CONTENIDO(INICIO)
-    function handleKeyPress(event){
-      const inputField = document.getElementById('__product__search');
-      const inputField2 = document.getElementById('__product__search-mob');
-      const options = document.getElementsByClassName('lSearchM__m__l');
-      const optionCount = options.length;
-      let selectedOptionIndex = -1;
-      let highlightedOption = null;
-      for(let i = 0; i < optionCount; i++){
-        if(options[i].classList.contains('highlighted')){
-          selectedOptionIndex = i;
-          highlightedOption = options[i];
-          break;
-        }
-      }
-      if(event.key === 'ArrowDown'){
-        event.preventDefault();
-        if(selectedOptionIndex < optionCount - 1){
-          if(highlightedOption){
-            highlightedOption.classList.remove('highlighted');
-          }
-          const nextOption = options[selectedOptionIndex + 1];
-          nextOption.classList.add('highlighted');
-          let textContent = nextOption.childNodes[3].childNodes[1].textContent;
-          inputField.value = textContent.trim();
-          inputField2.value = textContent.trim();
-          nextOption.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-      }else if(event.key === 'ArrowUp'){
-        event.preventDefault();
-        if(selectedOptionIndex > 0){
-          if(highlightedOption){
-            highlightedOption.classList.remove('highlighted');
-          }
-          const previousOption = options[selectedOptionIndex - 1];
-          previousOption.classList.add('highlighted');
-          let textContent = previousOption.childNodes[3].childNodes[1].textContent;
-          inputField.value = textContent.trim();
-          inputField2.value = textContent.trim();
-          previousOption.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }else if(selectedOptionIndex === 0){
-          inputField.value = '';
-          inputField.focus();
-          inputField2.value = '';
-          inputField2.focus();
-          highlightedOption.classList.remove('highlighted');
-        }
-      }else if(event.key === 'Enter' && highlightedOption){
-        highlightedOption.click();
-        $('.serch-result').addClass('d-none');
-      }      
-    }
-    document.addEventListener('keydown', handleKeyPress);
     $(document).on("click",".cWtspBtnCtc__pLink",function(e){
       e.preventDefault();
       /*

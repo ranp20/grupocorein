@@ -496,8 +496,9 @@
   </script>
   @endsection
 </div>
+<!-- METHODS PAYMENTS (WEBSITE) -->
 <!-- Modal bank -->
-<div class="modal fade" id="bank" tabindex="-1"  aria-hidden="true">
+<div class="modal fade" id="bank" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="" aria-hidden="true">
   <div class="modal-dialog" >
     <div class="modal-content">
       <div class="modal-header">
@@ -527,7 +528,7 @@
   </div>
 </div>
 <!-- Izipay -->
-<div class="modal fade" id="izipay" tabindex="-1"  aria-hidden="true">
+<div class="modal fade" id="izipay" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

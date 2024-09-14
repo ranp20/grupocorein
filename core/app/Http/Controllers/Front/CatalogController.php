@@ -21,6 +21,9 @@ use App\Models\ChieldCategory;
 use App\Models\Setting;
 use App\Models\Subcategory;
 use Illuminate\Support\Facades\Session;
+use DOMDocument;
+use DOMXPath;
+
 class CatalogController extends Controller{
   public function __construct(){
     $this->middleware('localize');
@@ -192,7 +195,8 @@ class CatalogController extends Controller{
       ->orWhere('sku', 'like', '%' . $search . '%')
       ->orWhere('sap_code', 'like', '%' . $search . '%')
       /* -- NUEVO CONTENIDO (FIN) -- */
-      ->orderby('id','desc')->take(10);
+      ->orderby('id','desc')
+      ->take(8);
     })
     ->when($category, function ($query, $category){
       return $query->where('category_id', $category->id);

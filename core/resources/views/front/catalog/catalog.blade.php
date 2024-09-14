@@ -656,11 +656,17 @@ if(Auth::check()){
   </div>
   @endif
 </div>
-<div class="row mt-15" id="item_pagination">
-  <div class="col-lg-12 text-center">
-    @if(isset($items) && !empty($items) && $items->count() > 0)
-      {{$items->links()}}
-    @endif
+<div class="container">      
+  <div class="row mt-15" id="item_pagination">
+    <div class="col-lg-12 text-center">
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center flex-wrap">
+          @if(isset($items) && !empty($items) && $items->count() > 0)
+            {{$items->links()}}
+          @endif
+        </ul>
+      </nav>
+    </div>
   </div>
 </div>
 <script type="text/javascript" src="{{asset('assets/front/js/catalog.js')}}"></script>

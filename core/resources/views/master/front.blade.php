@@ -18,6 +18,12 @@
 <link rel="apple-touch-icon" sizes="152x152" href="{{asset('assets/images/'.$setting->favicon)}}">
 <link rel="apple-touch-icon" sizes="180x180" href="{{asset('assets/images/'.$setting->favicon)}}">
 <link rel="apple-touch-icon" sizes="167x167" href="{{asset('assets/images/'.$setting->favicon)}}">
+<!-- (Plugin) Bootstrap v5.3.3 -->
+
+<link rel="stylesheet" href="{{ asset('node_modules/bootstrap/dist/css/bootstrap.min.css') }}">
+<script type="text/javascript" src="{{ asset('node_modules/@popperjs/core/dist/umd/popper.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('node_modules/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+
 @yield('styleplugins')
 <link href="{{ asset('assets/front/css/color.php?primary_color=').str_replace('#','',$setting->primary_color) }}" rel="stylesheet">
 <script type="text/javascript" src="{{asset('assets/front/js/modernizr.min.js')}}"></script>

@@ -4561,7 +4561,7 @@ a.alert{
 }
 
 .modal{
-    z-index: 9200
+    z-index: 92000;
 }
 
 .modal-content{
@@ -4595,7 +4595,7 @@ a.alert{
 }
 
 .modal-backdrop{
-    z-index: 9100
+    z-index: 91000;
 }
 
 .example-modal .modal{
@@ -5277,7 +5277,7 @@ video{
         padding: 42px 24px 30px;
         background-color: #fff;
         box-shadow: 0 0 0 0 rgba(0, 0, 0, .15);
-        z-index: 9910;
+        z-index: 99910;
         overflow-y: auto;
         -ms-overflow-style: none
     }
@@ -10032,7 +10032,10 @@ span.cookie-consent__message p{
 .link-a-menu-login .t-h-dropdown-menu > a{
     // padding: 6px 11px 2px 11px;
     padding: 10px 15px;
-    // border-bottom: thin solid #dddd;
+    border-bottom: thin solid #cccc;
+    &:last-child{
+        border: none;
+    }
 }
 .link-a-menu-login .t-h-dropdown-menu > a:hover{
     background-color: #e6e8e9;

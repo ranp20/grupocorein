@@ -264,6 +264,10 @@ input[f-hidden="aria-hidden_yipt"]{width: 0;height: 0;display: none;opacity: 0;v
 	display: block;
 	margin-top: 0.2rem;
 }
+.highlight-result{
+	font-weight: bold;
+	background-color: yellow;
+}
 .cFrmCtrl__cIcon--R{
 	position: absolute;
 	right: 0;
@@ -306,11 +310,18 @@ img{
   padding: 10px;
   cursor: pointer;
 	transition: none !important;
+	border-bottom: thin solid #ccc;
+	&:last-child{
+		border: none;
+	}
 }
 .lSearchM__m__l:hover {
   background-color: #f2f2f2;
 }
-.lSearchM__m__l.highlighted {
+.lSearchM__m__l.highlighted{
+  background-color: #dddd;
+}
+.lSearchM__m__l.highlight{
   background-color: #dddd;
 }
 .cLogo__modal-header{
@@ -707,7 +718,7 @@ img{
   right: 0;
   top: 0;
   width: 100%;
-  z-index: 100;
+  z-index: 9999;
 }
 .backdrop, .dark-backdrop {
   background-color: #212121;
@@ -2397,4 +2408,8 @@ a[data-zoom-id] img, .mz-thumb img{
 	width: calc(100% - 120px);
 	z-index: 1;
 	color: #fff;
+}
+/******************* MENU COLLAPSE MOBILE VERSION *******************/
+#mmenu .slideable-menu ul li{
+	border-bottom: thin solid #ccc;
 }

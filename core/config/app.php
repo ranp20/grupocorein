@@ -245,4 +245,6 @@ return [
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
     ],
 
+
+    'pagination' => 'bootstrap-4'
 ];

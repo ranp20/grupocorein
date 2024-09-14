@@ -1,8 +1,17 @@
 {
   "dependencies": {
     "@fancyapps/ui": "^5.0.22",
+    "bootstrap": "^5.3.3",
     "owl-carousel": "^1.0.0",
     "pdfobject": "^2.2.12",
     "swiper": "^11.1.12"
+  },
+  "devDependencies": {
+    "webpack-cli": "^5.1.4"
+  },
+  "scripts": {
+    "dev": "webpack --config core/webpack.mix.js",
+    "watch": "webpack --watch --config core/webpack.mix.js",
+    "prod": "webpack --mode production --config core/webpack.mix.js"
   }
 }

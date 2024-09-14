@@ -19,11 +19,13 @@ function renderStarRating($rating, $maxRating = 5){
 <div class="s-r-inner">
   @if(isset($items) && count($items) > 0)
     @foreach ($items as $item)
-    <div class="lSearchM__m__l p-col py-0 mb-0">
+    <div class="lSearchM__m__l p-col py-0 mb-0" data-text="{{ $item->name }}">
       <a class="lSearchM__m__link" href="{{route('front.product',$item->slug)}}">
-        <span class="product-thumb">
+        {{--
+        <!-- <span class="product-thumb">
           <img class="lazy" alt="Product" src="{{asset('assets/images/items/'.$item->photo)}}" width="100" height="100">
-        </span>
+        </span> -->
+        --}}
         <span class="product-card-body">
           <span class="product-title">
             {{-- <!-- <span>{{ strlen(strip_tags($item->name)) > 35 ? substr(strip_tags($item->name), 0, 35) : strip_tags($item->name) }}</span> --> --}}
@@ -35,10 +37,10 @@ function renderStarRating($rating, $maxRating = 5){
             {!! renderStarRating($item->reviews->avg('rating')) !!}
           </div>
           -->
-          --}}
-          <span class="product-price">
+          <!-- <span class="product-price">
             {{PriceHelper::grandCurrencyPrice($item)}}
-          </span>
+          </span> -->
+          --}}
         </span>
       </a>
     </div>

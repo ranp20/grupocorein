@@ -370,23 +370,23 @@ $orderIdGenFirst = genCodeRandom();
                     @endphp
                     @foreach ($gateways as $gateway)
                     @if (PriceHelper::CheckDigitalPaymentGateway())
-                    @if ($gateway->unique_keyword != 'cod')
-                    <div class="single-payment-method">
-                      <a class="text-decoration-none sLinkModal-shw__cPay" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
-                        <img class="" src="{{asset('assets/back/images/payment/'.$gateway->photo)}}" alt="{{$gateway->name}}" title="{{$gateway->name}}">
-                        <p>{{$gateway->name}}</p>
-                      </a>
-                    </div>
-                    @endif
+                      @if ($gateway->unique_keyword != 'cod')
+                      <div class="single-payment-method">
+                        <a type="button" class="text-decoration-none sLinkModal-shw__cPay" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
+                          <img class="" src="{{asset('assets/back/images/payment/'.$gateway->photo)}}" alt="{{$gateway->name}}" title="{{$gateway->name}}">
+                          <p>{{$gateway->name}}</p>
+                        </a>
+                      </div>
+                      @endif
                     @else
                     <div class="single-payment-method">
-                      <a class="text-decoration-none sLinkModal-shw__cPay" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
+                      <a type="button" class="text-decoration-none sLinkModal-shw__cPay" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
                         <img class="" src="{{asset('assets/back/images/payment/'.$gateway->photo)}}" alt="{{$gateway->name}}" title="{{$gateway->name}}">
                         <p>{{$gateway->name}}</p>
                       </a>
                     </div>
                     @endif
-                    @endforeach                
+                    @endforeach
                   </div>
                 </div>
               </div>
