@@ -2413,3 +2413,17 @@ a[data-zoom-id] img, .mz-thumb img{
 #mmenu .slideable-menu ul li{
 	border-bottom: thin solid #ccc;
 }
+div[data-notify=container],
+div[data-notify="container"],
+div[data-notify='container']{
+	z-index: 999999;
+}
+.alertBySystemShow{
+	z-index: 999999;
+}
+.alert.alert-danger.animated.fadeInDown{
+	z-index: 999999;
+}
+// body{
+// 	background-color: red !important;
+// }

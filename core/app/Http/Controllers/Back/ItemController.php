@@ -34,8 +34,9 @@ class ItemController extends Controller{
     $sku = $request->has('sku') ? ($request->sku ? $request->sku : '') : '';
     $sap_code = $request->has('sap_code') ? ($request->sap_code ? $request->sap_code : '') : '';
     /* -- NUEVO CONTENIDO (FIN) --*/
-    $datas = Item::
-    when($item_type, function ($query, $item_type) {
+    $query = Item::
+    select('id','category_id','sections_id','brand_id','coupon_id','name','slug','sku','photo','discount_price','on_sale_price','special_offer_price','status','is_type','updated_at','item_type','sap_code')
+    ->when($item_type, function ($query, $item_type) {
       return $query->where('item_type', $item_type);
     })
     ->when($is_type, function ($query, $is_type) {
@@ -61,11 +62,17 @@ class ItemController extends Controller{
     /* -- NUEVO CONTENIDO (FIN) --*/
     ->when($orderby, function ($query, $orderby) {
       return $query->orderby('id', $orderby);
-    })
-    ->get();
-    return view('back.item.index',[
-      'datas' => $datas
-    ]);
+    });
+    // ->get();
+    // return view('back.item.index',['datas' => $query]);
+    $datas = $query->paginate(100);
+    return view('back.item.index',['datas' => $datas]);
+
+    // if($request->ajax()){
+    //   $items = $query->paginate(10);
+    //   return response()->json($items);
+    // }
+
   }
   public function getsubCategory(Request $request){
     if($request->category_id){
