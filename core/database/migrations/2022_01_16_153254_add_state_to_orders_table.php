@@ -1,32 +1,16 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
-class AddStateToOrdersTable extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->text('state')->nullable();
-        });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::table('orders', function (Blueprint $table) {
-            //
-        });
-    }
+class AddStateToOrdersTable extends Migration{
+  public function up(){
+    Schema::table('orders', function (Blueprint $table) {
+      $table->text('state')->nullable();
+    });
+  }
+  public function down(){
+    Schema::table('orders', function (Blueprint $table) {
+      //
+    });
+  }
 }

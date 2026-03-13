@@ -37,7 +37,7 @@
               <tbody>
               @foreach ($orders as $order)
               <tr>
-                <td><a class="navi-link" href="#" data-toggle="modal" data-target="#orderDetails">{{$order->transaction_number}}</a></td>
+                <td><a class="navi-link" href="javascript:void(0);" data-toggle="modal" data-target="#orderDetails">{{$order->transaction_number}}</a></td>
                 <td>
                   @if ($setting->currency_direction == 1)
                   {{$order->currency_sign}}{{PriceHelper::OrderTotal($order)}}
@@ -76,7 +76,9 @@
                 @endphp
                 <td>{{ $order->created_at->format('d/m/Y')}}</td>
                 <td>
-                  <a href="{{route('user.order.invoice',$order->id)}}" class="btn btn-info btn-sm">{{__('Invoice')}}</a>
+                  <a href="{{route('user.order.invoice',$order->id)}}" class="btn btn-info btn-sm">
+                    <span>{{__('Invoice')}}</span>
+                  </a>
                 </td>
               </tr>
               @endforeach

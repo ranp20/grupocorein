@@ -10,7 +10,7 @@
         <h5 class=" mb-0 text-gray-800 pl-3">{{ __('Create Feature') }} <a class="btn btn-primary btn-sm" href="{{route('back.feature.index')}}"><i class="fas fa-chevron-left"></i> {{ __('Back') }}</a></h5>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('back.dashboard') }}">{{ __('Dashboard') }}</a></li>
-            <li class="breadcrumb-item"><a href="#">{{ __('Manage Features') }}</a></li>
+            <li class="breadcrumb-item"><a href="javascript:void(0);">{{ __('Manage Features') }}</a></li>
         </ol>
         </div>
     </div>

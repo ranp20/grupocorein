@@ -8,8 +8,20 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use PHPMailer\PHPMailer\{
   PHPMailer,
+  SMTP,
   Exception
 };
+
+// require 'vendor/autoload.php';
+
+// use PHPMailer\PHPMailer\PHPMailer;
+// use PHPMailer\PHPMailer\SMTP;
+// use PHPMailer\PHPMailer\Exception;
+
+// require '../vendor/phpmailer/phpmailer/src/Exception.php';
+// require '../vendor/phpmailer/phpmailer/src/PHPMailer.php';
+// require '../vendor/phpmailer/phpmailer/src/SMTP.php';
+
 class EmailHelper{
   public $mail;
   public $setting;
@@ -58,10 +70,12 @@ class EmailHelper{
       $this->mail->Subject = $emailData['subject'];
       $this->mail->Body = $emailData['body'];
       $this->mail->send();
-    }
-    catch (Exception $e){
+      // echo "Mensaje enviado con éxito...";
+    }catch (Exception $e){
       // dd($e->getMessage());
+      echo "Ocurrio un error al enviar el correo. Error: {$this->mail->ErrorInfo}";
     }
+    // exit();
     return true;
   }
   public static function getEmail(){

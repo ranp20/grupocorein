@@ -15,9 +15,9 @@ $(function ($) {
 			});
 		}
 
-		$(document).ready(function(){
-			lazy();
-		})
+		// $(document).ready(function(){
+		// 	lazy();
+		// });
 
 	// Flash Deal Area Start
     var $hero_slider_main = $(".hero-slider-main");
@@ -241,8 +241,10 @@ $(function ($) {
     // toprated-slider Area Start
     var $relatedproductsliderv = $(".relatedproductslider");
     $relatedproductsliderv.owlCarousel({
-        nav: false,
-        dots: true,
+        navText: [],
+        nav: true,
+        dots: false,
+        loop: false,
         autoplayTimeout: 6000,
         smartSpeed: 1200,
         margin: 15,

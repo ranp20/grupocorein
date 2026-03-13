@@ -15,6 +15,7 @@ use App\{
 };
 use App\Helpers\PriceHelper;
 use App\Helpers\SmsHelper;
+use App\Models\Brand;
 use App\Models\Currency;
 use App\Models\Item;
 use App\Models\Setting;
@@ -24,6 +25,10 @@ use App\Models\Departamento;
 use App\Models\Provincia;
 use App\Models\Distrito;
 use App\Models\Ciudad;
+use App\Models\Coupons;
+use DateTime;
+use DateTimeZone;
+use Cartalyst\Stripe\Api\Orders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -55,8 +60,13 @@ class CheckoutController extends Controller{
   }
   /* ---------------- AL HACER CLICK EN EL TAB DE "DATOS PERSONALES" ---------------- */
 	public function ship_address(){
-    if (!Session::has('cart')){
+    if(!Session::has('cart')){
       return redirect(route('front.cart'));
+    }else{
+      if(Session::has('cart') && count(Session::get('cart')) > 0){
+      }else{
+        return redirect(route('front.cart'));
+      }
     }
     $data['user'] = Auth::user() ? Auth::user() : null;
     $cart = Session::get('cart');
@@ -67,12 +77,66 @@ class CheckoutController extends Controller{
     $grand_total = 0;
     $attribute_price = 0;
     foreach($cart as $key => $item){
+      // $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+      // $total += ($item['price'] + $attribute_price) * $item['qty'];
+      // $cart_total = $total;
+      $keywithoutguion = str_replace("-","",$key);
+      $keywithoutguion2 = (int) $keywithoutguion;
+      $itemBD = Item::findOrFail($keywithoutguion2);
+
+      if($itemBD->tax_id){
+        $total_tax += $itemBD::taxCalculate($itemBD);
+      }
+
+      $total =0;
+      $option_price = 0;
+      $cartTotal = 0;
+
+      // -------------------------- VALIDACIÓN DE CUPONES
+      $totalwithoutcoupon = 0;
+      $totalwithcoupon = 0;
+      $totalwithoutcoupon_prod = 0;
+      $totalwithcoupon_prod = 0;
+      // ----------- CANTIDAD DE PRODUCTOS TOTAL...
+      $prod_qty = floatval($item['qty']);
+      // ----------- CANTIDAD DE PRODUCTOS SIN CUPÓN TOTAL...
+      $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+      // ----------- CANTIDAD DE PRODUCTOS CON CUPÓN...
+      $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
       $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-      $total += ($item['main_price'] + $attribute_price) * $item['qty'];
-      $cart_total = $total;
-      $item = Item::findOrFail($key);
-      if($item->tax){
-        $total_tax += $item::taxCalculate($item);
+      if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
+
+        // $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        $namecouponbyid = Coupons::where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        if(count($namecouponbyid) != 0){
+          $couponbyiddecode = json_decode($namecouponbyid, TRUE);
+          $nameofcouponbyid = $couponbyiddecode[0]['name'];
+          $expiresAtTimer = $couponbyiddecode[0]['time_end'];
+          // ----------- Crear un objeto DateTime a partir de la fecha final...
+          $currentDate = new DateTime();
+          $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+          // ----------- Asegurarse que la fecha es válida...
+          if(!$expirationDate) {
+            die('Invalid date format for countdown.');
+          }
+          // ----------- Obtener las fechas en milisegundos...
+          $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+          $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+          // ----------- Calcular el tiempo restante...
+          $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+          
+          if($remainingTime <= 0){
+            $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+          }else{
+            $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+            $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+            $cart_total += $totalwithoutcoupon + $totalwithcoupon;
+          }
+        }else{
+          $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+        }
+      }else{
+        $cart_total +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
       }
     }
     $shipping = [];
@@ -91,7 +155,7 @@ class CheckoutController extends Controller{
     if(Session::has('coupon')){
       $discount = Session::get('coupon');
     }
-    if (!PriceHelper::Digital()){
+    if(!PriceHelper::Digital()){
       $shipping = null;
     }
     // $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
@@ -102,11 +166,11 @@ class CheckoutController extends Controller{
     $total_amount = $grand_total;
 
     $getUserInfo = Auth::user() ? Auth::user() : null;
-    $regDistritoId = (isset($getUserInfo['reg_distrito_id']) && $getUserInfo['reg_distrito_id'] != "") ? $getUserInfo['reg_distrito_id'] : 0;
-    $distritoGet = Distrito::where('id',$regDistritoId)->select('id','distrito_name','distrito_min_amount','distrito_max_amount')->first();
+    $regDistritoCode = (isset($getUserInfo['reg_distrito_id']) && $getUserInfo['reg_distrito_id'] != "") ? $getUserInfo['reg_distrito_id'] : 1;
+    $distritoGet = Distrito::where('id',$regDistritoCode)->select('id','distrito_name','distrito_min_amount','distrito_max_amount')->first();
     $minAmountValidate = 1600.00;
-    $minAmountDelivery = floatval($distritoGet->distrito_min_amount);
-    $maxAmountDelivery = floatval($distritoGet->distrito_max_amount);
+    $minAmountDelivery = ($distritoGet->distrito_min_amount != "") ? floatval($distritoGet->distrito_min_amount) : 15.00;
+    $maxAmountDelivery = ($distritoGet->distrito_max_amount != "") ? floatval($distritoGet->distrito_max_amount) : 0;
     $ship_data['ship_amountaddress'] = 0;
     if($total_amount >= $minAmountValidate){
       $data['amountaddress'] = $maxAmountDelivery;
@@ -134,47 +198,58 @@ class CheckoutController extends Controller{
     $data['payments'] = PaymentSetting::whereStatus(1)->get();
     return view('front.checkout.billing',$data);
   }
-  /* ---------------- BILLING ---------------- */
+  /* ---------------- PANTALLA #1 BILLING ---------------- */
   public function billingStore(Request $request){
-    if($request->same_ship_address){
-      Session::put('billing_address',$request->all());
-      if(PriceHelper::CheckDigital()){
-        $shipping = [
-          "ship_first_name" => $request->bill_first_name,
-          "ship_last_name" => $request->bill_last_name,
-          "ship_email" => $request->bill_email,
-          "ship_phone" => $request->bill_phone,
-          "ship_address1" => $request->bill_address1,
-          "ship_address2" => $request->bill_address2,
-        ];
+    if(Session::has('cart') && count(Session::get('cart')) > 0){
+      if($request->same_ship_address){
+        Session::put('billing_address',$request->all());
+        if(PriceHelper::CheckDigital()){
+          $shipping = [
+            "ship_first_name" => $request->bill_first_name,
+            "ship_last_name" => $request->bill_last_name,
+            "ship_email" => $request->bill_email,
+            "ship_phone" => $request->bill_phone,
+            "ship_address1" => $request->bill_address1,
+            "ship_address2" => $request->bill_address2,
+          ];
+        }else{
+          $shipping = [
+            "ship_first_name" => $request->bill_first_name,
+            "ship_last_name" => $request->bill_last_name,
+            "ship_email" => $request->bill_email,
+            "ship_phone" => $request->bill_phone,
+            "ship_address1" => $request->bill_address1,
+            "ship_address2" => $request->bill_address2,
+          ];
+        }
+        Session::put('shipping_address',$shipping);
       }else{
-        $shipping = [
-          "ship_first_name" => $request->bill_first_name,
-          "ship_last_name" => $request->bill_last_name,
-          "ship_email" => $request->bill_email,
-          "ship_phone" => $request->bill_phone,
-          "ship_address1" => $request->bill_address1,
-          "ship_address2" => $request->bill_address2,
-        ];
+        Session::put('billing_address',$request->all());
+        Session::forget('shipping_address');
       }
-      Session::put('shipping_address',$shipping);
+      if(Session::has('shipping_address')){
+        return redirect()->route('front.checkout.payment');
+      }else{
+        return redirect()->route('front.checkout.shipping');
+      }
     }else{
-      Session::put('billing_address',$request->all());
-      Session::forget('shipping_address');
-    }
-    if(Session::has('shipping_address')){
-      return redirect()->route('front.checkout.payment');
-    }else{
-      return redirect()->route('front.checkout.shipping');
+      return redirect(route('front.cart'));
     }
   }
   /* ---------------- AL HACER CLICK EN EL TAB DE "DIRECCIÓN DE ENVÍO" ---------------- */
   public function shipping(){
+    /*
     if(Session::has('shipping_address')){
       return redirect(route('front.checkout.payment'));
     }
+    */
     if(!Session::has('cart')){
       return redirect(route('front.cart'));
+    }else{
+      if(Session::has('cart') && count(Session::get('cart')) > 0){
+      }else{
+        return redirect(route('front.cart'));
+      }
     }
     $getUserData = Auth::user();
     $getPaisData = json_encode(["id" => 1,"pais_code" => 1,"pais_name" => "PERU"], TRUE);
@@ -197,12 +272,66 @@ class CheckoutController extends Controller{
     $grand_total = 0;
     $attribute_price = 0;
     foreach($cart as $key => $item){
+      // $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+      // $total += ($item['price'] + $attribute_price) * $item['qty'];
+      // $cart_total = $total;
+      $keywithoutguion = str_replace("-","",$key);
+      $keywithoutguion2 = (int) $keywithoutguion;
+      $itemBD = Item::findOrFail($keywithoutguion2);
+
+      if($itemBD->tax_id){
+        $total_tax += $itemBD::taxCalculate($itemBD);
+      }
+
+      $total =0;
+      $option_price = 0;
+      $cartTotal = 0;
+
+      // -------------------------- VALIDACIÓN DE CUPONES
+      $totalwithoutcoupon = 0;
+      $totalwithcoupon = 0;
+      $totalwithoutcoupon_prod = 0;
+      $totalwithcoupon_prod = 0;
+      // ----------- CANTIDAD DE PRODUCTOS TOTAL...
+      $prod_qty = floatval($item['qty']);
+      // ----------- CANTIDAD DE PRODUCTOS SIN CUPÓN TOTAL...
+      $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+      // ----------- CANTIDAD DE PRODUCTOS CON CUPÓN...
+      $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
       $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-      $total += ($item['main_price'] + $attribute_price) * $item['qty'];
-      $cart_total = $total;
-      $item = Item::findOrFail($key);
-      if($item->tax){
-        $total_tax += $item::taxCalculate($item);
+      if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
+
+        // $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        $namecouponbyid = Coupons::where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        if(count($namecouponbyid) != 0){
+          $couponbyiddecode = json_decode($namecouponbyid, TRUE);
+          $nameofcouponbyid = $couponbyiddecode[0]['name'];
+          $expiresAtTimer = $couponbyiddecode[0]['time_end'];
+          // ----------- Crear un objeto DateTime a partir de la fecha final...
+          $currentDate = new DateTime();
+          $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+          // ----------- Asegurarse que la fecha es válida...
+          if(!$expirationDate) {
+            die('Invalid date format for countdown.');
+          }
+          // ----------- Obtener las fechas en milisegundos...
+          $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+          $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+          // ----------- Calcular el tiempo restante...
+          $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+          
+          if($remainingTime <= 0){
+            $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+          }else{
+            $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+            $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+            $cart_total += $totalwithoutcoupon + $totalwithcoupon;
+          }
+        }else{
+          $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+        }
+      }else{
+        $cart_total +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
       }
     }
     $shipping = [];
@@ -221,7 +350,7 @@ class CheckoutController extends Controller{
     if(Session::has('coupon')){
       $discount = Session::get('coupon');
     }
-    if (!PriceHelper::Digital()){
+    if(!PriceHelper::Digital()){
       $shipping = null;
     }
     // $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
@@ -232,11 +361,11 @@ class CheckoutController extends Controller{
     $total_amount = $grand_total;
     
     $getUserInfo = Auth::user() ? Auth::user() : null;
-    $regDistritoId = (isset($getUserInfo['reg_distrito_id']) && $getUserInfo['reg_distrito_id'] != "") ? $getUserInfo['reg_distrito_id'] : 0;
-    $distritoGet = Distrito::where('id',$regDistritoId)->select('id','distrito_name','distrito_min_amount','distrito_max_amount')->first();
+    $regDistritoCode = (isset($getUserInfo['reg_distrito_id']) && $getUserInfo['reg_distrito_id'] != "") ? $getUserInfo['reg_distrito_id'] : 1;
+    $distritoGet = Distrito::where('id',$regDistritoCode)->select('id','distrito_name','distrito_min_amount','distrito_max_amount')->first();
     $minAmountValidate = 1600.00;
-    $minAmountDelivery = floatval($distritoGet->distrito_min_amount);
-    $maxAmountDelivery = floatval($distritoGet->distrito_max_amount);
+    $minAmountDelivery = ($distritoGet->distrito_min_amount != "") ? floatval($distritoGet->distrito_min_amount) : 15.00;
+    $maxAmountDelivery = ($distritoGet->distrito_max_amount != "") ? floatval($distritoGet->distrito_max_amount) : 0;
     $ship_data['ship_amountaddress'] = 0;
     if($total_amount >= $minAmountValidate){
       $data['amountaddress'] = $maxAmountDelivery;
@@ -264,7 +393,7 @@ class CheckoutController extends Controller{
     $data['payments'] = PaymentSetting::whereStatus(1)->get();
     return view('front.checkout.shipping',$data);
   }
-  /* ---------------- SHIPPING ---------------- */
+  /* ---------------- PANTALLA #2 SHIPPING ---------------- */
   public function shippingStore(Request $request){
     $ship = Session::get('shipping_address');
     $bill = Session::get('billing_address');
@@ -289,12 +418,66 @@ class CheckoutController extends Controller{
     $grand_total = 0;
     $attribute_price = 0;
     foreach($cartGetInfo as $key => $item){
+      // $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+      // $total += ($item['price'] + $attribute_price) * $item['qty'];
+      // $cart_total = $total;
+      $keywithoutguion = str_replace("-","",$key);
+      $keywithoutguion2 = (int) $keywithoutguion;
+      $itemBD = Item::findOrFail($keywithoutguion2);
+
+      if($itemBD->tax_id){
+        $total_tax += $itemBD::taxCalculate($itemBD);
+      }
+
+      $total =0;
+      $option_price = 0;
+      $cartTotal = 0;
+
+      // -------------------------- VALIDACIÓN DE CUPONES
+      $totalwithoutcoupon = 0;
+      $totalwithcoupon = 0;
+      $totalwithoutcoupon_prod = 0;
+      $totalwithcoupon_prod = 0;
+      // ----------- CANTIDAD DE PRODUCTOS TOTAL...
+      $prod_qty = floatval($item['qty']);
+      // ----------- CANTIDAD DE PRODUCTOS SIN CUPÓN TOTAL...
+      $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+      // ----------- CANTIDAD DE PRODUCTOS CON CUPÓN...
+      $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
       $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-      $total += ($item['main_price'] + $attribute_price) * $item['qty'];
-      $cart_total = $total;
-      $item = Item::findOrFail($key);
-      if($item->tax){
-        $total_tax += $item::taxCalculate($item);
+      if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
+
+        // $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        $namecouponbyid = Coupons::where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        if(count($namecouponbyid) != 0){
+          $couponbyiddecode = json_decode($namecouponbyid, TRUE);
+          $nameofcouponbyid = $couponbyiddecode[0]['name'];
+          $expiresAtTimer = $couponbyiddecode[0]['time_end'];
+          // ----------- Crear un objeto DateTime a partir de la fecha final...
+          $currentDate = new DateTime();
+          $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+          // ----------- Asegurarse que la fecha es válida...
+          if(!$expirationDate) {
+            die('Invalid date format for countdown.');
+          }
+          // ----------- Obtener las fechas en milisegundos...
+          $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+          $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+          // ----------- Calcular el tiempo restante...
+          $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+          
+          if($remainingTime <= 0){
+            $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+          }else{
+            $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+            $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+            $cart_total += $totalwithoutcoupon + $totalwithcoupon;
+          }
+        }else{
+          $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+        }
+      }else{
+        $cart_total +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
       }
     }
     $shipping = [];
@@ -313,7 +496,7 @@ class CheckoutController extends Controller{
     if(Session::has('coupon')){
       $discount = Session::get('coupon');
     }
-    if (!PriceHelper::Digital()){
+    if(!PriceHelper::Digital()){
       $shipping = null;
     }
     // $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
@@ -324,6 +507,7 @@ class CheckoutController extends Controller{
     $minAmountValidate = 1600.00;
     $minAmountDelivery = floatval($distritoGet->distrito_min_amount);
     $maxAmountDelivery = floatval($distritoGet->distrito_max_amount);
+    $ship_data['ship_amountaddressId'] = $distritoRequest;
     $ship_data['ship_amountaddress'] = 0;
     if($total_amount >= $minAmountValidate){
       $ship_data['ship_amountaddress'] = $maxAmountDelivery;
@@ -363,7 +547,7 @@ class CheckoutController extends Controller{
       echo "";
     }
   }
-  /* ---------------- ACTUALIZAR EL MONTO DE DELIVERY EN EL CARRITO ---------------- */
+  /* ---------------- ACTUALIZAR EL MONTO DE DELIVERY EN EL CARRITO (SEGÚN SELECCIÓN DE PROVINCIA) ---------------- */
   public function updateAmountCart(Request $request){
     $cart = Session::get('cart');
     $total_tax = 0;
@@ -372,15 +556,71 @@ class CheckoutController extends Controller{
     $total_amount = 0;
     $grand_total = 0;
     $attribute_price = 0;
+
     foreach($cart as $key => $item){
+      // $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+      // $total += ($item['price'] + $attribute_price) * $item['qty'];
+      // $cart_total = $total;
+      $keywithoutguion = str_replace("-","",$key);
+      $keywithoutguion2 = (int) $keywithoutguion;
+      $itemBD = Item::findOrFail($keywithoutguion2);
+
+      if($itemBD->tax_id){
+        $total_tax += $itemBD::taxCalculate($itemBD);
+      }
+
+      $total =0;
+      $option_price = 0;
+      $cartTotal = 0;
+
+      // -------------------------- VALIDACIÓN DE CUPONES
+      $totalwithoutcoupon = 0;
+      $totalwithcoupon = 0;
+      $totalwithoutcoupon_prod = 0;
+      $totalwithcoupon_prod = 0;
+      // ----------- CANTIDAD DE PRODUCTOS TOTAL...
+      $prod_qty = floatval($item['qty']);
+      // ----------- CANTIDAD DE PRODUCTOS SIN CUPÓN TOTAL...
+      $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+      // ----------- CANTIDAD DE PRODUCTOS CON CUPÓN...
+      $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
       $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-      $total += ($item['main_price'] + $attribute_price) * $item['qty'];
-      $cart_total = $total;
-      $item = Item::findOrFail($key);
-      if($item->tax){
-        $total_tax += $item::taxCalculate($item);
+      if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
+
+        // $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        $namecouponbyid = Coupons::where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        if(count($namecouponbyid) != 0){
+          $couponbyiddecode = json_decode($namecouponbyid, TRUE);
+          $nameofcouponbyid = $couponbyiddecode[0]['name'];
+          $expiresAtTimer = $couponbyiddecode[0]['time_end'];
+          // ----------- Crear un objeto DateTime a partir de la fecha final...
+          $currentDate = new DateTime();
+          $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+          // ----------- Asegurarse que la fecha es válida...
+          if(!$expirationDate) {
+            die('Invalid date format for countdown.');
+          }
+          // ----------- Obtener las fechas en milisegundos...
+          $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+          $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+          // ----------- Calcular el tiempo restante...
+          $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+          
+          if($remainingTime <= 0){
+            $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+          }else{
+            $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+            $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+            $cart_total += $totalwithoutcoupon + $totalwithcoupon;
+          }
+        }else{
+          $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+        }
+      }else{
+        $cart_total +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
       }
     }
+
     $shipping = [];
     if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
       $shipping = ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->first();
@@ -397,7 +637,7 @@ class CheckoutController extends Controller{
     if(Session::has('coupon')){
       $discount = Session::get('coupon');
     }
-    if (!PriceHelper::Digital()){
+    if(!PriceHelper::Digital()){
       $shipping = null;
     }
     // $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
@@ -408,11 +648,11 @@ class CheckoutController extends Controller{
     $total_amount = $grand_total;
 
     $getUserInfo = Auth::user() ? Auth::user() : null;
-    $regDistritoCode = (isset($request['distrito_code']) && $request['distrito_code'] != "") ? $request['distrito_code'] : 0;
+    $regDistritoCode = (isset($request['distrito_code']) && $request['distrito_code'] != "") ? $request['distrito_code'] : 1;
     $distritoGet = Distrito::where('distrito_code',$regDistritoCode)->select('id','distrito_name','distrito_min_amount','distrito_max_amount')->first();
     $minAmountValidate = 1600.00;
-    $minAmountDelivery = floatval($distritoGet->distrito_min_amount);
-    $maxAmountDelivery = floatval($distritoGet->distrito_max_amount);
+    $minAmountDelivery = ($distritoGet->distrito_min_amount != "") ? floatval($distritoGet->distrito_min_amount) : 15.00;
+    $maxAmountDelivery = ($distritoGet->distrito_max_amount != "") ? floatval($distritoGet->distrito_max_amount) : 0;
     if($total_amount >= $minAmountValidate){
       $total_amount_operation = $grand_total + $maxAmountDelivery;
       $total_amount = floatval($total_amount_operation);
@@ -422,6 +662,7 @@ class CheckoutController extends Controller{
         "totalamount" => PriceHelper::setCurrencyPrice($total_amount),
       ];
       if(Session::has('shipping_address')){
+        Session::put('shipping_address.ship_amountaddressId', $distritoGet->id);
         Session::put('ship_amountaddress', $maxAmountDelivery);
       }
     }else if($total_amount < $minAmountValidate){
@@ -433,6 +674,7 @@ class CheckoutController extends Controller{
         "totalamount" => PriceHelper::setCurrencyPrice($total_amount),
       ];
       if(Session::has('shipping_address')){
+        Session::put('shipping_address.ship_amountaddressId', $distritoGet->id);
         Session::put('ship_amountaddress', $minAmountDelivery);
       }
     }else{
@@ -444,6 +686,7 @@ class CheckoutController extends Controller{
         "totalamount" => PriceHelper::setCurrencyPrice($total_amount),
       ];
       if(Session::has('shipping_address')){
+        Session::put('shipping_address.ship_amountaddressId', $distritoGet->id);
         Session::put('ship_amountaddress', $minAmountDelivery);
       }
     }
@@ -451,7 +694,7 @@ class CheckoutController extends Controller{
     // return response()->json($arrDataAmountCart);
     return response()->json(['data'=>$arrDataAmountCart]);
   }
-  /* ---------------- PAYMENT ---------------- */
+  /* ---------------- PANTALLA #3 PAYMENT ---------------- */
   public function payment(){
     if(!Session::has('billing_address')){
       return redirect(route('front.checkout.billing'));
@@ -461,6 +704,11 @@ class CheckoutController extends Controller{
     }
     if(!Session::has('cart')){
       return redirect(route('front.cart'));
+    }else{
+      if(Session::has('cart') && count(Session::get('cart')) > 0){
+      }else{
+        return redirect(route('front.cart'));
+      }
     }
     $data['user'] = Auth::user();
     $cart = Session::get('cart');
@@ -471,12 +719,66 @@ class CheckoutController extends Controller{
     $grand_total = 0;
     $attribute_price = 0;
     foreach($cart as $key => $item){
+      // $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+      // $total += ($item['price'] + $attribute_price) * $item['qty'];
+      // $cart_total = $total;
+      $keywithoutguion = str_replace("-","",$key);
+      $keywithoutguion2 = (int) $keywithoutguion;
+      $itemBD = Item::findOrFail($keywithoutguion2);
+
+      if($itemBD->tax_id){
+        $total_tax += $itemBD::taxCalculate($itemBD);
+      }
+
+      $total =0;
+      $option_price = 0;
+      $cartTotal = 0;
+
+      // -------------------------- VALIDACIÓN DE CUPONES
+      $totalwithoutcoupon = 0;
+      $totalwithcoupon = 0;
+      $totalwithoutcoupon_prod = 0;
+      $totalwithcoupon_prod = 0;
+      // ----------- CANTIDAD DE PRODUCTOS TOTAL...
+      $prod_qty = floatval($item['qty']);
+      // ----------- CANTIDAD DE PRODUCTOS SIN CUPÓN TOTAL...
+      $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+      // ----------- CANTIDAD DE PRODUCTOS CON CUPÓN...
+      $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
       $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-      $total += ($item['main_price'] + $attribute_price) * $item['qty'];
-      $cart_total = $total;
-      $item = Item::findOrFail($key);
-      if($item->tax){
-        $total_tax += $item::taxCalculate($item);
+      if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
+
+        // $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        $namecouponbyid = Coupons::where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        if(count($namecouponbyid) != 0){
+          $couponbyiddecode = json_decode($namecouponbyid, TRUE);
+          $nameofcouponbyid = $couponbyiddecode[0]['name'];
+          $expiresAtTimer = $couponbyiddecode[0]['time_end'];
+          // ----------- Crear un objeto DateTime a partir de la fecha final...
+          $currentDate = new DateTime();
+          $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+          // ----------- Asegurarse que la fecha es válida...
+          if(!$expirationDate) {
+            die('Invalid date format for countdown.');
+          }
+          // ----------- Obtener las fechas en milisegundos...
+          $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+          $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+          // ----------- Calcular el tiempo restante...
+          $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+          
+          if($remainingTime <= 0){
+            $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+          }else{
+            $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+            $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+            $cart_total += $totalwithoutcoupon + $totalwithcoupon;
+          }
+        }else{
+          $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+        }
+      }else{
+        $cart_total +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
       }
     }
     $shipping = [];
@@ -495,7 +797,7 @@ class CheckoutController extends Controller{
     if(Session::has('coupon')){
       $discount = Session::get('coupon');
     }
-    if (!PriceHelper::Digital()){
+    if(!PriceHelper::Digital()){
       $shipping = null;
     }
     // $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
@@ -504,29 +806,43 @@ class CheckoutController extends Controller{
     // $grand_total = $grand_total + $state_tax;
     $grand_total = $cart_total;
     $total_amount = $grand_total;
-    
+    $regDistritoCode = 0;
     $getUserInfo = Auth::user() ? Auth::user() : null;
-    $regDistritoId = (isset($getUserInfo['reg_distrito_id']) && $getUserInfo['reg_distrito_id'] != "") ? $getUserInfo['reg_distrito_id'] : 0;
-    $distritoGet = Distrito::where('id',$regDistritoId)->select('id','distrito_name','distrito_min_amount','distrito_max_amount')->first();
+    if(isset($getUserInfo['reg_distrito_id']) && $getUserInfo['reg_distrito_id'] != ""){
+      if(Session::has('shipping_address.ship_amountaddressId') && Session::get('shipping_address.ship_amountaddressId') != ""){
+        $regDistritoCode = Session::get('shipping_address.ship_amountaddressId');
+      }else{
+        $regDistritoCode = $getUserInfo['reg_distrito_id'];
+      }
+    }else{
+      $regDistritoCode = 1;
+    }
+    $distritoGet = Distrito::where('id',$regDistritoCode)->select('id','distrito_name','distrito_min_amount','distrito_max_amount')->first();
     $minAmountValidate = 1600.00;
-    $minAmountDelivery = floatval($distritoGet->distrito_min_amount);
-    $maxAmountDelivery = floatval($distritoGet->distrito_max_amount);
+    $minAmountDelivery = ($distritoGet->distrito_min_amount != "") ? floatval($distritoGet->distrito_min_amount) : 15.00;
+    $maxAmountDelivery = ($distritoGet->distrito_max_amount != "") ? floatval($distritoGet->distrito_max_amount) : 0;
     $ship_data['ship_amountaddress'] = 0;
     if($total_amount >= $minAmountValidate){
       $data['amountaddress'] = $maxAmountDelivery;
       $total_amount_operation = $grand_total + $maxAmountDelivery;
       $total_amount = floatval($total_amount_operation);
       $ship_data['grand_total'] = $total_amount;
+      Session::put('shipping_address.ship_amountaddress', $maxAmountDelivery);
+      Session::put('shipping_address.grand_total', $total_amount);
     }else if($total_amount < $minAmountValidate){
       $data['amountaddress'] = $minAmountDelivery;
       $total_amount_operation = $grand_total + $minAmountDelivery;
       $total_amount = floatval($total_amount_operation);
       $ship_data['grand_total'] = $total_amount;
+      Session::put('shipping_address.ship_amountaddress', $minAmountDelivery);
+      Session::put('shipping_address.grand_total', $total_amount);
     }else{
       $data['amountaddress'] = $minAmountDelivery;
       $total_amount_operation = $grand_total + $minAmountDelivery;
       $total_amount = floatval($total_amount_operation);
       $ship_data['grand_total'] = $total_amount;
+      Session::put('shipping_address.ship_amountaddress', $minAmountDelivery);
+      Session::put('shipping_address.grand_total', $total_amount);
     }
 
     $data['cart'] = $cart;
@@ -538,10 +854,14 @@ class CheckoutController extends Controller{
     $data['payments'] = PaymentSetting::whereStatus(1)->get();
     return view('front.checkout.payment',$data);
   }
-  /* ---------------- AL ENVIAR DATOS DE COMPROBANTE ---------------- */
-  public function sendDataVoucher(Request $request){    
+  /* ---------------- AL SELECCIONAR UN TIPO DE COMPROBANTE ---------------- */
+  public function selTypeOfVoucher(Request $request){
     $input = $request->all();
     $selOptSelected = (isset($input['chckpay_selOpt']) && $input['chckpay_selOpt'] != "") ? $input['chckpay_selOpt'] : '';
+    $user_ruc = "";
+    $user_razonsocial = "";
+    $user_addressfiscal = "";
+    $user_phone = "";
     // $arrDataVoucher = [];
     if($selOptSelected == 'boleta'){
       $arrDataVoucher = [
@@ -552,13 +872,86 @@ class CheckoutController extends Controller{
         "phone" => (isset($input['chckpay_phone']) && $input['chckpay_phone'] != "") ? $input['chckpay_phone'] : '',
       ];
     }else if($selOptSelected == 'factura'){
+      if(isset($input['chckpay_ruc']) && $input['chckpay_ruc'] != ""){
+        $user_ruc = $input['chckpay_ruc'];
+      }else{
+        $user_ruc = (Auth::user()->reg_ruc != "" || Auth::user()->reg_ruc) ? Auth::user()->reg_ruc : "";
+      }
+      if(isset($input['chckpay_razonsocial']) && $input['chckpay_razonsocial'] != ""){
+        $user_razonsocial = $input['chckpay_razonsocial'];
+      }else{
+        $user_razonsocial = (Auth::user()->reg_razonsocial != "" || Auth::user()->reg_razonsocial) ? Auth::user()->reg_razonsocial : "";
+      }
+      if(isset($input['chckpay_address']) && $input['chckpay_address'] != ""){
+        $user_addressfiscal = $input['chckpay_address'];
+      }else{
+        $user_addressfiscal = (Auth::user()->reg_addressfiscal != "" || Auth::user()->reg_addressfiscal) ? Auth::user()->reg_addressfiscal : "";
+      }
+      if(isset($input['chckpay_phone']) && $input['chckpay_phone'] != ""){
+        $user_phone = $input['chckpay_phone'];
+      }else{
+        $user_phone = (Auth::user()->phone != "" || Auth::user()->phone) ? Auth::user()->phone : "";
+      }
+      
       $arrDataVoucher = [
         "selOptSelected" => 'factura',
         "selOptSelectedId" => 2,
-        "ruc" => (isset($input['chckpay_ruc']) && $input['chckpay_ruc'] != "") ? $input['chckpay_ruc'] : '',
-        "razonsocial" => (isset($input['chckpay_razonsocial']) && $input['chckpay_razonsocial'] != "") ? $input['chckpay_razonsocial'] : '',
-        "address" => (isset($input['chckpay_address']) && $input['chckpay_address'] != "") ? $input['chckpay_address'] : '',
+        "ruc" => $user_ruc,
+        "razonsocial" => $user_razonsocial,
+        "address" => $user_addressfiscal,
+        "phone" => $user_phone,
+      ];
+    }else{
+      $arrDataVoucher = [];
+    }
+    return response()->json($arrDataVoucher);
+  }
+  /* ---------------- AL ENVIAR DATOS DE COMPROBANTE ---------------- */
+  public function sendDataVoucher(Request $request){    
+    $input = $request->all();
+    $selOptSelected = (isset($input['chckpay_selOpt']) && $input['chckpay_selOpt'] != "") ? $input['chckpay_selOpt'] : '';
+    $user_ruc = "";
+    $user_razonsocial = "";
+    $user_addressfiscal = "";
+    $user_phone = "";
+    // $arrDataVoucher = [];
+    if($selOptSelected == 'boleta'){
+      $arrDataVoucher = [
+        "selOptSelected" => 'boleta',
+        "selOptSelectedId" => 1,
+        "first_name" => (isset($input['chckpay_firt_name']) && $input['chckpay_firt_name'] != "") ? $input['chckpay_firt_name'] : '',
+        "dni" => (isset($input['chckpay_dni']) && $input['chckpay_dni'] != "") ? $input['chckpay_dni'] : '',
         "phone" => (isset($input['chckpay_phone']) && $input['chckpay_phone'] != "") ? $input['chckpay_phone'] : '',
+      ];
+    }else if($selOptSelected == 'factura'){
+      if(isset($input['chckpay_ruc']) && $input['chckpay_ruc'] != ""){
+        $user_ruc = $input['chckpay_ruc'];
+      }else{
+        $user_ruc = (Auth::user()->reg_ruc != "" || Auth::user()->reg_ruc) ? Auth::user()->reg_ruc : "";
+      }
+      if(isset($input['chckpay_razonsocial']) && $input['chckpay_razonsocial'] != ""){
+        $user_razonsocial = $input['chckpay_razonsocial'];
+      }else{
+        $user_razonsocial = (Auth::user()->reg_razonsocial != "" || Auth::user()->reg_razonsocial) ? Auth::user()->reg_razonsocial : "";
+      }
+      if(isset($input['chckpay_address']) && $input['chckpay_address'] != ""){
+        $user_addressfiscal = $input['chckpay_address'];
+      }else{
+        $user_addressfiscal = (Auth::user()->reg_addressfiscal != "" || Auth::user()->reg_addressfiscal) ? Auth::user()->reg_addressfiscal : "";
+      }
+      if(isset($input['chckpay_phone']) && $input['chckpay_phone'] != ""){
+        $user_phone = $input['chckpay_phone'];
+      }else{
+        $user_phone = (Auth::user()->reg_phone != "" || Auth::user()->reg_phone) ? Auth::user()->reg_phone : "";
+      }
+      
+      $arrDataVoucher = [
+        "selOptSelected" => 'factura',
+        "selOptSelectedId" => 2,
+        "ruc" => $user_ruc,
+        "razonsocial" => $user_razonsocial,
+        "address" => $user_addressfiscal,
+        "phone" => $user_phone,
       ];
     }else{
       $arrDataVoucher = [];
@@ -569,15 +962,462 @@ class CheckoutController extends Controller{
     }else{
       Session::put('data_voucher', $arrDataVoucher);
     }
+
+    // --------------- ACTUALIZAR DATOS EN SESSION "CART"
+    if(!Session::has('cart')){
+      return redirect(route('front.cart'));
+    }else{
+      if(Session::has('cart') && count(Session::get('cart')) > 0){
+      }else{
+        return redirect(route('front.cart'));
+      }
+    }  
+    $data['user'] = Auth::user();
+    $cart = Session::get('cart');
+    $total_tax = 0;
+    $cart_total = 0;
+    $total = 0;
+    $total_amount = 0;
+    $grand_total = 0;
+    $attribute_price = 0;
+
+    // echo "<pre>";
+    // print_r($cart);
+    // echo "</pre>";
+    // exit();
+
+    foreach($cart as $key => $item){
+      // $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+      // $total += ($item['price'] + $attribute_price) * $item['qty'];
+      // $cart_total = $total;
+      $keywithoutguion = str_replace("-","",$key);
+      $keywithoutguion2 = (int) $keywithoutguion;
+      $itemBD = Item::findOrFail($keywithoutguion2);
+
+      if($itemBD->tax_id){
+        $total_tax += $itemBD::taxCalculate($itemBD);
+      }
+
+      $total =0;
+      $option_price = 0;
+      $cartTotal = 0;
+
+      $itemDB2 = Item::where('id', $keywithoutguion2)->select('id','tax_id','sections_id','name','photo','discount_price','previous_price','on_sale_price','special_offer_price','brand_id','coupon_id','slug','sku','is_type','item_type','license_name','license_key')->first();
+      // -------------------------- VALIDACIÓN DE CUPONES
+      $totalwithoutcoupon = 0;
+      $totalwithcoupon = 0;
+      $totalwithoutcoupon_prod = 0;
+      $totalwithcoupon_prod = 0;
+      // ----------- CANTIDAD DE PRODUCTOS TOTAL...
+      $prod_qty = floatval($item['qty']);
+      // ----------- CANTIDAD DE PRODUCTOS SIN CUPÓN TOTAL...
+      $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+      // ----------- CANTIDAD DE PRODUCTOS CON CUPÓN...
+      $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
+      $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+      if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
+
+        // $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        // $namecouponbyid = Coupons::where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        $namecouponbyid = Coupons::where("id","=",$item['coupon_id'])->take(1)->get();
+        if(count($namecouponbyid) != 0){
+          $couponbyiddecode = json_decode($namecouponbyid, TRUE);
+          $nameofcouponbyid = $couponbyiddecode[0]['name'];
+          $expiresAtTimer = $couponbyiddecode[0]['time_end'];
+          $couponget_status = $couponbyiddecode[0]['status'];
+          // ----------- Crear un objeto DateTime a partir de la fecha final...
+          $currentDate = new DateTime();
+          $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+          // ----------- Asegurarse que la fecha es válida...
+          if(!$expirationDate) {
+            die('Invalid date format for countdown.');
+          }
+          // ----------- Obtener las fechas en milisegundos...
+          $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+          $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+          // ----------- Calcular el tiempo restante...
+          $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+          
+
+          // -------------- NOTA: (26/04/2024) ACTUALIZAR EL PRECIO DE CADA PRODUCTO...
+
+          if($remainingTime <= 0){
+            $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+            $cart[$keywithoutguion2.'-'] = [
+              'options_id' => $item['options_id'],
+              'attribute' => $item['attribute'],
+              'attribute_price' => $item['attribute_price'],
+              "attribute_collection" => $item['attribute_collection'],
+              "name" => $item['name'],
+              "slug" => $item['slug'],
+              "sku" => $item['sku'],
+              "brand_id" => $item['brand_id'],
+              "brand_name" => $item['brand_name'],
+              "rootunit_id" => $item['rootunit_id'],
+              "rootunit_name" => $item['rootunit_name'],
+              "qty" => $item['qty'],
+              "price" => PriceHelper::grandPrice($itemDB2),
+              "main_price" => $itemDB2->discount_price,
+              "photo" => $item['photo'],
+              "type" => $item['item_type'],
+              "item_type" => $item['item_type'],
+              "coupon_id" => "0",
+              "coupon_price" => "0",
+              "quantity_withoutcoupon" => "0",
+              "coupon_valid" => 'not_available',
+              'item_l_n' => $item['item_l_n'],
+              'item_l_k' => $item['item_l_k'],
+            ];
+            Session::put('cart', $cart);
+          }else{
+            if($couponget_status != 0){
+              $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+              $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+              $cart_total += $totalwithoutcoupon + $totalwithcoupon;
+              $cart[$keywithoutguion2.'-'] = [
+                'options_id' => $item['options_id'],
+                'attribute' => $item['attribute'],
+                'attribute_price' => $item['attribute_price'],
+                "attribute_collection" => $item['attribute_collection'],
+                "name" => $item['name'],
+                "slug" => $item['slug'],
+                "sku" => $item['sku'],
+                "brand_id" => $item['brand_id'],
+                "brand_name" => $item['brand_name'],
+                "rootunit_id" => $item['rootunit_id'],
+                "rootunit_name" => $item['rootunit_name'],
+                "qty" => $item['qty'],
+                "price" => PriceHelper::grandPrice($itemDB2),
+                "main_price" => $itemDB2->discount_price,
+                "photo" => $item['photo'],
+                "type" => $item['item_type'],
+                "item_type" => $item['item_type'],
+                "coupon_id" => $item['coupon_id'],
+                "coupon_price" => $item['coupon_price'],
+                "quantity_withoutcoupon" => $item['quantity_withoutcoupon'],
+                "coupon_valid" => 'available',
+                'item_l_n' => $item['item_l_n'],
+                'item_l_k' => $item['item_l_k'],
+              ];
+              Session::put('cart', $cart);
+            }else{
+              $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+              $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+              $cart_total += $totalwithoutcoupon + $totalwithcoupon;
+              $cart[$keywithoutguion2.'-'] = [
+                'options_id' => $item['options_id'],
+                'attribute' => $item['attribute'],
+                'attribute_price' => $item['attribute_price'],
+                "attribute_collection" => $item['attribute_collection'],
+                "name" => $item['name'],
+                "slug" => $item['slug'],
+                "sku" => $item['sku'],
+                "brand_id" => $item['brand_id'],
+                "brand_name" => $item['brand_name'],
+                "rootunit_id" => $item['rootunit_id'],
+                "rootunit_name" => $item['rootunit_name'],
+                "qty" => $item['qty'],
+                "price" => PriceHelper::grandPrice($itemDB2),
+                "main_price" => $itemDB2->discount_price,
+                "photo" => $item['photo'],
+                "type" => $item['item_type'],
+                "item_type" => $item['item_type'],
+                "coupon_id" => "0",
+                "coupon_price" => "0",
+                "quantity_withoutcoupon" => "0",
+                "coupon_valid" => 'not_available',
+                'item_l_n' => $item['item_l_n'],
+                'item_l_k' => $item['item_l_k'],
+              ];
+              Session::put('cart', $cart);
+            }
+          }
+        }else{
+          $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+          $cart[$keywithoutguion2.'-'] = [
+            'options_id' => $item['options_id'],
+            'attribute' => $item['attribute'],
+            'attribute_price' => $item['attribute_price'],
+            "attribute_collection" => $item['attribute_collection'],
+            "name" => $item['name'],
+            "slug" => $item['slug'],
+            "sku" => $item['sku'],
+            "brand_id" => $item['brand_id'],
+            "brand_name" => $item['brand_name'],
+            "rootunit_id" => $item['rootunit_id'],
+            "rootunit_name" => $item['rootunit_name'],
+            "qty" => $item['qty'],
+            "price" => PriceHelper::grandPrice($itemDB2),
+            "main_price" => $itemDB2->discount_price,
+            "photo" => $item['photo'],
+            "type" => $item['item_type'],
+            "item_type" => $item['item_type'],
+            "coupon_id" => "0",
+            "coupon_price" => "0",
+            "quantity_withoutcoupon" => "0",
+            "coupon_valid" => 'not_available',
+            'item_l_n' => $item['item_l_n'],
+            'item_l_k' => $item['item_l_k'],
+          ];
+          Session::put('cart', $cart);
+        }
+      }else{
+        $cart_total +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
+        $cart[$keywithoutguion2.'-'] = [
+          'options_id' => $item['options_id'],
+          'attribute' => $item['attribute'],
+          'attribute_price' => $item['attribute_price'],
+          "attribute_collection" => $item['attribute_collection'],
+          "name" => $item['name'],
+          "slug" => $item['slug'],
+          "sku" => $item['sku'],
+          "brand_id" => $item['brand_id'],
+          "brand_name" => $item['brand_name'],
+          "rootunit_id" => $item['rootunit_id'],
+          "rootunit_name" => $item['rootunit_name'],
+          "qty" => $item['qty'],
+          "price" => PriceHelper::grandPrice($itemDB2),
+          "main_price" => $itemDB2->discount_price,
+          "photo" => $item['photo'],
+          "type" => $item['item_type'],
+          "item_type" => $item['item_type'],
+          "coupon_id" => "0",
+          "coupon_price" => "0",
+          "quantity_withoutcoupon" => "0",
+          "coupon_valid" => 'not_available',
+          'item_l_n' => $item['item_l_n'],
+          'item_l_k' => $item['item_l_k'],
+        ];
+        Session::put('cart', $cart);
+      }
+
+    }
+
     return response()->json($arrDataVoucher);
   }
-  /* ---------------- AL ENVIAR Y PROCESAR LOS DATOS DE PAGO ---------------- */
-  public function checkoutProcess(Request $request){
-    
-  }
+  /* ---------------- ACTUALIZAR SESSION CART ---------------- */
+  // public function updateSessionCRUD(){
+    // if(!Session::has('cart')){
+    //   return redirect(route('front.cart'));
+    // }  
+    // $data['user'] = Auth::user();
+    // $cart = Session::get('cart');
+    // $total_tax = 0;
+    // $cart_total = 0;
+    // $total = 0;
+    // $total_amount = 0;
+    // $grand_total = 0;
+    // $attribute_price = 0;
+
+    // // echo "<pre>";
+    // // print_r($cart);
+    // // echo "</pre>";
+    // // exit();
+
+    // foreach($cart as $key => $item){
+    //   // $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+    //   // $total += ($item['price'] + $attribute_price) * $item['qty'];
+    //   // $cart_total = $total;
+    //   $keywithoutguion = str_replace("-","",$key);
+    //   $keywithoutguion2 = (int) $keywithoutguion;
+    //   $itemBD = Item::findOrFail($keywithoutguion2);
+
+    //   if($itemBD->tax_id){
+    //     $total_tax += $itemBD::taxCalculate($itemBD);
+    //   }
+
+    //   $total =0;
+    //   $option_price = 0;
+    //   $cartTotal = 0;
+
+    //   $itemDB2 = Item::where('id', $keywithoutguion2)->select('id','tax_id','sections_id','name','photo','discount_price','previous_price','on_sale_price','special_offer_price','brand_id','coupon_id','slug','sku','is_type','item_type','license_name','license_key')->first();
+    //   // -------------------------- VALIDACIÓN DE CUPONES
+    //   $totalwithoutcoupon = 0;
+    //   $totalwithcoupon = 0;
+    //   $totalwithoutcoupon_prod = 0;
+    //   $totalwithcoupon_prod = 0;
+    //   // ----------- CANTIDAD DE PRODUCTOS TOTAL...
+    //   $prod_qty = floatval($item['qty']);
+    //   // ----------- CANTIDAD DE PRODUCTOS SIN CUPÓN TOTAL...
+    //   $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+    //   // ----------- CANTIDAD DE PRODUCTOS CON CUPÓN...
+    //   $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
+    //   $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+    //   if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
+
+    //     // $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+    //     // $namecouponbyid = Coupons::where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+    //     $namecouponbyid = Coupons::where("id","=",$item['coupon_id'])->take(1)->get();
+    //     if(count($namecouponbyid) != 0){
+    //       $couponbyiddecode = json_decode($namecouponbyid, TRUE);
+    //       $nameofcouponbyid = $couponbyiddecode[0]['name'];
+    //       $expiresAtTimer = $couponbyiddecode[0]['time_end'];
+    //       $couponget_status = $couponbyiddecode[0]['status'];
+    //       // ----------- Crear un objeto DateTime a partir de la fecha final...
+    //       $currentDate = new DateTime();
+    //       $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+    //       // ----------- Asegurarse que la fecha es válida...
+    //       if(!$expirationDate) {
+    //         die('Invalid date format for countdown.');
+    //       }
+    //       // ----------- Obtener las fechas en milisegundos...
+    //       $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+    //       $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+    //       // ----------- Calcular el tiempo restante...
+    //       $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+          
+
+    //       // -------------- NOTA: (26/04/2024) ACTUALIZAR EL PRECIO DE CADA PRODUCTO...
+
+    //       if($remainingTime <= 0){
+    //         $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+    //         $cart[$keywithoutguion2.'-'] = [
+    //           'options_id' => $item['options_id'],
+    //           'attribute' => $item['attribute'],
+    //           'attribute_price' => $item['attribute_price'],
+    //           "attribute_collection" => $item['attribute_collection'],
+    //           "name" => $item['name'],
+    //           "slug" => $item['slug'],
+    //           "sku" => $item['sku'],
+    //           "brand_id" => $item['brand_id'],
+    //           "brand_name" => $item['brand_name'],
+    //           "qty" => $item['qty'],
+    //           "price" => PriceHelper::grandPrice($itemDB2),
+    //           "main_price" => $itemDB2->discount_price,
+    //           "photo" => $item['photo'],
+    //           "type" => $item['item_type'],
+    //           "item_type" => $item['item_type'],
+    //           "coupon_id" => "0",
+    //           "coupon_price" => "0",
+    //           "quantity_withoutcoupon" => "0",
+    //           "coupon_valid" => 'not_available',
+    //           'item_l_n' => $item['item_l_n'],
+    //           'item_l_k' => $item['item_l_k'],
+    //         ];
+    //         Session::put('cart', $cart);
+    //       }else{
+    //         if($couponget_status != 0){
+    //           $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+    //           $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+    //           $cart_total += $totalwithoutcoupon + $totalwithcoupon;
+    //           $cart[$keywithoutguion2.'-'] = [
+    //             'options_id' => $item['options_id'],
+    //             'attribute' => $item['attribute'],
+    //             'attribute_price' => $item['attribute_price'],
+    //             "attribute_collection" => $item['attribute_collection'],
+    //             "name" => $item['name'],
+    //             "slug" => $item['slug'],
+    //             "sku" => $item['sku'],
+    //             "brand_id" => $item['brand_id'],
+    //             "brand_name" => $item['brand_name'],
+    //             "qty" => $item['qty'],
+    //             "price" => PriceHelper::grandPrice($itemDB2),
+    //             "main_price" => $itemDB2->discount_price,
+    //             "photo" => $item['photo'],
+    //             "type" => $item['item_type'],
+    //             "item_type" => $item['item_type'],
+    //             "coupon_id" => $item['coupon_id'],
+    //             "coupon_price" => $item['coupon_price'],
+    //             "quantity_withoutcoupon" => $item['quantity_withoutcoupon'],
+    //             "coupon_valid" => 'available',
+    //             'item_l_n' => $item['item_l_n'],
+    //             'item_l_k' => $item['item_l_k'],
+    //           ];
+    //           Session::put('cart', $cart);
+    //         }else{
+    //           $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+    //           $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+    //           $cart_total += $totalwithoutcoupon + $totalwithcoupon;
+    //           $cart[$keywithoutguion2.'-'] = [
+    //             'options_id' => $item['options_id'],
+    //             'attribute' => $item['attribute'],
+    //             'attribute_price' => $item['attribute_price'],
+    //             "attribute_collection" => $item['attribute_collection'],
+    //             "name" => $item['name'],
+    //             "slug" => $item['slug'],
+    //             "sku" => $item['sku'],
+    //             "brand_id" => $item['brand_id'],
+    //             "brand_name" => $item['brand_name'],
+    //             "qty" => $item['qty'],
+    //             "price" => PriceHelper::grandPrice($itemDB2),
+    //             "main_price" => $itemDB2->discount_price,
+    //             "photo" => $item['photo'],
+    //             "type" => $item['item_type'],
+    //             "item_type" => $item['item_type'],
+    //             "coupon_id" => "0",
+    //             "coupon_price" => "0",
+    //             "quantity_withoutcoupon" => "0",
+    //             "coupon_valid" => 'not_available',
+    //             'item_l_n' => $item['item_l_n'],
+    //             'item_l_k' => $item['item_l_k'],
+    //           ];
+    //           Session::put('cart', $cart);
+    //         }
+    //       }
+    //     }else{
+    //       $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+    //       $cart[$keywithoutguion2.'-'] = [
+    //         'options_id' => $item['options_id'],
+    //         'attribute' => $item['attribute'],
+    //         'attribute_price' => $item['attribute_price'],
+    //         "attribute_collection" => $item['attribute_collection'],
+    //         "name" => $item['name'],
+    //         "slug" => $item['slug'],
+    //         "sku" => $item['sku'],
+    //         "brand_id" => $item['brand_id'],
+    //         "brand_name" => $item['brand_name'],
+    //         "qty" => $item['qty'],
+    //         "price" => PriceHelper::grandPrice($itemDB2),
+    //         "main_price" => $itemDB2->discount_price,
+    //         "photo" => $item['photo'],
+    //         "type" => $item['item_type'],
+    //         "item_type" => $item['item_type'],
+    //         "coupon_id" => "0",
+    //         "coupon_price" => "0",
+    //         "quantity_withoutcoupon" => "0",
+    //         "coupon_valid" => 'not_available',
+    //         'item_l_n' => $item['item_l_n'],
+    //         'item_l_k' => $item['item_l_k'],
+    //       ];
+    //       Session::put('cart', $cart);
+    //     }
+    //   }else{
+    //     $cart_total +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
+    //     $cart[$keywithoutguion2.'-'] = [
+    //       'options_id' => $item['options_id'],
+    //       'attribute' => $item['attribute'],
+    //       'attribute_price' => $item['attribute_price'],
+    //       "attribute_collection" => $item['attribute_collection'],
+    //       "name" => $item['name'],
+    //       "slug" => $item['slug'],
+    //       "sku" => $item['sku'],
+    //       "brand_id" => $item['brand_id'],
+    //       "brand_name" => $item['brand_name'],
+    //       "qty" => $item['qty'],
+    //       "price" => PriceHelper::grandPrice($itemDB2),
+    //       "main_price" => $itemDB2->discount_price,
+    //       "photo" => $item['photo'],
+    //       "type" => $item['item_type'],
+    //       "item_type" => $item['item_type'],
+    //       "coupon_id" => "0",
+    //       "coupon_price" => "0",
+    //       "quantity_withoutcoupon" => "0",
+    //       "coupon_valid" => 'not_available',
+    //       'item_l_n' => $item['item_l_n'],
+    //       'item_l_k' => $item['item_l_k'],
+    //     ];
+    //     Session::put('cart', $cart);
+    //   }
+
+    // }
+
+    // echo "<pre>";
+    // print_r(Session::get('cart'));
+    // echo "</pre>";
+    // exit();
+  // }
   /* ---------------- AL ENVIAR DATOS DESDE EL MÉTODO DE PAGO ---------------- */
 	public function checkout(PaymentRequest $request){
-
     $input = $request->all();
     $checkout = false;
     $payment_redirect = false;
@@ -718,8 +1558,13 @@ class CheckoutController extends Controller{
     return redirect()->route('front.checkout.billing');
 	}
   public function stateSetUp($state_id){
-    if (!Session::has('cart')){
+    if(!Session::has('cart')){
       return redirect(route('front.cart'));
+    }else{
+      if(Session::has('cart') && count(Session::get('cart')) > 0){
+      }else{
+        return redirect(route('front.cart'));
+      }
     }
     $cart = Session::get('cart');
     $total_tax = 0;
@@ -727,12 +1572,66 @@ class CheckoutController extends Controller{
     $total = 0;
     $attribute_price = 0;
     foreach($cart as $key => $item){
+      // $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
+      // $total += ($item['price'] + $attribute_price) * $item['qty'];
+      // $cart_total = $total;
+      $keywithoutguion = str_replace("-","",$key);
+      $keywithoutguion2 = (int) $keywithoutguion;
+      $itemBD = Item::findOrFail($keywithoutguion2);
+
+      if($itemBD->tax_id){
+        $total_tax += $itemBD::taxCalculate($itemBD);
+      }
+
+      $total =0;
+      $option_price = 0;
+      $cartTotal = 0;
+
+      // -------------------------- VALIDACIÓN DE CUPONES
+      $totalwithoutcoupon = 0;
+      $totalwithcoupon = 0;
+      $totalwithoutcoupon_prod = 0;
+      $totalwithcoupon_prod = 0;
+      // ----------- CANTIDAD DE PRODUCTOS TOTAL...
+      $prod_qty = floatval($item['qty']);
+      // ----------- CANTIDAD DE PRODUCTOS SIN CUPÓN TOTAL...
+      $prod_quantity_withoutcoupon = floatval($item['quantity_withoutcoupon']);
+      // ----------- CANTIDAD DE PRODUCTOS CON CUPÓN...
+      $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
       $attribute_price = (isset($item['attribute_price']) && !empty($item['attribute_price'])) ? $item['attribute_price'] : 0;
-      $total += ($item['main_price'] + $attribute_price) * $item['qty'];
-      $cart_total = $total;
-      $item = Item::findOrFail($key);
-      if($item->tax){
-        $total_tax += $item::taxCalculate($item);
+      if($item['coupon_id'] != "" && $item['coupon_id'] != "0" && $item['coupon_price'] != "" && $item['coupon_price'] != 0 && $item['coupon_price'] != 0.00){
+
+        // $namecouponbyid = DB::table('tbl_coupons')->where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        $namecouponbyid = Coupons::where("id","=",$item['coupon_id'])->where("status","!=",0)->take(1)->get();
+        if(count($namecouponbyid) != 0){
+          $couponbyiddecode = json_decode($namecouponbyid, TRUE);
+          $nameofcouponbyid = $couponbyiddecode[0]['name'];
+          $expiresAtTimer = $couponbyiddecode[0]['time_end'];
+          // ----------- Crear un objeto DateTime a partir de la fecha final...
+          $currentDate = new DateTime();
+          $expirationDate = DateTime::createFromFormat('Y-m-d H:i:s', $expiresAtTimer, new DateTimeZone('America/Lima'));
+          // ----------- Asegurarse que la fecha es válida...
+          if(!$expirationDate) {
+            die('Invalid date format for countdown.');
+          }
+          // ----------- Obtener las fechas en milisegundos...
+          $millisecondsCurrentDate = $currentDate->getTimestamp() * 1000;
+          $millisecondsExpirationDate = $expirationDate->getTimestamp() * 1000;
+          // ----------- Calcular el tiempo restante...
+          $remainingTime = max(0, $millisecondsExpirationDate - $millisecondsCurrentDate);
+          
+          if($remainingTime <= 0){
+            $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+          }else{
+            $totalwithoutcoupon += ($item['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+            $totalwithcoupon += ($item['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+            $cart_total += $totalwithoutcoupon + $totalwithcoupon;
+          }
+        }else{
+          $cart_total += ($item['price'] + $total + $attribute_price) * $item['qty'];
+        }
+      }else{
+        $cart_total +=  ($item['price'] + $total + $attribute_price) * $item['qty'];
       }
     }
     $shipping = [];
@@ -779,12 +1678,13 @@ class CheckoutController extends Controller{
     $data['grand_total'] = PriceHelper::setCurrencyPrice($total_amount);
     return response()->json($data);
   }
-  /* ------------------- NUEVO CONTENIDO ------------------- */
+  /* ------------------- OBTENER TODOS LOS DEPARTAMENTOS ------------------- */
   public function getAllDepartamentos(){
     $departamentos = Departamento::get()->toArray();
     $data = $departamentos;
     return response()->json(['data'=>$data]);
   }
+  /* ------------------- OBTENER PROVINCIAS POR ID DE DEPARTAMENTO ------------------- */
   public function getProvinciaByIdDepartamento(Request $request){
     if($request->departamento_code){
       $provincias = Provincia::where('departamento_code', $request->departamento_code)->get()->toArray();
@@ -794,6 +1694,7 @@ class CheckoutController extends Controller{
     }
     return response()->json(['data'=>$data]);
   }
+  /* ------------------- OBTENER DISTRITOS POR ID DE PROVINCIA ------------------- */
   public function getDistritoByIdProvincia(Request $request){
     if($request->provincia_code){
       $distritos = Distrito::where('provincia_code', $request->provincia_code)->get()->toArray();
@@ -803,7 +1704,38 @@ class CheckoutController extends Controller{
     }
     return response()->json(['data'=>$data]);
   }
+  /* ------------------- GENERAR UN ID AUTOGENERADO NO REPETITIVO ------------------- */
+  public function getUltimateIdGenCode($idgencodelast){
+    if($idgencodelast){
+      $idgencode = str_replace(' ','',$idgencodelast->id_gencode);
+      if($idgencode != "" && $idgencode != null){
+        $lastCodeArr = explode('-', $idgencode);
+        $firstGroup = intval($lastCodeArr[0]);
+        $secondGroup = intval($lastCodeArr[1]);
+        if($secondGroup == 9999999){
+          $firstGroup++;
+          $secondGroup = 1;
+        }else{
+          $secondGroup++;
+        }
+      }else{
+        $firstGroup = 1;
+        $secondGroup = 1;
+      }
+    }else{
+      $firstGroup = 1;
+      $secondGroup = 1;
+    }
+    
+    $firstGroupPadded = str_pad($firstGroup, 3, '0', STR_PAD_LEFT);
+    $secondGroupPadded = str_pad($secondGroup, 7, '0', STR_PAD_LEFT);
+    $code = $firstGroupPadded . '-' . $secondGroupPadded;
+    return $code;
+  }
+  /* ------------------- GENERAR PDF DE ORDEN ------------------- */
   public function getGeneratePDFOrderPreview(){
+    $ultimateIdGenCode = Order::select('id_gencode')->orderBy('id', 'desc')->take(1)->first();
+    $nextIdGenCode = $this->getUltimateIdGenCode($ultimateIdGenCode);    
     $get_idUser = Auth::user()->id;
     $get_BillingAddress = Session::get('billing_address');
     $get_ShippingAddress = Session::get('shipping_address');
@@ -812,10 +1744,51 @@ class CheckoutController extends Controller{
     $countAllProds = 0;
     $newSubtotalAllProds = 0;
     foreach($get_SessionCart as $k => $v){
+      $total = 0;
+      // -------------------------- VALIDACIÓN DE CUPONES
+      $totalwithoutcoupon = 0;
+      $totalwithcoupon = 0;
+      $newSubtotalProdsFormat = 0;
       $newIdProds = str_replace('-','', $k);
-      $newSubtotalProds = $v['price'] * $v['qty'];
-      $newSubtotalProdsFormat = (isset($v['subtotal']) && !empty($v['subtotal'])) ? $v['subtotal'] : PriceHelper::setCurrencyPrice($newSubtotalProds);
-      $newSubtotalAllProds += $newSubtotalProds;
+      // $newSubtotalProds = $v['price'] * $v['qty'];
+      // $newSubtotalProdsFormat = (isset($v['subtotal']) && !empty($v['subtotal'])) ? $v['subtotal'] : PriceHelper::setCurrencyPrice($newSubtotalProds);
+      // ----------- CANTIDAD DE PRODUCTOS TOTAL...
+      $prod_qty = floatval($v['qty']);
+      // ----------- CANTIDAD DE PRODUCTOS SIN CUPÓN TOTAL...
+      $prod_quantity_withoutcoupon = floatval($v['quantity_withoutcoupon']);
+      // ----------- CANTIDAD DE PRODUCTOS CON CUPÓN...
+      $prodwithcouponassoc = $prod_qty - $prod_quantity_withoutcoupon;
+      $attribute_price = (isset($v['attribute_price']) && !empty($v['attribute_price'])) ? $v['attribute_price'] : 0;
+      if($v['coupon_id'] != "" && $v['coupon_id'] != "0" && $v['coupon_price'] != "" && $v['coupon_price'] != 0 && $v['coupon_price'] != 0.00){
+        if($v['coupon_valid'] == "available"){
+          $totalwithoutcoupon += ($v['price'] + $total + $attribute_price) * $prod_quantity_withoutcoupon;
+          $totalwithcoupon += ($v['coupon_price'] + $total + $attribute_price) * $prodwithcouponassoc;
+          $newSubtotalProdsFormat += $totalwithoutcoupon + $totalwithcoupon;
+        }else{
+          if(isset($v['subtotal']) && !empty($v['subtotal'])){
+            $newSubtotalProdsFormat = $v['subtotal'];
+          }else{
+            $newSubtotalProdsFormat += ($v['price'] + $total + $attribute_price) * $v['qty'];
+          }
+        }
+      }else{
+        if(isset($v['subtotal']) && !empty($v['subtotal'])){
+          $newSubtotalProdsFormat = $v['subtotal'];
+        }else{
+          $newSubtotalProdsFormat += ($v['price'] + $total + $attribute_price) * $v['qty'];
+        }
+      }
+      $newSubtotalAllProds += $newSubtotalProdsFormat;
+      $itemPhoto = (isset($v['photo']) && !empty($v['photo'])) ? str_replace(" ", "%20", $v['photo']) : '';
+      $urlPhoto = asset('assets/images/items/'.$itemPhoto);
+      $couponDataInfo_format = "0.00";
+      if(isset($v['coupon_id']) && !empty($v['coupon_id']) && $v['coupon_id'] != 0 && $v['coupon_id'] != "0"){
+        $couponDataInfo = Coupons::where('id', "=", $v['coupon_id'])->select('name','discount_percentage')->take(1)->get()->toArray();
+        if(count($couponDataInfo) > 0){
+        $couponDataInfo_convert = floatval($couponDataInfo[0]['discount_percentage']);
+        $couponDataInfo_format = $couponDataInfo_convert;
+        }
+      }      
       $get_SessionCartFormat[$countAllProds] = [
         'id' => $newIdProds,
         'options_id' => (isset($v['options_id']) && !empty($v['options_id'])) ? $v['options_id'] : [],
@@ -825,16 +1798,23 @@ class CheckoutController extends Controller{
         'slug' => (isset($v['slug']) && !empty($v['slug'])) ? $v['slug'] : 'No-encontrado',
         'sku' => (isset($v['sku']) && !empty($v['sku'])) ? $v['sku'] : 'No-encontrado',
         'brand_name' => (isset($v['brand_name']) && !empty($v['brand_name'])) ? $v['brand_name'] : 'No-encontrado',
+        'rootunit_name' => (isset($v['rootunit_name']) && !empty($v['rootunit_name'])) ? $v['rootunit_name'] : 'No-encontrado',
         'qty' => (isset($v['qty']) && !empty($v['qty'])) ? $v['qty'] : 0,
         'price' => (isset($v['price']) && !empty($v['price'])) ? PriceHelper::setCurrencyPrice($v['price']) : 0,
         'main_price' => (isset($v['main_price']) && !empty($v['main_price'])) ? PriceHelper::setCurrencyPrice($v['main_price']) : 0,
-        'photo' => (isset($v['photo']) && !empty($v['photo'])) ? $v['photo'] : '',
+        'photo' => $itemPhoto,
+        'photo_url' => $urlPhoto,
         'type' => (isset($v['type']) && !empty($v['type'])) ? $v['type'] : '',
         'item_type' => (isset($v['item_type']) && !empty($v['item_type'])) ? $v['item_type'] : 'Normal',
+        "coupon_id" => (isset($v['coupon_id']) && !empty($v['coupon_id'])) ? $v['coupon_id'] : 0,
+        "coupon_price" => (isset($v['coupon_price']) && !empty($v['coupon_price'])) ? PriceHelper::setCurrencyOfCoupon($v['coupon_price']) : 0,
+        "quantity_withoutcoupon" => (isset($v['quantity_withoutcoupon']) && !empty($v['quantity_withoutcoupon'])) ? $v['quantity_withoutcoupon'] : 0,
+        "coupon_valid" => (isset($v['coupon_valid']) && !empty($v['coupon_valid'])) ? $v['coupon_valid'] : "not_available",
+        "coupon_percentage" => $couponDataInfo_format,
         'item_l_n' => (isset($v['item_l_n']) && !empty($v['item_l_n'])) ? $v['item_l_n'] : [],
         'item_l_k' => (isset($v['item_l_k']) && !empty($v['item_l_k'])) ? $v['item_l_k'] : [],
         'user_id' => (isset($v['user_id']) && !empty($v['user_id'])) ? $v['user_id'] : $get_idUser,
-        'subtotal' => $newSubtotalProdsFormat,
+        'subtotal' => PriceHelper::setCurrencyPrice($newSubtotalProdsFormat),
       ];
       $countAllProds++;
     }
@@ -843,19 +1823,20 @@ class CheckoutController extends Controller{
     $reg_address1 = (isset(Auth::user()->reg_address1) && !empty(Auth::user()->reg_address1))? Auth::user()->reg_address1 : '';
     $reg_address2 = (isset(Auth::user()->reg_address2) && !empty(Auth::user()->reg_address2))? Auth::user()->reg_address2 : '';
     $reg_addressFinal = '';
-    if(!empty($reg_address1) && !empty($reg_address2)){
-      $reg_addressFinal = $reg_address1.", ".$reg_address2;
-    }else if(!empty($reg_address1) && empty($reg_address2)){
-      $reg_addressFinal = $reg_address1;
-    }else if(empty($reg_address1) && !empty($reg_address2)){
-      $reg_addressFinal = $reg_address2;
+    if(!empty($get_ShippingAddress['ship_address1']) && !empty($get_ShippingAddress['ship_address2'])){
+      $reg_addressFinal = $get_ShippingAddress['ship_address1'].", ".$get_ShippingAddress['ship_address2'];
+    }else if(!empty($get_ShippingAddress['ship_address1']) && empty($get_ShippingAddress['ship_address2'])){
+      $reg_addressFinal = $get_ShippingAddress['ship_address1'];
+    }else if(empty($get_ShippingAddress['ship_address1']) && !empty($get_ShippingAddress['ship_address2'])){
+      $reg_addressFinal = $get_ShippingAddress['ship_address2'];
     }else{
-      if(!empty($get_ShippingAddress['ship_address1']) && !empty($get_ShippingAddress['ship_address2'])){
-        $reg_addressFinal = $get_ShippingAddress['ship_address1'].", ".$get_ShippingAddress['ship_address2'];
-      }else if(!empty($get_ShippingAddress['ship_address1']) && empty($get_ShippingAddress['ship_address2'])){
-        $reg_addressFinal = $get_ShippingAddress['ship_address1'];
-      }else if(empty($get_ShippingAddress['ship_address1']) && !empty($get_ShippingAddress['ship_address2'])){
-        $reg_addressFinal = $get_ShippingAddress['ship_address2'];
+      $reg_addressFinal = '';
+      if(!empty($reg_address1) && !empty($reg_address2)){
+        $reg_addressFinal = $reg_address1.", ".$reg_address2;
+      }else if(!empty($reg_address1) && empty($reg_address2)){
+        $reg_addressFinal = $reg_address1;
+      }else if(empty($reg_address1) && !empty($reg_address2)){
+        $reg_addressFinal = $reg_address2;
       }else{
         $reg_addressFinal = '';
       }
@@ -875,16 +1856,23 @@ class CheckoutController extends Controller{
     if(!empty($reg_razonsocial)){
       $reg_razonsocialFinal = $reg_razonsocial;
     }else{
-      $reg_razonsocialFinal = Auth::user()->reg_razonsocial;
+      if(Auth::user()->reg_razonsocial || Auth::user()->reg_razonsocial != ""){
+        $reg_razonsocialFinal = Auth::user()->reg_razonsocial;
+      }else{
+        $reg_razonsocialFinal = Auth::user()->first_name . " " . Auth::user()->last_name;
+      }
     }
 
     // MONTO DE DELIVERY
     $ammountDeliveryShipping = (isset($get_ShippingAddress['ship_amountaddress']) && !empty($get_ShippingAddress['ship_amountaddress'])) ? $get_ShippingAddress['ship_amountaddress'] : 0;
 
+    config(['app.timezone' => 'America/Lima']);
+    date_default_timezone_set('America/Lima');
+
     $get_SessionUserInfo = [
-      'date' => date('Y/m/d H:i:s'),
+      'date' => date('Y/m/d h:i:s A'),
       'client' => $reg_razonsocialFinal,
-      'name' => Auth::user()->first_name . Auth::user()->last_name,
+      'name' => Auth::user()->first_name . " " . Auth::user()->last_name,
       'ruc' => (isset(Auth::user()->reg_ruc) && !empty(Auth::user()->reg_ruc))? Auth::user()->reg_ruc : 'No especificado',
       'user' => (isset(Auth::user()->email) && !empty(Auth::user()->email))? Auth::user()->email : 'No especificado',
       'address' => $reg_addressFinal,
@@ -903,16 +1891,32 @@ class CheckoutController extends Controller{
       'delivery' => PriceHelper::setCurrencyPrice($ammountDeliveryShipping),
       'totalNeto' => PriceHelper::setCurrencyPrice($totalNeto)
     ];
+    $setting = Setting::first();
+    $getSettingsInfo = [
+      'site_title' => $setting->title,
+      'site_ruc' => $setting->ruc,
+      'site_working-hours' => [
+        'init' => $setting->friday_start,
+        'end' => $setting->friday_end
+      ],
+      'site_weekend' => [
+        'init' => $setting->satureday_start,
+        'end' => $setting->satureday_end
+      ]
+    ];
 
     $dataPDF = [
       "billing_address" => $get_BillingAddress,
       "shipping_address" => $get_ShippingAddress,
       "session_cart" => $get_SessionCartFormat,
       "session_cartSubtotal" => $get_SessionCartSubtotal,
-      "session_userInfo" => $get_SessionUserInfo
+      "session_userInfo" => $get_SessionUserInfo,
+      "system_settinginfo" => $getSettingsInfo,
+      "getUltimateGenCodeOrder" => $nextIdGenCode
     ];
     
-    return PDF::loadView('front.checkout.gen_pdforderpreview', compact('dataPDF'))
+    return PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
+          ->loadView('front.checkout.gen_pdforderpreview', compact('dataPDF'))
           ->setPaper('A4', 'landscape')
           ->stream('ejemplo.pdf', array('Attachment' => true))
           ->header('Content-Type', 'application/pdf');

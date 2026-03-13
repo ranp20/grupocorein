@@ -2,44 +2,81 @@
 <tr id="product-bulk-delete">
   <td><input type="checkbox" class="bulk-item" value="{{$data->id}}"></td>
   <td>
-    <img src="{{ $data->thumbnail ? asset('assets/images/'.$data->thumbnail) : asset('assets/images/placeholder.png') }}" alt="Image Not Found">
+    <a class="link_viewTargetBlankImg" href="{{ $data->photo ? asset('assets/images/items/'.$data->photo) : asset('assets/images/placeholder.png') }}" target="_blank">
+      <img src="{{ $data->photo ? asset('assets/images/items/'.$data->photo) : asset('assets/images/placeholder.png') }}" alt="Image Not Found">
+    </a>
   </td>
   <td>
     {{ $data->name }}
   </td>
   <td>
-    @if($data->sections_id != 0)
-    @php
-    $newPrice = 0;
-    if($data->on_sale_price != 0){
-      $newPrice = $data->on_sale_price;
-    }else if($data->special_offer_price != 0){
-      $newPrice = $data->special_offer_price;
-    }else{
-      $newPrice = $data->discount_price;
-    }
-    @endphp
-    @endif
-    {{ PriceHelper::adminCurrencyPrice($newPrice) }}
+    {{ $data->sku }}
   </td>
   <td>
+    @php
+    $newPrice = 0;
+    @endphp
     @if($data->sections_id != 0)
+      @php
+      if($data->on_sale_price != 0){
+        $newPrice = $data->on_sale_price;
+      }else if($data->special_offer_price != 0){
+        $newPrice = $data->special_offer_price;
+      }else{
+        $newPrice = $data->discount_price;
+      }
+      @endphp
+    @else
+      @php
+        $newPrice = $data->discount_price;
+      @endphp
+    @endif
+    <span>{{ PriceHelper::adminCurrencyPrice($newPrice) }}</span>
+  </td>
+  <td>
+    @php
+    $brandName = DB::table('brands')->where('id', $data->brand_id)->get();
+    @endphp
+    @foreach($brandName as $k => $v)
+    {{ $v->name }}
+    @endforeach
+    
+  </td>
+  <td>
     @php
     $nameSection = "";
     $nameSectionClassSpan = "";
-    if($data->sections_id == 1){
-      $nameSection = "En promoción";
-      $nameSectionClassSpan = "sptxt_prod-prom";
-    }else if($data->sections_id == 2){
-      $nameSection = "Oferta Especial";
-      $nameSectionClassSpan = "sptxt_prod-offspecial";
-    }else{
-      $nameSection = "Normal";
-      $nameSectionClassSpan = "sptxt_prod-normal";
-    }
     @endphp
+    @if($data->sections_id != 0)
+      @php
+        if($data->sections_id == 1){
+          $nameSection = __('On sale');
+          $nameSectionClassSpan = "sptxt_prod-prom";
+        }else if($data->sections_id == 2){
+          $nameSection = __('Special offer');
+          $nameSectionClassSpan = "sptxt_prod-offspecial";
+        }else{
+          $nameSection = __('Normal');
+          $nameSectionClassSpan = "sptxt_prod-normal";
+        }
+      @endphp
+    @else
+      @php
+        $nameSection = "Normal";
+        $nameSectionClassSpan = "sptxt_prod-normal";
+      @endphp
     @endif
     <span class="{{$nameSectionClassSpan}}">{{ $nameSection }}</span>
+  </td>
+  <td>
+    <?php
+      config(['app.timezone' => 'America/Lima']);
+      date_default_timezone_set('America/Lima');
+      $lastDateUpdatedDate = date("Y/m/d", strtotime($data->updated_at));
+      $lastDateUpdatedHour = date("h:i:s A", strtotime($data->updated_at));
+      $lastDateUpdatedFormat = __('Last modification').' '.$lastDateUpdatedDate.' '.__('at').' '.$lastDateUpdatedHour;
+    ?>
+    <span>{{ $lastDateUpdatedFormat }}</span>
   </td>
   <td>
     <div class="dropdown">
@@ -73,9 +110,11 @@
   </td>
   -->
   --}}
-  <td class="d-tr_none">
-    {{$data->sap_code}} 
-  </td>
+  {{--
+  <!-- <td class="d-tr_none">
+    <span>{{$data->sap_code}}</span>
+  </td> -->
+  --}}
   <td>
     <div class="dropdown">
       <button class="btn btn-secondary btn-sm  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

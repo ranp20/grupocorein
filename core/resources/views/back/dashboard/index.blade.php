@@ -28,7 +28,7 @@
       <div class="card card-stats card-round">
         <div class="card-body ">
           <div class="row align-items-center">
-            <div class="col-icon">
+            <div class="col-icon p-0">
               <div class="icon-big text-center icon-success bubble-shadow-small">
                 <i class="fas fa-shopping-cart"></i>
               </div>
@@ -47,7 +47,7 @@
       <div class="card card-stats card-round">
         <div class="card-body ">
           <div class="row align-items-center">
-            <div class="col-icon">
+            <div class="col-icon p-0">
               <div class="icon-big text-center icon-success bubble-shadow-small">
                 <i class="fas fa-shopping-cart"></i>
               </div>
@@ -66,7 +66,7 @@
       <div class="card card-stats card-round">
         <div class="card-body ">
           <div class="row align-items-center">
-            <div class="col-icon">
+            <div class="col-icon p-0">
               <div class="icon-big text-center icon-success bubble-shadow-small">
                 <i class="fas fa-shopping-cart"></i>
               </div>
@@ -85,7 +85,7 @@
       <div class="card card-stats card-round">
         <div class="card-body ">
           <div class="row align-items-center">
-            <div class="col-icon">
+            <div class="col-icon p-0">
               <div class="icon-big text-center icon-success bubble-shadow-small">
               <i class="fas fa-shopping-cart"></i>
               </div>
@@ -104,7 +104,7 @@
       <div class="card card-stats card-round">
         <div class="card-body ">
           <div class="row align-items-center">
-            <div class="col-icon">
+            <div class="col-icon p-0">
               <div class="icon-big text-center icon-secondary  bubble-shadow-small">
                 <i class="far fa-chart-bar"></i>
               </div>
@@ -123,7 +123,7 @@
       <div class="card card-stats card-round">
         <div class="card-body ">
           <div class="row align-items-center">
-            <div class="col-icon">
+            <div class="col-icon p-0">
               <div class="icon-big text-center icon-secondary  bubble-shadow-small">
                 <i class="far fa-chart-bar"></i>
               </div>
@@ -142,7 +142,7 @@
       <div class="card card-stats card-round">
         <div class="card-body ">
           <div class="row align-items-center">
-            <div class="col-icon">
+            <div class="col-icon p-0">
               <div class="icon-big text-center icon-secondary  bubble-shadow-small">
                 <i class="far fa-chart-bar"></i>
               </div>
@@ -161,7 +161,7 @@
       <div class="card card-stats card-round">
         <div class="card-body ">
           <div class="row align-items-center">
-            <div class="col-icon">
+            <div class="col-icon p-0">
               <div class="icon-big text-center icon-secondary  bubble-shadow-small">
               <i class="far fa-chart-bar"></i>
               </div>
@@ -180,7 +180,7 @@
       <div class="card card-stats card-round">
         <div class="card-body ">
           <div class="row align-items-center">
-            <div class="col-icon">
+            <div class="col-icon p-0">
               <div class="icon-big text-center icon-danger  bubble-shadow-small">
                 <i class="fas fa-money-bill-wave"></i>
               </div>
@@ -199,7 +199,7 @@
         <div class="card card-stats card-round">
             <div class="card-body ">
                 <div class="row align-items-center">
-                    <div class="col-icon">
+                    <div class="col-icon p-0">
                         <div class="icon-big text-center icon-danger  bubble-shadow-small">
                             <i class="fas fa-money-bill-wave"></i>
                         </div>
@@ -219,7 +219,7 @@
         <div class="card card-stats card-round">
             <div class="card-body ">
                 <div class="row align-items-center">
-                    <div class="col-icon">
+                    <div class="col-icon p-0">
                         <div class="icon-big text-center icon-danger  bubble-shadow-small">
                             <i class="fas fa-money-bill-wave"></i>
                         </div>
@@ -239,7 +239,7 @@
         <div class="card card-stats card-round">
             <div class="card-body ">
                 <div class="row align-items-center">
-                    <div class="col-icon">
+                    <div class="col-icon p-0">
                         <div class="icon-big text-center icon-danger  bubble-shadow-small">
                             <i class="fas fa-money-bill-wave"></i>
                         </div>
@@ -262,7 +262,7 @@
             <div class="card card-stats card-round">
                 <div class="card-body ">
                     <div class="row align-items-center">
-                        <div class="col-icon">
+                        <div class="col-icon p-0">
                             <div class="icon-big text-center icon-info bubble-shadow-small">
                                 <i class="far fa-check-circle"></i>
                             </div>
@@ -282,7 +282,7 @@
         <div class="card card-stats card-round">
             <div class="card-body ">
                 <div class="row align-items-center">
-                    <div class="col-icon">
+                    <div class="col-icon p-0">
                         <div class="icon-big text-center icon-info bubble-shadow-small">
                             <i class="far fa-check-circle"></i>
                         </div>
@@ -304,7 +304,7 @@
         <div class="card card-stats card-round">
             <div class="card-body ">
                 <div class="row align-items-center">
-                    <div class="col-icon">
+                    <div class="col-icon p-0">
                         <div class="icon-big text-center icon-info bubble-shadow-small">
                             <i class="far fa-check-circle"></i>
                         </div>
@@ -324,7 +324,7 @@
         <div class="card card-stats card-round">
             <div class="card-body ">
                 <div class="row align-items-center">
-                    <div class="col-icon">
+                    <div class="col-icon p-0">
                         <div class="icon-big text-center icon-info bubble-shadow-small">
                             <i class="far fa-check-circle"></i>
                         </div>
@@ -344,7 +344,7 @@
         <div class="card card-stats card-round">
             <div class="card-body ">
                 <div class="row align-items-center">
-                    <div class="col-icon">
+                    <div class="col-icon p-0">
                         <div class="icon-big text-center icon-info bubble-shadow-small">
                             <i class="far fa-check-circle"></i>
                         </div>
@@ -364,7 +364,7 @@
         <div class="card card-stats card-round">
             <div class="card-body ">
                 <div class="row align-items-center">
-                    <div class="col-icon">
+                    <div class="col-icon p-0">
                         <div class="icon-big text-center icon-info bubble-shadow-small">
                             <i class="far fa-check-circle"></i>
                         </div>
@@ -385,7 +385,7 @@
         <div class="card card-stats card-round">
             <div class="card-body ">
                 <div class="row align-items-center">
-                    <div class="col-icon">
+                    <div class="col-icon p-0">
                         <div class="icon-big text-center icon-info bubble-shadow-small">
                             <i class="far fa-check-circle"></i>
                         </div>
@@ -407,7 +407,7 @@
         <div class="card card-stats card-round">
             <div class="card-body ">
                 <div class="row align-items-center">
-                    <div class="col-icon">
+                    <div class="col-icon p-0">
                         <div class="icon-big text-center icon-info bubble-shadow-small">
                             <i class="far fa-check-circle"></i>
                         </div>
@@ -427,7 +427,7 @@
         <div class="card card-stats card-round">
             <div class="card-body ">
                 <div class="row align-items-center">
-                    <div class="col-icon">
+                    <div class="col-icon p-0">
                         <div class="icon-big text-center icon-info bubble-shadow-small">
                             <i class="far fa-check-circle"></i>
                         </div>
@@ -448,7 +448,7 @@
         <div class="card card-stats card-round">
             <div class="card-body ">
                 <div class="row align-items-center">
-                    <div class="col-icon">
+                    <div class="col-icon p-0">
                         <div class="icon-big text-center icon-info bubble-shadow-small">
                             <i class="far fa-check-circle"></i>
                         </div>
@@ -468,7 +468,7 @@
         <div class="card card-stats card-round">
             <div class="card-body ">
                 <div class="row align-items-center">
-                    <div class="col-icon">
+                    <div class="col-icon p-0">
                         <div class="icon-big text-center icon-info bubble-shadow-small">
                             <i class="far fa-check-circle"></i>
                         </div>
@@ -487,7 +487,7 @@
         <div class="card card-stats card-round">
             <div class="card-body ">
                 <div class="row align-items-center">
-                    <div class="col-icon">
+                    <div class="col-icon p-0">
                         <div class="icon-big text-center icon-info  bubble-shadow-small">
                             <i class="far fa-check-circle"></i>
                         </div>
@@ -546,20 +546,22 @@
                 </thead>
                 <tbody>
                   @foreach($recentOrders as $data)
-                  <tr>
-                    <td>
-                      <a href="{{route('back.user.show',$data->user_id)}}">{{ $data->user->displayName()}}</a>
-                    </td>
-                    <td>
-                      <a href="{{route('back.order.invoice',$data->id)}}">{{ $data->transaction_number}}</a>
-                    </td>
-                    <td>
-                      {{ $data->payment_method}}
-                    </td>
-                    <td>
-                      {{$data->currency_sign}}{{PriceHelper::OrderTotal($data)}}
-                    </td>
-                  </tr>
+                    @if($data->user_id)
+                    <tr>
+                      <td>
+                        <a href="{{route('back.user.show',$data->user_id)}}">{{ $data->user->displayName()}}</a>
+                      </td>
+                      <td>
+                        <a href="{{route('back.order.invoice',$data->id)}}">{{ $data->transaction_number}}</a>
+                      </td>
+                      <td>
+                        {{ $data->payment_method}}
+                      </td>
+                      <td>
+                        {{$data->currency_sign}}{{PriceHelper::OrderTotal($data)}}
+                      </td>
+                    </tr>
+                    @endif
                   @endforeach
                 </tbody>
               </table>

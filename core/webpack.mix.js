@@ -1,4 +1,6 @@
-const mix = require('laravel-mix');
+// const mix = require('laravel-mix');
+// const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+// const TerserPlugin = require('terser-webpack-plugin');
 
 /*
  |--------------------------------------------------------------------------
@@ -11,5 +13,40 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css');
+// Primera compilación para la carpeta 'public/assets/js'
+// mix.js('nocompiled/js/app.js', 'public/js')
+//     .sass('nocompiled/sass/app.scss', 'public/css')
+//     .webpackConfig({
+//         optimization: {
+//             minimize: true,
+//             minimizer: [
+//                 new TerserPlugin({
+//                     terserOptions: {
+//                         compress: {
+//                             drop_console: true, // Elimina las llamadas a console.*
+//                         },
+//                     },
+//                 }),
+//                 new CssMinimizerPlugin(),
+//             ],
+//         },
+//     });
+
+// Segunda compilación para la carpeta 'public/backup/js'
+// mix.js('nocompiled/js/app.js', 'public/js')
+//     .sass('nocompiled/sass/app.scss', 'public/css')
+//     .webpackConfig({
+//         optimization: {
+//             minimize: true,
+//             minimizer: [
+//                 new TerserPlugin({
+//                     terserOptions: {
+//                         compress: {
+//                             drop_console: true, // Elimina las llamadas a console.*
+//                         },
+//                     },
+//                 }),
+//                 new CssMinimizerPlugin(),
+//             ],
+//         },
+//     });

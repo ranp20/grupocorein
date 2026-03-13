@@ -25,6 +25,9 @@
           <div class="padding-top-2x mt-2 hidden-lg-up"></div>
           <form class="row" action="{{route('user.profile.update')}}" method="POST" enctype="multipart/form-data">
             @csrf
+            <div>
+              <h5>{{__('Personal information')}}</h5>
+            </div>
             <div class="col-md-6">
               <div class="form-group">
                 <label for="avater" class="form-label">{{__('Avater Photo')}}</label>
@@ -82,6 +85,47 @@
                 @error('password')
                 <p class="text-danger">{{$message}}</p>
                 @enderror
+              </div>
+            </div>
+            <div class="col-12"><hr class="mt-2 mb-3"></div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="reg-address1">{{__('Address 1')}} *</label>
+                <input class="form-control" name="reg_address1" placeholder="{{ (isset($user->reg_address1) && $user->reg_address1 != '') ? $user->reg_address1 : 'Dirección 1' }}" value="{{ $user->reg_address1 }}" type="text" id="reg-address1">
+                @error('reg_address1')
+                <p class="text-danger">{{$message}}</p>
+                @endif
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="reg-address2">{{__('Address 2 (Optional)')}} </label>
+                <input class="form-control" name="reg_address2" placeholder="{{ (isset($user->reg_address2) && $user->reg_address2 != '') ? $user->reg_address2 : 'Dirección 2' }}" value="{{ $user->reg_address2 }}" type="text" id="reg-address2">
+                @error('reg_address2')
+                <p class="text-danger">{{$message}}</p>
+                @endif
+              </div>
+            </div>
+            <div class="col-12"><hr class="mt-2 mb-3"></div>
+            <div>
+              <h5>{{__('Enterprise data')}}</h5>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="reg-ruc">RUC</label>
+                <input class="form-control" type="text" data-valformat="onlydigits" name="reg_ruc" placeholder="RUC" id="reg-ruc" value="{{ $user->reg_ruc }}" maxlength="11">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="reg-razosocial">Razón social</label>
+                <input class="form-control" type="text" name="reg_razonsocial" placeholder="Razón social" id="reg-razosocial" value="{{ $user->reg_razonsocial }}">
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label for="reg-addressfiscal">Dirección Fiscal</label>
+                <input class="form-control" type="text" name="reg_addressfiscal" placeholder="Dirección Fiscal" id="reg-addressfiscal" value="{{ $user->reg_addressfiscal }}">
               </div>
             </div>
             <div class="col-12">

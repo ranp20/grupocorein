@@ -6,6 +6,9 @@
       <div class="d-sm-flex align-items-center justify-content-between">
         <h3 class="mb-0 bc-title"><b>{{ __('All Products') }}</b></h3>
         <div class="right">
+          <a class="btn btn-primary btn-sm d-inline-block" href="{{ route('back.item.add') }}">
+            <span class="sub-item">{{ __('Add Product') }}</span>
+          </a>
           <a href="{{route('back.csv.export')}}" class="btn btn-info btn-sm d-inline-block">{{__('CSV Export')}}</a>
           <form class="d-inline-block" action="{{route('back.bulk.delete')}}" method="get">
             <input type="hidden" value="" name="ids[]" id="bulk_delete">
@@ -30,7 +33,7 @@
           <div class="row">
             <div class="col-lg-3 col-md-4 col-sm-6" >
               <div class="form-group px-0">
-                <select class="form-control" name="item_type">
+                <select class="form-control form-select" name="item_type">
                   <option value="">{{__('All Product')}}</option>
                   <option value="normal" {{request()->input('item_type') == 'normal' ? 'selected' : ''}}>{{__('Physical Product')}}</option>
                   {{--
@@ -45,8 +48,8 @@
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6" >
               <div class="form-group px-0">
-                <select class="form-control" name="is_type">
-                  <option  disabled>{{__('Select Type')}}</option>
+                <select class="form-control form-select" name="is_type">
+                  <option disabled>{{__('Select Type')}}</option>
                   <option value="">{{__('All Type')}}</option>
                   <option value="undefine" {{request()->input('is_type') == 'undefine' ? 'selected' : ''}}>{{__('Undefine Product')}}</option>
                   <option value="new" {{request()->input('is_type') == 'new' ? 'selected' : ''}}>{{__('New Arrival')}}</option>
@@ -59,7 +62,7 @@
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6" >
               <div class="form-group px-0">
-                <select class="form-control" name="category_id">
+                <select class="form-control form-select" name="category_id">
                   <option disabled>{{__('Select Category')}}</option>
                   <option value="">{{__('All Category')}}</option>
                   @foreach(DB::table('categories')->whereStatus(1)->get() as $cat)
@@ -70,7 +73,7 @@
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6" >
               <div class="form-group px-0">
-                <select class="form-control" name="orderby">
+                <select class="form-control form-select" name="orderby">
                   <option disabled>{{__('Select Order')}}</option>
                   <option value="asc" {{request()->input('orderby') == 'asc' ? 'selected' : ''}}>{{__('Ascending order')}}</option>
                   <option value="desc" {{request()->input('orderby') == 'desc' ? 'selected' : ''}}>{{__('Descending order')}}</option>
@@ -78,14 +81,25 @@
               </div>
             </div>
             <!-- NUEVO CONTENIDO (INICIO) -->
-            <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="col-lg-3 col-md-4 col-sm-6" >
               <div class="form-group px-0">
-                <input type="text" class="form-control" name="sku" id="sku" maxlength="200" placeholder="Código de producto">
+                <select class="form-control form-select" name="coupon_id">
+                  <option disabled>{{__('Select coupon')}}</option>
+                  <option value="">{{__('All Coupons')}}</option>
+                  @foreach(DB::table('tbl_coupons')->whereStatus(1)->get() as $coupon)
+                  <option value="{{ $coupon->id }}" {{request()->input('coupon_id') == $coupon->id ? 'selected' : ''}}>{{ $coupon->name }}</option>
+                  @endforeach
+                </select>
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group px-0">
-                <input type="text" class="form-control" name="sap_code" id="sap_code" maxlength="200" placeholder="Código SAP">
+                <input type="text" class="form-control" name="sku" id="sku" maxlength="200" placeholder="{{ __('Product code') }}">
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+              <div class="form-group px-0">
+                <input type="text" class="form-control" name="sap_code" id="sap_code" maxlength="200" placeholder="{{ __('SAP Code') }}">
               </div>
             </div>
             <!-- NUEVO CONTENIDO (FIN) -->
@@ -98,20 +112,24 @@
         </div>
       </form>
       <br>
-			<div class="gd-responsive-table">
-				<table class="table table-bordered table-striped" id="admin-table" width="100%" cellspacing="0">
+			<div class="gd-responsive-table" id="tblitems-custom">
+				<table class="table table-striped table-bordered" id="admin-table" width="100%" cellspacing="0">
+				<!-- <table class="table table-striped table-bordered" id="admin-itemsTable" width="100%" cellspacing="0"> -->
 					<thead>
 						<tr>
-							<th> <input type="checkbox" data-target="product-bulk-delete" class="form-control bulk_all_delete"> </th>
+							<th class="d-sorting_none"><input type="checkbox" data-target="product-bulk-delete" class="form-control bulk_all_delete"></th>
 							<th>{{ __('Image') }}</th>
               <th width="30%">{{ __('Name') }}</th>
+              <th>{{ __('SKU') }}</th>
               <th>{{ __('Price') }}</th>
-              <th>{{ __('Sección') }}</th>
+              <th>{{ __('Brand') }}</th>
+              <th>{{ __('Section') }}</th>
+              <th>{{ __('Date') }}</th>
 							<th>{{ __('Status') }}</th>
 							<!-- <th>{{ __('Type') }}</th> -->
 							<!-- <th>{{ __('Item Type') }}</th> -->
 							<!-- NUEVO CONTENIDO (INICIO) -->
-							<th class="d-tr_none">{{ __('SAP Code') }}</th>
+							{{-- <!-- <th class="d-tr_none">{{ __('SAP Code') }}</th> --> --}}
 							<!-- NUEVO CONTENIDO (FIN) -->
 							<th>{{ __('Actions') }}</th>
 						</tr>
@@ -120,11 +138,13 @@
             @include('back.item.table',compact('datas'))
 					</tbody>
 				</table>
+        <div class="pagination-wrapper">
+          {{ $datas->links() }}
+        </div>
 			</div>
 		</div>
 	</div>
 </div>
-{{-- DELETE MODAL --}}
 <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="confirm-deleteModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -148,5 +168,4 @@
     </div>
   </div>
 </div>
-{{-- DELETE MODAL ENDS --}}
 @endsection

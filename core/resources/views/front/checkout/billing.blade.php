@@ -111,7 +111,7 @@
               <div class="form-group">
                 <div class="custom-control custom-checkbox">
                   <input class="custom-control-input" type="checkbox" id="trams__condition" >
-                  <label class="custom-control-label" for="trams__condition">Este sitio está protegido por reCAPTCHA y el <a href="{{$setting->policy_link}}" target="_blank">Privacy Policy</a> y <a href="{{$setting->terms_link}}" target="_blank">Términos de servicio</a> aplicar.</label>
+                  <label class="custom-control-label" for="trams__condition">Este sitio está protegido por reCAPTCHA y el <a href="{{$setting->policy_link}}" target="_blank">Política de privacidad</a> y <a href="{{$setting->terms_link}}" target="_blank">Términos de servicio</a> aplicar.</label>
                 </div>
               </div>
               @endif

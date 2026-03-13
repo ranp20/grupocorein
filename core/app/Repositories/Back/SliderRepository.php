@@ -1,61 +1,63 @@
 <?php
-
 namespace App\Repositories\Back;
-
 use App\{
-    Models\Slider,
-    Helpers\ImageHelper
+  Models\Slider,
+  Helpers\ImageHelper
 };
-
-class SliderRepository
-{
-
-    /**
-     * Store slider.
-     *
-     * @param  \App\Http\Requests\ImageStoreRequest  $request
-     * @return void
-     */
-
-    public function store($request)
-    {
-        $input = $request->all();
-        $input['photo'] = ImageHelper::handleUploadedImage($request->file('photo'),'assets/images');
-        $input['logo'] = ImageHelper::handleUploadedImage($request->file('logo'),'assets/images');
-        Slider::create($input);
+class SliderRepository{
+  public function store($request){
+    $input = $request->all();
+    $content_check = ($request->has('content_check') && $request->content_check == 1) ? 'false' : 'true';
+    $content_alignment = ($request->has('content_alignment')) ? $request->content_alignment : '';
+    $content_title = ($request->has('content_title')) ? $request->content_title : 'Banner de prueba 001';
+    $content_description = ($request->has('content_description')) ? $request->content_description : 'Descripción del banner (default)';
+    $content_btncheck = ($request->has('content_btncheck')) ? $request->content_btncheck : 'off';
+    $content_btn_title = ($request->has('content_btn_title')) ? $request->content_btn_title : '';
+    $content_btn_link = ($request->has('content_btn_link')) ? $request->content_btn_link : '';
+    $input['content_check'] = $content_check;
+    $content_config = [
+      'content_alignment' => $content_alignment,
+      'content_title' => $content_title,
+      'content_description' => $content_description,
+      'content_btncheck' => $content_btncheck,
+      'content_btn_title' => $content_btn_title,
+      'content_btn_link' => $content_btn_link
+    ];
+    $input['content_info'] = json_encode($content_config, TRUE);
+    $input['photo'] = ImageHelper::handleUploadedImageSlider($request->file('photo'),'assets/images/sliders');
+    $input['logo'] = ImageHelper::handleUploadedImageSlider($request->file('logo'),'assets/images/sliders');
+    Slider::create($input);
+  }
+  public function update($slider, $request){
+    $input = $request->all();
+    $content_check = ($request->has('content_check') && $request->content_check == 1) ? 'false' : 'true';
+    $content_alignment = ($request->has('content_alignment')) ? $request->content_alignment : '';
+    $content_title = ($request->has('content_title')) ? $request->content_title : 'Banner de prueba 001';
+    $content_description = ($request->has('content_description')) ? $request->content_description : 'Descripción del banner 001';
+    $content_btncheck = ($request->has('content_btncheck')) ? $request->content_btncheck : 'off';
+    $content_btn_title = ($request->has('content_btn_title')) ? $request->content_btn_title : 'Click Aquí';
+    $content_btn_link = ($request->has('content_btn_link')) ? $request->content_btn_link : '#';
+    $input['content_check'] = $content_check;
+    $content_config = [
+      'content_alignment' => $content_alignment,
+      'content_title' => $content_title,
+      'content_description' => $content_description,
+      'content_btncheck' => $content_btncheck,
+      'content_btn_title' => $content_btn_title,
+      'content_btn_link' => $content_btn_link
+    ];
+    $input['content_info'] = json_encode($content_config, TRUE);
+    if($file = $request->file('photo')){
+      $input['photo'] = ImageHelper::handleUpdatedUploadedImageSlider($file,'/assets/images/sliders/',$slider,'/assets/images/sliders/','photo');
     }
-
-    /**
-     * Update slider.
-     *
-     * @param  \App\Http\Requests\ImageUpdateRequest  $request
-     * @return void
-     */
-
-    public function update($slider, $request)
-    {
-        $input = $request->all();
-        if ($file = $request->file('photo')) {
-            $input['photo'] = ImageHelper::handleUpdatedUploadedImage($file,'/assets/images/',$slider,'/assets/images/','photo');
-        }
-        if ($file = $request->file('logo')) {
-            $input['logo'] = ImageHelper::handleUpdatedUploadedImage($file,'/assets/images/',$slider,'/assets/images/','logo');
-        }
-        $slider->update($input);
+    if ($file = $request->file('logo')){
+      $input['logo'] = ImageHelper::handleUpdatedUploadedImageSlider($file,'/assets/images/sliders/',$slider,'/assets/images/sliders/','logo');
     }
-
-    /**
-     * Delete slider.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-
-    public function delete($slider)
-    {
-        ImageHelper::handleDeletedImage($slider,'photo','assets/images/');
-        ImageHelper::handleDeletedImage($slider,'logo','assets/images/');
-        $slider->delete();
-    }
-
+    $slider->update($input);
+  }
+  public function delete($slider){
+    ImageHelper::handleDeletedImage($slider,'photo','assets/images/sliders/');
+    ImageHelper::handleDeletedImage($slider,'logo','assets/images/sliders/');
+    $slider->delete();
+  }
 }

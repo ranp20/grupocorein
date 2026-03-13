@@ -19,27 +19,30 @@ function renderStarRating($rating, $maxRating = 5){
 <div class="s-r-inner">
   @if(isset($items) && count($items) > 0)
     @foreach ($items as $item)
-    <div class="product-card lSearchM__m__l p-col py-0 mb-0">
-      <a class="product-thumb" href="{{route('front.product',$item->slug)}}">
-        <img class="lazy" alt="Product" src="{{asset('assets/images/'.$item->thumbnail)}}" style="">
-      </a>
-      <div class="product-card-body">
-        <h3 class="product-title">
-          <a href="{{route('front.product',$item->slug)}}">
-            {{ strlen(strip_tags($item->name)) > 35 ? substr(strip_tags($item->name), 0, 35) : strip_tags($item->name) }}
-          </a>
-        </h3>
+    <div class="lSearchM__m__l p-col py-0 mb-0" data-text="{{ $item->name }}">
+      <a class="lSearchM__m__link" href="{{route('front.product',$item->slug)}}">
         {{--
-        <!--
-        <div class="rating-stars">
-          {!! renderStarRating($item->reviews->avg('rating')) !!}
-        </div>
-        -->
+        <!-- <span class="product-thumb">
+          <img class="lazy" alt="Product" src="{{asset('assets/images/items/'.$item->photo)}}" width="100" height="100">
+        </span> -->
         --}}
-        <h4 class="product-price">
-          {{PriceHelper::grandCurrencyPrice($item)}}
-        </h4>
-      </div>
+        <span class="product-card-body">
+          <span class="product-title">
+            {{-- <!-- <span>{{ strlen(strip_tags($item->name)) > 35 ? substr(strip_tags($item->name), 0, 35) : strip_tags($item->name) }}</span> --> --}}
+            <span>{{ $item->name }}</span>
+          </span>
+          {{--
+          <!--
+          <div class="rating-stars">
+            {!! renderStarRating($item->reviews->avg('rating')) !!}
+          </div>
+          -->
+          <!-- <span class="product-price">
+            {{PriceHelper::grandCurrencyPrice($item)}}
+          </span> -->
+          --}}
+        </span>
+      </a>
     </div>
     @endforeach
   @else

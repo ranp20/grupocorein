@@ -40,8 +40,14 @@
 .toprated-slider.owl-carousel .owl-nav div:hover,
 .btn,
 .footer-social-links a,
-.a2a_kit a
+.a2a_kit a,
+.brand-list::-webkit-scrollbar-thumb,
+.c-contBrandsFiltersByChcks::-webkit-scrollbar-thumb,
+.swiper-pagination-bullet-active
 {
+    background : <?php echo $color?>  !important;
+}
+.letter-all{
     background : <?php echo $color?>  !important;
 }
 
@@ -50,7 +56,9 @@
 .hero-slider > .owl-carousel.dots-inside .owl-dots .owl-dot,
 .widget-title::after,
 .scroll-to-top-btn:hover,
-a.list-group-item::before, .list-group-item-action::before
+a.list-group-item::before, .list-group-item-action::before,
+#c-mtoggSearchMob,
+#c-mtoggSearchMob .site-header, #c-mtoggSearchMob .search-box-wrap
 {
     background-color : <?php echo $color?> !important;
 }
@@ -89,29 +97,39 @@ a.list-group-item::before, .list-group-item-action::before
 .order-table .product-item .product-title > a:hover,
 .list-group-item.active,
 a.list-group-item:hover,
- a.list-group-item:focus, a.list-group-item:active,
- .list-group-item-action:hover,
- .list-group-item-action:focus,
- .list-group-item-action:active,
- .progress-steps li.active .icon,
- .comparison-table .comparison-item .comparison-item-title:hover,
- .site-header .site-menu > ul > li.active > a,
- .breadcrumbs > li > a:hover,
- .faq-box:hover .link,
- .left-category-area .category-list .sub-c-box .title:hover,
- .left-category-area .category-list .sub-c-box .child-category a:hover,
- .section-title .links a:hover, 
- .section-title .links a.active,
- #quick_filter li a:hover,
- #quick_filter li a.active,
- .section-title .right_link:hover,
- .popular-category.theme3 .links a.active,
- .popular-category.theme3 .links a:hover,
- .site-header .search-box-wrap .input-group .serch-result .bottom-area a:hover,
- .shop-view>a,
- .genius-banner .inner-content p,
- .details-page-top-right-content .price-area .main-price,
- .free-shippin-aa
+a.list-group-item:focus, a.list-group-item:active,
+.list-group-item-action:hover,
+.list-group-item-action:focus,
+.list-group-item-action:active,
+.progress-steps li.active .icon,
+.comparison-table .comparison-item .comparison-item-title:hover,
+.site-header .site-menu > ul > li.active > a,
+.breadcrumbs > li > a:hover,
+.faq-box:hover .link,
+.left-category-area .category-list .sub-c-box .title:hover,
+.left-category-area .category-list .sub-c-box .child-category a:hover,
+.section-title .links a:hover, 
+.section-title .links a.active,
+#quick_filter li a:hover,
+#quick_filter li a.active,
+.section-title .right_link:hover,
+.popular-category.theme3 .links a.active,
+.popular-category.theme3 .links a:hover,
+.site-header .search-box-wrap .input-group .serch-result .bottom-area a:hover,
+.shop-view>a,
+.genius-banner .inner-content p,
+.details-page-top-right-content .price-area .main-price,
+.free-shippin-aa,
+.txt-theme,
+.product-sku,
+.titulo-as,
+.lSearchM__m__link .product-price,
+.link-a-menu-login .t-h-dropdown-menu > a .cIcon-profile i,
+.link-a-menu-login .t-h-dropdown-menu > a .cIcon-profile svg,
+.wt-custm--sbtitle,
+.single-service.single-service2 .content h6,
+.swiper-button-next, .swiper-button-prev,
+.categories-f__desing-2 .wrapper .card-grid-item__title
 {
     color : <?php echo $color?> !important;
 }
@@ -139,11 +157,6 @@ a.list-group-item:hover,
     background-color:  <?php echo $color?>;
 }
 
-.category-scroll {
-    scrollbar-color:  <?php echo $color?> #e4e4e4;
-    scrollbar-width: thin;
-}
-
 .btn-outline-primary {
     border-color: <?php echo $color?>;
     color: <?php echo $color?>;
@@ -158,7 +171,8 @@ a.list-group-item:hover,
 }
 .product-card:hover,
 .brand-slider .slider-item a:hover,
-.genius-banner:hover
+.genius-banner:hover,
+.categories-f__desing-2 .wrapper .card-grid-item:hover
 {
     border-color: <?php echo $color?>;
 }

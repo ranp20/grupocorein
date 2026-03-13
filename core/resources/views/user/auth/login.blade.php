@@ -121,6 +121,7 @@
               <div class="form-group">
                 <label for="reg-pass-confirm">{{__('Confirm Password')}}</label>
                 <input class="form-control" type="password" name="password_confirmation" autocomplete="off" spellcheck="false" placeholder="{{__('Confirm Password')}}" id="reg-pass-confirm" required>
+                <span id="mssg_cConfirmTwoPass"></span>
               </div>
             </div>
             @if(old('reg_enterprise') != "" && old('reg_enterprise') == "on")
@@ -191,15 +192,13 @@
               <div class="col-sm-6">
                 <div class="form-group">
                   <label for="reg-departamento">Departamento</label>
-                  <select class="form-control" name="reg_departamento" id="reg-departamento" data-href="${locationsGET + '/provincia'}" required>
-                    ${tmpListDepartamentos}
-                  </select>
+                  <select class="form-control" name="reg_departamento" id="reg-departamento" data-href="" required></select>
                 </div>
               </div>
               <div class="col-sm-6">
                 <div class="form-group">
                   <label for="reg-provincia">Provincia</label>
-                  <select class="form-control" name="reg_provincia" id="reg-provincia" data-href="${locationsGET + '/distrito'}" required></select>
+                  <select class="form-control" name="reg_provincia" id="reg-provincia" data-href="" required></select>
                 </div>
               </div>
               <div class="col-sm-6">

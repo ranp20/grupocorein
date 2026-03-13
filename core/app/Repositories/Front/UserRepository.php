@@ -58,13 +58,11 @@ class UserRepository{
     }else{
       $user = Auth::user();
     }
-    if(isset($input->password) && !empty($input->password) && $input->password != ""){
+    if($request['password'] && isset($input['password']) && !empty($input['password']) && $input['password'] != ""){
       $input['password'] = bcrypt($input['password']);
-      $user->password = $input['password'];
-      $user->update();
     }
     if($file = $request->file('photo')){
-      $input['photo'] = ImageHelper::handleUpdatedUploadedImage($file,'/assets/images',$user,'/assets/images/','photo');
+      $input['photo'] = ImageHelper::handleUpdatedUploadedImageUser($file,'/assets/images/users',$user,'/assets/images/users/','photo');
     }
     if($request->newsletter){
       if(!Subscriber::where('email',$user->email)->exists()){
@@ -75,6 +73,6 @@ class UserRepository{
     }else{
       Subscriber::where('email',$user->email)->delete();
     }
-    $user->fill($input)->save();
+    $user->update($input);
   }
 }

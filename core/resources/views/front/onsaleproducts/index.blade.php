@@ -37,6 +37,14 @@ function renderStarRating($rating,$maxRating=5) {
   $html = $html;
   return $html;
 }
+
+$user_id = 0;
+if(Auth::check()){
+  if(!empty(auth()->user()) || auth()->user() != ""){
+    $user = Auth::user();
+    $user_id = Auth::user()->id;
+  }
+}
 @endphp
 <div class="deal-of-day-section pb-5">
   <div class="container">

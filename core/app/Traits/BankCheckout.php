@@ -17,7 +17,37 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 trait BankCheckout{
+  public function getUltimateIdGenCode($idgencodelast){
+    if($idgencodelast){
+      $idgencode = str_replace(' ','',$idgencodelast->id_gencode);
+      if($idgencode != "" && $idgencode != null){
+        $lastCodeArr = explode('-', $idgencode);
+        $firstGroup = intval($lastCodeArr[0]);
+        $secondGroup = intval($lastCodeArr[1]);
+        if($secondGroup == 9999999){
+          $firstGroup++;
+          $secondGroup = 1;
+        }else{
+          $secondGroup++;
+        }
+      }else{
+        $firstGroup = 1;
+        $secondGroup = 1;
+      }
+    }else{
+      $firstGroup = 1;
+      $secondGroup = 1;
+    }
+    
+    $firstGroupPadded = str_pad($firstGroup, 3, '0', STR_PAD_LEFT);
+    $secondGroupPadded = str_pad($secondGroup, 7, '0', STR_PAD_LEFT);
+    $code = $firstGroupPadded . '-' . $secondGroupPadded;
+    return $code;
+  }
   public function BankSubmit($data){
+    $ultimateIdGenCode = Order::select('id_gencode')->orderBy('id', 'desc')->take(1)->first();
+    $nextIdGenCode = $this->getUltimateIdGenCode($ultimateIdGenCode);
+
     $user = Auth::user();
     $setting = Setting::first();
     $cart = Session::get('cart');
@@ -26,10 +56,9 @@ trait BankCheckout{
     $total = 0;
     $option_price = 0;
     foreach($cart as $key => $item){
-      $total += $item['main_price'] * $item['qty'];
-      
-      if(!empty($item['attribute_price']) && $item['attribute_price'] != ""){
-        // $option_price += $item['attribute_price'];
+      $total += $item['price'] * $item['qty'];
+      if($item['attribute_price'] != "" && count($item['attribute_price']) > 0){
+        $option_price += $item['attribute_price'];
       }
 
       $cart_total = $total + $option_price;
@@ -61,6 +90,7 @@ trait BankCheckout{
     $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
     $grand_total += PriceHelper::StatePrce($data['state_id'],$cart_total);
     $total_amount = PriceHelper::setConvertPrice($grand_total);
+    $orderData['id_gencode'] = $nextIdGenCode;
     $orderData['state'] =  $data['state_id'] ? json_encode(State::findOrFail($data['state_id']),true) : null;
     $orderData['cart'] = json_encode($cart,true);
     $orderData['discount'] = json_encode($discount,true);

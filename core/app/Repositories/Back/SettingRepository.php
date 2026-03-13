@@ -11,27 +11,75 @@ class SettingRepository{
     $image_files = ['logo','favicon','loader','feature_image','announcement','footer_gateway_img','maintainance_image'];
     $social_fields = ['facebook_check','google_check'];
     foreach($image_files as $image_file){
-      if ($file = $request->file($image_file)) {
-        $input[$image_file] = ImageHelper::handleUpdatedUploadedImage($file,'/assets/images',$data,'/assets/images/',$image_file);
+      echo $image_file."<br>";
+      if($file = $request->file($image_file)){
+        if($image_file == "announcement"){
+          $input[$image_file] = ImageHelper::handleUpdatedUploadedImage($file,'/assets/images/announcements',$data,'/assets/images/announcements/',$image_file);
+        }else{
+          $input[$image_file] = ImageHelper::handleUpdatedUploadedImage($file,'/assets/images',$data,'/assets/images/',$image_file);
+        }
       }
+      
+      // if ($file = $request->file($image_file)) {
+      //   $input[$image_file] = ImageHelper::handleUpdatedUploadedImage($file,'/assets/images',$data,'/assets/images/',$image_file);
+      // }
     }
+    // exit();
     if($request->social_icons && $request->social_links){
-      $links = ['icons'=>$request->social_icons,'links'=>$request->social_links];
+      $links = [
+        'icons'=>$request->social_icons,
+        'links'=>$request->social_links
+      ];
       $input['social_link'] = json_encode($links,true);
     }
-    if($request->wtspnumbers_title && $request->wtspnumbers_number){
-      $whatsapp_numbers = [
-        'icons'=>$request->wtspnumbers_icon,
-        'title'=>$request->wtspnumbers_title,
-        'text'=>$request->wtspnumbers_text,
-        'number'=>$request->wtspnumbers_number
-      ];
-      $input['whatsapp_numbers'] = json_encode($whatsapp_numbers,true);
+
+    // echo "<pre>";
+    // print_r($request->all());
+    // echo "</pre>";
+    // exit();
+
+    $whatsAppCollection = [];
+    if(isset($request->wtspnumbersgeneral_title)){
+      foreach($request->wtspnumbersgeneral_title as $k => $v){
+        $whatsAppCollection['whatsapp_numbers']['general'][$k]['title'] = $v;
+      }
+      $input['whatsapp_numbers'] = json_encode($whatsAppCollection);
     }
+    if(isset($request->wtspnumbersgeneral_text)){
+      foreach($request->wtspnumbersgeneral_text as $k => $v){
+        $whatsAppCollection['whatsapp_numbers']['general'][$k]['text'] = $v;
+      }
+      $input['whatsapp_numbers'] = json_encode($whatsAppCollection);
+    }
+    if(isset($request->wtspnumbersgeneral_number)){
+      foreach($request->wtspnumbersgeneral_number as $k => $v){
+        $whatsAppCollection['whatsapp_numbers']['general'][$k]['number'] = str_replace(" ","",$v);
+      }
+      $input['whatsapp_numbers'] = json_encode($whatsAppCollection);
+    }
+    if(isset($request->wtspnumbers_title)){
+      foreach($request->wtspnumbers_title as $k => $v){
+        $whatsAppCollection['whatsapp_numbers']['in_product'][$k]['title'] = $v;
+      }
+      $input['whatsapp_numbers'] = json_encode($whatsAppCollection);
+    }
+    if(isset($request->wtspnumbers_text)){
+      foreach($request->wtspnumbers_text as $k => $v){
+        $whatsAppCollection['whatsapp_numbers']['in_product'][$k]['text'] = $v;
+      }
+      $input['whatsapp_numbers'] = json_encode($whatsAppCollection);
+    }
+    if(isset($request->wtspnumbers_number)){
+      foreach($request->wtspnumbers_number as $k => $v){
+        $whatsAppCollection['whatsapp_numbers']['in_product'][$k]['number'] = str_replace(" ","",$v);
+      }
+      $input['whatsapp_numbers'] = json_encode($whatsAppCollection);
+    }
+    // $input['whatsapp_numbers'] = json_encode($whatsAppCollection);
     // message text json encode
     if(isset($input['twilio_section'])){
       $input['twilio_section'] = json_encode($input['twilio_section'],true);
-    }   
+    }
     $setting_fields = [
       'is_attribute_search',
       'is_range_search',
@@ -50,6 +98,13 @@ class SettingRepository{
       'is_privacy_trams',
       'is_guest_checkout'
     ];
+    /*
+    echo "<pre>";
+    print_r($input);
+    echo "</pre>";
+    exit();
+    */
+    
     foreach($setting_fields as $setting_field){
       if($request->has($setting_field)){
         $input[$setting_field] = 1;

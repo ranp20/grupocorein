@@ -1,5 +1,30 @@
 (function($){
   "use strict"; // Start of use strict
+  // -------------- MENÚS COLAPSABLES (JQUERY)
+  $('*[data-toggle="collapse"]').click(function(e) {
+    e.preventDefault();
+    var content = $(this).next();
+    $('.collapse.show').each(function() {
+      $(this).slideUp(400).removeClass('show');
+      $(this).parent().removeClass('submenu');
+      $(this).parent().removeClass('active');
+    });
+    $(this).siblings('[data-toggle="collapse"]').each(function() {
+      var siblingContent = $(this).next();
+      siblingContent.slideUp(400).removeClass('show');
+      $(this).parent().removeClass('submenu');
+      $(this).parent().removeClass('active');
+    });
+    if(content.is(':visible')){
+      content.slideUp(400).removeClass('show');
+      $(this).parent().removeClass('submenu');
+      $(this).parent().removeClass('active');
+    }else{
+      // $(this).parent().addClass('submenu');
+      content.slideDown(400).addClass('show');
+      $(this).parent().addClass('active');
+    }
+  });
   $(".sidebar-wrapper .sidebar-content ul.nav li.nav-item a").each(function(){
     var pageUrl = window.location.href.split(/[?#]/)[0];
     if (this.href == pageUrl){
@@ -186,8 +211,24 @@
     // Datatable
     if($('#admin-table').length > 0){
       $('#admin-table').DataTable({
+        orderCellsTop: true,
+        fixedHeader: true,
         responsive: true,
-        ordering: false
+        ordering: true,
+        // scrollY: "400px",
+        // scrollX: true,
+        scrollCollapse: true,
+        paging: true,
+        columnDefs:[{
+          targets: "_all",
+          sortable: true,
+          searchable: true
+        }],
+        fixedColumns:   {
+          leftColumns: 3
+        },
+        lengthChange: true,
+        searching: true,
       });
     }
     // Set icon in edit
@@ -195,21 +236,17 @@
       $("input[name=icon]").val($('#icon-value').val());
     }
     // Tagify
-    if( $('.tags').length > 0 ){
+    if($('.tags').length > 0 ){
       $('.tags').tagify();
     }
     // Magnific Popup
-    if( $('.popup-link').length > 0 ){
+    if($('.popup-link').length > 0 ){
       $('.popup-link').magnificPopup({
         type: 'image'
       });
     }
-    // Social Picker
-    if( $('.social-picker').length > 0 ){
-      $('.social-picker').iconpicker();
-    }
     // Sorting Section
-    if( $('#section-list').length > 0 ){
+    if($('#section-list').length > 0 ){
       var el = document.getElementById('section-list');
       Sortable.create(el, {
       animation: 100,
@@ -218,93 +255,10 @@
       handle: '.draggable-item',
       sort: true,
       filter: '.sortable-disabled',
+      // filter: '.sorting',
       chosenClass: 'active'
       });
     }
-    // Appending Social Icons To Items
-    $('.add-social').on('click',function(){
-      var text = $(this).data('text');
-      $('#social-section').append(`
-      <div class="d-flex">
-        <div>
-          <div class="form-group">
-            <button class="btn btn-secondary social-picker" name="social_icons[]" data-icon="fab fa-font-awesome">
-            </button>
-          </div>
-        </div>
-        <div class="flex-grow-1">
-          <div class="form-group mb-1">
-            <input type="text" class="form-control" name="social_links[]" placeholder="${text}">
-          </div>
-        </div>
-        <div class="flex-btn">
-          <button type="button" class="btn btn-danger remove-social">
-            <i class="fa fa-minus"></i>
-          </button>
-        </div>
-      </div>
-      `);
-      $('.social-picker').iconpicker();
-    });
-    // Appending Specification To Items
-    $('.add-specification').on('click',function(){
-      var text = $(this).data('text');
-      var text1 = $(this).data('text1');
-      $('#specifications-section').append(`
-      <div class="d-flex">
-        <div class="flex-grow-1">
-          <div class="form-group">
-            <input type="text" class="form-control" name="specification_name[]" placeholder="${text}" value="">
-          </div>
-        </div>
-        <div class="flex-grow-1">
-          <div class="form-group">
-            <input type="text" class="form-control" name="specification_description[]" placeholder="${text1}" value="">
-          </div>
-        </div>
-        <div class="flex-btn">
-          <button type="button" class="btn btn-danger remove-spcification">
-            <i class="fa fa-minus"></i>
-          </button>
-        </div>
-      </div>
-      `);
-      $('.social-picker').iconpicker();
-    });
-    // Appending License To Items
-    $('.add-license').on('click',function(){
-      var text = $(this).data('text');
-      var text1 = $(this).data('text1');
-      $('#license-section').append(`
-      <div class="d-flex">
-        <div class="flex-grow-1">
-          <div class="form-group">
-            <input type="text" class="form-control" name="license_name[]" placeholder="${text}" value="">
-            </div>
-          </div>
-          <div class="flex-grow-1">
-            <div class="form-group">
-              <input type="text" class="form-control" name="license_key[]" placeholder="${text1}" value="">
-            </div>
-          </div>
-          <div class="flex-btn">
-            <button type="button" class="btn btn-danger remove-license">
-              <i class="fa fa-minus"></i>
-            </button>
-          </div>
-        </div>
-      `);
-      $('.social-picker').iconpicker();
-    });
-    $(document).on('click','.remove-social',function(){
-      $(this).parent().parent().remove();
-    });
-    $(document).on('click','.remove-spcification',function(){
-      $(this).parent().parent().remove();
-    });
-    $(document).on('click','.remove-license',function(){
-      $(this).parent().parent().remove();
-    });
     $(document).on('change','#category_id',function(){
       let category_id = $(this).val();
       let url = $(this).attr('data-href');
@@ -627,4 +581,11 @@
     getDistritos(url,ciudad_id);
   });
   /*-------------- NUEVO CONTENIDO (FIN) --------------*/
+  // ------------ AGREGAR @CSRF_FIELD EN TODOS LOS FORMULARIO EXISTENTES...
+  $('form').each(function(i, form){
+    var $form = $(form);
+    if(! $form.find('input[name="_token"]').length){
+      $('form').prepend('<input type="hidden" name="_token" value="'+ $('meta[name="csrf-token"]').prop('content') +'"/>');
+    }
+  });
 })(jQuery); // End of use strict

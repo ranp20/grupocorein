@@ -1,4 +1,5 @@
 $(() => {
+  let _tokenfrm = $("#csl-fGv8n09c__sGaYs45").find("input[name='_token']").val();
   // ------------ SHOW/HIDDEN PASSWORD
   $(document).on("click", "div.fnc-icon_passCtrl", function(){
     var inputTypeControlPass1 = $(this).parent().find("input").attr("type");
@@ -72,4 +73,132 @@ $(() => {
     });
   }
   */
+ // ------------ FORMATO - SÓLO DÍGITOS PARA LOS ELEMENTOS CREADOS DESPUÉS DE CARGADO EL DOM
+  $(document).on("input keyup keypress","input[data-valformat=onlydigits]", function(){
+    $(this).val($(this).val().replace(/[^0-9]/g, ''));
+  });
+  // ----------- ACTUALIZAR ICONO DE USUARIO
+  $(document).on("change","#photo_avataruser-front",function(e){
+    let readerImg = new FileReader();
+    let contUploadView = $("#avater_photo_view");
+    if(e.target.files[0] == undefined || e.target.files[0] == "undefined"){
+      $("#avater_photo_view").attr("src", "../assets/images/placeholder.png");
+    }else{
+      let changeIconUserUrl = $(this).attr("data-href");
+      var formData = new FormData();
+      var file = e.target.files[0];
+      formData.append('photo', file);
+      $.ajax({
+        headers: {
+          'X-CSRF-TOKEN': _tokenfrm
+        },
+        type: 'POST',
+        url: changeIconUserUrl,
+        data: formData,
+        processData: false,
+        contentType: false,
+        beforeSend: function(){
+          $(`<span class="c_changeloader-1">
+          <span></span>
+        </span>`).insertBefore("#avater_photo_view");
+        },
+        success: function(res){
+          $("#avater_photo_view").prev().remove();
+          if(res != ""){
+            let data = JSON.parse(res);
+            if(data.type == "success"){
+              successNotification(data.mssg);
+            }else{
+              dangerNotification(data.mssg);
+            }
+          }else{
+            dangerNotification('Hubo un error al actualizar el avatar.');
+          }
+        },
+      });
+
+      readerImg.readAsDataURL(e.target.files[0]);
+      readerImg.onload = function(){
+        contUploadView.attr("src", readerImg.result);
+      }
+    }
+  });
+  // Notifications
+  function successNotification(title){
+    $.notify(
+      {
+        title: ` <strong>${title}</strong>`,
+        message: "",
+        icon: "fas fa-check-circle",
+      },
+      {
+        // settings
+        element: "body",
+        position: null,
+        type: "success",
+        allow_dismiss: true,
+        newest_on_top: false,
+        showProgressbar: false,
+        placement: {
+          from: "top",
+          align: "right",
+        },
+        offset: 20,
+        spacing: 10,
+        z_index: 1031,
+        delay: 5000,
+        timer: 1000,
+        url_target: "_blank",
+        mouse_over: null,
+        animate: {
+          enter: "animated fadeInDown",
+          exit: "animated fadeOutUp",
+        },
+        onShow: null,
+        onShown: null,
+        onClose: null,
+        onClosed: null,
+        icon_type: "class",
+      }
+    );
+  }
+  function dangerNotification(title){
+    $.notify(
+      {
+        // options
+        title: ` <strong>${title}</strong>`,
+        message: "",
+        icon: "fas fa-exclamation-triangle",
+      },
+      {
+        // settings
+        element: "body",
+        position: null,
+        type: "danger",
+        allow_dismiss: true,
+        newest_on_top: false,
+        showProgressbar: false,
+        placement: {
+          from: "top",
+          align: "right",
+        },
+        offset: 20,
+        spacing: 10,
+        z_index: 1031,
+        delay: 5000,
+        timer: 1000,
+        url_target: "_blank",
+        mouse_over: null,
+        animate: {
+          enter: "animated fadeInDown",
+          exit: "animated fadeOutUp",
+        },
+        onShow: null,
+        onShown: null,
+        onClose: null,
+        onClosed: null,
+        icon_type: "class",
+      }
+    );
+  }
 });

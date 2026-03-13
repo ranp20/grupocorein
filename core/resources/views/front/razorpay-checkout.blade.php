@@ -1,4 +1,4 @@
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script type="text/javascript" src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <form name='razorpayform' action="{{ $notify_url }}" method="POST">
     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
     <input type="hidden" name="razorpay_signature"  id="razorpay_signature" >

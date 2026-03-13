@@ -60,6 +60,11 @@ $orderIdGenFirst = genCodeRandom();
 </div>
 <div class="container padding-bottom-3x mb-1  checkut-page">
   <div class="row">
+    <?php
+      // echo "<pre>";
+      // print_r(Session::get('cart'));
+      // echo "</pre>";
+    ?>
     <div class="col-xl-9 col-lg-8">
       <div class="steps flex-sm-nowrap mb-2">
         <a class="step" href="{{route('front.checkout.billing')}}">
@@ -171,7 +176,7 @@ $orderIdGenFirst = genCodeRandom();
               <div class="col-sm-12">
                 <div class="form-group">
                   <!-- <label for="reg-slOpts__voucher">Tipo de comprobante</label> -->
-                  <select class="form-control" name="reg_slOpts__voucher" id="reg-slOpts__voucher" required>
+                  <select class="form-control" name="reg_slOpts__voucher" id="reg-slOpts__voucher" data-href="{{ route('front.checkout.setdatavoucher') }}" required>
                     <option selected value="">Elige una opción</option>
                     @foreach($selOptsTable as $k => $v)
                     <option value="{{ (isset($selOptVoucher['selOptSelectedId']) && $selOptVoucher['selOptSelectedId'] != '' && $v['id'] == $selOptVoucher['selOptSelectedId']) ? $selOptVoucher['selOptSelectedId'] : $v['id'] }}" {{ (isset($selOptVoucher['selOptSelected']) && $selOptVoucher['selOptSelected'] != '' && $v['id'] == $selOptVoucher['selOptSelectedId']) ? 'selected' : '' }}>{{ (isset($selOptVoucher['selOptSelected']) && $selOptVoucher['selOptSelected'] != '' && $v['name'] == $selOptVoucher['selOptSelected']) ? ucfirst($selOptVoucher['selOptSelected']) : ucfirst($v['name']) }}</option>
@@ -206,6 +211,10 @@ $orderIdGenFirst = genCodeRandom();
                     <div class="col-12 d-flex align-items-center justify-content-start">
                       <div class="form-group mt-3 mb-0">
                         <div class="btn btn-success d-flex align-items-center" t-apparence="btn-sub__frm">
+                          {{--
+                        <!-- <div class="btn btn-success d-flex align-items-center" t-apparence="btn-sub__frm" data-href="{{ route('front.checkout.submitupdatesesscart') }}"> -->
+                          <!-- <input type="hidden" name="_token_update" id="token_update" value="{{ csrf_token() }}"> -->
+                          --}}
                           <span>Finalizar compra</span>
                           <span class="cNxticon-i">
                             <svg xmlns:x="http://ns.adobe.com/Extensibility/1.0/" xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" xmlns:graph="http://ns.adobe.com/Graphs/1.0/" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 100;" xml:space="preserve"><switch><foreignObject requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/" x="0" y="0" width="1" height="1"/><g i:extraneous="self"><path d="M95.9,46.2L65.4,15.7c-2.1-2.1-5.5-2.1-7.5,0c-2.1,2.1-2.1,5.5,0,7.5l21.5,21.5H7.8c-2.9,0-5.3,2.4-5.3,5.3    c0,2.9,2.4,5.3,5.3,5.3h71.5L57.9,76.8c-2.1,2.1-2.1,5.5,0,7.5c1,1,2.4,1.6,3.8,1.6s2.7-0.5,3.8-1.6l30.6-30.6    c1-1,1.6-2.4,1.6-3.8C97.5,48.6,96.9,47.2,95.9,46.2z"/></g></switch></svg>
@@ -281,6 +290,10 @@ $orderIdGenFirst = genCodeRandom();
                     <div class="col-12 d-flex align-items-center justify-content-start">
                       <div class="form-group mt-3 mb-0">
                         <div class="btn btn-success d-flex align-items-center" t-apparence="btn-sub__frm">
+                        {{--
+                        <!-- <div class="btn btn-success d-flex align-items-center" t-apparence="btn-sub__frm" data-href="{{ route('front.checkout.submitupdatesesscart') }}"> -->
+                          <!-- <input type="hidden" name="_token_update" id="token_update" value="{{ csrf_token() }}"> -->
+                          --}}
                           <span>Finalizar compra</span>
                           <span class="cNxticon-i">
                             <svg xmlns:x="http://ns.adobe.com/Extensibility/1.0/" xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" xmlns:graph="http://ns.adobe.com/Graphs/1.0/" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 100;" xml:space="preserve"><switch><foreignObject requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/" x="0" y="0" width="1" height="1"/><g i:extraneous="self"><path d="M95.9,46.2L65.4,15.7c-2.1-2.1-5.5-2.1-7.5,0c-2.1,2.1-2.1,5.5,0,7.5l21.5,21.5H7.8c-2.9,0-5.3,2.4-5.3,5.3    c0,2.9,2.4,5.3,5.3,5.3h71.5L57.9,76.8c-2.1,2.1-2.1,5.5,0,7.5c1,1,2.4,1.6,3.8,1.6s2.7-0.5,3.8-1.6l30.6-30.6    c1-1,1.6-2.4,1.6-3.8C97.5,48.6,96.9,47.2,95.9,46.2z"/></g></switch></svg>
@@ -357,23 +370,23 @@ $orderIdGenFirst = genCodeRandom();
                     @endphp
                     @foreach ($gateways as $gateway)
                     @if (PriceHelper::CheckDigitalPaymentGateway())
-                    @if ($gateway->unique_keyword != 'cod')
-                    <div class="single-payment-method">
-                      <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
-                        <img class="" src="{{asset('assets/back/images/payment/'.$gateway->photo)}}" alt="{{$gateway->name}}" title="{{$gateway->name}}">
-                        <p>{{$gateway->name}}</p>
-                      </a>
-                    </div>
-                    @endif
+                      @if ($gateway->unique_keyword != 'cod')
+                      <div class="single-payment-method">
+                        <a type="button" class="text-decoration-none sLinkModal-shw__cPay" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
+                          <img class="" src="{{asset('assets/back/images/payment/'.$gateway->photo)}}" alt="{{$gateway->name}}" title="{{$gateway->name}}">
+                          <p>{{$gateway->name}}</p>
+                        </a>
+                      </div>
+                      @endif
                     @else
                     <div class="single-payment-method">
-                      <a class="text-decoration-none sLinkModal-shw__cPay" href="#" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
+                      <a type="button" class="text-decoration-none sLinkModal-shw__cPay" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#{{$gateway->unique_keyword}}">
                         <img class="" src="{{asset('assets/back/images/payment/'.$gateway->photo)}}" alt="{{$gateway->name}}" title="{{$gateway->name}}">
                         <p>{{$gateway->name}}</p>
                       </a>
                     </div>
                     @endif
-                    @endforeach                
+                    @endforeach
                   </div>
                 </div>
               </div>
