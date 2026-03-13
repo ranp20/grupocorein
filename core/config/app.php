@@ -175,7 +175,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Cartalyst\Stripe\Laravel\StripeServiceProvider::class,
+        // Cartalyst\Stripe\Laravel\StripeServiceProvider::class, // DE LA VERSIÓN ANTIGUAR (PHP 7.4)
         Laravel\Socialite\SocialiteServiceProvider::class,
 
 
@@ -237,7 +237,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         // 'Datatables' => yajra\Datatables\Datatables::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
-        'Stripe' => Cartalyst\Stripe\Laravel\Facades\Stripe::class,
+        // 'Stripe' => Cartalyst\Stripe\Laravel\Facades\Stripe::class,  // DE LA VERSIÓN ANTIGUAR (PHP 7.4)
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Image' => Intervention\Image\ImageManagerStatic::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
