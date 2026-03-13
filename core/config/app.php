@@ -183,6 +183,7 @@ return [
         /* --------------- NUEVO CONTENIDO --------------- */
         Barryvdh\DomPDF\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
     ],
 
     /*
@@ -234,7 +235,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Datatables' => yajra\Datatables\Datatables::class,
+        // 'Datatables' => yajra\Datatables\Datatables::class,
+        'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Stripe' => Cartalyst\Stripe\Laravel\Facades\Stripe::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Image' => Intervention\Image\ImageManagerStatic::class,
@@ -246,5 +248,5 @@ return [
     ],
 
 
-    'pagination' => 'bootstrap-4'
+    'pagination' => 'bootstrap-5'
 ];

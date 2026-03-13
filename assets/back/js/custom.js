@@ -1,5 +1,30 @@
 (function($){
   "use strict"; // Start of use strict
+  // -------------- MENÚS COLAPSABLES (JQUERY)
+  $('*[data-toggle="collapse"]').click(function(e) {
+    e.preventDefault();
+    var content = $(this).next();
+    $('.collapse.show').each(function() {
+      $(this).slideUp(400).removeClass('show');
+      $(this).parent().removeClass('submenu');
+      $(this).parent().removeClass('active');
+    });
+    $(this).siblings('[data-toggle="collapse"]').each(function() {
+      var siblingContent = $(this).next();
+      siblingContent.slideUp(400).removeClass('show');
+      $(this).parent().removeClass('submenu');
+      $(this).parent().removeClass('active');
+    });
+    if(content.is(':visible')){
+      content.slideUp(400).removeClass('show');
+      $(this).parent().removeClass('submenu');
+      $(this).parent().removeClass('active');
+    }else{
+      // $(this).parent().addClass('submenu');
+      content.slideDown(400).addClass('show');
+      $(this).parent().addClass('active');
+    }
+  });
   $(".sidebar-wrapper .sidebar-content ul.nav li.nav-item a").each(function(){
     var pageUrl = window.location.href.split(/[?#]/)[0];
     if (this.href == pageUrl){

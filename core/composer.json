@@ -34,6 +34,7 @@
         "spatie/laravel-cookie-consent": "^2.12",
         "spatie/laravel-sitemap": "^5.8.0",
         "twilio/sdk": "^6.28",
+        "yajra/laravel-datatables-oracle": "^9.21",
         "zanysoft/laravel-zip": "^1.0"
     },
     "require-dev": {

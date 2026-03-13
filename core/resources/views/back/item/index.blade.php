@@ -33,7 +33,7 @@
           <div class="row">
             <div class="col-lg-3 col-md-4 col-sm-6" >
               <div class="form-group px-0">
-                <select class="form-control" name="item_type">
+                <select class="form-control form-select" name="item_type">
                   <option value="">{{__('All Product')}}</option>
                   <option value="normal" {{request()->input('item_type') == 'normal' ? 'selected' : ''}}>{{__('Physical Product')}}</option>
                   {{--
@@ -48,7 +48,7 @@
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6" >
               <div class="form-group px-0">
-                <select class="form-control" name="is_type">
+                <select class="form-control form-select" name="is_type">
                   <option disabled>{{__('Select Type')}}</option>
                   <option value="">{{__('All Type')}}</option>
                   <option value="undefine" {{request()->input('is_type') == 'undefine' ? 'selected' : ''}}>{{__('Undefine Product')}}</option>
@@ -62,7 +62,7 @@
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6" >
               <div class="form-group px-0">
-                <select class="form-control" name="category_id">
+                <select class="form-control form-select" name="category_id">
                   <option disabled>{{__('Select Category')}}</option>
                   <option value="">{{__('All Category')}}</option>
                   @foreach(DB::table('categories')->whereStatus(1)->get() as $cat)
@@ -73,7 +73,7 @@
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6" >
               <div class="form-group px-0">
-                <select class="form-control" name="orderby">
+                <select class="form-control form-select" name="orderby">
                   <option disabled>{{__('Select Order')}}</option>
                   <option value="asc" {{request()->input('orderby') == 'asc' ? 'selected' : ''}}>{{__('Ascending order')}}</option>
                   <option value="desc" {{request()->input('orderby') == 'desc' ? 'selected' : ''}}>{{__('Descending order')}}</option>
@@ -83,7 +83,7 @@
             <!-- NUEVO CONTENIDO (INICIO) -->
             <div class="col-lg-3 col-md-4 col-sm-6" >
               <div class="form-group px-0">
-                <select class="form-control" name="coupon_id">
+                <select class="form-control form-select" name="coupon_id">
                   <option disabled>{{__('Select coupon')}}</option>
                   <option value="">{{__('All Coupons')}}</option>
                   @foreach(DB::table('tbl_coupons')->whereStatus(1)->get() as $coupon)
@@ -112,8 +112,9 @@
         </div>
       </form>
       <br>
-			<div class="gd-responsive-table">
-				<table class="table table-bordered table-striped" id="admin-table" width="100%" cellspacing="0">
+			<div class="gd-responsive-table" id="tblitems-custom">
+				<table class="table table-striped table-bordered" id="admin-table" width="100%" cellspacing="0">
+				<!-- <table class="table table-striped table-bordered" id="admin-itemsTable" width="100%" cellspacing="0"> -->
 					<thead>
 						<tr>
 							<th class="d-sorting_none"><input type="checkbox" data-target="product-bulk-delete" class="form-control bulk_all_delete"></th>
@@ -137,6 +138,9 @@
             @include('back.item.table',compact('datas'))
 					</tbody>
 				</table>
+        <div class="pagination-wrapper">
+          {{ $datas->links() }}
+        </div>
 			</div>
 		</div>
 	</div>

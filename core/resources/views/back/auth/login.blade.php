@@ -13,11 +13,11 @@
         @csrf
         @include('alerts.alerts')
         <div class="form-group">
-          <label for="username" class="placeholder">{{ __('Email Address') }}</label>
+          <label for="username" class="d-block placeholder">{{ __('Email Address') }}</label>
           <input id="username" name="login_email" type="email" class="form-control input-border-bottom" value="{{ old('login_email') }}" required>
         </div>
         <div class="form-group">
-          <label for="password" class="placeholder">{{ __('Password') }}</label>  
+          <label for="password" class="d-block placeholder">{{ __('Password') }}</label>  
           <div class="input-group">
             <input id="password" name="login_password" type="password" class="form-control input-border-bottom" autocomplete="off" required>
             <div class="cFrmCtrl__cIcon--R fnc-icon_passCtrl me-1">
